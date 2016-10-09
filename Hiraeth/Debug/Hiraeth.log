@@ -1,0 +1,10 @@
+﻿  map.cpp
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(10): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(45): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(28): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(59): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(67): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(82): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(94): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+  Hiraeth.vcxproj -> C:\Users\gal\Documents\Visual Studio 2015\Projects\Hiraeth\Debug\Hiraeth.exe
+  Hiraeth.vcxproj -> C:\Users\gal\Documents\Visual Studio 2015\Projects\Hiraeth\Debug\Hiraeth.pdb (Partial PDB)
