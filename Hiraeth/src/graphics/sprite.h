@@ -14,7 +14,6 @@ namespace hiraeth {
 			Sprite(float x, float y, float width, float height, const maths::vec4& color);
 			Sprite(float x, float y, float width, float height, Texture* texture);
 			Sprite(float x, float y, float width, float height, Texture* texture, std::vector<maths::vec2> uv);
-			Sprite(map::Tile tile, Texture* texture);
 		};
 	}
 }

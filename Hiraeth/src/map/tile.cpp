@@ -15,6 +15,17 @@ namespace hiraeth {
 
 		 }
 
+		 Tile::Tile(Serializer s)
+			 : Tile(s.position, s.scale, s.uv_pos, s.uv_size, s.type)
+		 {
+
+		 }
+
+		 Tile::~Tile()
+		 {
+
+		 }
+
 		std::vector<maths::vec2> Tile::create_uv_by_pos_size(maths::vec2 pos, maths::vec2 size, maths::vec2 tex_size)
 		{
 			std::vector<maths::vec2> uv;

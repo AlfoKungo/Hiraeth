@@ -37,6 +37,12 @@ namespace hiraeth {
 			{
 				setUVDefaults();
 			}
+			Renderable2D(maths::vec3 position, maths::vec2 size)
+				: m_Position(position), m_Size(size)
+			{
+				setUVDefaults();
+				m_Color = maths::vec4(1, 1, 1, 1);
+			}
 			Renderable2D(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv, Texture* texture)
 				: m_Position(position), m_Size(size)
 			{
@@ -62,6 +68,8 @@ namespace hiraeth {
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
 
 			inline const GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
+
+			virtual void update() {}
 		private:
 			void setUVDefaults()
 			{

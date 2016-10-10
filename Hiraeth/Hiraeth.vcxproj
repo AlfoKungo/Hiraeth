@@ -141,6 +141,7 @@
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\map\map.cpp" />
     <ClCompile Include="src\map\maprenderer.cpp" />
+    <ClCompile Include="src\map\portal.cpp" />
     <ClCompile Include="src\map\tile.cpp" />
     <ClCompile Include="src\maths\mat4.cpp" />
     <ClCompile Include="src\maths\vec2.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\map\map.h" />
     <ClInclude Include="src\map\maprenderable.h" />
     <ClInclude Include="src\map\maprenderer.h" />
+    <ClInclude Include="src\map\portal.h" />
     <ClInclude Include="src\map\tile.h" />
     <ClInclude Include="src\maths\mat4.h" />
     <ClInclude Include="src\maths\maths.h" />

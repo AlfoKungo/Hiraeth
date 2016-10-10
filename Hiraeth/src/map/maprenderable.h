@@ -22,14 +22,12 @@ namespace hiraeth {
 			maths::vec4 m_Color;
 			std::vector<maths::vec2> m_UV;
 		protected:
+			MapRenderable()	{ }
 			MapRenderable(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv)
 				: m_Position(position), m_Size(size), m_UV(uv)
 			{
 				m_Color = maths::vec4(1, 1, 1, 1);
 			}
-		//private:
-		//	MapRenderable();
-		//	friend class cereal::access;
 		public:
 			virtual ~MapRenderable()
 			{

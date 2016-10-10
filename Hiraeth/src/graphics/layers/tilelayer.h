@@ -11,6 +11,9 @@ namespace hiraeth {
 		public:
 			TileLayer(Shader* shader);
 			virtual ~TileLayer();
+
+			void update();
+			void clear() { m_Renderables.clear(); }
 		};
 
 	}

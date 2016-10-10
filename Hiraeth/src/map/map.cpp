@@ -4,120 +4,172 @@
 namespace hiraeth {
 	namespace map {
 
-		Map::Map(const std::string& filename, const std::string& bg_filename, std::vector<Tile> tiles, view::Camera* camera)
-			: m_Tex(filename), m_BgTex(bg_filename), m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
-			m_BgLayer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
-			m_Camera(camera), m_Renderer(filename)
+		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera)
+			: m_Tex(filename),
+			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
+			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
+			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
+			m_BgLayer(&m_BgShader), m_PtLayer(&m_PtShader), m_Wnd(wind),
+			m_Camera(camera), m_Renderer(filename), m_MapIndex(map_index)
 		{
-			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, &m_BgTex));
-			for (std::vector<Tile>::const_iterator it = tiles.begin(); it != tiles.end(); it++)
-				m_Tiles.push_back(*it);
+			//m_PtLayer.add(new Portal(maths::vec3(1, 1, 1), 1, wind, new graphics::Texture("portal_adv.png"), this));
+			//m_PtLayer.add(new Portal(maths::vec3(500, 0, 1), 1, wind, new graphics::Texture("portal.png"), this));
+			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));
+			if (map_index == 2)
+			{
+				serialize();
+				map_index = 0;
+			}
+			deserialize(map_index);
+			//GLint texIDs[] =
+			//{
+			//	0,1,2,3,4,5,6,7,8,9
+			//};
+			//m_BgShader.enable();
+			//m_BgShader.setUniform1iv("textures", texIDs, 10);
+			//m_PtShader.enable();
+			//m_PtShader.setUniform1iv("textures", texIDs, 10);
 
-			//glActiveTexture(GL_TEXTURE0);
-		}
-		Map::Map(const std::string& filename, const std::string& bg_filename, int offset, view::Camera* camera)
-			: m_Tex(filename), m_BgTex(bg_filename), m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
-			m_BgLayer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
-			m_Camera(camera), m_Renderer(filename)
-		{
-			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, &m_BgTex));
-			deserialize_tiles(offset);
-
-			//glActiveTexture(GL_TEXTURE0);
 		}
 
 		Map::~Map()
 		{
-
 		}
 
 		void Map::draw()
 		{
-			m_Shader.enable();
-			m_Shader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
-			m_Shader.disable();
-
 			m_BgLayer.render();
 
-			m_Tex.bind();
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, m_Tex.getID());
 			m_Shader.enable();
+			m_Shader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
 			m_Renderer.begin();
-
 			for (const Tile tile : m_Tiles)
 				tile.submit(&m_Renderer);
-
 			m_Renderer.end();
-
 			m_Renderer.flush();
+
+			m_PtShader.enable();
+			m_PtShader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
+			m_PtLayer.render();
 		}
 
-		void Map::serialize_tiles()
+		void Map::update()
 		{
-			std::vector<Tile> tiles1, tiles2;
-			for (int y = -450; y < -100; y += 59)
-				for (int x = -800; x < 800; x += 89)
-					tiles1.push_back(Tile(maths::vec2(x, y), 1.0f, maths::vec2(1 + (rand() % 6) * 91, 268), maths::vec2(90, 59), 0));
-			tiles1.push_back(Tile(maths::vec2(-90, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-			tiles1.push_back(Tile(maths::vec2(0, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-			tiles1.push_back(Tile(maths::vec2(-180, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-			tiles1.push_back(Tile(maths::vec2(270, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-			tiles1.push_back(Tile(maths::vec2(0, 0), 1.0f, maths::vec2(0, 0), maths::vec2(621, 328), 0));
-			for (int y = -350; y < 0; y += 59)
-				for (int x = -1000; x < 600; x += 89)
-					tiles2.push_back(Tile(maths::vec2(x, y), 1.0f, maths::vec2(1 + (rand() % 6) * 91, 268), maths::vec2(90, 59), 0));
 
+			m_PtLayer.update();
+
+			if (m_ChangeMapFlag) 
+			{
+				deserialize(m_MapIndex);
+				m_ChangeMapFlag = false;
+			}
+		}
+
+		void Map::change_map(int new_index)
+		{
+			m_MapIndex = new_index;
+			m_ChangeMapFlag = true;
+		}
+
+		void Map::serialize()
+		{
 			std::ofstream file("my_file.save");
 			cereal::BinaryOutputArchive oarchive(file);
 			oarchive((int)2);
 			file.seekp(sizeof(int) + sizeof(int)*2);
-			for (std::vector<Tile>::const_iterator it = tiles1.begin(); it != tiles1.end(); it++)
+			oarchive(2);
+			for (int i = 0;i < 2; i++)
 			{
-				std::cout << file.tellp() << std::endl;
-				//m1.reset(&(*it));
-				//std::unique_ptr<Tile const> const m1{ new Tile(maths::vec2(-90, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0) };
-				std::unique_ptr<Tile const> m1{ &*it };
-				oarchive(m1);
-				m1.release();
+				Portal::Serializer s{ maths::vec3(i * 200, 0,0), 1 };
+				oarchive(s);
 			}
-			int loc1 = file.tellp();
-				std::cout << loc1 << std::endl;
+			int count = 0, tile_count_pos = file.tellp();
+			file.seekp(sizeof(int), std::ios::cur);
+			for (int y = -450; y < -100; y += 59)
+				for (int x = -800; x < 800; x += 89)
+				{
+					oarchive(Tile::Serializer{ maths::vec3(x, y, 0), 1.0f, maths::vec2(1 + (rand() % 6) * 91, 268), maths::vec2(90, 59), 0 });
+					//std::cout << file.tellp() << std::endl;
+					count++;
+				}
+			oarchive(Tile::Serializer{maths::vec3(-90, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
+			oarchive(Tile::Serializer{maths::vec3(0, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
+			oarchive(Tile::Serializer{maths::vec3(-180, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
+			oarchive(Tile::Serializer{maths::vec3(0, 0,0), 1.0f, maths::vec2(0, 0), maths::vec2(621, 328), 0});
+			int loaction_after1 = file.tellp();
+			file.seekp(tile_count_pos);
+			oarchive(count + 4);
 			file.seekp(sizeof(int));
-			oarchive(loc1 - sizeof(int) * 3);
-			file.seekp(loc1);
-			for (std::vector<Tile>::const_iterator it = tiles2.begin(); it != tiles2.end(); it++)
+			oarchive(loaction_after1 - sizeof(int) * 3);
+
+			file.seekp(loaction_after1);
+			oarchive(2);
+			for (int i = 0;i < 2; i++)
 			{
-				std::cout << file.tellp() << std::endl;
-				std::unique_ptr<Tile const> m1{ &*it };
-				oarchive(m1);
-				m1.release();
+				Portal::Serializer s{ maths::vec3((i * (-200)) - 200, 0,0), 0 };
+				oarchive(s);
 			}
-			int loc2 = file.tellp();
-				std::cout << loc2 << std::endl;
+			count = 0;
+			tile_count_pos = file.tellp();
+			file.seekp(sizeof(int), std::ios::cur);
+			for (int y = -350; y < 0; y += 59)
+				for (int x = -1000; x < 600; x += 89)
+				{
+					oarchive(Tile::Serializer{ maths::vec3(x, y, 0), 1.0f, maths::vec2(1 + (rand() % 6) * 91, 268), maths::vec2(90, 59), 0 });
+					count++;
+				}
+			int location_after2 = file.tellp();
+			file.seekp(tile_count_pos);
+			oarchive(count);
 			file.seekp(sizeof(int) + sizeof(int));
-			oarchive(loc2 - loc1 - sizeof(int) * 3);
+			oarchive(location_after2 - loaction_after1 - sizeof(int) * 3);
 		}
 
-		void Map::deserialize_tiles(int offset)
+		void Map::deserialize(int map_index)
 		{
 			std::ifstream file("my_file.save");
 			cereal::BinaryInputArchive iarchive(file);
-			int amount;
-			iarchive(amount);
-			int beg_of_data, tmp, end_of_data = 0;
-			for (int i = 0; i <= offset; i++)
+			m_Tiles.clear();
+			m_PtLayer.clear();
+
+			int maps_amount, start_of_data = 0, tmp;
+			//read maps_amount
+			iarchive(maps_amount);
+			//read start_of_data and end_of_data
+			for (int i = 0; i < map_index; i++)
 			{
-				std::cout << file.tellg() << std::endl;
 				iarchive(tmp);
-				end_of_data += tmp;
+				start_of_data += tmp;
 			}
-			beg_of_data = end_of_data - tmp;
-			file.seekg(sizeof(amount) + amount * sizeof(int) + beg_of_data);
-			std::unique_ptr<Tile> deserialized_message{ nullptr };
-			for (int i = 0; file.tellg() < end_of_data; i++)
+			file.seekg(sizeof(maps_amount) + maps_amount * sizeof(int) + start_of_data);
+			//deserialize tiles
+			deserialize_portals(&iarchive);
+			deserialize_tiles(&iarchive);
+		}
+
+		void Map::deserialize_portals(cereal::BinaryInputArchive* iarchive)
+		{
+			Portal::Serializer s;
+			int portals_amount;
+			(*iarchive)(portals_amount);
+			for (int i = 0; i < portals_amount; i++)
 			{
-				iarchive(deserialized_message);
-				//m_Tiles.push_back(*(deserialized_message.get()));
-				m_Tiles.push_back(Tile(*deserialized_message.get()));
+				(*iarchive)(s);
+				m_PtLayer.add(new Portal(s, 110, m_Wnd, new graphics::Texture("portal_adv.png"), this));
+			}
+		}
+
+		void Map::deserialize_tiles(cereal::BinaryInputArchive* iarchive)
+		{
+			Tile::Serializer s;
+			int tile_amount;
+			(*iarchive)(tile_amount);
+			for (int i = 0; i < tile_amount; i++)
+			{
+				(*iarchive)(s);
+				m_Tiles.push_back(Tile(s));
 			}
 		}
 	}

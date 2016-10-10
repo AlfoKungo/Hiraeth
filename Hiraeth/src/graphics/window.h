@@ -15,7 +15,7 @@ namespace hiraeth {
 			GLFWwindow *m_Window;
 			bool m_Closed;
 
-			bool m_Keys[GLFW_KEY_LAST];
+			unsigned char m_Keys[GLFW_KEY_LAST];
 			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
 			double mx, my;
 		public:
@@ -27,7 +27,7 @@ namespace hiraeth {
 			int getWidth() const { return m_Width; }
 			int getHeight() const { return m_Height; }
 
-			bool isKeyPressed(unsigned int keycode) const;
+			unsigned char isKeyPressed(unsigned int keycode) const;
 			bool isMouseButtonPressed(unsigned int button) const;
 			void getMousePosition(double& x, double& y) const;
 		private:

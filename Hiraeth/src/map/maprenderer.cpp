@@ -112,6 +112,9 @@ namespace hiraeth {
 
 		void MapRenderer::flush()
 		{
+			//glActiveTexture(GL_TEXTURE0);
+				//glBindTexture(GL_TEXTURE_2D, m_Tex->getID());
+
 			glBindVertexArray(m_VAO);
 			m_IBO->bind();
 			

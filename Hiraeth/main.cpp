@@ -28,51 +28,32 @@ int main()
 
 	mat4 ortho = mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 
-	Shader* s2 = new Shader("src/shaders/basic.vert", "src/shaders/basic.frag");
-	Shader& bg_shader = *s2;
-	bg_shader.enable();
-
 	std::vector<Tile> tiles;
+	Shader* s = new Shader("src/shaders/map.vert", "src/shaders/map.frag");
+	Shader& shader = *s;
 
-	
 	Camera camera(&window);
 #define SAVE 0
 #define MAP 1
 #if SAVE
 #if MAP
-	for (int y = -450; y < -100; y += 59)
-		for (int x = -800; x < 800; x += 89)
-			tiles.push_back(Tile(vec2(x, y), 1.0f, maths::vec2(1 + (rand() % 6)*91, 268), maths::vec2(90, 59), 0));
-	tiles.push_back(Tile(vec2(-90, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-	tiles.push_back(Tile(vec2(0, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-	tiles.push_back(Tile(vec2(-180, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-	tiles.push_back(Tile(vec2(270, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-	tiles.push_back(Tile(vec2(0, 0), 1.0f, maths::vec2(0, 0), maths::vec2(621, 328), 0));
-	Map map("map4.png", "bg1.png", tiles, &camera);
+	Map map("map4.png", tiles, &window, &camera);
 	map.serialize_tiles();
 #else
 	for (int y = -350; y < 0; y += 59)
 		for (int x = -1000; x < 600; x += 89)
 			tiles.push_back(Tile(vec2(x, y), 1.0f, maths::vec2(1 + (rand() % 6)*91, 268), maths::vec2(90, 59), 0));
-	Map map("map4.png", "bg1.png", tiles, &camera);
+	Map map("map4.png", tiles, &window, &camera);
 	map.serialize_tiles();
 #endif
 #else
 	#if MAP
-	Map map("map4.png", "bg1.png", 0, &camera);
+	Map map("map4.png", 2, &window, &camera);
 #else
-	Map map("map4.png", "bg1.png", 1, &camera);
+	Map map("map4.png", 1, &window, &camera);
 #endif
 #endif
 //#if SAVE
-//	for (int y = -450; y < -100; y += 59)
-//		for (int x = -800; x < 800; x += 89)
-//			tiles.push_back(Tile(vec2(x, y), 1.0f, maths::vec2(1 + (rand() % 6)*91, 268), maths::vec2(90, 59), 0));
-//	tiles.push_back(Tile(vec2(-90, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-//	tiles.push_back(Tile(vec2(0, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-//	tiles.push_back(Tile(vec2(-180, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-//	tiles.push_back(Tile(vec2(270, 0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
-//	tiles.push_back(Tile(vec2(0, 0), 1.0f, maths::vec2(0, 0), maths::vec2(621, 328), 0));
 //	std::ofstream file("my_file.save");
 //		cereal::BinaryOutputArchive oarchive(file); // Create an output archive
 //
@@ -100,6 +81,7 @@ int main()
 		double x, y;
 		window.getMousePosition(x, y);
 		camera.update();
+		map.update();
 		map.draw();
 
 

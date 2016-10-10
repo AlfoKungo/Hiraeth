@@ -10,6 +10,7 @@
 #include "graphics\window.h"
 
 #include "maprenderer.h"
+#include "portal.h"
 #include "graphics\batchrenderer2d.h"
 #include "View\Camera.h"
 
@@ -25,23 +26,35 @@ namespace hiraeth {
 		{
 		private:
 			std::vector<Tile> m_Tiles;
+
 			graphics::Texture m_Tex;
-			graphics::Texture m_BgTex;
+
 			graphics::Shader m_Shader;
+			graphics::Shader m_PtShader;
+			graphics::Shader m_BgShader;
+
+			graphics::TileLayer m_PtLayer;
 			graphics::TileLayer m_BgLayer;
+
+			int m_MapIndex;
+			bool m_ChangeMapFlag;
+
+			graphics::Window* m_Wnd;
 			view::Camera* m_Camera;
 			MapRenderer m_Renderer;
 		public:
-			Map(const std::string& filename, const std::string& bg_filename, std::vector<Tile> tiles, view::Camera* wnd);
-			Map(const std::string& filename, const std::string& bg_filename, int offset, view::Camera* wnd);
-			Map(const std::string& filename, const std::string& bg_filename, std::vector<Tile> tiles);
+			Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* wnd);
 			~Map();
 
 			void draw();
-			void serialize_tiles();
+			void update();
+			void change_map(int new_index);
 
 		private:
-			void deserialize_tiles(int offset);
+			void serialize();
+			void deserialize(int map_index);
+			void deserialize_tiles(cereal::BinaryInputArchive* iarchive);
+			void deserialize_portals(cereal::BinaryInputArchive* iarchive);
 		};
 
 	}
