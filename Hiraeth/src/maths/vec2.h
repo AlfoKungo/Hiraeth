@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+//#include <math.h>
 
 namespace hiraeth {
 	namespace maths {
@@ -38,6 +39,8 @@ namespace hiraeth {
 
 			vec2& operator*=(const float& other);
 			vec2& operator/=(const float& other);
+
+			float distance_to(const vec2 other);
 
 		template<class Archive>
 		void serialize(Archive & archive) { archive(x,y); }

@@ -133,6 +133,12 @@ namespace hiraeth {
 			return !(*this == other);
 		}
 
+		float vec2::distance_to(const vec2 other)
+		{
+			float sum = pow(x - other.x, 2.0f) + pow(x - other.x, 2.0);
+			return sqrt(sum);
+		}
+
 		std::ostream& operator<<(std::ostream& stream, const vec2& vector)
 		{
 			stream << "vec2: (" << vector.x << ", " << vector.y << ")";

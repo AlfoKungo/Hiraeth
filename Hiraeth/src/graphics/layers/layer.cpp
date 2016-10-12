@@ -8,6 +8,11 @@ namespace hiraeth {
 		{
 			m_Shader->enable();
 			m_Shader->setUniformMat4("pr_matrix", m_ProjectionMatrix);
+			GLint texIDs[] =
+			{
+				0,1,2,3,4,5,6,7,8,9
+			};
+			m_Shader->setUniform1iv("textures", texIDs, 10);
 			m_Shader->disable();
 		}
 
@@ -19,7 +24,6 @@ namespace hiraeth {
 
 			for (int i = 0; i < m_Renderables.size(); i++)
 			{
-				if (m_Renderables[i])
 					delete m_Renderables[i];
 			}
 		}
@@ -29,6 +33,10 @@ namespace hiraeth {
 			m_Renderables.push_back(renderable);
 		}
 
+		void Layer::add_ref(Renderable2D* renderable)
+		{
+			m_RefRenderables.push_back(renderable);
+		}
 		void Layer::render()
 		{
 			m_Shader->enable();
@@ -36,10 +44,21 @@ namespace hiraeth {
 
 			for (const Renderable2D* renderable : m_Renderables)
 					renderable->submit(m_Renderer);
+			for (const Renderable2D* renderable : m_RefRenderables)
+					renderable->submit(m_Renderer);
 
 			m_Renderer->end();
 
 			m_Renderer->flush();
+		}
+		void Layer::clear()
+		{
+			for (int i = 0; i < m_Renderables.size(); i++)
+			{
+					delete m_Renderables[i];
+			}
+			m_Renderables.clear();
+			m_RefRenderables.clear();
 		}
 	}
 }

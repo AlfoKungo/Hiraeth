@@ -54,7 +54,7 @@ namespace hiraeth {
 
 			virtual ~Renderable2D()
 			{
-
+				//delete m_Texture;
 			}
 
 			virtual void submit(Renderer2D* renderer) const

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "renderable2d.h"
-#include "map\tile.h"
 
 namespace hiraeth {
 	namespace graphics {

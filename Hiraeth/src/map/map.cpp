@@ -4,51 +4,42 @@
 namespace hiraeth {
 	namespace map {
 
-		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera)
-			: m_Tex(filename),
-			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
+		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera, Timer* time)
+			: m_Char(maths::vec3(0, 0, 0), new graphics::Texture("char_body.png"), time, wind),
+			m_PtTex("portal_adv.png"),
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
-			m_BgLayer(&m_BgShader), m_PtLayer(&m_PtShader), m_Wnd(wind),
-			m_Camera(camera), m_Renderer(filename), m_MapIndex(map_index)
+			m_CrShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
+			m_BgLayer(&m_BgShader), m_PtLayer(&m_PtShader), m_CrLayer(&m_CrShader), m_MapLayer(filename, camera), 
+			m_Wnd(wind), m_Time(time), m_Camera(camera), m_MapIndex(map_index) 
 		{
-			//m_PtLayer.add(new Portal(maths::vec3(1, 1, 1), 1, wind, new graphics::Texture("portal_adv.png"), this));
-			//m_PtLayer.add(new Portal(maths::vec3(500, 0, 1), 1, wind, new graphics::Texture("portal.png"), this));
+			//std::cout << "is it hiuge? " << sizeof(graphics::Texture) << std::endl;
 			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));
+			m_CrLayer.add_ref(&m_Char);
+			//m_CrLayer.add(new game::Character(maths::vec3(0, 0, 0), new graphics::Texture("char.png"), time, wind));
 			if (map_index == 2)
 			{
 				serialize();
 				map_index = 0;
 			}
 			deserialize(map_index);
-			//GLint texIDs[] =
-			//{
-			//	0,1,2,3,4,5,6,7,8,9
-			//};
-			//m_BgShader.enable();
-			//m_BgShader.setUniform1iv("textures", texIDs, 10);
-			//m_PtShader.enable();
-			//m_PtShader.setUniform1iv("textures", texIDs, 10);
-
 		}
 
 		Map::~Map()
 		{
+			m_MapLayer.clear();
+			m_PtLayer.clear();
 		}
 
 		void Map::draw()
 		{
 			m_BgLayer.render();
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_Tex.getID());
-			m_Shader.enable();
-			m_Shader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
-			m_Renderer.begin();
-			for (const Tile tile : m_Tiles)
-				tile.submit(&m_Renderer);
-			m_Renderer.end();
-			m_Renderer.flush();
+			m_MapLayer.draw();
+
+			m_CrShader.enable();
+			m_CrShader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
+			m_CrLayer.render();
 
 			m_PtShader.enable();
 			m_PtShader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
@@ -58,6 +49,8 @@ namespace hiraeth {
 		void Map::update()
 		{
 
+			m_Char.update();
+			//m_CrLayer.update();
 			m_PtLayer.update();
 
 			if (m_ChangeMapFlag) 
@@ -131,7 +124,7 @@ namespace hiraeth {
 		{
 			std::ifstream file("my_file.save");
 			cereal::BinaryInputArchive iarchive(file);
-			m_Tiles.clear();
+			m_MapLayer.clear();
 			m_PtLayer.clear();
 
 			int maps_amount, start_of_data = 0, tmp;
@@ -146,7 +139,7 @@ namespace hiraeth {
 			file.seekg(sizeof(maps_amount) + maps_amount * sizeof(int) + start_of_data);
 			//deserialize tiles
 			deserialize_portals(&iarchive);
-			deserialize_tiles(&iarchive);
+			m_MapLayer.deserialize_tiles(&iarchive);
 		}
 
 		void Map::deserialize_portals(cereal::BinaryInputArchive* iarchive)
@@ -157,20 +150,9 @@ namespace hiraeth {
 			for (int i = 0; i < portals_amount; i++)
 			{
 				(*iarchive)(s);
-				m_PtLayer.add(new Portal(s, 110, m_Wnd, new graphics::Texture("portal_adv.png"), this));
+				m_PtLayer.add(new Portal(s, m_Wnd, &m_PtTex, this, m_Time, &m_Char));
 			}
 		}
 
-		void Map::deserialize_tiles(cereal::BinaryInputArchive* iarchive)
-		{
-			Tile::Serializer s;
-			int tile_amount;
-			(*iarchive)(tile_amount);
-			for (int i = 0; i < tile_amount; i++)
-			{
-				(*iarchive)(s);
-				m_Tiles.push_back(Tile(s));
-			}
-		}
 	}
 }

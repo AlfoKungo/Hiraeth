@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\game\character.cpp" />
     <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
@@ -136,10 +137,12 @@
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\simple2drenderer.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
+    <ClCompile Include="src\graphics\spritedrenderable.cpp" />
     <ClCompile Include="src\graphics\static_sprite.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\map\map.cpp" />
+    <ClCompile Include="src\map\maplayer.cpp" />
     <ClCompile Include="src\map\maprenderer.cpp" />
     <ClCompile Include="src\map\portal.cpp" />
     <ClCompile Include="src\map\tile.cpp" />
@@ -151,6 +154,7 @@
     <ClCompile Include="src\view\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\character.h" />
     <ClInclude Include="src\graphics\batchrenderer2d.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\indexbuffer.h" />
@@ -163,10 +167,12 @@
     <ClInclude Include="src\graphics\shader.h" />
     <ClInclude Include="src\graphics\simple2drenderer.h" />
     <ClInclude Include="src\graphics\sprite.h" />
+    <ClInclude Include="src\graphics\spritedrenderable.h" />
     <ClInclude Include="src\graphics\static_sprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\window.h" />
     <ClInclude Include="src\map\map.h" />
+    <ClInclude Include="src\map\maplayer.h" />
     <ClInclude Include="src\map\maprenderable.h" />
     <ClInclude Include="src\map\maprenderer.h" />
     <ClInclude Include="src\map\portal.h" />

@@ -13,7 +13,6 @@ namespace hiraeth {
 			virtual ~TileLayer();
 
 			void update();
-			void clear() { m_Renderables.clear(); }
 		};
 
 	}

@@ -11,6 +11,7 @@ namespace hiraeth {
 		protected:
 			Renderer2D* m_Renderer;
 			std::vector<Renderable2D*> m_Renderables;
+			std::vector<Renderable2D*> m_RefRenderables;
 			Shader* m_Shader;
 			maths::mat4 m_ProjectionMatrix;
 		public:
@@ -18,7 +19,9 @@ namespace hiraeth {
 		public:
 			virtual ~Layer();
 			virtual void add(Renderable2D* renderable);
+			virtual void add_ref(Renderable2D* renderable);
 			virtual void render();
+			void clear();
 		};
 
 	}

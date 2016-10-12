@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils\timer.h"
 #include <vector>
 #include "tile.h"
 #include "graphics\texture.h"
@@ -12,7 +13,11 @@
 #include "maprenderer.h"
 #include "portal.h"
 #include "graphics\batchrenderer2d.h"
-#include "View\Camera.h"
+#include "graphics\spritedrenderable.h"
+#include "view\camera.h"
+#include "game\character.h"
+
+#include "maplayer.h"
 
 #include <cereal\archives\binary.hpp>
 #include <fstream>
@@ -25,25 +30,27 @@ namespace hiraeth {
 		class Map
 		{
 		private:
-			std::vector<Tile> m_Tiles;
 
-			graphics::Texture m_Tex;
+			graphics::Texture m_PtTex;
 
-			graphics::Shader m_Shader;
 			graphics::Shader m_PtShader;
 			graphics::Shader m_BgShader;
+			graphics::Shader m_CrShader;
 
 			graphics::TileLayer m_PtLayer;
 			graphics::TileLayer m_BgLayer;
+			graphics::TileLayer m_CrLayer;
+			MapLayer m_MapLayer;
 
 			int m_MapIndex;
 			bool m_ChangeMapFlag;
 
 			graphics::Window* m_Wnd;
 			view::Camera* m_Camera;
-			MapRenderer m_Renderer;
+			game::Character m_Char;
+			Timer* m_Time;
 		public:
-			Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* wnd);
+			Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* wnd, Timer* time);
 			~Map();
 
 			void draw();
@@ -53,7 +60,6 @@ namespace hiraeth {
 		private:
 			void serialize();
 			void deserialize(int map_index);
-			void deserialize_tiles(cereal::BinaryInputArchive* iarchive);
 			void deserialize_portals(cereal::BinaryInputArchive* iarchive);
 		};
 

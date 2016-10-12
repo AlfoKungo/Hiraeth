@@ -15,8 +15,15 @@ namespace hiraeth {
 
 		void TileLayer::update()
 		{
-			for (std::vector<Renderable2D*>::const_iterator it = m_Renderables.begin(); it != m_Renderables.end(); it++)
-				(**it).update();
+
+			for (Renderable2D* rend : m_RefRenderables)
+				rend->update();
+			for (Renderable2D* rend : m_Renderables)
+				rend->update();
+			//for (std::vector<Renderable2D*>::const_iterator it = m_RefRenderables.begin(); it != m_Renderables.end(); it++)
+			//	(**it).update();
+			//for (std::vector<Renderable2D*>::const_iterator it = m_Renderables.begin(); it != m_Renderables.end(); it++)
+			//	(**it).update();
 		}
 	}
 }

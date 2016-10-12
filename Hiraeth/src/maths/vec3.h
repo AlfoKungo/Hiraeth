@@ -30,6 +30,8 @@ namespace hiraeth {
 			vec3& operator*=(const vec3& other);
 			vec3& operator/=(const vec3& other);
 
+			float distance_to(const vec3 other);
+
 		template<class Archive>
 		void serialize(Archive & archive) { archive(x,y,z); }
 

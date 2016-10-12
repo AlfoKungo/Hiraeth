@@ -1,6 +1,12 @@
 #pragma once
 
+//#define WIN64_LEAN_AND_MEAN
 #include <Windows.h>
+
+
+//#include <WinDef.h>
+//#include <WinGDI.h>
+//#include <GL/gl.h>
 
 namespace hiraeth {
 

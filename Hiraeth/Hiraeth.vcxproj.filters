@@ -87,6 +87,15 @@
     <ClCompile Include="src\map\portal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\spritedrenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\map\maplayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\maths\mat4.h">
@@ -180,6 +189,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\map\portal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\spritedrenderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\map\maplayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
