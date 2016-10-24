@@ -4,19 +4,18 @@
 namespace hiraeth {
 	namespace map {
 
-		//MapRenderer::MapRenderer(const std::string& filename) 
-		//	: m_Tex(filename)
-		MapRenderer::MapRenderer(graphics::Texture tex) 
-			: m_Tex(m_Tex)
+		MapRenderer::MapRenderer(graphics::Texture* tex)
+			: m_Tex(tex)
 		{
-				m_TransformationStack.push_back(maths::mat4::identity());
-				m_TransformationBack = &m_TransformationStack.back();
+			m_TransformationStack.push_back(maths::mat4::Identity());
+			m_TransformationBack = &m_TransformationStack.back();
 			init();
 		}
 
 		MapRenderer::~MapRenderer() 
 		{
 			delete m_IBO;
+			delete m_Tex;
 			glDeleteBuffers(1, &m_VBO);
 		}
 
@@ -69,36 +68,28 @@ namespace hiraeth {
 		{
 			const maths::vec3& position = renderable->getPosition();
 			const maths::vec2& size = renderable->getSize();
-			const maths::vec4& color = renderable->getColor();
+			const unsigned int color = renderable->getColor();
 			const std::vector<maths::vec2>& uv = renderable->getUV();
-
-			unsigned int c = 0;
-
-			int r = color.x * 255.0f;
-			int g = color.y * 255.0f;
-			int b = color.z * 255.0f;
-			int a = color.w * 255.0f;
-			c = a << 24 | b << 16 | g << 8 | r;
 
 
 			m_Buffer->vertex = *m_TransformationBack * position;
 			m_Buffer->uv = uv[0];
-			m_Buffer->color = c;
+			m_Buffer->color = color;
 			m_Buffer++;
 
 			m_Buffer->vertex = *m_TransformationBack * maths::vec3(position.x, position.y + size.y, 0);
 			m_Buffer->uv = uv[1];
-			m_Buffer->color = c;
+			m_Buffer->color = color;
 			m_Buffer++;
 
 			m_Buffer->vertex = *m_TransformationBack * maths::vec3(position.x + size.x, position.y + size.y, 0);
 			m_Buffer->uv = uv[2];
-			m_Buffer->color = c;
+			m_Buffer->color = color;
 			m_Buffer++;
 
 			m_Buffer->vertex = *m_TransformationBack * maths::vec3(position.x + size.x, position.y, 0);
 			m_Buffer->uv = uv[3];
-			m_Buffer->color = c;
+			m_Buffer->color = color;
 			m_Buffer++;
 
 			m_IndexCount += 6;
@@ -112,9 +103,8 @@ namespace hiraeth {
 
 		void MapRenderer::flush()
 		{
-			//glActiveTexture(GL_TEXTURE0);
-				//glBindTexture(GL_TEXTURE_2D, m_Tex->getID());
-
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, m_Tex->getID());
 			glBindVertexArray(m_VAO);
 			m_IBO->bind();
 			

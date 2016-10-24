@@ -21,7 +21,7 @@ namespace hiraeth {
 			SpritedRenderable::update();
  			if (m_State == State::Default && m_Wnd->isKeyPressed(GLFW_KEY_SPACE))
 			{
-				if (m_Position.distance_to(m_Char->getPosition()) <= 50)
+				if (m_Bounds.GetMinimumBound().Distance(m_Char->getPosition()) <= 50)
 				{
 					m_Map->change_map(m_NextMap);
 					m_State = State::Change_Map;

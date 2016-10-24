@@ -5,7 +5,10 @@ namespace hiraeth {
 	{
 		
 		Texture::Texture(const std::string& filename)
-			: m_FileName(filename)
+			: Texture(filename, filename)
+		{}
+		Texture::Texture(const std::string& name, const std::string& filename)
+			: m_Name(name), m_FileName(filename)
 		{
 			m_TID = load();
 		}
@@ -19,7 +22,6 @@ namespace hiraeth {
 		{
 			BYTE* pixels = load_image(m_FileName.c_str(), &m_Width, &m_Height);
 
-
 			GLuint result;
 			glGenTextures(1, &result);
 			glBindTexture(GL_TEXTURE_2D, result);
@@ -28,7 +30,7 @@ namespace hiraeth {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
-			//delete pixels;
+			delete[] pixels;
 			return result;
 		}
 

@@ -4,9 +4,9 @@ namespace hiraeth {
 	namespace map {
 
 		MapLayer::MapLayer(const std::string& filename, view::Camera* camera)
-			: m_Tex(filename), m_Camera(camera),
+			: m_Camera(camera),
 			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
-			m_Renderer(filename)
+			m_Renderer(new graphics::Texture(filename))
 		{
 
 		}
@@ -21,8 +21,8 @@ namespace hiraeth {
 
 		void MapLayer::draw()
 		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_Tex.getID());
+			//glActiveTexture(GL_TEXTURE0);
+			//glBindTexture(GL_TEXTURE_2D, m_Tex.getID());
 			m_Shader.enable();
 			m_Shader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
 			m_Renderer.begin();

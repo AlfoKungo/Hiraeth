@@ -12,7 +12,6 @@ namespace hiraeth {
 		{
 		private:
 			std::vector<Tile*> m_Tiles;
-			graphics::Texture m_Tex;
 			graphics::Shader m_Shader;
 			MapRenderer m_Renderer;
 			view::Camera* m_Camera;

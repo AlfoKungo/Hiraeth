@@ -14,8 +14,8 @@
 #include "portal.h"
 #include "graphics\batchrenderer2d.h"
 #include "graphics\spritedrenderable.h"
-#include "view\camera.h"
 #include "game\character.h"
+#include "view\camera.h"
 
 #include "maplayer.h"
 

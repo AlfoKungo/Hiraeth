@@ -9,6 +9,14 @@ namespace hiraeth {
 			
 		}
 
+		Group::~Group()
+		{
+			for (int i = 0; i < m_Renderables.size(); i++)
+			{
+					delete m_Renderables[i];
+			}
+		}
+
 		void Group::add(Renderable2D* renderable)
 		{
 			m_Renderables.push_back(renderable);

@@ -17,7 +17,7 @@ namespace hiraeth {
 		protected:
 			Renderer2D()
 			{
-				m_TransformationStack.push_back(maths::mat4::identity());
+				m_TransformationStack.push_back(maths::mat4::Identity());
 				m_TransformationBack = &m_TransformationStack.back();
 			}
 		public:

@@ -135,11 +135,10 @@
     <ClCompile Include="src\graphics\layers\layer.cpp" />
     <ClCompile Include="src\graphics\layers\tilelayer.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
-    <ClCompile Include="src\graphics\simple2drenderer.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
     <ClCompile Include="src\graphics\spritedrenderable.cpp" />
-    <ClCompile Include="src\graphics\static_sprite.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
+    <ClCompile Include="src\graphics\texturemanager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\map\map.cpp" />
     <ClCompile Include="src\map\maplayer.cpp" />
@@ -147,10 +146,12 @@
     <ClCompile Include="src\map\portal.cpp" />
     <ClCompile Include="src\map\tile.cpp" />
     <ClCompile Include="src\maths\mat4.cpp" />
+    <ClCompile Include="src\maths\rectangle.cpp" />
     <ClCompile Include="src\maths\vec2.cpp" />
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
     <ClCompile Include="src\save\serializer.cpp" />
+    <ClCompile Include="src\utils\timer.cpp" />
     <ClCompile Include="src\view\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,11 +166,10 @@
     <ClInclude Include="src\graphics\renderable2d.h" />
     <ClInclude Include="src\graphics\renderer2d.h" />
     <ClInclude Include="src\graphics\shader.h" />
-    <ClInclude Include="src\graphics\simple2drenderer.h" />
     <ClInclude Include="src\graphics\sprite.h" />
     <ClInclude Include="src\graphics\spritedrenderable.h" />
-    <ClInclude Include="src\graphics\static_sprite.h" />
     <ClInclude Include="src\graphics\texture.h" />
+    <ClInclude Include="src\graphics\texturemanager.h" />
     <ClInclude Include="src\graphics\window.h" />
     <ClInclude Include="src\map\map.h" />
     <ClInclude Include="src\map\maplayer.h" />
@@ -180,6 +180,7 @@
     <ClInclude Include="src\maths\mat4.h" />
     <ClInclude Include="src\maths\maths.h" />
     <ClInclude Include="src\maths\maths_funcs.h" />
+    <ClInclude Include="src\maths\rectangle.h" />
     <ClInclude Include="src\maths\vec2.h" />
     <ClInclude Include="src\maths\vec3.h" />
     <ClInclude Include="src\maths\vec4.h" />

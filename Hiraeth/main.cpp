@@ -6,7 +6,6 @@
 
 #include "src\graphics\shader.h"
 #include "src\map\map.h"
-#include "View\Camera.h"
 
 #include <time.h>
 #include <cereal\archives\binary.hpp>
@@ -24,14 +23,14 @@ int main()
 	using namespace view;
 	Window window("Hiraeth", 1600, 900);
 
-	mat4 ortho = mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+	mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 
 	std::vector<Tile> tiles;
 
-	Camera camera(&window);
-
 	Timer time;
 	float timer = 0;
+
+	Camera camera(&window, &time);
 
 	Map map("map4.png", 2, &window, &camera, &time);
 
@@ -41,9 +40,9 @@ int main()
 		window.clear();
 		double x, y;
 		window.getMousePosition(x, y);
-		camera.update();
 		map.update();
 		map.draw();
+		camera.update();
 
 
 		window.update();

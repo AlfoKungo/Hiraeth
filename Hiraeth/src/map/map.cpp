@@ -5,7 +5,7 @@ namespace hiraeth {
 	namespace map {
 
 		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera, Timer* time)
-			: m_Char(maths::vec3(0, 0, 0), new graphics::Texture("char_body.png"), time, wind),
+			: m_Char(maths::vec3(0, 0, 0), new graphics::Texture("char_body.png"), new graphics::Texture("char_hand.png"), new graphics::Texture("char_head.png"), new graphics::Texture("char_body_walk.png"), new graphics::Texture("char_hand_walk.png"), time, wind),
 			m_PtTex("portal_adv.png"),
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
@@ -16,6 +16,7 @@ namespace hiraeth {
 			//std::cout << "is it hiuge? " << sizeof(graphics::Texture) << std::endl;
 			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));
 			m_CrLayer.add_ref(&m_Char);
+			camera->setCharacter(&m_Char);
 			//m_CrLayer.add(new game::Character(maths::vec3(0, 0, 0), new graphics::Texture("char.png"), time, wind));
 			if (map_index == 2)
 			{
@@ -48,7 +49,6 @@ namespace hiraeth {
 
 		void Map::update()
 		{
-
 			m_Char.update();
 			//m_CrLayer.update();
 			m_PtLayer.update();

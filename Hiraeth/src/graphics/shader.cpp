@@ -20,8 +20,8 @@ namespace hiraeth {
 			GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
 			GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
 
-			std::string vertSourceString = FileUtils::read_file(m_VertPath).c_str();
-			std::string fragSourceString = FileUtils::read_file(m_FragPath).c_str();
+			std::string vertSourceString = read_file(m_VertPath).c_str();
+			std::string fragSourceString = read_file(m_FragPath).c_str();
 
 			const char* vertSource = vertSourceString.c_str();
 			const char* fragSource = fragSourceString.c_str();
