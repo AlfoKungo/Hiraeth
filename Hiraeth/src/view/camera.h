@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game\character.h"
+#include "graphics\renderable2d.h"
 #include "maths\maths.h"
 #include "graphics\window.h"
 #include "utils\timer.h"
@@ -21,7 +21,7 @@ namespace hiraeth {
 		private:
 			maths::mat4 m_Ortho;
 			graphics::Window* m_Wnd;
-			game::Character* m_Char;
+			graphics::Renderable2D* m_Char;
 			float m_PositionTimer = 0;
 			Timer* m_Time;
 		public:
@@ -30,7 +30,7 @@ namespace hiraeth {
 			void update();
 
 			maths::mat4 get_ortho() { return m_Ortho; }
-			void setCharacter(game::Character* character);
+			void setCharacter(graphics::Renderable2D* character);
 		private:
 			void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
 		};

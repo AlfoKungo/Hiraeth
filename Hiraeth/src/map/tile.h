@@ -42,6 +42,11 @@ namespace hiraeth {
 			maths::vec2 get_uv_pos() { return m_Uv_pos; }
 			maths::vec2 get_uv_size() { return m_Uv_size; }
 			float get_type() { return m_Type; }
+			
+			maths::Rectangle get_rec()
+			{
+				return maths::Rectangle(m_Position, m_Uv_size * m_Scale);
+			}
 
 		template<class Archive>
 		void serialize(Archive & ar) 

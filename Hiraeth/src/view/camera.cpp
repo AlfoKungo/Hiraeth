@@ -38,7 +38,7 @@ namespace hiraeth {
 			}
 		}
 
-		void Camera::setCharacter(game::Character* character)
+		void Camera::setCharacter(graphics::Renderable2D* character)
 		{
 			m_Char = character;
 		}

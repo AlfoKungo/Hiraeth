@@ -16,7 +16,7 @@ namespace hiraeth {
 			bool m_Closed;
 
 			bool m_Keys[GLFW_KEY_LAST];
-			bool m_KeyState[GLFW_KEY_LAST];
+			bool m_LastKeys[GLFW_KEY_LAST];
 			bool m_KeyTyped[GLFW_KEY_LAST];
 			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
 			bool m_MouseState[GLFW_MOUSE_BUTTON_LAST];

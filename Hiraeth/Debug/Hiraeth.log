@@ -1,12 +1,17 @@
-﻿  texturemanager.cpp
-  character.cpp
+﻿  character.cpp
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(51): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(68): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(14): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(25): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(44): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(13): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(24): warning C4018: '<': signed/unsigned mismatch
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(28): warning C4018: '<': signed/unsigned mismatch
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(164): warning C4018: '<': signed/unsigned mismatch
   Hiraeth.vcxproj -> C:\Users\gal\Documents\Visual Studio 2015\Projects\Hiraeth\Debug\Hiraeth.exe
   Hiraeth.vcxproj -> C:\Users\gal\Documents\Visual Studio 2015\Projects\Hiraeth\Debug\Hiraeth.pdb (Partial PDB)

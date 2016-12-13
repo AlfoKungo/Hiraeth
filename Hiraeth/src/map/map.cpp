@@ -5,7 +5,7 @@ namespace hiraeth {
 	namespace map {
 
 		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera, Timer* time)
-			: m_Char(maths::vec3(0, 0, 0), new graphics::Texture("char_body.png"), new graphics::Texture("char_hand.png"), new graphics::Texture("char_head.png"), new graphics::Texture("char_body_walk.png"), new graphics::Texture("char_hand_walk.png"), time, wind),
+			: m_Char(maths::vec3(-230, 0, 0),time, wind, &m_MapLayer),
 			m_PtTex("portal_adv.png"),
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
@@ -52,7 +52,6 @@ namespace hiraeth {
 			m_Char.update();
 			//m_CrLayer.update();
 			m_PtLayer.update();
-
 			if (m_ChangeMapFlag) 
 			{
 				deserialize(m_MapIndex);
@@ -89,7 +88,7 @@ namespace hiraeth {
 				}
 			oarchive(Tile::Serializer{maths::vec3(-90, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
 			oarchive(Tile::Serializer{maths::vec3(0, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
-			oarchive(Tile::Serializer{maths::vec3(-180, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
+			oarchive(Tile::Serializer{maths::vec3(-190, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0});
 			oarchive(Tile::Serializer{maths::vec3(0, 0,0), 1.0f, maths::vec2(0, 0), maths::vec2(621, 328), 0});
 			int loaction_after1 = file.tellp();
 			file.seekp(tile_count_pos);

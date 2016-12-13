@@ -16,7 +16,7 @@ namespace hiraeth {
 			for (int i = 0; i < GLFW_KEY_LAST; i++)
 			{
 				m_Keys[i] = false;
-				m_KeyState[i] = false;
+				m_LastKeys[i] = false;
 				m_KeyTyped[i] = false;
 			}
 			for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; i++)
@@ -78,7 +78,6 @@ namespace hiraeth {
 			if (keycode >= GLFW_KEY_LAST)
 				return false;
 
-			//return m_Keys[keycode] == GLFW_PRESS;
 			return m_Keys[keycode];
 		}
 		
@@ -120,12 +119,12 @@ namespace hiraeth {
 		void Window::update() 
 		{
 			for (int i = 0; i < GLFW_KEY_LAST; i++)
-				m_KeyTyped[i] = m_Keys[i] && !m_KeyState[i];
+				m_KeyTyped[i] = m_Keys[i] && !m_LastKeys[i];
 
 			for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; i++)
 				m_MouseClicked[i] = m_MouseButtons[i] && !m_MouseState[i];
 
-			memcpy(m_KeyState, m_Keys, GLFW_KEY_LAST);
+			memcpy(m_LastKeys, m_Keys, GLFW_KEY_LAST);
 			memcpy(m_MouseState, m_MouseButtons, GLFW_MOUSE_BUTTON_LAST);
 
 			GLenum error = glGetError();
@@ -134,7 +133,6 @@ namespace hiraeth {
 
 			glfwPollEvents();
 			glfwSwapBuffers(m_Window);
-			m_Keys;
 		}
 
 		void window_resize(GLFWwindow *window, int width, int height)
