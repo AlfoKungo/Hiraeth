@@ -44,10 +44,10 @@ int main()
 		window.clear();
 		double x, y;
 		window.getMousePosition(x, y);
-		map.update();
-		map.draw();
 		camera.update();
+		map.update();
 
+		map.draw();
 
 		window.update();
 		frames++;

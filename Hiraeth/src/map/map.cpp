@@ -67,7 +67,7 @@ namespace hiraeth {
 
 		void Map::serialize()
 		{
-			std::ofstream file("my_file.save");
+			std::ofstream file("map.hi");
 			cereal::BinaryOutputArchive oarchive(file);
 			oarchive((int)2);
 			file.seekp(sizeof(int) + sizeof(int)*2);
@@ -121,7 +121,7 @@ namespace hiraeth {
 
 		void Map::deserialize(int map_index)
 		{
-			std::ifstream file("my_file.save");
+			std::ifstream file("map.hi");
 			cereal::BinaryInputArchive iarchive(file);
 			m_MapLayer.clear();
 			m_PtLayer.clear();

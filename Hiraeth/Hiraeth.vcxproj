@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\game\character.cpp" />
+    <ClCompile Include="src\game\creature.cpp" />
     <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="src\maths\vec2.cpp" />
     <ClCompile Include="src\maths\vec3.cpp" />
     <ClCompile Include="src\maths\vec4.cpp" />
+    <ClCompile Include="src\physics\collisionable.cpp" />
     <ClCompile Include="src\physics\foothold.cpp" />
     <ClCompile Include="src\save\serializer.cpp" />
     <ClCompile Include="src\utils\timer.cpp" />
@@ -157,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\character.h" />
+    <ClInclude Include="src\game\creature.h" />
     <ClInclude Include="src\graphics\batchrenderer2d.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\indexbuffer.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="src\maths\vec2.h" />
     <ClInclude Include="src\maths\vec3.h" />
     <ClInclude Include="src\maths\vec4.h" />
+    <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />
     <ClInclude Include="src\utils\fileutils.h" />

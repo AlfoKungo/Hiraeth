@@ -1,4 +1,4 @@
-﻿  character.cpp
+﻿  creature.cpp
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(51): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(68): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
@@ -9,9 +9,72 @@ c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\mapre
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(44): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
-c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(13): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(24): warning C4018: '<': signed/unsigned mismatch
-c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(28): warning C4018: '<': signed/unsigned mismatch
-c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\character.cpp(164): warning C4018: '<': signed/unsigned mismatch
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\creature.cpp(15): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\creature.cpp(26): warning C4018: '<': signed/unsigned mismatch
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\game\creature.cpp(30): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  portal.cpp
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(51): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(68): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(44): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
+  map.cpp
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(51): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(68): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(44): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(77): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(80): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(93): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(103): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(107): warning C4244: '=': conversion from 'std::streamoff' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(112): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\map.cpp(115): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+  character.cpp
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(51): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(68): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(44): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
+  main.cpp
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(27): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(32): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(37): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(42): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(47): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(52): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(57): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(62): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\maths\maths_funcs.h(67): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(51): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(68): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\graphics\renderable2d.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\maprenderable.h(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\gal\documents\visual studio 2015\projects\hiraeth\hiraeth\src\map\tile.h(44): warning C4244: 'return': conversion from 'unsigned int' to 'float', possible loss of data
+  Generating Code...
   Hiraeth.vcxproj -> C:\Users\gal\Documents\Visual Studio 2015\Projects\Hiraeth\Debug\Hiraeth.exe
   Hiraeth.vcxproj -> C:\Users\gal\Documents\Visual Studio 2015\Projects\Hiraeth\Debug\Hiraeth.pdb (Partial PDB)
