@@ -4,7 +4,7 @@
 #include "graphics\spritedrenderable.h"
 #include "graphics\texture.h"
 #include "game\character.h"
-#include "graphics\window.h"
+#include "keyboard\keyboard.h"
 
 
 namespace hiraeth {
@@ -35,14 +35,14 @@ namespace hiraeth {
 			} m_State;
 
 			int m_NextMap;
-			graphics::Window* m_Wnd;
+			input::Keyboard* m_Kb;
 			Map* m_Map;
 			game::Character* m_Char;
 
 		public:
-			Portal(maths::vec3 position, int next_map, graphics::Window* wind, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character);
-			Portal(Serializer s, graphics::Window* wind, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character)
-				: Portal(s.position, s.next_map, wind, ptex, map, time, character) {}
+			Portal(maths::vec3 position, int next_map, input::Keyboard* kb, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character);
+			Portal(Serializer s, input::Keyboard* kb, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character)
+				: Portal(s.position, s.next_map, kb, ptex, map, time, character) {}
 			~Portal();
 
 			void update() override;

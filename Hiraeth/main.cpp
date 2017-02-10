@@ -2,6 +2,7 @@
 #include "src\maths\maths.h"
 
 #include "src\graphics\window.h"
+#include "keyboard\keyboard.h"
 #include "view\camera.h"
 
 #include "src\graphics\shader.h"
@@ -14,6 +15,8 @@
 #include <cereal\types\memory.hpp>
 #include <cereal\types\vector.hpp>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 int main()
 {
@@ -23,8 +26,10 @@ int main()
 	using namespace map;
 	using namespace view;
 
+	FT_Library ft;
 
-	Window window("Hiraeth", 1600, 900);
+	input::Keyboard keyboard;
+	Window window("Hiraeth", 1600, 900, &keyboard);
 
 	mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 
@@ -43,7 +48,7 @@ int main()
 	{
 		window.clear();
 		double x, y;
-		window.getMousePosition(x, y);
+		window.getKeyboard()->getMousePosition(x, y);
 		camera.update();
 		map.update();
 

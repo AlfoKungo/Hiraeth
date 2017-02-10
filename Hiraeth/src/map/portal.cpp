@@ -4,9 +4,9 @@
 namespace hiraeth {
 	namespace map {
 
-		Portal::Portal(maths::vec3 position, int next_map, graphics::Window* wind, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character)
+		Portal::Portal(maths::vec3 position, int next_map, input::Keyboard* kb, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character)
 			: SpritedRenderable(position, 8, PORTAL_ANIMATION_DELAY, ptex, time),
-			m_Wnd(wind), m_Map(map), m_State(State::Change_Map), m_Char(character)
+			m_Kb(kb), m_Map(map), m_State(State::Change_Map), m_Char(character)
 		{
 			m_NextMap = next_map;
 		}
@@ -19,7 +19,7 @@ namespace hiraeth {
 		void Portal::update()
 		{
 			SpritedRenderable::update();
- 			if (m_State == State::Default && m_Wnd->isKeyPressed(GLFW_KEY_SPACE))
+ 			if (m_State == State::Default && m_Kb->isKeyPressed(GLFW_KEY_SPACE))
 			{
 				if (m_Bounds.GetMinimumBound().Distance(m_Char->getPosition()) <= 50)
 				{
@@ -27,7 +27,7 @@ namespace hiraeth {
 					m_State = State::Change_Map;
 				}
 			}
-			else if (m_State == State::Change_Map && !m_Wnd->isKeyPressed(GLFW_KEY_SPACE))
+			else if (m_State == State::Change_Map && !m_Kb->isKeyPressed(GLFW_KEY_SPACE))
 			{
 				m_State = State::Default;
 			}
