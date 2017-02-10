@@ -69,11 +69,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\FreeType\include;$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\FreeType\include;$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -128,6 +128,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\game\character.cpp" />
     <ClCompile Include="src\game\creature.cpp" />
+    <ClCompile Include="src\game\inventory\inventory.cpp" />
+    <ClCompile Include="src\game\inventory\stats.cpp" />
     <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
@@ -141,6 +143,8 @@
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texturemanager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
+    <ClCompile Include="src\keyboard\key.cpp" />
+    <ClCompile Include="src\keyboard\keyboard.cpp" />
     <ClCompile Include="src\map\map.cpp" />
     <ClCompile Include="src\map\maplayer.cpp" />
     <ClCompile Include="src\map\maprenderer.cpp" />
@@ -158,8 +162,12 @@
     <ClCompile Include="src\view\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\basic\drawable.h" />
+    <ClInclude Include="src\basic\updatable.h" />
     <ClInclude Include="src\game\character.h" />
     <ClInclude Include="src\game\creature.h" />
+    <ClInclude Include="src\game\inventory\inventory.h" />
+    <ClInclude Include="src\game\inventory\stats.h" />
     <ClInclude Include="src\graphics\batchrenderer2d.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\indexbuffer.h" />
@@ -175,6 +183,9 @@
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\texturemanager.h" />
     <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="src\keyboard\key.h" />
+    <ClInclude Include="src\keyboard\keyboard.h" />
+    <ClInclude Include="src\keyboard\keyboard_event.h" />
     <ClInclude Include="src\map\map.h" />
     <ClInclude Include="src\map\maplayer.h" />
     <ClInclude Include="src\map\maprenderable.h" />

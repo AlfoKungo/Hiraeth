@@ -14,7 +14,7 @@ namespace hiraeth {
 
 		private:
 		public:
-			Character(maths::vec3 pos, Timer* time, graphics::Window* m_Wnd, 
+			Character(maths::vec3 pos, Timer* time, input::Keyboard* kb, 
 				map::MapLayer* m_MapLayer);
 			~Character();
 

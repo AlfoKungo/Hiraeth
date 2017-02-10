@@ -5,7 +5,7 @@ namespace hiraeth {
 	namespace map {
 
 		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera, Timer* time)
-			: m_Char(maths::vec3(-230, 0, 0),time, wind, &m_MapLayer),
+			: m_Char(maths::vec3(-230, 0, 0),time, wind->getKeyboard(), &m_MapLayer),
 			m_PtTex("portal_adv.png"),
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
@@ -149,7 +149,7 @@ namespace hiraeth {
 			for (int i = 0; i < portals_amount; i++)
 			{
 				(*iarchive)(s);
-				m_PtLayer.add(new Portal(s, m_Wnd, &m_PtTex, this, m_Time, &m_Char));
+				m_PtLayer.add(new Portal(s, m_Wnd->getKeyboard(), &m_PtTex, this, m_Time, &m_Char));
 			}
 		}
 
