@@ -55,7 +55,6 @@ namespace hiraeth {
 			if (m_ChangeMapFlag) 
 			{
 				deserialize(m_MapIndex);
-				m_ChangeMapFlag = false;
 			}
 		}
 
@@ -139,6 +138,7 @@ namespace hiraeth {
 			//deserialize tiles
 			deserialize_portals(&iarchive);
 			m_MapLayer.deserialize_tiles(&iarchive);
+			m_ChangeMapFlag = false;
 		}
 
 		void Map::deserialize_portals(cereal::BinaryInputArchive* iarchive)

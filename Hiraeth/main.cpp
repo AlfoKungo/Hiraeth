@@ -26,7 +26,18 @@ int main()
 	using namespace map;
 	using namespace view;
 
-	FT_Library ft;
+	//FT_Library ft;
+	//if (FT_Init_FreeType(&ft)) {
+	//	fprintf(stderr, "FATAL: Could not init FreeType");
+	//	return 1;
+	//}
+	////Init Arial FreeType Face
+	//FT_Face arial;
+	//if (FT_New_Face(ft, "arial", 0, &arial))
+	//{
+	//	fprintf(stderr, "FATAL: Could not init font \"Arial\"");
+	//	return 1;
+	//}
 
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);

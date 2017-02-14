@@ -16,6 +16,8 @@
 #include "graphics\spritedrenderable.h"
 #include "game\character.h"
 #include "view\camera.h"
+#include "basic\drawable.h"
+#include "basic\updatable.h"
 
 #include "maplayer.h"
 
@@ -27,7 +29,7 @@
 namespace hiraeth {
 	namespace map {
 
-		class Map
+		class Map : basic::Drawable, basic::Updatable
 		{
 		private:
 
@@ -53,8 +55,8 @@ namespace hiraeth {
 			Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* wnd, Timer* time);
 			~Map();
 
-			void draw();
-			void update();
+			void draw() override;
+			void update() override;
 			void change_map(int new_index);
 
 		private:

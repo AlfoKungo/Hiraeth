@@ -1,0 +1,50 @@
+﻿  autofit.c
+  ftbitmap.c
+  ftfstype.c
+  ftgasp.c
+  ftstroke.c
+  ftbbox.c
+  ftfntfmt.c
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afblue.c : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+  ftpfr.c
+  ftsynth.c
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+c:\users\gal\desktop\freetype-2.7.1\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (1255). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\src\autofit\autofit.c)
+  fttype1.c
+  ftwinfnt.c
+  ftlcdfil.c
+  ftgxval.c
+  ftotval.c
+  ftpatent.c
+  bdf.c
+  cff.c
+  ftbase.c
+  ftcache.c
+  ftglyph.c
+  ftgzip.c
+c:\users\gal\desktop\freetype-2.7.1\src\base\ftobjs.c(4883): warning C4702: unreachable code
+c:\users\gal\desktop\freetype-2.7.1\src\base\ftobjs.c(4884): warning C4702: unreachable code
+  ftinit.c
+  ftlzw.c
+  ftsystem.c
+  smooth.c
+  ftmm.c
+  pcf.c
+  pfr.c
+  psaux.c
+  pshinter.c
+  psmodule.c
+  raster.c
+  sfnt.c
+  truetype.c
+  type1.c
+  type1cid.c
+c:\users\gal\desktop\freetype-2.7.1\src\sfnt\ttsbit.c(1452): warning C4100: 'metrics_only': unreferenced formal parameter (compiling source file ..\..\..\src\sfnt\sfnt.c)
+  type42.c
+  winfnt.c
+  ftdebug.c
+  freetype.vcxproj -> C:\Users\gal\Desktop\freetype-2.7.1\builds\windows\vc2010\.\..\..\..\objs\vc2010\Win32\freetype271.lib

@@ -47,8 +47,9 @@ namespace hiraeth {
 			for (const Renderable2D* renderable : m_RefRenderables)
 					renderable->submit(m_Renderer);
 
-			m_Renderer->end();
+			m_Renderer->drawString("Hello!", maths::vec3(0, 0, 0), 0xffff00ff);
 
+			m_Renderer->end();
 			m_Renderer->flush();
 		}
 		void Layer::clear()
