@@ -42,12 +42,12 @@ namespace hiraeth {
 			for (int i = 0; i < m_FootHolds->size(); i++)
 			{
 				if (m_FootHolds->at(i).LinesIntersect(char_rec.position, char_rec.position + char_speed))
-						if(y_force < 0)
-					if (m_FootHolds->at(i).is_solid())
-					//if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
-				{
-					collision.x = i;
-				}
+					if (y_force < 0)
+						if (m_FootHolds->at(i).is_solid())
+							//if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
+						{
+							collision.x = i;
+						}
 				if (m_FootHolds->at(i).Intersects(next_char_rec)
 					&& !m_FootHolds->at(i).is_solid())
 				{

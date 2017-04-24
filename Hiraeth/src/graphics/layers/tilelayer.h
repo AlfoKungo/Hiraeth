@@ -3,6 +3,9 @@
 #include "layer.h"
 #include "../batchrenderer2d.h"
 
+/** This class is currently unused */
+
+
 namespace hiraeth {
 	namespace graphics {
 

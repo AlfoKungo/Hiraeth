@@ -41,7 +41,7 @@ namespace hiraeth {
 			float get_scale() { return m_Scale; }
 			maths::vec2 get_uv_pos() { return m_Uv_pos; }
 			maths::vec2 get_uv_size() { return m_Uv_size; }
-			float get_type() { return m_Type; }
+			unsigned int get_type() { return m_Type; }
 			
 			maths::Rectangle get_rec()
 			{

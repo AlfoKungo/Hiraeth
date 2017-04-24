@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <GL/glew.h>
+#include "font.h"
 #include "maths\maths.h"
 
 
@@ -41,7 +42,7 @@ namespace hiraeth {
 			virtual void submit(const Renderable2D* renderable) = 0;
 			virtual void end() {}
 			virtual void flush() = 0;
-			virtual void drawString(const std::string& text, const maths::vec3& position, unsigned int color) = 0;
+			virtual void drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color) = 0;
 		};
 	}
 }

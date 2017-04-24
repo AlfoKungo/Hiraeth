@@ -15,6 +15,7 @@ namespace hiraeth {
 			bool right = false;
 			bool up = false;
 			bool down = false;
+			bool jump = false;
 		};
 
 		class Creature : public graphics::Renderable2D, public physics::Collisionable
@@ -24,7 +25,6 @@ namespace hiraeth {
 #define CHARACTER_GRAVITY 0.5f;
 #define FRICTION 0.4f
 #define CHARACTER_TIME_BETWEEN_ADDS 0.001f
-//#define NO_FOOTHOLD -1
 #define FORCE_OF_GRAVITY 0.25f
 
 		enum StanceState {
@@ -37,13 +37,11 @@ namespace hiraeth {
 		} m_Direction;
 
 		protected:
-			input::Keyboard* m_Kb;
 
 		private:
 			std::vector<int> actions; //this is to create a list of actions to do.
 			std::vector<graphics::SpritedRenderable*> m_StandRenderables;
 			std::vector<graphics::SpritedRenderable*> m_WalkRenderables;
-			//int m_Foothold;
 			//map::MapLayer* m_MapLayer;
 			float m_MovementTimer;
 			maths::vec2 m_Force;
@@ -52,7 +50,7 @@ namespace hiraeth {
 		public:
 			Creature(maths::vec3 pos, Timer* time, input::Keyboard* kb,
 				map::MapLayer* m_MapLayer);
-			~Creature();
+			virtual ~Creature();
 
 			void update() override;
 			void submit(graphics::Renderer2D* renderable) const override;

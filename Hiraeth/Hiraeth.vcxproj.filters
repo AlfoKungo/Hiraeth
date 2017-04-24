@@ -114,12 +114,6 @@
     <ClCompile Include="src\physics\collisionable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\inventory\inventory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\inventory\stats.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\keyboard\keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -129,25 +123,43 @@
     <ClCompile Include="src\graphics\label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\distance-field.c">
+    <ClCompile Include="src\graphics\font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\edtaa3func.c">
+    <ClCompile Include="src\graphics\font_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\platform.c">
+    <ClCompile Include="ext\freetype-gl\distance-field.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\texture-atlas.c">
+    <ClCompile Include="ext\freetype-gl\edtaa3func.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\texture-font.c">
+    <ClCompile Include="ext\freetype-gl\platform.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\utf8-utils.c">
+    <ClCompile Include="ext\freetype-gl\texture-atlas.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\freetype-gl_v2\vector.c">
+    <ClCompile Include="ext\freetype-gl\texture-font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\utf8-utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\vector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audio\sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audio\sound_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\ui_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\stats.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -263,12 +275,6 @@
     <ClInclude Include="src\physics\collisionable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\inventory\inventory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\inventory\stats.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\keyboard\keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -287,34 +293,55 @@
     <ClInclude Include="src\graphics\label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\distance-field.h">
+    <ClInclude Include="src\graphics\font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\edtaa3func.h">
+    <ClInclude Include="src\graphics\font_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\freetype-gl.h">
+    <ClInclude Include="ext\freetype-gl\distance-field.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\opengl.h">
+    <ClInclude Include="ext\freetype-gl\edtaa3func.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\platform.h">
+    <ClInclude Include="ext\freetype-gl\freetype-gl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\texture-atlas.h">
+    <ClInclude Include="ext\freetype-gl\opengl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\texture-font.h">
+    <ClInclude Include="ext\freetype-gl\platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\utf8-utils.h">
+    <ClInclude Include="ext\freetype-gl\texture-atlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\vec234.h">
+    <ClInclude Include="ext\freetype-gl\texture-font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\freetype-gl_v2\vector.h">
+    <ClInclude Include="ext\freetype-gl\utf8-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\vec234.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\freetype-gl\vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audio\sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audio\sound_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ui_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ui_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\stats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

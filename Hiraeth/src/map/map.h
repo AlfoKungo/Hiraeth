@@ -18,6 +18,8 @@
 #include "view\camera.h"
 #include "basic\drawable.h"
 #include "basic\updatable.h"
+#include "graphics\label.h"
+#include "graphics\font_manager.h"
 
 #include "maplayer.h"
 
@@ -29,7 +31,7 @@
 namespace hiraeth {
 	namespace map {
 
-		class Map : basic::Drawable, basic::Updatable
+		class Map : Drawable, Updatable
 		{
 		private:
 
@@ -39,9 +41,14 @@ namespace hiraeth {
 			graphics::Shader m_BgShader;
 			graphics::Shader m_CrShader;
 
-			graphics::TileLayer m_PtLayer;
-			graphics::TileLayer m_BgLayer;
-			graphics::TileLayer m_CrLayer;
+			//graphics::TileLayer m_PtLayer;
+			//graphics::TileLayer m_BgLayer;
+			//graphics::TileLayer m_CrLayer;
+
+			graphics::Layer m_PtLayer;
+			graphics::Layer m_BgLayer;
+			graphics::Layer m_CrLayer;
+
 			MapLayer m_MapLayer;
 
 			int m_MapIndex;

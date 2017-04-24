@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderable2d.h"
+#include "font_manager.h"
 
 namespace hiraeth
 {
@@ -8,10 +9,15 @@ namespace hiraeth
 	{
 		class Label : public Renderable2D
 		{
+		//public:
 		private:
+			Font* m_Font;
 			std::string m_Text;
+			float x, y;
 		public:
-			Label(std::string text, float x, float y, maths::vec4 color);
+			Label(Font* font, std::string text, float x, float y, unsigned int color);
+			Label(const std::string& font, std::string text, float x, float y, unsigned int color);
+			Label(const std::string& font, unsigned int size, std::string text, float x, float y, unsigned int color);
 			void submit(Renderer2D* renderer) const override;
 		};
 	}

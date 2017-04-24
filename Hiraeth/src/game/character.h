@@ -13,6 +13,7 @@ namespace hiraeth {
 		{
 
 		private:
+			input::Keyboard* m_Kb;
 		public:
 			Character(maths::vec3 pos, Timer* time, input::Keyboard* kb, 
 				map::MapLayer* m_MapLayer);

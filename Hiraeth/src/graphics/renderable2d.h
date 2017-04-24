@@ -6,6 +6,8 @@
 
 #include "renderer2d.h"
 #include "texture.h"
+#include "basic/drawable.h"
+#include "basic/updatable.h"
 
 #include "../maths/maths.h"
 #include "shader.h"
@@ -21,7 +23,7 @@ namespace hiraeth {
 			unsigned int color;
 		};
 
-		class Renderable2D
+		class Renderable2D : public Drawable, public Updatable
 		{
 		protected:
 			maths::Rectangle m_Bounds;
@@ -37,24 +39,16 @@ namespace hiraeth {
 				setColor(color);
 				setUVDefaults();
 			}
-			//Renderable2D(maths::vec3 position, maths::vec2 size)
-			//	: m_Bounds(position, size)
-			//{
-			//	setUVDefaults();
-			//	setColor(maths::vec4(1, 1, 1, 1));
-			//}
 			Renderable2D(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv, Texture* texture)
-				: m_Bounds(position, size)
+				: m_Bounds(position, size), m_Color(0xffffffff)
 			{
 				m_Texture = texture;
 				for (std::vector<maths::vec2>::const_iterator it = uv.begin(); it != uv.end(); it++)
 					m_UV.push_back((*it) / maths::vec2((*m_Texture).getWidth(), (*m_Texture).getHeight()));
-				setColor(maths::vec4(1, 1, 1, 1));
 			}
 
 			virtual ~Renderable2D()
 			{
-				//delete m_Texture;
 			}
 
 			virtual void submit(Renderer2D* renderer) const
@@ -63,15 +57,6 @@ namespace hiraeth {
 			}
 
 			inline void setColor(unsigned int color) { m_Color = color; }
-			void setColor(const maths::vec4& color)
-			{
-				int r = color.x * 255.0f;
-				int g = color.y * 255.0f;
-				int b = color.z * 255.0f;
-				int a = color.w * 255.0f;
-				m_Color = a << 24 | b << 16 | g << 8 | r;
-			}
-
 
 			// gets
 			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
@@ -90,6 +75,7 @@ namespace hiraeth {
 			inline void move(const maths::vec2& step) { m_Bounds.position += step; }
 
 			virtual void update() {}
+			virtual void draw() {}
 		private:
 			void setUVDefaults()
 			{

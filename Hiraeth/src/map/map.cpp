@@ -10,12 +10,19 @@ namespace hiraeth {
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_CrShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
-			m_BgLayer(&m_BgShader), m_PtLayer(&m_PtShader), m_CrLayer(&m_CrShader), m_MapLayer(filename, camera), 
+			m_BgLayer(&m_BgShader),
+			m_PtLayer(&m_PtShader),
+			m_CrLayer(&m_CrShader),
+			//m_BgLayer(&m_BgShader),
+			//m_PtLayer(&m_BgShader),
+			//m_CrLayer(&m_BgShader),
+			m_MapLayer(filename, camera), 
 			m_Wnd(wind), m_Time(time), m_Camera(camera), m_MapIndex(map_index) 
 		{
-			//std::cout << "is it hiuge? " << sizeof(graphics::Texture) << std::endl;
+			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", 400, 0, 0xffff0000);
 			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));
 			m_CrLayer.add_ref(&m_Char);
+			m_BgLayer.add(fps);
 			camera->setCharacter(&m_Char);
 			//m_CrLayer.add(new game::Character(maths::vec3(0, 0, 0), new graphics::Texture("char.png"), time, wind));
 			if (map_index == 2)
@@ -45,6 +52,7 @@ namespace hiraeth {
 			m_PtShader.enable();
 			m_PtShader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
 			m_PtLayer.render();
+			
 		}
 
 		void Map::update()

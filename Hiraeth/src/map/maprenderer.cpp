@@ -73,8 +73,8 @@ namespace hiraeth {
 
 
 			m_Buffer->vertex = *m_TransformationBack * position;
-			m_Buffer->uv = uv[0];
-			m_Buffer->color = color;
+			m_Buffer->uv     = uv[0];
+			m_Buffer->color  = color;
 			m_Buffer++;
 
 			m_Buffer->vertex = *m_TransformationBack * maths::vec3(position.x, position.y + size.y, 0);

@@ -12,7 +12,7 @@ namespace hiraeth {
 		}
 		MapLayer::~MapLayer()
 		{
-			for (int i = 0; i < m_Tiles.size(); i++)
+			for (unsigned int i = 0; i < m_Tiles.size(); i++)
 			{
 					delete m_Tiles[i];
 			}
@@ -26,8 +26,8 @@ namespace hiraeth {
 			m_Shader.enable();
 			m_Shader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
 			m_Renderer.begin();
-			//for (const Tile* tile : m_Tiles)
-			//	tile->submit(&m_Renderer);
+			for (const Tile* tile : m_Tiles)
+				tile->submit(m_Renderer);
 			m_Renderer.end();
 			m_Renderer.flush();
 		}
@@ -55,7 +55,7 @@ namespace hiraeth {
 
 		void MapLayer::clear()
 		{
-			for (int i = 0; i < m_Tiles.size(); i++)
+			for (unsigned int i = 0; i < m_Tiles.size(); i++)
 			{
 					delete m_Tiles[i];
 			}

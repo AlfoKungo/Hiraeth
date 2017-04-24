@@ -19,7 +19,7 @@ namespace hiraeth {
 		void Portal::update()
 		{
 			SpritedRenderable::update();
- 			if (m_State == State::Default && m_Kb->isKeyPressed(GLFW_KEY_SPACE))
+			if (m_State == State::Default && m_Kb->isKeyPressed(GLFW_KEY_SPACE))
 			{
 				if (m_Bounds.GetMinimumBound().Distance(m_Char->getPosition()) <= 50)
 				{

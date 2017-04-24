@@ -5,7 +5,8 @@ namespace hiraeth {
 
 		Character::Character(maths::vec3 pos, Timer* time, input::Keyboard* kb,
 			map::MapLayer* m_MapLayer)
-			: Creature(pos, time, kb, m_MapLayer)
+			: Creature(pos, time, kb, m_MapLayer),
+			m_Kb(kb)
 		{
 
 		}
@@ -24,18 +25,16 @@ namespace hiraeth {
 		{
 			CreatureControls c;
 
-				if (m_Kb->isKeyPressed(GLFW_KEY_D))
-				{
+				if (m_Kb->isKeyPressed(GLFW_KEY_RIGHT))
 					c.right = true;
-				}
-				else if (m_Kb->isKeyPressed(GLFW_KEY_A))
-				{
+				else if (m_Kb->isKeyPressed(GLFW_KEY_LEFT))
 					c.left = true;
-				}
-				if (m_Kb->isKeyPressed(GLFW_KEY_W))
+				if (m_Kb->isKeyPressed(GLFW_KEY_UP))
 					c.up = true;
-				if (m_Kb->isKeyPressed(GLFW_KEY_S))
+				if (m_Kb->isKeyPressed(GLFW_KEY_DOWN))
 					c.down = true;
+				if (m_Kb->isKeyPressed(GLFW_KEY_SPACE))
+					c.jump = true;
 			return c;
 		}
 

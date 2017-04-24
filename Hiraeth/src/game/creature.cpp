@@ -7,10 +7,8 @@ namespace hiraeth {
 			map::MapLayer* mapLayer)
 			: Collisionable(&m_Bounds, mapLayer),
 			m_Force(0.0f), m_StanceState(StanceState::Stand), m_Direction(Direction::Left),
-			//m_TransformationMatrix(maths::mat4::Translate(pos)), m_Foothold(-1),
-			//m_Wnd(wnd), m_MovementTimer(time->elapsed()), m_Time(time), m_MapLayer(m_MapLayer)
 			m_TransformationMatrix(maths::mat4::Translate(pos)), 
-			m_Kb(kb), m_MovementTimer(time->elapsed()), m_Time(time)
+			m_MovementTimer(time->elapsed()), m_Time(time)
 		{
 			m_Bounds = maths::Rectangle(pos, maths::vec2(graphics::TextureManager::Load("char_head.png")->getWidth()/3, graphics::TextureManager::Load("char_body.png")->getHeight()));
 			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.4f, false, graphics::TextureManager::Load("char_body.png"), time));
@@ -53,8 +51,8 @@ namespace hiraeth {
 				break;
 			}
 
-			if (m_Time->elapsed() - m_MovementTimer > CHARACTER_TIME_BETWEEN_ADDS)
-			{
+			//if (m_Time->elapsed() - m_MovementTimer > CHARACTER_TIME_BETWEEN_ADDS)
+			//{
 				analyze_controls();
 
 				add_gravity(&m_Force.y);
@@ -88,7 +86,7 @@ namespace hiraeth {
 				//m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
 
 				m_MovementTimer = m_Time->elapsed();
-			}
+			//}
 		}
 
 		void Creature::analyze_controls()
@@ -114,35 +112,12 @@ namespace hiraeth {
 				m_Force.y += CHARACTER_SPEED;
 			if (controls.down)
 				m_Force.y -= CHARACTER_SPEED;
-			if (m_Kb->isKeyPressed(GLFW_KEY_SPACE))
+			if (controls.jump)
 			{
 				m_Force.y += 3.0f;
 			}
 
 		}
-
-		//void Creature::set_foothold(int foothold_index)
-		//{
-		//	m_Foothold = foothold_index;
-		//	set_y_by_foothold();
-		//}
-
-		//bool Creature::check_if_still_on_foothold()
-		//{
-		//	physics::FootHold foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
-		//	return (m_Bounds.GetMaximumBound().x > foothold.p1.x && m_Bounds.GetMinimumBound().x < foothold.p2.x);
-		//}
-
-		//void Creature::set_y_by_foothold()
-		//{
-		//	m_Force.y = 0;
-		//	physics::FootHold foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
-		//	float d = 0, y_pos;
-		//	if (foothold.p1.x != foothold.p2.x)
-		//		d = (foothold.p1.x - m_Bounds.position.x) / (foothold.p1.x - foothold.p2.x);
-		//	y_pos = d * foothold.p2.y + (1 - d) * foothold.p1.y;
-		//	move_to(maths::vec2(m_Bounds.position.x, y_pos));
-		//}
 
 		void Creature::submit(graphics::Renderer2D* renderer) const
 		{
@@ -174,29 +149,5 @@ namespace hiraeth {
 			m_StanceState = next_state;
 		}
 
-		//physics::CollisionStruct Creature::analyze_collision(maths::Rectangle char_rec, maths::vec2 char_speed)
-		//{
-		//	std::vector<physics::FootHold> *m_FootHolds = &m_MapLayer->m_FootHolds;
-		//	physics::CollisionStruct collision = { NO_FOOTHOLD, NO_FOOTHOLD };
-		//	float x_force = char_speed.x, y_force = char_speed.y;
-		//	maths::Rectangle next_char_rec = char_rec;
-		//	next_char_rec.position += char_speed;
-		//	
-		//	for (int i = 0; i < m_FootHolds->size(); i++)
-		//	{
-		//		if (m_FootHolds->at(i).LinesIntersect(char_rec.position, char_rec.position + char_speed)
-		//		//if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
-		//			&& m_FootHolds->at(i).is_solid() && y_force < 0)
-		//		{
-		//		collision.x = i;
-		//		}
-		//		if (m_FootHolds->at(i).Intersects(next_char_rec)
-		//			&& !m_FootHolds->at(i).is_solid())
-		//		{
-		//			collision.y = i;
-		//		}
-		//	}
-		//	return collision;
-		//}
 	}
 }

@@ -19,7 +19,7 @@ namespace hiraeth {
 
 			void clicked(unsigned int key, int action)
 			{
-				if (keys_map.at(key) != NULL)
+				if (keys_map[key] != NULL)
 					if (action == true)
 						keys_map.at(key)->ButtonClicked();
 					else
@@ -28,7 +28,8 @@ namespace hiraeth {
 
 			void register_to_key(unsigned int key, KeyboardEvent* key_event)
 			{
-				//keys_map.insert[key] = key_event;
+				//keys_map.insert(std::pair<unsigned int, KeyboardEvent*>(key, key_event));
+				keys_map[key] = key_event;
 			}
 
 			bool isKeyPressed(unsigned int keycode) const;

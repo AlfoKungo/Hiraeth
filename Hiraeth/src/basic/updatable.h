@@ -1,13 +1,11 @@
 #pragma once
 
 namespace hiraeth {
-	namespace basic {
 
 		class Updatable
 		{
 		public:
-			bool to_update;
+			bool is_to_update;
 			virtual void update() = 0;
 		};
-	}
 }

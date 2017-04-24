@@ -2,6 +2,7 @@
 
 #include "../renderer2d.h"
 #include "../renderable2d.h"
+#include "../batchrenderer2d.h"
 
 namespace hiraeth {
 	namespace graphics {
@@ -16,10 +17,12 @@ namespace hiraeth {
 			maths::mat4 m_ProjectionMatrix;
 		public:
 			Layer(Renderer2D* renderer, Shader* shader, maths::mat4 projectionMatrix);
+			Layer(Shader* shader);
 		public:
 			virtual ~Layer();
 			virtual void add(Renderable2D* renderable);
 			virtual void add_ref(Renderable2D* renderable);
+			void update();
 			virtual void render();
 			void clear();
 		};

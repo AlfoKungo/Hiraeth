@@ -58,8 +58,6 @@ namespace hiraeth {
 
 			glBindVertexArray(0);
 
-			m_FTAtlas = ftgl::texture_atlas_new(512, 512, 2);
-			m_FTFont = ftgl::texture_font_new_from_file(m_FTAtlas, 30, "arial.ttf");
 
 #ifdef SHOW_ATLAS
 			std::string nig = "24sdasdjkh7";
@@ -138,7 +136,7 @@ namespace hiraeth {
 			m_IndexCount += 6;
 		}
 
-		void BatchRenderer2D::drawString(const std::string& text, const maths::vec3& position, unsigned int color)
+		void BatchRenderer2D::drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color)
 		{
 			using namespace ftgl;
 
@@ -146,7 +144,7 @@ namespace hiraeth {
 			bool found = false;
 			for (int i = 0; i < m_TextureSlots.size(); i++)
 			{
-				if (m_TextureSlots[i] == m_FTAtlas->id)
+				if (m_TextureSlots[i] == font.getID())
 				{
 					ts = (float)(i + 1);
 					found = true;
@@ -161,29 +159,21 @@ namespace hiraeth {
 					flush();
 					begin();
 				}
-				m_TextureSlots.push_back(m_FTAtlas->id);
+				m_TextureSlots.push_back(font.getID());
 				ts = (float)(m_TextureSlots.size());
 			}
 
-			if (!m_FTAtlas->id)
-			{
-				glGenTextures(1, &m_FTAtlas->id);
-			}
-			glBindTexture(GL_TEXTURE_2D, m_FTAtlas->id);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, m_FTAtlas->width, m_FTAtlas->height,
-				0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, m_FTAtlas->data);
 
+			font.submitFont();
+
+			texture_font_t* ft_font = font.getFTFont();
 #ifndef SHOW_ATLAS
 			float x = position.x;
 			for (int i = 0; i < text.length(); i++)
 			{
 				//char c = text.at(i);
 				const char *c = &text[i];
-				texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, c);
+				texture_glyph_t* glyph = texture_font_get_glyph(ft_font, c);
 
 				if (glyph != NULL)
 				{
@@ -203,26 +193,26 @@ namespace hiraeth {
 					float v1 = glyph->t1;
 
 
-					m_Buffer->vertex = maths::vec3(x0, y0, 0);
+					m_Buffer->vertex = *m_TransformationBack * maths::vec3(x0, y0, 0);
 					m_Buffer->uv = maths::vec2(u0, v0);
 					m_Buffer->tid = ts;
 					m_Buffer->color = color;
 					m_Buffer++;
 
-					m_Buffer->vertex = maths::vec3(x0, y1, 0);
+					m_Buffer->vertex = *m_TransformationBack * maths::vec3(x0, y1, 0);
 					m_Buffer->uv = maths::vec2(u0, v1);
 					m_Buffer->tid = ts;
 					m_Buffer->color = color;
 					m_Buffer++;
 
-					m_Buffer->vertex = maths::vec3(x1, y1, 0);
-					m_Buffer->uv = maths::vec2(u1, v1);
+					m_Buffer->vertex = *m_TransformationBack * maths::vec3(x1, y1, 0);
+					m_Buffer->uv = maths::vec2(u1-0.0005, v1);
 					m_Buffer->tid = ts;
 					m_Buffer->color = color;
 					m_Buffer++;
 
-					m_Buffer->vertex = maths::vec3(x1, y0, 0);
-					m_Buffer->uv = maths::vec2(u1, v0);
+					m_Buffer->vertex = *m_TransformationBack * maths::vec3(x1, y0, 0);
+					m_Buffer->uv = maths::vec2(u1-0.0005, v0);
 					m_Buffer->tid = ts;
 					m_Buffer->color = color;
 					m_Buffer++;

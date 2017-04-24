@@ -8,6 +8,11 @@ namespace hiraeth {
 		{
 
 		}
+		Sprite::Sprite(float x, float y, Texture* texture)
+			: Renderable2D(maths::vec3(x, y, 0), maths::vec2(texture->getWidth(), texture->getHeight()), 0xffffffff)
+		{
+			m_Texture = texture;
+		}
 		Sprite::Sprite(float x, float y, float width, float height, Texture* texture)
 			: Renderable2D(maths::vec3(x, y, 0), maths::vec2(width, height), 0xffffffff)
 		{

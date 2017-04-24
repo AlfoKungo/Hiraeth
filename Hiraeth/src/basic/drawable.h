@@ -1,13 +1,11 @@
 #pragma once
 
 namespace hiraeth {
-	namespace basic {
 
 		class Drawable
 		{
 		public:
-			bool to_draw;
+			bool is_to_draw;
 			virtual void draw() = 0;
 		};
-	}
 }

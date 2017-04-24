@@ -12,7 +12,6 @@ namespace hiraeth {
 		private:
 			int m_Direction = 1;
 			int m_FrameIndex;
-			int m_NextMap;
 			int m_FramesAmount;
 			float m_FrameWidth;
 			float m_FrameDelay;

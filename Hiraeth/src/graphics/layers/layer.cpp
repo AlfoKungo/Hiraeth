@@ -16,10 +16,15 @@ namespace hiraeth {
 			m_Shader->disable();
 		}
 
+		Layer::Layer(Shader* shader)
+			: Layer(new BatchRenderer2D(), shader, maths::mat4::Orthographic(-800.0f, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
+		{
+
+		}
+
 		Layer::~Layer()
 		{
 
-			//delete m_Shader;
 			delete m_Renderer;
 
 			for (int i = 0; i < m_Renderables.size(); i++)
@@ -37,6 +42,16 @@ namespace hiraeth {
 		{
 			m_RefRenderables.push_back(renderable);
 		}
+
+		void Layer::update()
+		{
+
+			for (Renderable2D* rend : m_RefRenderables)
+				rend->update();
+			for (Renderable2D* rend : m_Renderables)
+				rend->update();
+		}
+
 		void Layer::render()
 		{
 			m_Shader->enable();
@@ -46,8 +61,6 @@ namespace hiraeth {
 					renderable->submit(m_Renderer);
 			for (const Renderable2D* renderable : m_RefRenderables)
 					renderable->submit(m_Renderer);
-
-			m_Renderer->drawString("Hello!", maths::vec3(0, 0, 0), 0xffff00ff);
 
 			m_Renderer->end();
 			m_Renderer->flush();
