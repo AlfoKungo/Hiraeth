@@ -5,7 +5,7 @@ namespace hiraeth {
 		class Updatable
 		{
 		public:
-			bool is_to_update;
+			bool is_to_update = false;
 			virtual void update() = 0;
 		};
 }

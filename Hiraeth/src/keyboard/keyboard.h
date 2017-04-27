@@ -7,11 +7,19 @@
 namespace hiraeth {
 	namespace input {
 
+		enum Controls
+		{
+			up, down, left, right, jump
+		};
+
 		class Keyboard
 		{
 		private:
 			std::map<unsigned int, KeyboardEvent*> keys_map;
+			std::map<Controls, unsigned int> m_Controls;
+			std::map<unsigned int, Controls> m_KeysControls;
 			bool m_Keys[GLFW_KEY_LAST];
+			bool m_KeysClicked[GLFW_KEY_LAST];
 			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
 			double mx, my;
 		public:
@@ -19,25 +27,31 @@ namespace hiraeth {
 
 			void clicked(unsigned int key, int action)
 			{
+				m_KeysClicked[key] = action == GLFW_PRESS;
 				if (keys_map[key] != NULL)
-					if (action == true)
-						keys_map.at(key)->ButtonClicked();
+					if (action == GLFW_PRESS)
+						keys_map[key]->ButtonClicked();
 					else
-						keys_map.at(key)->ButtonReleased();
+						keys_map[key]->ButtonReleased();
 			}
 
 			void register_to_key(unsigned int key, KeyboardEvent* key_event)
 			{
-				//keys_map.insert(std::pair<unsigned int, KeyboardEvent*>(key, key_event));
 				keys_map[key] = key_event;
 			}
 
 			bool isKeyPressed(unsigned int keycode) const;
+			bool isControlPressed(Controls control);
+			bool isKeyClicked(unsigned int keycode);
+			bool isControlClicked(Controls control);
 			bool isMouseButtonPressed(unsigned int button) const;
 			void getMousePosition(double& x, double& y) const;
 			friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 			friend void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 			friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+		private:
+
+			void initControls();
 		};
 
 #pragma region Keys

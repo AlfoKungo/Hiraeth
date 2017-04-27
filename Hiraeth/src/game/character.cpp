@@ -25,15 +25,13 @@ namespace hiraeth {
 		{
 			CreatureControls c;
 
-				if (m_Kb->isKeyPressed(GLFW_KEY_RIGHT))
+				if (m_Kb->isControlPressed(input::Controls::right))
 					c.right = true;
-				else if (m_Kb->isKeyPressed(GLFW_KEY_LEFT))
+				else if (m_Kb->isControlPressed(input::Controls::left))
 					c.left = true;
-				if (m_Kb->isKeyPressed(GLFW_KEY_UP))
-					c.up = true;
-				if (m_Kb->isKeyPressed(GLFW_KEY_DOWN))
+				if (m_Kb->isControlPressed(input::Controls::down))
 					c.down = true;
-				if (m_Kb->isKeyPressed(GLFW_KEY_SPACE))
+				if (m_Kb->isControlPressed(input::Controls::jump))
 					c.jump = true;
 			return c;
 		}

@@ -97,7 +97,7 @@ int main()
 	Map map("map4.png", 2, &window, &camera, &time);
 
 	ui::UiManager::set_keyboard(&keyboard);
-	ui::UiManager::open_stats();
+	ui::UiManager::init_all_windows();
 
 	unsigned int frames = 0;
 	while (!window.closed())

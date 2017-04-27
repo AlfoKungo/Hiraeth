@@ -13,8 +13,8 @@ namespace hiraeth {
 		class Portal : public graphics::SpritedRenderable
 		{
 
-#define PORTAL_ANIMATION_DELAY 12.0f
-//#define PORTAL_ANIMATION_DELAY 0.12f
+//#define PORTAL_ANIMATION_DELAY 12.0f
+#define PORTAL_ANIMATION_DELAY 0.12f
 #define PORTAL_FRAME_WIDTH     110.0f
 
 		public:

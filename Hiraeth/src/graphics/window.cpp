@@ -53,7 +53,7 @@ namespace hiraeth {
 			glfwSetCursorPosCallback(m_Window, input::cursor_position_callback);
 
 			// Disable VSYNC
-			glfwSwapInterval(0.0);
+			//glfwSwapInterval(0.0);
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

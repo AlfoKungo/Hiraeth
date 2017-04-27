@@ -21,11 +21,12 @@ namespace hiraeth {
 		class Creature : public graphics::Renderable2D, public physics::Collisionable
 		{
 
-#define CHARACTER_SPEED 0.5f
+#define CHARACTER_SPEED 25.0f
+#define CHARACTER_JUMP 16.0f
 #define CHARACTER_GRAVITY 0.5f;
-#define FRICTION 0.4f
-#define CHARACTER_TIME_BETWEEN_ADDS 0.001f
-#define FORCE_OF_GRAVITY 0.25f
+#define FRICTION maths::vec2(0.2f, 0.92f)
+#define CHARACTER_TIME_BETWEEN_ADDS 1.0f/60.0f
+#define FORCE_OF_GRAVITY 0.55f
 
 		enum StanceState {
 			Stand,
@@ -47,6 +48,7 @@ namespace hiraeth {
 			maths::vec2 m_Force;
 			maths::mat4 m_TransformationMatrix;
 			Timer* m_Time;
+			CreatureControls m_Controls;
 		public:
 			Creature(maths::vec3 pos, Timer* time, input::Keyboard* kb,
 				map::MapLayer* m_MapLayer);
