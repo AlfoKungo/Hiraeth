@@ -26,6 +26,7 @@ namespace hiraeth {
 			virtual ~SpritedRenderable();
 
 			void update() override;
+			//void draw() override;
 
 		private:
 			std::vector<maths::vec2> create_uv_by_pos_size(maths::vec2 pos, maths::vec2 size, maths::vec2 tex_size);

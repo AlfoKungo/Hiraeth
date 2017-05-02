@@ -52,7 +52,7 @@ namespace hiraeth {
 			glfwSetMouseButtonCallback(m_Window, input::mouse_button_callback);
 			glfwSetCursorPosCallback(m_Window, input::cursor_position_callback);
 
-			// Disable VSYNC
+			// Disable VSYN
 			//glfwSwapInterval(0.0);
 
 			glEnable(GL_BLEND);

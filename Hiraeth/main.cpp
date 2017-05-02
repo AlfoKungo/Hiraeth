@@ -96,8 +96,8 @@ int main()
 
 	Map map("map4.png", 2, &window, &camera, &time);
 
-	ui::UiManager::set_keyboard(&keyboard);
-	ui::UiManager::init_all_windows();
+	ui::UiManager uiManager(&keyboard, &time);
+	keyboard.registerToMouse(&uiManager);
 
 	unsigned int frames = 0;
 	while (!window.closed())
@@ -106,14 +106,16 @@ int main()
 		window.clear();
 		double x, y;
 		window.getKeyboard()->getMousePosition(x, y);
+		std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y) ;
+		window.setTitle(s.c_str());
 		camera.update();
 		map.update();
-		ui::UiManager::update();
+		uiManager.update();
 		
 
 		//draw
 		map.draw();
-		ui::UiManager::draw();
+		uiManager.draw();
 
 		window.update();
 		frames++;

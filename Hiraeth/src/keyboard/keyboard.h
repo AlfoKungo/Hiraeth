@@ -1,15 +1,17 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include <GLFW/glfw3.h>
 #include "keyboard_event.h"
+#include "mouse_event.h"
 
 namespace hiraeth {
 	namespace input {
 
 		enum Controls
 		{
-			up, down, left, right, jump
+			none, up, down, left, right, jump
 		};
 
 		class Keyboard
@@ -21,23 +23,24 @@ namespace hiraeth {
 			bool m_Keys[GLFW_KEY_LAST];
 			bool m_KeysClicked[GLFW_KEY_LAST];
 			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
-			double mx, my;
 		public:
+			std::vector<MouseEvent*> m_MouseEventMap;
+			double mx, my, pmx, pmy;
 			Keyboard();
 
-			void clicked(unsigned int key, int action)
+			void registerToKey(Controls control, KeyboardEvent* key_event)
 			{
-				m_KeysClicked[key] = action == GLFW_PRESS;
-				if (keys_map[key] != NULL)
-					if (action == GLFW_PRESS)
-						keys_map[key]->ButtonClicked();
-					else
-						keys_map[key]->ButtonReleased();
+				keys_map[m_Controls[control]] = key_event;
 			}
 
-			void register_to_key(unsigned int key, KeyboardEvent* key_event)
+			void registerToKey(unsigned int key, KeyboardEvent* key_event)
 			{
 				keys_map[key] = key_event;
+			}
+
+			void registerToMouse(MouseEvent* mouse_event)
+			{
+				m_MouseEventMap.push_back(mouse_event);
 			}
 
 			bool isKeyPressed(unsigned int keycode) const;
@@ -51,6 +54,16 @@ namespace hiraeth {
 			friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 		private:
 
+			void clicked(unsigned int key, int action)
+			{
+				m_KeysClicked[key] = action == GLFW_PRESS;
+				Controls c = m_KeysControls[key];
+				if (keys_map[key] != NULL)
+					if (action == GLFW_PRESS || action == GLFW_REPEAT)
+						keys_map[key]->ButtonClicked(c);
+					else
+						keys_map[key]->ButtonReleased(c);
+			}
 			void initControls();
 		};
 

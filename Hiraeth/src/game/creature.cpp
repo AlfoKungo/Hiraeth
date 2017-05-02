@@ -101,7 +101,7 @@ namespace hiraeth {
 
 		void Creature::analyze_controls()
 		{
-			m_Controls = set_update_controls();
+			//m_Controls = set_update_controls();
 			if (m_Controls.right)
 			{
 				change_stance(StanceState::Walk);

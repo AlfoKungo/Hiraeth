@@ -15,6 +15,9 @@ namespace hiraeth {
 			~Group();
 			void add(Renderable2D* renderable);
 			void submit(Renderer2D* renderer) const override;
+			void translate(const maths::vec3& pos);
+			void update() override;
+			maths::mat4 getTransform() { return m_TransformationMatrix; }
 		};
 	}
 }

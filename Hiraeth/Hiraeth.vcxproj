@@ -211,6 +211,7 @@
     <ClInclude Include="src\keyboard\key.h" />
     <ClInclude Include="src\keyboard\keyboard.h" />
     <ClInclude Include="src\keyboard\keyboard_event.h" />
+    <ClInclude Include="src\keyboard\mouse_event.h" />
     <ClInclude Include="src\map\map.h" />
     <ClInclude Include="src\map\maplayer.h" />
     <ClInclude Include="src\map\maprenderable.h" />

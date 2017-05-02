@@ -50,8 +50,8 @@ namespace hiraeth {
 
 		void Camera::setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t)
 		{
-			//maths::mat4 Translated = maths::mat4::Translate(-maths::vec2((a - b)*t).Divide(maths::vec2(CAMERA_VP_SIZE_X_HALF, CAMERA_VP_SIZE_Y_HALF)));
-			//m_Ortho *= maths::mat4::Transpose(Translated);
+			maths::mat4 Translated = maths::mat4::Translate(-maths::vec2((a - b)*t).Divide(maths::vec2(CAMERA_VP_SIZE_X_HALF, CAMERA_VP_SIZE_Y_HALF)));
+			m_Ortho *= maths::mat4::Transpose(Translated);
 		}
 	}
 }

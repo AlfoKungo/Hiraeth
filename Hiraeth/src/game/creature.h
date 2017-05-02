@@ -22,11 +22,11 @@ namespace hiraeth {
 		{
 
 #define CHARACTER_SPEED 25.0f
-#define CHARACTER_JUMP 16.0f
+#define CHARACTER_JUMP 12.0f
 #define CHARACTER_GRAVITY 0.5f;
-#define FRICTION maths::vec2(0.2f, 0.92f)
+#define FRICTION maths::vec2(0.2f, 1.0f)
 #define CHARACTER_TIME_BETWEEN_ADDS 1.0f/60.0f
-#define FORCE_OF_GRAVITY 0.55f
+#define FORCE_OF_GRAVITY 0.94f
 
 		enum StanceState {
 			Stand,
@@ -38,6 +38,7 @@ namespace hiraeth {
 		} m_Direction;
 
 		protected:
+			CreatureControls m_Controls;
 
 		private:
 			std::vector<int> actions; //this is to create a list of actions to do.
@@ -48,7 +49,6 @@ namespace hiraeth {
 			maths::vec2 m_Force;
 			maths::mat4 m_TransformationMatrix;
 			Timer* m_Time;
-			CreatureControls m_Controls;
 		public:
 			Creature(maths::vec3 pos, Timer* time, input::Keyboard* kb,
 				map::MapLayer* m_MapLayer);

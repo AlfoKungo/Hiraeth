@@ -2,7 +2,6 @@
 
 namespace hiraeth {
 	namespace input {
-
 		Keyboard::Keyboard()
 		{
 
@@ -78,12 +77,31 @@ namespace hiraeth {
 		{
 			Keyboard* kb = (Keyboard*)glfwGetWindowUserPointer(window);
 			kb->m_MouseButtons[button] = action != GLFW_RELEASE;
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+				for (auto const& window : kb->m_MouseEventMap)
+				{
+					window->leftButtonClicked(kb->pmx, kb->pmy);
+				}
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+				for (auto const& window : kb->m_MouseEventMap)
+				{
+					window->leftButtonReleased(kb->pmx, kb->pmy);
+				}
+
 		}
 		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 		{
 			Keyboard* kb = (Keyboard*)glfwGetWindowUserPointer(window);
+			kb->pmx = kb->mx;
+			kb->pmy = kb->my;
 			kb->mx = xpos;
 			kb->my = ypos;
+			if (kb->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+				for (auto const& window : kb->m_MouseEventMap)
+				{
+					window->mouseMove(kb->pmx, kb->pmy, xpos, ypos);
+				}
+				
 		}
 
 		void Keyboard::initControls()

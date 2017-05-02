@@ -1,15 +1,12 @@
 #pragma once
 
-//#include "graphics\spritedrenderable.h"
-//#include "graphics\window.h"
-//#include "map\maplayer.h"
-//#include "graphics\texturemanager.h"
 #include "game\creature.h"
+#include "keyboard\keyboard_event.h"
 
 namespace hiraeth {
 	namespace game {
 
-		class Character : public Creature
+		class Character : public Creature, public input::KeyboardEvent
 		{
 
 		private:
@@ -20,6 +17,8 @@ namespace hiraeth {
 			~Character();
 
 			//void update() override;
+			void ButtonClicked(input::Controls control);
+			void ButtonReleased(input::Controls control);
 		private:
 			virtual CreatureControls set_update_controls() override;
 		};

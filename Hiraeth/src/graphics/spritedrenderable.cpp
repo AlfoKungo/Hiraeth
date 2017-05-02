@@ -17,6 +17,7 @@ namespace hiraeth {
 		}
 
 		void SpritedRenderable::update()
+		//void SpritedRenderable::draw()
 		{
 			if (m_Time->elapsed() - m_AnimationTimer > m_FrameDelay)
 			{
