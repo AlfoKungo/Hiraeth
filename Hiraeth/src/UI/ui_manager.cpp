@@ -44,11 +44,18 @@ namespace hiraeth {
 			//for (auto const& window : m_Windows)
 			for (std::vector<UiWindow*>::iterator window = m_Windows.begin(); window != m_Windows.end(); ++window)
 			{
-				if ((*window)->isTitlebarContains(mx, my))
+				if ((*window)->isWindowContains(mx, my))
 				{
-					(*window)->attach();
-					std::iter_swap( m_Windows.begin(), window);
-					break;
+					if ((*window)->isTitlebarContains(mx, my))
+					{
+						(*window)->attach();
+						std::iter_swap(m_Windows.begin(), window);
+						break;
+					}
+					else
+					{
+						(*window)->mouse_clicked();
+					}
 				}
 			}
 		}

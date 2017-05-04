@@ -33,6 +33,9 @@ namespace hiraeth {
 			Stats(maths::vec2 pos, Timer* time);
 			void draw();
 			void update();
+			void mouse_clicked() {}
+			void mouse_released() {}
+			void mouse_moved(float mx, float my) {}
 		private:
 		};
 

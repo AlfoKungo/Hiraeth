@@ -31,6 +31,15 @@ namespace hiraeth {
 			{
 				m_Group.translate(maths::vec2(-mx, my));
 			}
+			bool isWindowContains(float x, float y)
+			{
+				maths::mat4 t = m_Group.getTransform();
+				maths::Rectangle r = maths::Rectangle(t * maths::vec2(0), m_WindowSize);
+				maths::vec2 n = maths::vec2(x - 800, -(y - 450));
+				if (r.Contains(n))
+					return true;
+				return false;
+			}
 			bool isTitlebarContains(float x, float y)
 			{
 				maths::mat4 t = m_Group.getTransform();
@@ -39,10 +48,14 @@ namespace hiraeth {
 				maths::vec2 n = maths::vec2(x - 800, -(y - 450));
 				if (r.Contains(n))
 					return true;
+				return false;
 			}
 			void attach() { m_IsAttached = true; }
 			void unattach() { m_IsAttached = false; }
 			bool is_attached() { return m_IsAttached; }
+			virtual void mouse_clicked() = 0;
+			virtual void mouse_released() = 0;
+			virtual void mouse_moved(float mx, float my) = 0;
 		private:
 			maths::Rectangle getTitlebar() 
 			{ 
