@@ -3,28 +3,24 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec3 pos, Timer* time, input::Keyboard* kb,
+		Character::Character(maths::vec2 pos, input::Keyboard* kb,
 			map::MapLayer* m_MapLayer)
-			: Creature(pos, time, kb, m_MapLayer),
+			: Creature(maths::Rectangle(pos, maths::vec2(45,31)), m_MapLayer),
 			m_Kb(kb)
 		{
-			m_Kb->registerToKey(input::Controls::up, this);
-			m_Kb->registerToKey(input::Controls::down, this);
-			m_Kb->registerToKey(input::Controls::right, this);
-			m_Kb->registerToKey(input::Controls::left, this);
-			m_Kb->registerToKey(input::Controls::jump, this);
+			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.4f, false, graphics::TextureManager::Load("char_body.png")));
+			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(18,10), 3, 0.4f, false, graphics::TextureManager::Load("char_hand.png")));
+			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(-4,29), 3, 0.4f, false, graphics::TextureManager::Load("char_head.png")));
+			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 4, 0.4f, true, graphics::TextureManager::Load("char_body_walk.png")));
+			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(11,11), 4, 0.4f, true, graphics::TextureManager::Load("char_hand_walk.png")));
+			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(-4,29), 3, 0.4f, true, graphics::TextureManager::Load("char_head.png")));
+			registerKeys();
 		}
 
 		Character::~Character()
-			//: ~Creature()
 		{
 
 		}
-
-		//void Character::update()
-		//{
-		//	Creature::update();
-		//}
 
 		void Character::ButtonReleased(input::Controls control)
 		{
@@ -49,20 +45,15 @@ namespace hiraeth {
 			if (control == input::Controls::jump)
 				m_Controls.jump = true;
 		}
-
-		CreatureControls Character::set_update_controls()
+		
+		void Character::registerKeys()
 		{
-			CreatureControls c;
+			m_Kb->registerToKey(input::Controls::up, this);
+			m_Kb->registerToKey(input::Controls::down, this);
+			m_Kb->registerToKey(input::Controls::right, this);
+			m_Kb->registerToKey(input::Controls::left, this);
+			m_Kb->registerToKey(input::Controls::jump, this);
 
-				if (m_Kb->isControlPressed(input::Controls::right))
-					c.right = true;
-				else if (m_Kb->isControlPressed(input::Controls::left))
-					c.left = true;
-				if (m_Kb->isControlPressed(input::Controls::down))
-					c.down = true;
-				if (m_Kb->isControlPressed(input::Controls::jump))
-					c.jump = true;
-			return c;
 		}
 
 	}

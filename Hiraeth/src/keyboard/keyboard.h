@@ -11,7 +11,8 @@ namespace hiraeth {
 
 		enum Controls
 		{
-			none, up, down, left, right, jump
+			none, up, down, left, right, jump, escape,
+			stats_a, stats_b, stats_c 
 		};
 
 		class Keyboard
@@ -65,6 +66,7 @@ namespace hiraeth {
 						keys_map[key]->ButtonReleased(c);
 			}
 			void initControls();
+			void setKeyControl(Controls control, unsigned int key);
 		};
 
 #pragma region Keys

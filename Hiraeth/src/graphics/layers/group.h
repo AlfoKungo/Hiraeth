@@ -17,7 +17,7 @@ namespace hiraeth {
 			void submit(Renderer2D* renderer) const override;
 			void translate(const maths::vec3& pos);
 			void update() override;
-			maths::mat4 getTransform() { return m_TransformationMatrix; }
+			maths::mat4 getTransform() const { return m_TransformationMatrix; }
 		};
 	}
 }

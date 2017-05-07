@@ -1,4 +1,10 @@
-#include "utils\timer.h"
+#include <time.h>
+#include <cereal\archives\binary.hpp>
+#include <fstream>
+#include <cereal\types\memory.hpp>
+#include <cereal\types\vector.hpp>
+
+#include "utils\static_timer.h"
 #include "src\maths\maths.h"
 
 #include "src\graphics\window.h"
@@ -11,11 +17,6 @@
 #include "graphics\label.h"
 #include "UI\ui_manager.h"
 
-#include <time.h>
-#include <cereal\archives\binary.hpp>
-#include <fstream>
-#include <cereal\types\memory.hpp>
-#include <cereal\types\vector.hpp>
 #include <ga.h>
 
 #include <ft2build.h>
@@ -86,17 +87,18 @@ int main()
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);
 
-	mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+	//mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 	std::vector<Tile> tiles;
 
-	Timer time;
+	StaticTimer::init();
+
 	float timer = 0;
 
-	Camera camera(&window, &time);
+	Camera camera(&window);
 
-	Map map("map4.png", 2, &window, &camera, &time);
+	Map map("map4.png", 2, &window, &camera);
 
-	ui::UiManager uiManager(&keyboard, &time);
+	ui::UiManager uiManager(&keyboard);
 	keyboard.registerToMouse(&uiManager);
 
 	unsigned int frames = 0;
@@ -119,7 +121,7 @@ int main()
 
 		window.update();
 		frames++;
-		if (time.elapsed() - timer > 1.0f)
+		if (StaticTimer::timer.elapsed() - timer > 1.0f)
 		{
 			timer += 1.0f;
 			printf("%d fps\n", frames);

@@ -24,18 +24,26 @@ namespace hiraeth {
 			unsigned int AbilityPoints;
 			unsigned int Str, Int, Luk, Dex;
 		};
+		struct Damage
+		{
+			unsigned int RawDamage;
+			float critical;
+			unsigned int accuracy;
+		};
+
 		class Stats : public UiWindow
 		{
 		private:
 			StatsStruct m_StatsStruct;
 			graphics::Layer m_Layer;
 		public:
-			Stats(maths::vec2 pos, Timer* time);
+			Stats(maths::vec2 pos, input::Controls control_key);
 			void draw();
 			void update();
 			void mouse_clicked() {}
 			void mouse_released() {}
 			void mouse_moved(float mx, float my) {}
+			Damage getDamage() const { return Damage{ m_StatsStruct.Str , 0, 0}; }
 		private:
 		};
 

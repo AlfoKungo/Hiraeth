@@ -101,21 +101,27 @@ namespace hiraeth {
 				{
 					window->mouseMove(kb->pmx, kb->pmy, xpos, ypos);
 				}
-				
+
 		}
 
 		void Keyboard::initControls()
 		{
-			m_Controls[Controls::up] = GLFW_KEY_UP;
-			m_Controls[Controls::down] = GLFW_KEY_DOWN;
-			m_Controls[Controls::left] = GLFW_KEY_LEFT;
-			m_Controls[Controls::right] = GLFW_KEY_RIGHT;
-			m_Controls[Controls::jump] = GLFW_KEY_SPACE;
-			m_KeysControls[GLFW_KEY_UP] = Controls::up;
-			m_KeysControls[GLFW_KEY_DOWN] = Controls::down;
-			m_KeysControls[GLFW_KEY_LEFT] = Controls::left;
-			m_KeysControls[GLFW_KEY_RIGHT] = Controls::right;
-			m_KeysControls[GLFW_KEY_SPACE] = Controls::jump;
+			setKeyControl(Controls::up, GLFW_KEY_UP);
+			setKeyControl(Controls::down, GLFW_KEY_DOWN);
+			setKeyControl(Controls::left, GLFW_KEY_LEFT);
+			setKeyControl(Controls::right, GLFW_KEY_RIGHT);
+			setKeyControl(Controls::jump, GLFW_KEY_SPACE);
+			setKeyControl(Controls::escape, GLFW_KEY_ESCAPE);
+			setKeyControl(Controls::stats_a, GLFW_KEY_S);
+			setKeyControl(Controls::stats_b, GLFW_KEY_D);
+			setKeyControl(Controls::stats_c, GLFW_KEY_A);
+		}
+
+		void Keyboard::setKeyControl(Controls control, unsigned int key)
+		{
+			m_Controls[control] = key;
+			m_KeysControls[key] = control;
+
 		}
 	}
 }

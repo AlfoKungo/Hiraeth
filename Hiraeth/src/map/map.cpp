@@ -4,8 +4,9 @@
 namespace hiraeth {
 	namespace map {
 
-		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera, Timer* time)
-			: m_Char(maths::vec3(399.334991f, 0, 0),time, wind->getKeyboard(), &m_MapLayer),
+		Map::Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* camera)
+			: m_Char(maths::vec2(0, 0), wind->getKeyboard(), &m_MapLayer),
+			m_Monster(maths::vec2(-200, 0), &m_MapLayer),
 			m_PtTex("portal_adv.png"),
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
@@ -17,11 +18,12 @@ namespace hiraeth {
 			//m_PtLayer(&m_BgShader),
 			//m_CrLayer(&m_BgShader),
 			m_MapLayer(filename, camera), 
-			m_Wnd(wind), m_Time(time), m_Camera(camera), m_MapIndex(map_index) 
+			m_Wnd(wind), m_Camera(camera), m_MapIndex(map_index) 
 		{
 			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", 400, 0, 0xffff0000);
 			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));
 			m_CrLayer.add_ref(&m_Char);
+			m_CrLayer.add_ref(&m_Monster);
 			m_BgLayer.add(fps);
 			camera->setCharacter(&m_Char);
 			//m_CrLayer.add(new game::Character(maths::vec3(0, 0, 0), new graphics::Texture("char.png"), time, wind));
@@ -57,8 +59,7 @@ namespace hiraeth {
 
 		void Map::update()
 		{
-			m_Char.update();
-			//m_CrLayer.update();
+			m_CrLayer.update();
 			m_PtLayer.update();
 			if (m_ChangeMapFlag) 
 			{
@@ -157,7 +158,7 @@ namespace hiraeth {
 			for (int i = 0; i < portals_amount; i++)
 			{
 				(*iarchive)(s);
-				m_PtLayer.add(new Portal(s, m_Wnd->getKeyboard(), &m_PtTex, this, m_Time, &m_Char));
+				m_PtLayer.add(new Portal(s, m_Wnd->getKeyboard(), &m_PtTex, this, &m_Char));
 			}
 		}
 

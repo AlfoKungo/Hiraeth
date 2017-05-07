@@ -5,12 +5,13 @@
 #include "graphics\texture.h"
 #include "game\character.h"
 #include "keyboard\keyboard.h"
+#include "keyboard\keyboard_event.h"
 
 
 namespace hiraeth {
 	namespace map {
 		class Map;
-		class Portal : public graphics::SpritedRenderable
+		class Portal : public graphics::SpritedRenderable, public input::KeyboardEvent
 		{
 
 //#define PORTAL_ANIMATION_DELAY 12.0f
@@ -40,13 +41,15 @@ namespace hiraeth {
 			game::Character* m_Char;
 
 		public:
-			Portal(maths::vec3 position, int next_map, input::Keyboard* kb, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character);
-			Portal(Serializer s, input::Keyboard* kb, graphics::Texture* ptex, Map* map, Timer* time, game::Character* character)
-				: Portal(s.position, s.next_map, kb, ptex, map, time, character) {}
+			Portal(maths::vec3 position, int next_map, input::Keyboard* kb, graphics::Texture* ptex, Map* map, game::Character* character);
+			Portal(Serializer s, input::Keyboard* kb, graphics::Texture* ptex, Map* map, game::Character* character)
+				: Portal(s.position, s.next_map, kb, ptex, map, character) {}
 			~Portal();
 
 			void update() override;
 
+			void ButtonClicked(input::Controls control) override;
+			void ButtonReleased(input::Controls control) override {}
 		private:
 
 		};

@@ -15,6 +15,7 @@
 #include "graphics\batchrenderer2d.h"
 #include "graphics\spritedrenderable.h"
 #include "game\character.h"
+#include "game\monster.h"
 #include "view\camera.h"
 #include "basic\drawable.h"
 #include "basic\updatable.h"
@@ -57,9 +58,9 @@ namespace hiraeth {
 			graphics::Window* m_Wnd;
 			view::Camera* m_Camera;
 			game::Character m_Char;
-			Timer* m_Time;
+			game::Monster m_Monster;
 		public:
-			Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* wnd, Timer* time);
+			Map(const std::string& filename, int map_index, graphics::Window* wind, view::Camera* wnd);
 			~Map();
 
 			void draw() override;

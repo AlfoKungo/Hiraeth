@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils\timer.h"
+#include "utils\static_timer.h"
 #include "renderable2d.h"
 #include "maths\maths.h"
 
@@ -18,11 +18,10 @@ namespace hiraeth {
 			float m_AnimationTimer;
 			bool m_IsLoop;
 		protected:
-			Timer* m_Time;
 		public:
-			SpritedRenderable(maths::vec3 position, int frame_amount, float frame_delay, bool  is_loop, graphics::Texture* ptex, Timer* time);
-			SpritedRenderable(maths::vec3 position, int frame_amount, float frame_delay, graphics::Texture* ptex, Timer* time) :
-				SpritedRenderable(position, frame_amount, frame_delay, true, ptex, time) {}
+			SpritedRenderable(maths::vec3 position, int frame_amount, float frame_delay, bool  is_loop, graphics::Texture* ptex);
+			SpritedRenderable(maths::vec3 position, int frame_amount, float frame_delay, graphics::Texture* ptex) :
+				SpritedRenderable(position, frame_amount, frame_delay, true, ptex) {}
 			virtual ~SpritedRenderable();
 
 			void update() override;

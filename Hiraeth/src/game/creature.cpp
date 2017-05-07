@@ -3,20 +3,13 @@
 namespace hiraeth {
 	namespace game {
 
-		Creature::Creature(maths::vec3 pos, Timer* time, input::Keyboard* kb, 
-			map::MapLayer* mapLayer)
+		Creature::Creature(maths::Rectangle bounds, map::MapLayer* mapLayer)
 			: Collisionable(m_Bounds, mapLayer),
 			m_Force(0.0f), m_StanceState(StanceState::Stand), m_Direction(Direction::Left),
-			m_TransformationMatrix(maths::mat4::Translate(pos)), 
-			m_MovementTimer(time->elapsed()), m_Time(time)
+			m_TransformationMatrix(maths::mat4::Translate(bounds.position)), 
+			m_MovementTimer(StaticTimer::timer.elapsed())
 		{
-			m_Bounds = maths::Rectangle(pos, maths::vec2(graphics::TextureManager::Load("char_head.png")->getWidth()/3, graphics::TextureManager::Load("char_body.png")->getHeight()));
-			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.4f, false, graphics::TextureManager::Load("char_body.png"), time));
-			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(18,10), 3, 0.4f, false, graphics::TextureManager::Load("char_hand.png"), time));
-			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(-4,29), 3, 0.4f, false, graphics::TextureManager::Load("char_head.png"), time));
-			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 4, 0.4f, true, graphics::TextureManager::Load("char_body_walk.png"), time));
-			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(11,11), 4, 0.4f, true, graphics::TextureManager::Load("char_hand_walk.png"), time));
-			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2() + maths::vec2(-4,29), 3, 0.4f, true, graphics::TextureManager::Load("char_head.png"), time));
+			m_Bounds = bounds;
 		}
 
 		Creature::~Creature()
@@ -53,49 +46,52 @@ namespace hiraeth {
 
 			//if (m_Time->elapsed() - m_MovementTimer > CHARACTER_TIME_BETWEEN_ADDS)
 			//{
-				analyze_controls();
-				//m_Force *= (m_Time->elapsed() - m_MovementTimer)*60;
+			analyze_controls();
+			//m_Force *= (m_Time->elapsed() - m_MovementTimer)*60;
 
-				m_LastFoothold = m_Foothold;
-				add_gravity(&m_Force.y);
-				m_Force *= FRICTION;
-				//std::string d = "pos: " + m_Bounds.position.ToString() + " ; force: " + m_Force.ToString();
-				//m_Wnd->setTitle(d.c_str());
-				physics::CollisionStruct FootHold = analyze_collision(m_Bounds, m_Force);
-				if (FootHold.y != NO_FOOTHOLD)
-				{
-					m_Force = force_by_vertical_foothold(m_Force, FootHold.y);
-				}
-				if (m_Foothold == NO_FOOTHOLD)
-				{
-					if (FootHold.x != NO_FOOTHOLD)
-					{
-						set_foothold(FootHold.x);
-						m_Force = set_y_by_foothold(m_Force);
-					}
-				}
+			m_LastFoothold = m_Foothold;
+			addGravity(m_Force.y);
+			multiplyByFriction(m_Force);
+			//std::string d = "pos: " + m_Bounds.position.ToString() + " ; force: " + m_Force.ToString();
+			//m_Wnd->setTitle(d.c_str());
+			maths::vec2 FootHold = maths::vec2(NO_FOOTHOLD);
+			if (m_Foothold != NO_FOOTHOLD)
+			{
+				//if (m_Force.y > 0)
+				if (m_Controls.jump)
+					m_Foothold = NO_FOOTHOLD;
+				else if (!check_if_still_on_foothold())
+					m_Foothold = NO_FOOTHOLD;
 				else
 				{
-					//if (m_Force.y > 0)
-					if (m_Controls.jump)
-						m_Foothold = NO_FOOTHOLD;
-					else if (!check_if_still_on_foothold())
-						m_Foothold = NO_FOOTHOLD;
-					else
-					{
-						m_Force = set_y_by_foothold(m_Force);
-					}
+					m_Force = set_y_by_foothold(m_Force);
 				}
-				move(m_Force);
-				m_TransformationMatrix *= maths::mat4::Translate(m_Force);
-				if (m_Foothold != NO_FOOTHOLD)
+			}
+			else
+			{
+				FootHold.x = analyzeCollisionX(m_Bounds, maths::vec2(0,m_Force.y));
+				if (FootHold.x != NO_FOOTHOLD)
 				{
-					m_Force.y = 0;
+					set_foothold(FootHold.x);
+					m_Force = set_y_by_foothold(m_Force);
 				}
+			}
+			FootHold.y = analyzeCollisionY(m_Bounds, m_Force);
+			if (FootHold.y != NO_FOOTHOLD)
+			{
+				m_Force = force_by_vertical_foothold(m_Force, FootHold.y);
+			}
 
-				//m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
+			move(m_Force);
+			m_TransformationMatrix *= maths::mat4::Translate(m_Force);
+			if (m_Foothold != NO_FOOTHOLD)
+			{
+				m_Force.y = 0;
+			}
 
-				m_MovementTimer = m_Time->elapsed();
+			//m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
+
+			//m_MovementTimer = StaticTimer::timer.elapsed();
 			//}
 		}
 

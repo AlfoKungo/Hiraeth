@@ -3,6 +3,7 @@
 
 #include "vec2.h"
 #include "vec3.h"
+#include "mat4.h"
 
 namespace hiraeth {
 	namespace maths {
@@ -37,6 +38,7 @@ namespace hiraeth {
 			Rectangle(float x, float y, float width, float height);
 
 			Rectangle& Add(const vec2& value);
+			Rectangle& Transoform(const mat4& other);
 			friend Rectangle operator+(Rectangle left, const vec2& right);
 
 			bool Intersects(const Rectangle& other) const;
@@ -45,8 +47,10 @@ namespace hiraeth {
 			vec2 Distance(const Rectangle& other) const;
 
 
+
 			inline vec2 GetMinimumBound() const { return position; }
 			inline vec2 GetMaximumBound() const { return position + size; }
+			vec2 GetBottomMiddle() const { return maths::vec2(position.x + size.x/2, position.y); }
 
 			bool operator==(const Rectangle& other) const;
 			bool operator!=(const Rectangle& other) const;

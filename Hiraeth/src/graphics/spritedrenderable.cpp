@@ -3,9 +3,9 @@
 namespace hiraeth {
 	namespace graphics {
 
-		SpritedRenderable::SpritedRenderable(maths::vec3 position, int frames_amount, float frame_delay, bool is_loop, graphics::Texture* ptex, Timer* time)
+		SpritedRenderable::SpritedRenderable(maths::vec3 position, int frames_amount, float frame_delay, bool is_loop, graphics::Texture* ptex)
 			: Renderable2D(position, maths::vec2(ptex->getWidth() / (float)(frames_amount), ptex->getHeight()), 0xffffffff),
-			m_Time(time), m_FrameIndex(0), m_AnimationTimer(time->elapsed()), m_IsLoop(is_loop),
+			m_FrameIndex(0), m_AnimationTimer(StaticTimer::timer.elapsed()), m_IsLoop(is_loop),
 			m_FrameWidth(ptex->getWidth() / (float)(frames_amount)), m_FrameDelay(frame_delay), m_FramesAmount(frames_amount)
 		{
 			m_Texture = ptex;
@@ -19,7 +19,7 @@ namespace hiraeth {
 		void SpritedRenderable::update()
 		//void SpritedRenderable::draw()
 		{
-			if (m_Time->elapsed() - m_AnimationTimer > m_FrameDelay)
+			if (StaticTimer::timer.elapsed() - m_AnimationTimer > m_FrameDelay)
 			{
 				set_new_frame(m_FrameIndex);
 				m_FrameIndex += m_Direction;
@@ -34,7 +34,7 @@ namespace hiraeth {
 						m_Direction *= -1;
 					}
 				}
-				m_AnimationTimer = m_Time->elapsed();
+				m_AnimationTimer = StaticTimer::timer.elapsed();
 			}
 		}
 

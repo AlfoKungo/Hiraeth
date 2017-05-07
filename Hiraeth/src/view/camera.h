@@ -3,7 +3,7 @@
 #include "graphics\renderable2d.h"
 #include "maths\maths.h"
 #include "graphics\window.h"
-#include "utils\timer.h"
+#include "utils\static_timer.h"
 
 namespace hiraeth {
 	namespace view {
@@ -23,9 +23,9 @@ namespace hiraeth {
 			graphics::Window* m_Wnd;
 			graphics::Renderable2D* m_Char;
 			float m_PositionTimer = 0;
-			Timer* m_Time;
+			//Timer* m_Time;
 		public:
-			Camera(graphics::Window* wnd, Timer* time);
+			Camera(graphics::Window* wnd);
 			~Camera();
 			void update();
 

@@ -13,14 +13,14 @@ namespace hiraeth {
             m_Foothold = foothold_index;
         }
 
-        bool Collisionable::check_if_still_on_foothold()
+        bool Collisionable::check_if_still_on_foothold() const
         {
             physics::FootHold foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
-            return (m_Box.GetMaximumBound().x > foothold.p1.x && m_Box.GetMinimumBound().x < foothold.p2.x);
+            return (m_Box.GetBottomMiddle().x > foothold.p1.x && m_Box.GetBottomMiddle().x < foothold.p2.x);
         }
 
-        maths::vec2 Collisionable::force_by_vertical_foothold(const maths::vec2& force, int footholdIndex)
-        {
+        maths::vec2 Collisionable::force_by_vertical_foothold(const maths::vec2& force, int footholdIndex) const
+       {
             physics::FootHold foothold = m_MapLayer->m_FootHolds.at(footholdIndex);
             float x_force = force.x;
             if (force.x > 0)
@@ -30,42 +30,54 @@ namespace hiraeth {
             return maths::vec2(x_force, force.y);
         }
 
-        maths::vec2 Collisionable::set_y_by_foothold(const maths::vec2& force)
+        maths::vec2 Collisionable::set_y_by_foothold(const maths::vec2& force) const
         {
             physics::FootHold foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
             float d = 0;
             if (foothold.p1.x != foothold.p2.x)
                 d = (foothold.p1.x - m_Box.x) / (foothold.p1.x - foothold.p2.x);
-            float y_pos = d * foothold.p2.y + (1 - d) * foothold.p1.y - m_Box.y;
-            return maths::vec2(force.x, y_pos);
+            float y_force = d * foothold.p2.y + (1 - d) * foothold.p1.y - m_Box.y;
+            return maths::vec2(force.x, y_force);
             //return maths::vec2(m_Box.x, y_pos);
         }
 
-        physics::CollisionStruct Collisionable::analyze_collision(maths::Rectangle char_rec, maths::vec2 char_speed)
+        int Collisionable::analyzeCollisionX(const maths::Rectangle& char_rec, const maths::vec2& char_speed) const
         {
             std::vector<physics::FootHold> *m_FootHolds = &m_MapLayer->m_FootHolds;
-            physics::CollisionStruct collision = { NO_FOOTHOLD, NO_FOOTHOLD };
-            float x_force = char_speed.x, y_force = char_speed.y;
+            maths::vec2 char_pos = char_rec.GetBottomMiddle();
+            maths::vec2 next_char_pos = (char_rec + char_speed).GetBottomMiddle();
+
+            for (int i = 0; i < m_FootHolds->size(); i++)
+            {
+                if (m_FootHolds->at(i).LinesIntersect(char_pos, next_char_pos))
+                    if (char_speed.y < 0)
+                        if (m_FootHolds->at(i).is_solid())
+                            //if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
+                        {
+                            return i;
+                        }
+            }
+            return -1;
+        }
+
+        int Collisionable::analyzeCollisionY(const maths::Rectangle& char_rec, const maths::vec2& char_speed) const
+        {
+            std::vector<physics::FootHold> *m_FootHolds = &m_MapLayer->m_FootHolds;
             maths::Rectangle next_char_rec = char_rec;
             next_char_rec.position += char_speed;
 
             for (int i = 0; i < m_FootHolds->size(); i++)
             {
-                if (m_FootHolds->at(i).LinesIntersect(char_rec.position, next_char_rec.position))
-                    if (y_force < 0 && m_FootHolds->at(i).LinesIntersect(char_rec.position, next_char_rec.position))
-                        if (m_FootHolds->at(i).is_solid())
-                            //if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
-                        {
-                            collision.x = i;
-                        }
-                //if (!m_FootHolds->at(i).Intersects(char_rec) && m_FootHolds->at(i).Intersects(next_char_rec)
                 if (m_FootHolds->at(i).Intersects(next_char_rec)
-                    && !m_FootHolds->at(i).is_solid())
+                    //&& !m_FootHolds->at(i).Intersects(char_rec)
+                    && next_char_rec.y != m_FootHolds->at(i).p2.y 
+                    && !m_FootHolds->at(i).is_solid()
+                    )
                 {
-                     collision.y = i;
+                     return i;
                 }
             }
-            return collision;
+            return -1;
         }
     }
 }

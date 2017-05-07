@@ -27,6 +27,10 @@ namespace hiraeth
 			m_Bounds.y = y;
 			m_Color = color;
 		}
+		Label::Label(const std::string& font, unsigned int size, int number, float x, float y, unsigned int color)
+			: Label(font, size, std::to_string(number), x, y, color)
+		{
+		}
 
 		void Label::submit(Renderer2D* renderer) const
 		{

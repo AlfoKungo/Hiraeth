@@ -46,11 +46,14 @@ namespace hiraeth {
 				(*iarchive)(s);
 				m_Tiles.push_back(new Tile(s));
 			}
-			m_FootHolds.push_back(physics::FootHold(maths::vec2(-800, -100), maths::vec2(800,-100), maths::vec2(0, 1)));
+			m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(-800, -100), maths::vec2(800,-100)));
+			m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(800, -150), maths::vec2(1000,-150)));
+			m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(800, -50), maths::vec2(1000,-50)));
 			//m_FootHolds.push_back(physics::FootHold(maths::vec2(-800, 0), maths::vec2(800,-200), maths::vec2(0, 1)));
-			m_FootHolds.push_back(physics::FootHold(maths::vec2(-700, -200), maths::vec2(-700,400), maths::vec2(1, 0)));
-			m_FootHolds.push_back(physics::FootHold(maths::vec2(-800, -450), maths::vec2(-800,-100), maths::vec2(1, 0)));
-			m_FootHolds.push_back(physics::FootHold(maths::vec2(800, -450), maths::vec2(800,-100), maths::vec2(1, 0)));
+			m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(1000, -200), 600));
+			m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(-700, -200), 600));
+			m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(-800, -450), 350));
+			m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(800, -450), 350));
 		}
 
 		void MapLayer::clear()

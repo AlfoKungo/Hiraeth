@@ -3,8 +3,8 @@
 namespace hiraeth {
 	namespace view {
 
-		Camera::Camera(graphics::Window* wnd, Timer* time)
-			: m_Wnd(wnd), m_Time(time), m_PositionTimer(time->elapsed()),
+		Camera::Camera(graphics::Window* wnd)
+			: m_Wnd(wnd), m_PositionTimer(StaticTimer::timer.elapsed()),
 			//m_Ortho(maths::mat4::LookAt(maths::vec3(0,0,-5), maths::vec3(0,0,0), maths::vec3(0,1,0)))
 			m_Ortho(maths::mat4::Orthographic(-800.0f, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
 		{
@@ -17,7 +17,7 @@ namespace hiraeth {
 
 		void Camera::update()
 		{
-			if (m_Time->elapsed() - m_PositionTimer > CAMERA_TIME_BETWEEN_MOVEMENT)
+			if (StaticTimer::timer.elapsed() - m_PositionTimer > CAMERA_TIME_BETWEEN_MOVEMENT)
 			{
 				maths::vec3 cpos(m_Ortho.GetPosition());
 #ifdef CAMERA_RANGE
@@ -38,7 +38,7 @@ namespace hiraeth {
 #else
 				setNewPosition(m_Char->getPosition(), cpos, maths::vec2(CAMERA_X_LERP_VALUE,CAMERA_Y_LERP_VALUE));
 #endif
-				m_PositionTimer = m_Time->elapsed();
+				m_PositionTimer = StaticTimer::timer.elapsed();
 			}
 		}
 

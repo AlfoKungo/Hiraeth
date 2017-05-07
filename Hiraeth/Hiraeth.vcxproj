@@ -137,6 +137,8 @@
     <ClCompile Include="src\audio\sound_manager.cpp" />
     <ClCompile Include="src\game\character.cpp" />
     <ClCompile Include="src\game\creature.cpp" />
+    <ClCompile Include="src\game\monster.cpp" />
+    <ClCompile Include="src\game\monster_manager.cpp" />
     <ClCompile Include="src\graphics\batchrenderer2d.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
@@ -170,6 +172,7 @@
     <ClCompile Include="src\save\serializer.cpp" />
     <ClCompile Include="src\UI\stats.cpp" />
     <ClCompile Include="src\UI\ui_manager.cpp" />
+    <ClCompile Include="src\utils\static_timer.cpp" />
     <ClCompile Include="src\utils\timer.cpp" />
     <ClCompile Include="src\view\camera.cpp" />
   </ItemGroup>
@@ -190,6 +193,8 @@
     <ClInclude Include="src\basic\updatable.h" />
     <ClInclude Include="src\game\character.h" />
     <ClInclude Include="src\game\creature.h" />
+    <ClInclude Include="src\game\monster.h" />
+    <ClInclude Include="src\game\monster_manager.h" />
     <ClInclude Include="src\graphics\batchrenderer2d.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\indexbuffer.h" />
@@ -233,6 +238,7 @@
     <ClInclude Include="src\UI\ui_window.h" />
     <ClInclude Include="src\utils\fileutils.h" />
     <ClInclude Include="src\utils\ImageLoad.h" />
+    <ClInclude Include="src\utils\static_timer.h" />
     <ClInclude Include="src\utils\timer.h" />
     <ClInclude Include="src\view\camera.h" />
   </ItemGroup>

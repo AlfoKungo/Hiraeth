@@ -17,12 +17,14 @@ namespace hiraeth {
 			maths::Rectangle& m_Box;
 
 			Collisionable(maths::Rectangle& box, map::MapLayer* m_MapLayer);
+			virtual ~Collisionable() {}
 		protected:
-			physics::CollisionStruct analyze_collision(maths::Rectangle char_rec, maths::vec2 char_speed);
+			int analyzeCollisionX(const maths::Rectangle& char_rec, const maths::vec2& char_speed) const;
+			int analyzeCollisionY(const maths::Rectangle& char_rec, const maths::vec2& char_speed) const;
 			void set_foothold(int foothold);
-			bool check_if_still_on_foothold();
-			maths::vec2 force_by_vertical_foothold(const maths::vec2& force, int footholdIndex);
-			maths::vec2 set_y_by_foothold(const maths::vec2& force);
+			bool check_if_still_on_foothold() const;
+			maths::vec2 force_by_vertical_foothold(const maths::vec2& force, int footholdIndex) const;
+			maths::vec2 set_y_by_foothold(const maths::vec2& force)const ;
 		private:
 		};
 	}

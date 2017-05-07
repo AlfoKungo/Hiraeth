@@ -12,15 +12,16 @@ namespace hiraeth {
 		private:
 			input::Keyboard* m_Kb;
 		public:
-			Character(maths::vec3 pos, Timer* time, input::Keyboard* kb, 
+			Character(maths::vec2 pos, input::Keyboard* kb, 
 				map::MapLayer* m_MapLayer);
 			~Character();
 
 			//void update() override;
 			void ButtonClicked(input::Controls control);
 			void ButtonReleased(input::Controls control);
+
+			void registerKeys();
 		private:
-			virtual CreatureControls set_update_controls() override;
 		};
 	}
 }

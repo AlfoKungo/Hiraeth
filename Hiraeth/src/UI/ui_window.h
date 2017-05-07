@@ -8,56 +8,61 @@
 namespace hiraeth {
 	namespace ui {
 
-		class UiWindow : public input::KeyboardEvent, public Drawable, public Updatable
+		class UiWindow : public Drawable, public Updatable
 		{
+		private:
+			input::Controls m_ControlKey;
 		protected:
 			graphics::Group m_Group;
 			maths::vec2 m_WindowSize;
 			bool m_IsAttached;
 		public:
-			//UiWindow() : m_Group(maths::mat4::Translate(maths::vec3(-400, -50, 0))), 
-			UiWindow(maths::Rectangle rec)
+			UiWindow(maths::Rectangle rec, input::Controls control_key)
 			 : m_Group(maths::mat4::Translate(rec.position)), 
 				m_WindowSize(rec.size),
-				m_IsAttached(false)
+				m_IsAttached(false),
+				m_ControlKey(control_key)
 			{}
-			void ButtonClicked(input::Controls c) override
+			
+			void controlKeyClicked()
 			{
 				is_to_draw = !is_to_draw;
 				is_to_update = !is_to_update;
 			}
-			void ButtonReleased(input::Controls c) override {}
+			
 			void move(float mx, float my)
 			{
 				m_Group.translate(maths::vec2(-mx, my));
 			}
-			bool isWindowContains(float x, float y)
+
+			bool isWindowContains(float x, float y) const
 			{
-				maths::mat4 t = m_Group.getTransform();
-				maths::Rectangle r = maths::Rectangle(t * maths::vec2(0), m_WindowSize);
-				maths::vec2 n = maths::vec2(x - 800, -(y - 450));
-				if (r.Contains(n))
+				maths::mat4 transform = m_Group.getTransform();
+				maths::Rectangle rec = maths::Rectangle(0, m_WindowSize).Transoform(transform);
+				maths::vec2 cursorPos = maths::vec2(x - 800, -(y - 450));
+				if (rec.Contains(cursorPos))
 					return true;
 				return false;
 			}
-			bool isTitlebarContains(float x, float y)
+			bool isTitlebarContains(float x, float y) const
 			{
-				maths::mat4 t = m_Group.getTransform();
-				maths::Rectangle r = getTitlebar();
-				r.position = t * r.position;
-				maths::vec2 n = maths::vec2(x - 800, -(y - 450));
-				if (r.Contains(n))
+				maths::mat4 transform = m_Group.getTransform();
+				maths::Rectangle rec = getTitlebar().Transoform(transform);
+				maths::vec2 cursorPos = maths::vec2(x - 800, -(y - 450));
+				if (rec.Contains(cursorPos))
 					return true;
 				return false;
 			}
 			void attach() { m_IsAttached = true; }
 			void unattach() { m_IsAttached = false; }
-			bool is_attached() { return m_IsAttached; }
+			inline bool is_attached() const { return m_IsAttached; }
+			inline input::Controls getControlKey() const { return m_ControlKey; }
+
 			virtual void mouse_clicked() = 0;
 			virtual void mouse_released() = 0;
 			virtual void mouse_moved(float mx, float my) = 0;
 		private:
-			maths::Rectangle getTitlebar() 
+			maths::Rectangle getTitlebar() const
 			{ 
 				return maths::Rectangle(0, m_WindowSize.y - 25, m_WindowSize.x, 25); 
 			}

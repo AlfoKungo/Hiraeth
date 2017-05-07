@@ -38,6 +38,11 @@ namespace hiraeth {
 
 			return *this;
 		}
+		Rectangle& Rectangle::Transoform(const mat4& transform_mat)
+		{
+			position = transform_mat * position;
+			return *this;
+		}
 
 		Rectangle operator+(Rectangle left, const vec2& right)
 		{

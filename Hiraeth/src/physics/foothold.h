@@ -34,5 +34,27 @@ namespace hiraeth {
 		private:
 			OutCode ComputeOutCode(double x, double y, maths::Rectangle rec);
 		};
+
+		class HorizontalFootHold : public FootHold
+		{
+		public:
+			HorizontalFootHold(maths::vec2 p1, float length)
+				: FootHold(p1 - maths::vec2(22.5f, -3), maths::vec2(p1.x + length + 22.5f, p1.y + 3), maths::vec2(0, 1))
+			{}
+			HorizontalFootHold(maths::vec2 p1, maths::vec2 p2)
+				: FootHold(p1 - maths::vec2(22.5f, -3), p2 + maths::vec2(22.5f, 3), maths::vec2(0, 1))
+			{}
+		};
+
+		class VerticalFootHold : public FootHold
+		{
+		public:
+			VerticalFootHold(maths::vec2 p1, float length)
+				: FootHold(p1, maths::vec2(p1.x, p1.y + length), maths::vec2(1, 0))
+			{}
+			VerticalFootHold(maths::vec2 p1, maths::vec2 p2)
+				: FootHold(p1, p2, maths::vec2(1, 0))
+			{}
+		};
 	}
 }
