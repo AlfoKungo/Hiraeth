@@ -122,7 +122,7 @@ namespace hiraeth {
 				m_Force.y += CHARACTER_JUMP;
 		}
 
-		void Creature::submit(graphics::Renderer2D* renderer) const
+		void Creature::draw(graphics::Renderer2D* renderer) const
 		{
 			switch (m_Direction)
 			{
@@ -137,11 +137,11 @@ namespace hiraeth {
 			{
 			case StanceState::Stand:
 				for (const Renderable2D* renderable : m_StandRenderables)
-					renderable->submit(renderer);
+					renderable->draw(renderer);
 				break;
 			case StanceState::Walk:
 				for (const Renderable2D* renderable : m_WalkRenderables)
-					renderable->submit(renderer);
+					renderable->draw(renderer);
 				break;
 			}
 			renderer->pop();

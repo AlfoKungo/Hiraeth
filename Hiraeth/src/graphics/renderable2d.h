@@ -51,10 +51,10 @@ namespace hiraeth {
 			{
 			}
 
-			virtual void submit(Renderer2D* renderer) const
-			{
-				renderer->submit(this);
-			}
+			//virtual void submit(Renderer2D* renderer) const
+			//{
+			//	renderer->submit(this);
+			//}
 
 			inline void setColor(unsigned int color) { m_Color = color; }
 
@@ -75,7 +75,10 @@ namespace hiraeth {
 			inline void move(const maths::vec2& step) { m_Bounds.position += step; }
 
 			virtual void update() {}
-			virtual void draw() {}
+			virtual void draw(Renderer2D* renderer) const
+			{ 
+				renderer->submit(this); 
+			}
 		private:
 			void setUVDefaults()
 			{

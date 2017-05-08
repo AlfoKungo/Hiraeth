@@ -2,11 +2,13 @@
 #include "keyboard\keyboard_event.h"
 #include "keyboard\mouse_event.h"
 #include "graphics\layers\group.h"
+#include "graphics\layers\layer.h"
 #include "basic\drawable.h"
 #include "basic\updatable.h"
 
 namespace hiraeth {
 	namespace ui {
+#define TITLE_BAR_SIZE 25
 
 		class UiWindow : public Drawable, public Updatable
 		{
@@ -22,7 +24,8 @@ namespace hiraeth {
 				m_WindowSize(rec.size),
 				m_IsAttached(false),
 				m_ControlKey(control_key)
-			{}
+			{
+			}
 			
 			void controlKeyClicked()
 			{
@@ -61,10 +64,12 @@ namespace hiraeth {
 			virtual void mouse_clicked() = 0;
 			virtual void mouse_released() = 0;
 			virtual void mouse_moved(float mx, float my) = 0;
+			void update() override { m_Group.update(); }
+			void draw(graphics::Renderer2D* renderer) const override { m_Group.draw(renderer); }
 		private:
 			maths::Rectangle getTitlebar() const
 			{ 
-				return maths::Rectangle(0, m_WindowSize.y - 25, m_WindowSize.x, 25); 
+				return maths::Rectangle(0, m_WindowSize.y - TITLE_BAR_SIZE, m_WindowSize.x, TITLE_BAR_SIZE); 
 			}
 		};
 

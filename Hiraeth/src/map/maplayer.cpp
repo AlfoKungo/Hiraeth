@@ -3,8 +3,8 @@
 namespace hiraeth {
 	namespace map {
 
-		MapLayer::MapLayer(const std::string& filename, view::Camera* camera)
-			: m_Camera(camera),
+		MapLayer::MapLayer(const std::string& filename)
+			:
 			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
 			m_Renderer(new graphics::Texture(filename))
 		{
@@ -24,7 +24,7 @@ namespace hiraeth {
 			//glActiveTexture(GL_TEXTURE0);
 			//glBindTexture(GL_TEXTURE_2D, m_Tex.getID());
 			m_Shader.enable();
-			m_Shader.setUniformMat4("pr_matrix", m_Camera->get_ortho());
+			m_Shader.setUniformMat4("pr_matrix", view::Camera::get_ortho());
 			m_Renderer.begin();
 			for (const Tile* tile : m_Tiles)
 				tile->submit(m_Renderer);

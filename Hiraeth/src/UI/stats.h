@@ -1,6 +1,5 @@
 #pragma once
 #include "ui_window.h"
-#include "graphics\layers\layer.h"
 #include "graphics\batchrenderer2d.h"
 #include "maths\maths.h"
 #include "graphics\texturemanager.h"
@@ -35,11 +34,8 @@ namespace hiraeth {
 		{
 		private:
 			StatsStruct m_StatsStruct;
-			graphics::Layer m_Layer;
 		public:
 			Stats(maths::vec2 pos, input::Controls control_key);
-			void draw();
-			void update();
 			void mouse_clicked() {}
 			void mouse_released() {}
 			void mouse_moved(float mx, float my) {}

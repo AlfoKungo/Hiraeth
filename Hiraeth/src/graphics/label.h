@@ -21,7 +21,7 @@ namespace hiraeth
 			Label(const std::string& font, std::string text, float x, float y, unsigned int color);
 			Label(const std::string& font, unsigned int size, std::string text, float x, float y, unsigned int color);
 			Label(const std::string& font, unsigned int size, int number, float x, float y, unsigned int color);
-			void submit(Renderer2D* renderer) const override;
+			void draw(Renderer2D* renderer) const override;
 		};
 	}
 }

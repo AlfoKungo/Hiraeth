@@ -9,7 +9,7 @@
 namespace hiraeth {
 	namespace graphics {
 
-		class TileLayer : public Layer
+		class TileLayer : public Layer<Renderable2D>
 		{
 		public:
 			TileLayer(Shader* shader);

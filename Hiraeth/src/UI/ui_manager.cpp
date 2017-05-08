@@ -4,9 +4,13 @@ namespace hiraeth {
 	namespace ui {
 
 		UiManager::UiManager(input::Keyboard* kb)
-			: m_Kb(kb)
+			: m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
+			//: m_Layer(shader),
+			m_Windows(m_Layer.m_Renderables),
+			m_Kb(kb)
 		{
 			init_all_windows();
+			kb->registerToMouse(this);
 			kb->registerToKey(input::Controls::escape, this);
 			kb->registerToKey(input::Controls::stats_a, this);
 			kb->registerToKey(input::Controls::stats_b, this);
@@ -14,33 +18,31 @@ namespace hiraeth {
 		}
 		void UiManager::draw()
 		{
-			for (auto window = m_Windows.rbegin(); window != m_Windows.rend(); ++window)
-			{
-				if ((*window)->is_to_draw)
-					(*window)->draw();
-			}
+			m_Layer.render();
+			//m_Layer_b.render();
+			//m_Layer_c.render();
 		}
 
 		void UiManager::update()
 		{
-			for (const auto & window : m_Windows)
-			{
-				if (window->is_to_update)
-					window->update();
-			}
+			m_Layer.update();
+			//m_Layer_b.update();
+			//m_Layer_c.update();
 		}
 
 		void UiManager::init_all_windows()
 		{
-			m_Windows.push_back(new Stats(maths::vec2(0, 0), input::Controls::stats_a));
-			m_Windows.push_back(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
-			m_Windows.push_back(new Stats(maths::vec2(300, 0), input::Controls::stats_c));
+			m_Layer.add(new Stats(maths::vec2(0, 0), input::Controls::stats_a));
+			m_Layer.add(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
+			m_Layer.add(new Stats(maths::vec2(300, 0), input::Controls::stats_c));
+			//m_Layer_b.add(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
+			//m_Layer_c.add(new Stats(maths::vec2(300, 0), input::Controls::stats_c));
 		}
 
 		void UiManager::leftButtonClicked(float mx, float my)
 		{
-
 			//for (auto & window : m_Windows)
+
 			for (auto window = m_Windows.begin(); window != m_Windows.end(); ++window)
 			{
 				if ((*window)->isWindowContains(mx, my))
@@ -92,10 +94,11 @@ namespace hiraeth {
 					if ((*window)->getControlKey() == c)
 					{
 						(*window)->controlKeyClicked();
-						//if ((*window)->is_to_draw)
+						if ((*window)->is_to_draw)
 							std::rotate(m_Windows.begin(), window, window + 1);
-						//else
-							//std::rotate(window, window + 1, m_Windows.end());
+						else
+							std::rotate(window, window + 1, m_Windows.end());
+						break;
 					}
 				}
 			}

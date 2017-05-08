@@ -1,4 +1,5 @@
 #pragma once
+#include "graphics\renderer2d.h"
 
 namespace hiraeth {
 
@@ -6,7 +7,7 @@ namespace hiraeth {
 		{
 		public:
 			bool is_to_draw = true;
-			virtual void draw() = 0;
+			virtual void draw(graphics::Renderer2D* renderer) const = 0;
 			virtual ~Drawable() {}
 		};
 }

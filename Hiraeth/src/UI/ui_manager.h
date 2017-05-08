@@ -13,8 +13,9 @@ namespace hiraeth {
 		class UiManager : public input::MouseEvent, public input::KeyboardEvent
 		{
 		private:
-			std::vector<UiWindow*> m_Windows;
+			std::vector<UiWindow*>& m_Windows;
 			input::Keyboard* m_Kb;
+			graphics::Layer<UiWindow> m_Layer;
 		public:
 			UiManager(input::Keyboard* kb);
 			void draw();

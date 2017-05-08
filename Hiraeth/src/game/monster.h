@@ -1,6 +1,8 @@
 #pragma once
 
 #include "character.h"
+#include <ctime>
+#include <random>
 
 namespace hiraeth {
 	namespace game {
@@ -9,12 +11,12 @@ namespace hiraeth {
 		{
 		private:
 			unsigned int level, maxHP, maxMP;
+			float timer;
 
 		public:
 			Monster(maths::vec2 pos, map::MapLayer* mapLayer);
 			virtual ~Monster() {}
 
-			//void update() override;
 			void update() override;
 		private:
 		};

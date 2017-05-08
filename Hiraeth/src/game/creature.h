@@ -28,6 +28,7 @@ namespace hiraeth {
 #define CHARACTER_TIME_BETWEEN_ADDS 1.0f/60.0f
 #define FORCE_OF_GRAVITY 0.94f
 
+		protected:
 		enum StanceState {
 			Stand,
 			Walk,
@@ -53,7 +54,7 @@ namespace hiraeth {
 			virtual ~Creature();
 
 			void update() override;
-			void submit(graphics::Renderer2D* renderable) const override;
+			void draw(graphics::Renderer2D* renderable) const override;
 			void move_to(const maths::vec2& pos);
 		private:
 			void analyze_controls();

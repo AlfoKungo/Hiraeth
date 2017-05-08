@@ -32,7 +32,7 @@ namespace hiraeth
 		{
 		}
 
-		void Label::submit(Renderer2D* renderer) const
+		void Label::draw(Renderer2D* renderer) const
 		{
 			renderer->drawString(*m_Font, m_Text, m_Bounds.position, m_Color);
 		}

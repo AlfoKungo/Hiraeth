@@ -19,20 +19,22 @@ namespace hiraeth {
 		class Camera 
 		{
 		private:
-			maths::mat4 m_Ortho;
-			graphics::Window* m_Wnd;
-			graphics::Renderable2D* m_Char;
-			float m_PositionTimer = 0;
-			//Timer* m_Time;
+			static maths::mat4 m_Ortho;
+			static graphics::Renderable2D* m_Char;
+			static float m_PositionTimer;
 		public:
-			Camera(graphics::Window* wnd);
-			~Camera();
-			void update();
+			static void init(graphics::Renderable2D* charcater);
+			static void update();
 
-			maths::mat4 get_ortho() { return m_Ortho; }
-			void setCharacter(graphics::Renderable2D* character);
+			static maths::mat4 get_ortho()
+			{ 
+				return m_Ortho; 
+			}
+			static void setCharacter(graphics::Renderable2D* character);
 		private:
-			void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
+			static void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
+
+			Camera();
 		};
 	}
 }

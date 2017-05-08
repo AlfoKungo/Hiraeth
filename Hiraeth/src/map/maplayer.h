@@ -15,11 +15,10 @@ namespace hiraeth {
 			std::vector<Tile*> m_Tiles;
 			graphics::Shader m_Shader;
 			MapRenderer m_Renderer;
-			view::Camera* m_Camera;
 		public:
 			std::vector<physics::FootHold> m_FootHolds;
 		public:
-			MapLayer(const std::string& filename, view::Camera* camera);
+			MapLayer(const std::string& filename);
 			~MapLayer();
 
 			void draw();

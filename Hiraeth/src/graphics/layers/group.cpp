@@ -22,12 +22,12 @@ namespace hiraeth {
 			m_Renderables.push_back(renderable);
 		}
 
-		void Group::submit(Renderer2D* renderer) const
+		void Group::draw(Renderer2D* renderer) const
 		{
 			renderer->push(m_TransformationMatrix);
 
 			for (const Renderable2D* renderable : m_Renderables)
-				renderable->submit(renderer);
+				renderable->draw(renderer);
 
 			renderer->pop();
 		}

@@ -5,7 +5,6 @@
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 #include "../../ext/freetype-gl/freetype-gl.h"
-#include <ga.h>
 
 namespace hiraeth {
 	namespace graphics {

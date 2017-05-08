@@ -5,7 +5,6 @@ namespace hiraeth {
 
 		Stats::Stats(maths::vec2 pos, input::Controls control_key)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 212, 373), control_key),
-			m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
 			m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 4, 45,
 						   "Good Music", 4300, 2000, 9999, 3, 4, 9, 9, 4 }
 		{
@@ -29,17 +28,6 @@ namespace hiraeth {
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Level, 74, 293, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Job, 74, 311, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Name, 74, 329, 0xff000000));
-			m_Layer.add(&m_Group);
-		}
-		
-		void Stats::draw()
-		{
-			m_Layer.render();
-		}
-	
-		void Stats::update()
-		{
-			m_Group.update();
 		}
 	}
 }
