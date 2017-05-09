@@ -20,7 +20,7 @@ namespace hiraeth {
 		{
 		private:
 			static maths::mat4 m_Ortho;
-			static graphics::Renderable2D* m_Char;
+			static const graphics::Renderable2D* m_Char;
 			static float m_PositionTimer;
 		public:
 			static void init(graphics::Renderable2D* charcater);

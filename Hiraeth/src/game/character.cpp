@@ -46,6 +46,13 @@ namespace hiraeth {
 				m_Controls.jump = true;
 		}
 		
+		void Character::update()
+		{
+			if (is_hit && StaticTimer::timer.elapsed() - m_HitTimer > 0.0f)
+				is_hit = false;
+			Creature::update();
+		}
+
 		void Character::registerKeys()
 		{
 			m_Kb->registerToKey(input::Controls::up, this);
@@ -56,5 +63,20 @@ namespace hiraeth {
 
 		}
 
+		void Character::getHit(Direction dir)
+		{
+			if (Direction::Left == dir)
+			{
+				m_Force = maths::vec2(20, 8);
+					m_Direction = Direction::Left;
+			}
+			else
+			{
+				m_Force = maths::vec2(-20, 8);
+					m_Direction = Direction::Right;
+			}
+			is_hit = true;
+			m_HitTimer = StaticTimer::timer.elapsed() + 1.5f;
+		}
 	}
 }

@@ -4,8 +4,11 @@ namespace hiraeth {
 	namespace game {
 
 		Monster::Monster(maths::vec2 pos, map::MapLayer* mapLayer)
-			: Creature(maths::Rectangle(pos, maths::vec2(45, 31)), mapLayer), timer(0)
+			: Creature(maths::Rectangle(pos, maths::vec2(45, 31)), mapLayer), m_AiTimer(StaticTimer::timer.elapsed()),
+			gen(rd()),
+			dis(0,8)
 		{
+			srand(time(NULL));
 			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.6f, true, graphics::TextureManager::Load("slime_stand.png")));
 			m_WalkRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 7, 0.2f, true, graphics::TextureManager::Load("slime_walk.png")));
 			m_Controls.left = true;
@@ -14,7 +17,7 @@ namespace hiraeth {
 
 		void Monster::update()
 		{
-			if (m_Foothold >= 0)
+			if (m_Foothold != NO_FOOTHOLD)
 			{
 				const physics::FootHold& foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
 				const float&& length = foothold.p2.x - foothold.p1.x;
@@ -29,12 +32,9 @@ namespace hiraeth {
 					m_Controls.right = false;
 
 				}
-				if (StaticTimer::timer.elapsed() - timer > 2.0f)
+				if (StaticTimer::timer.elapsed() - m_AiTimer > 0.0f)
 				{
-					std::random_device rd;
-					std::mt19937 gen(rd());
-					std::uniform_int_distribution<> dis(0, 6);
-					if (dis(gen) < 1)
+					if (dis(gen) < 4)
 					{
 						m_Controls.left = false;
 						m_Controls.right = false;
@@ -43,7 +43,7 @@ namespace hiraeth {
 					{
 						if (StanceState::Stand == m_StanceState)
 						{
-							if (dis(gen) < 4)
+							if (dis(gen) < 7)
 							{
 								m_Controls.left = true;
 								m_Controls.right = false;
@@ -55,10 +55,19 @@ namespace hiraeth {
 							}
 						}
 					}
-					timer += 2.0f;
+					m_AiTimer += (float)(rand() % 30) / 10 + 1;
+					//m_AiTimer += 2.0f;
 				}
 			}
 			Creature::update();
+		}
+
+		bool Monster::checkCollision(const maths::Rectangle& rec)
+		{
+
+			if (abs(rec.GetBottomMiddle().x - m_Bounds.GetBottomMiddle().x) - rec.width / 2 - m_Bounds.width / 2 < 0)
+				return true;
+			return false;
 		}
 	}
 }

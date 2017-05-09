@@ -98,7 +98,7 @@ int main()
     Map map("map4.png", 2, &window);
 
     ui::UiManager uiManager(&keyboard);
-    game::MonsterManager monsterManager(map.GetMapLayer());
+    game::MonsterManager monsterManager(map.getMapLayer(), map.getCharacter());
 
     unsigned int frames = 0;
     while (!window.closed())

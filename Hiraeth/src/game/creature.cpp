@@ -57,8 +57,8 @@ namespace hiraeth {
 			maths::vec2 FootHold = maths::vec2(NO_FOOTHOLD);
 			if (m_Foothold != NO_FOOTHOLD)
 			{
-				//if (m_Force.y > 0)
-				if (m_Controls.jump)
+				//if (m_Controls.jump)
+				if (m_Force.y > 5)
 					m_Foothold = NO_FOOTHOLD;
 				else if (!check_if_still_on_foothold())
 					m_Foothold = NO_FOOTHOLD;
@@ -97,29 +97,31 @@ namespace hiraeth {
 
 		void Creature::analyze_controls()
 		{
-			//m_Controls = set_update_controls();
-			if (m_Controls.right)
+			if (m_Foothold != NO_FOOTHOLD)
 			{
-				change_stance(StanceState::Walk);
-				m_Direction = Direction::Right;
-				m_Force.x += CHARACTER_SPEED;
+				if (m_Controls.right)
+				{
+					change_stance(StanceState::Walk);
+					m_Direction = Direction::Right;
+					m_Force.x += CHARACTER_SPEED;
+				}
+				else if (m_Controls.left)
+				{
+					change_stance(StanceState::Walk);
+					m_Direction = Direction::Left;
+					m_Force.x -= CHARACTER_SPEED;
+				}
+				else
+				{
+					change_stance(StanceState::Stand);
+				}
+				if (m_Controls.up)
+					m_Force.y += CHARACTER_SPEED;
+				if (m_Controls.down)
+					m_Force.y -= CHARACTER_SPEED;
+				if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
+					m_Force.y += CHARACTER_JUMP;
 			}
-			else if (m_Controls.left)
-			{
-				change_stance(StanceState::Walk);
-				m_Direction = Direction::Left;
-				m_Force.x -= CHARACTER_SPEED;
-			}
-			else
-			{
-				change_stance(StanceState::Stand);
-			}
-			if (m_Controls.up)
-				m_Force.y += CHARACTER_SPEED;
-			if (m_Controls.down)
-				m_Force.y -= CHARACTER_SPEED;
-			if (m_Controls.jump && m_Foothold != NO_FOOTHOLD) 
-				m_Force.y += CHARACTER_JUMP;
 		}
 
 		void Creature::draw(graphics::Renderer2D* renderer) const

@@ -9,8 +9,11 @@ namespace hiraeth {
 		class Character : public Creature, public input::KeyboardEvent
 		{
 
+		public:
+			bool is_hit = false;
 		private:
 			input::Keyboard* m_Kb;
+			float m_HitTimer;
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, 
 				map::MapLayer* m_MapLayer);
@@ -19,9 +22,10 @@ namespace hiraeth {
 			//void update() override;
 			void ButtonClicked(input::Controls control);
 			void ButtonReleased(input::Controls control);
+			void update() override;
 
 			void registerKeys();
-		private:
+			void getHit(Direction dir);
 		};
 	}
 }

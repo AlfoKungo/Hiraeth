@@ -65,7 +65,8 @@ namespace hiraeth {
 			void draw();
 			void update() override;
 			void change_map(int new_index);
-			MapLayer* GetMapLayer() { return &m_MapLayer; }
+			MapLayer* getMapLayer() { return &m_MapLayer; }
+			game::Character* getCharacter() { return &m_Char; }
 
 		private:
 			void serialize();

@@ -10,14 +10,18 @@ namespace hiraeth {
 		class Monster : public Creature
 		{
 		private:
+			std::random_device rd;
+			std::mt19937 gen;
+			std::uniform_int_distribution<> dis;
 			unsigned int level, maxHP, maxMP;
-			float timer;
+			float m_AiTimer;
 
 		public:
 			Monster(maths::vec2 pos, map::MapLayer* mapLayer);
 			virtual ~Monster() {}
 
 			void update() override;
+			bool checkCollision(const maths::Rectangle& rec);
 		private:
 		};
 	}

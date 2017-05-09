@@ -4,7 +4,7 @@ namespace hiraeth {
 	namespace view {
 
 		maths::mat4 Camera::m_Ortho;
-		graphics::Renderable2D* Camera::m_Char;
+		const graphics::Renderable2D* Camera::m_Char;
 		float Camera::m_PositionTimer;
 
 		void Camera::init(graphics::Renderable2D* character)
