@@ -75,11 +75,11 @@ namespace hiraeth {
 			m_Buffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		}
 
-		void  BatchRenderer2D::submit(const Renderable2D* renderable)
+		void  BatchRenderer2D::submit(const Renderable2D* renderable, unsigned int blendColor)
 		{
 			const maths::vec3& position = renderable->getPosition();
 			const maths::vec2& size = renderable->getSize();
-			const unsigned int color = renderable->getColor();
+			const unsigned int color = renderable->getColor() & blendColor;
 			const std::vector<maths::vec2>& uv = renderable->getUV();
 			const GLuint tid = renderable->getTID();
 

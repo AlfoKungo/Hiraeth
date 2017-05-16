@@ -3,11 +3,14 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiManager::UiManager(input::Keyboard* kb)
+		UiManager::UiManager(input::Keyboard* kb, game::CharacterStats *character_stats)
 			: m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
 			//: m_Layer(shader),
-			m_Windows(m_Layer.m_Renderables),
-			m_Kb(kb)
+			m_Windows(m_Layer.m_RefRenderables),
+			m_Kb(kb),
+			m_StatsA(maths::vec2(0, 0), input::Controls::stats_a, character_stats),
+			m_StatsB(maths::vec2(-300, 0), input::Controls::stats_b, character_stats),
+			m_StatsC(maths::vec2(300, 0), input::Controls::stats_c, character_stats)
 		{
 			init_all_windows();
 			kb->registerToMouse(this);
@@ -32,9 +35,9 @@ namespace hiraeth {
 
 		void UiManager::init_all_windows()
 		{
-			m_Layer.add(new Stats(maths::vec2(0, 0), input::Controls::stats_a));
-			m_Layer.add(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
-			m_Layer.add(new Stats(maths::vec2(300, 0), input::Controls::stats_c));
+			m_Layer.add_ref(&m_StatsA);
+			m_Layer.add_ref(&m_StatsB);
+			m_Layer.add_ref(&m_StatsC);
 			//m_Layer_b.add(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
 			//m_Layer_c.add(new Stats(maths::vec2(300, 0), input::Controls::stats_c));
 		}

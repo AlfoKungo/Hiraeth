@@ -5,20 +5,20 @@ namespace hiraeth {
 	namespace map {
 
 		Map::Map(const std::string& filename, int map_index, graphics::Window* wind)
-			: m_Char(maths::vec2(0, 0), wind->getKeyboard(), &m_MapLayer),
+			: m_PtTex("portal_adv.png"),
 			//m_Monster(maths::vec2(-200, 0), &m_MapLayer),
-			m_PtTex("portal_adv.png"),
-			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
+			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_CrShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
-			m_BgLayer(&m_BgShader),
 			m_PtLayer(&m_PtShader),
+			m_BgLayer(&m_BgShader),
 			m_CrLayer(&m_CrShader),
+			m_MapLayer(filename),
 			//m_BgLayer(&m_BgShader),
 			//m_PtLayer(&m_BgShader),
 			//m_CrLayer(&m_BgShader),
-			m_MapLayer(filename), 
-			m_Wnd(wind), m_MapIndex(map_index) 
+			m_MapIndex(map_index), 
+			m_Wnd(wind), m_Char(maths::vec2(0, 0), wind->getKeyboard(), getMapLayer()) 
 		{
 			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", 400, 0, 0xffff0000);
 			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));

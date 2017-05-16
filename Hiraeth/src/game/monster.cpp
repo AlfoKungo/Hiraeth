@@ -4,9 +4,11 @@ namespace hiraeth {
 	namespace game {
 
 		Monster::Monster(maths::vec2 pos, map::MapLayer* mapLayer)
-			: Creature(maths::Rectangle(pos, maths::vec2(45, 31)), mapLayer), m_AiTimer(StaticTimer::timer.elapsed()),
+			: Creature(maths::Rectangle(pos, maths::vec2(45, 31)), mapLayer, MONSTER_SPEED, CHARACTER_JUMP,
+				new MonsterStats()),
 			gen(rd()),
-			dis(0,8)
+			dis(0, 8),
+			m_AiTimer(StaticTimer::timer.elapsed())
 		{
 			srand(time(NULL));
 			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.6f, true, graphics::TextureManager::Load("slime_stand.png")));

@@ -8,19 +8,52 @@ namespace hiraeth {
         {
         }
 
-        void Collisionable::set_foothold(int foothold_index)
+        void Collisionable::analyzeCollision()
         {
-            m_Foothold = foothold_index;
+            m_LastFoothold = m_Foothold;
+            maths::vec2 FootHold = maths::vec2(NO_FOOTHOLD);
+            if (m_Foothold != NO_FOOTHOLD)
+            {
+                //if (m_Controls.jump)
+                if (m_Force.y > 5)
+                    m_Foothold = NO_FOOTHOLD;
+                else if (!check_if_still_on_foothold())
+                    m_Foothold = NO_FOOTHOLD;
+                else
+                {
+                    m_Force = set_y_by_foothold(m_Force);
+                }
+            }
+            else
+            {
+                m_Foothold = analyzeCollisionX(maths::vec2(0,m_Force.y));
+                if (m_Foothold != NO_FOOTHOLD)
+                {
+                    //set_foothold(FootHold.x);
+                    m_Force = set_y_by_foothold(m_Force);
+                }
+            }
+            FootHold.y = analyzeCollisionY(m_Force);
+            if (FootHold.y != NO_FOOTHOLD)
+            {
+                m_Force = force_by_vertical_foothold(m_Force, FootHold.y);
+            }
+            move(m_Force);
+            if (m_Foothold != NO_FOOTHOLD)
+            {
+                m_Force.y = 0;
+            }
+
         }
 
         bool Collisionable::check_if_still_on_foothold() const
         {
-            physics::FootHold foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
+            const physics::FootHold& foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
             return (m_Box.GetBottomMiddle().x > foothold.p1.x && m_Box.GetBottomMiddle().x < foothold.p2.x);
         }
 
         maths::vec2 Collisionable::force_by_vertical_foothold(const maths::vec2& force, int footholdIndex) const
-       {
+        {
             physics::FootHold foothold = m_MapLayer->m_FootHolds.at(footholdIndex);
             float x_force = force.x;
             if (force.x > 0)
@@ -38,14 +71,13 @@ namespace hiraeth {
                 d = (foothold.p1.x - m_Box.x) / (foothold.p1.x - foothold.p2.x);
             float y_force = d * foothold.p2.y + (1 - d) * foothold.p1.y - m_Box.y;
             return maths::vec2(force.x, y_force);
-            //return maths::vec2(m_Box.x, y_pos);
         }
 
-        int Collisionable::analyzeCollisionX(const maths::Rectangle& char_rec, const maths::vec2& char_speed) const
+        int Collisionable::analyzeCollisionX(const maths::vec2& char_speed) const
         {
             std::vector<physics::FootHold> *m_FootHolds = &m_MapLayer->m_FootHolds;
-            maths::vec2 char_pos = char_rec.GetBottomMiddle();
-            maths::vec2 next_char_pos = (char_rec + char_speed).GetBottomMiddle();
+            const maths::vec2 char_pos = m_Box.GetBottomMiddle();
+            maths::vec2 next_char_pos = (m_Box + char_speed).GetBottomMiddle();
 
             for (int i = 0; i < m_FootHolds->size(); i++)
             {
@@ -60,11 +92,10 @@ namespace hiraeth {
             return -1;
         }
 
-        int Collisionable::analyzeCollisionY(const maths::Rectangle& char_rec, const maths::vec2& char_speed) const
+        int Collisionable::analyzeCollisionY(const maths::vec2& char_speed) const
         {
             std::vector<physics::FootHold> *m_FootHolds = &m_MapLayer->m_FootHolds;
-            maths::Rectangle next_char_rec = char_rec;
-            next_char_rec.position += char_speed;
+            maths::Rectangle next_char_rec = m_Box + char_speed;
 
             for (int i = 0; i < m_FootHolds->size(); i++)
             {

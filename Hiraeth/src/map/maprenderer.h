@@ -2,11 +2,11 @@
 
 #include <vector>
 #include <GL/glew.h>
-#include "maths\maths.h"
+#include "maths/maths.h"
 
 #include <cstddef>
-#include "graphics\texture.h"
-#include "graphics\buffers\indexbuffer.h"
+#include "graphics/texture.h"
+#include "graphics/buffers/indexbuffer.h"
 
 
 namespace hiraeth {

@@ -2,7 +2,7 @@
 
 #include <FreeImage.h>
 #include <string>
-#include <GL\glew.h>
+#include <GL/glew.h>
 #include "../utils/ImageLoad.h"
 
 namespace hiraeth {

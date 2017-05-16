@@ -3,11 +3,14 @@
 namespace hiraeth {
 	namespace game {
 
-		Creature::Creature(maths::Rectangle bounds, map::MapLayer* mapLayer)
-			: Collisionable(m_Bounds, mapLayer),
-			m_Force(0.0f), m_StanceState(StanceState::Stand), m_Direction(Direction::Left),
-			m_TransformationMatrix(maths::mat4::Translate(bounds.position)), 
-			m_MovementTimer(StaticTimer::timer.elapsed())
+		Creature::Creature(maths::Rectangle bounds, map::MapLayer* mapLayer, float speed, float jump,
+			Stats* stats)
+			: Collisionable(m_Bounds, mapLayer), m_StanceState(StanceState::Stand), m_Direction(Direction::Left),
+			m_Stats(stats),
+			m_Speed(speed), m_Jump(jump),
+			m_HitTimer(StaticTimer::timer.elapsed()), 
+			m_MovementTimer(StaticTimer::timer.elapsed()),
+		m_TransformationMatrix(maths::mat4::Translate(bounds.position))
 		{
 			m_Bounds = bounds;
 		}
@@ -24,14 +27,9 @@ namespace hiraeth {
 			}
 		}
 
-		inline void Creature::move_to(const maths::vec2& pos)
-		{
-			m_Bounds.position = pos;
-			m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
-		}
-
 		void Creature::update()
 		{
+
 			switch (m_StanceState)
 			{
 			case StanceState::Stand:
@@ -44,50 +42,24 @@ namespace hiraeth {
 				break;
 			}
 
+			if (is_hit)
+				if (StaticTimer::timer.elapsed() - m_HitTimer > 0.0f)
+				{
+					is_hit = false;
+					m_Color = 0xffffffff;
+				}
+				else
+				{
+					m_Color = 0x00ffffff | ((unsigned char((m_HitTimer - StaticTimer::timer.elapsed()) / 1.5f * 128 * 2) % 128 + 86) << 24);
+				}
+
 			//if (m_Time->elapsed() - m_MovementTimer > CHARACTER_TIME_BETWEEN_ADDS)
 			//{
 			analyze_controls();
 			//m_Force *= (m_Time->elapsed() - m_MovementTimer)*60;
-
-			m_LastFoothold = m_Foothold;
-			addGravity(m_Force.y);
+			addGravity(m_Force);
 			multiplyByFriction(m_Force);
-			//std::string d = "pos: " + m_Bounds.position.ToString() + " ; force: " + m_Force.ToString();
-			//m_Wnd->setTitle(d.c_str());
-			maths::vec2 FootHold = maths::vec2(NO_FOOTHOLD);
-			if (m_Foothold != NO_FOOTHOLD)
-			{
-				//if (m_Controls.jump)
-				if (m_Force.y > 5)
-					m_Foothold = NO_FOOTHOLD;
-				else if (!check_if_still_on_foothold())
-					m_Foothold = NO_FOOTHOLD;
-				else
-				{
-					m_Force = set_y_by_foothold(m_Force);
-				}
-			}
-			else
-			{
-				FootHold.x = analyzeCollisionX(m_Bounds, maths::vec2(0,m_Force.y));
-				if (FootHold.x != NO_FOOTHOLD)
-				{
-					set_foothold(FootHold.x);
-					m_Force = set_y_by_foothold(m_Force);
-				}
-			}
-			FootHold.y = analyzeCollisionY(m_Bounds, m_Force);
-			if (FootHold.y != NO_FOOTHOLD)
-			{
-				m_Force = force_by_vertical_foothold(m_Force, FootHold.y);
-			}
-
-			move(m_Force);
-			m_TransformationMatrix *= maths::mat4::Translate(m_Force);
-			if (m_Foothold != NO_FOOTHOLD)
-			{
-				m_Force.y = 0;
-			}
+			analyzeCollision();
 
 			//m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
 
@@ -97,31 +69,26 @@ namespace hiraeth {
 
 		void Creature::analyze_controls()
 		{
-			if (m_Foothold != NO_FOOTHOLD)
+			if (m_Controls.right)
 			{
-				if (m_Controls.right)
-				{
-					change_stance(StanceState::Walk);
-					m_Direction = Direction::Right;
-					m_Force.x += CHARACTER_SPEED;
-				}
-				else if (m_Controls.left)
-				{
-					change_stance(StanceState::Walk);
-					m_Direction = Direction::Left;
-					m_Force.x -= CHARACTER_SPEED;
-				}
-				else
-				{
-					change_stance(StanceState::Stand);
-				}
-				if (m_Controls.up)
-					m_Force.y += CHARACTER_SPEED;
-				if (m_Controls.down)
-					m_Force.y -= CHARACTER_SPEED;
-				if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
-					m_Force.y += CHARACTER_JUMP;
+				change_stance(StanceState::Walk);
+				m_Direction = Direction::Right;
+				m_Force.x += calculateForce(m_Speed);
 			}
+			else if (m_Controls.left)
+			{
+				change_stance(StanceState::Walk);
+				m_Direction = Direction::Left;
+				m_Force.x -= calculateForce(m_Speed);
+			}
+			else
+			{
+				change_stance(StanceState::Stand);
+			}
+			if (m_Controls.down)
+				m_Force.y -= m_Speed;
+			if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
+				m_Force.y += m_Jump;
 		}
 
 		void Creature::draw(graphics::Renderer2D* renderer) const
@@ -138,12 +105,14 @@ namespace hiraeth {
 			switch (m_StanceState)
 			{
 			case StanceState::Stand:
-				for (const Renderable2D* renderable : m_StandRenderables)
-					renderable->draw(renderer);
+				for (Renderable2D* renderable : m_StandRenderables)
+					renderer->submit(renderable, m_Color);
+					//renderable->draw(renderer, m_Color);
 				break;
 			case StanceState::Walk:
-				for (const Renderable2D* renderable : m_WalkRenderables)
-					renderable->draw(renderer);
+				for (Renderable2D* renderable : m_WalkRenderables)
+					renderer->submit(renderable, m_Color);
+					//renderable->draw(renderer, m_Color);
 				break;
 			}
 			renderer->pop();
@@ -154,5 +123,18 @@ namespace hiraeth {
 			m_StanceState = next_state;
 		}
 
+		void Creature::getHit(Direction dir, Damage damage)
+		{
+			m_Stats->causeDamage(damage);
+			if (Direction::Left == dir)
+				m_Force = calculateForce(maths::vec2(20, 8));
+			else
+				m_Force = calculateForce(maths::vec2(-20, 8));
+			m_Direction = dir;
+			is_hit = true;
+			m_HitTimer = StaticTimer::timer.elapsed() + 1.5f;
+			m_Color &= 0x80ffffff;
+			//m_Color = 0x80ffffff;
+		}
 	}
 }

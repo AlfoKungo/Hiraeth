@@ -5,7 +5,7 @@
 #include "renderer2d.h"
 #include "renderable2d.h"
 
-#include "buffers\indexbuffer.h"
+#include "buffers/indexbuffer.h"
 
 #if 0
 //#include "../../ext/freetype-gl/freetype-gl.h"
@@ -42,7 +42,8 @@ namespace hiraeth {
 			BatchRenderer2D();
 			~BatchRenderer2D();
 			void begin() override;
-			void submit(const Renderable2D* renderable) override;
+			void submit(const Renderable2D* renderable) override { submit(renderable, renderable->getColor()); }
+			void submit(const Renderable2D* renderable, unsigned int blendColor) override;
 			void drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color) override;
 			void end() override;
 			void flush() override;

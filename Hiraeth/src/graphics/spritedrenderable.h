@@ -1,8 +1,8 @@
 #pragma once
 
-#include "utils\static_timer.h"
+#include "utils/static_timer.h"
 #include "renderable2d.h"
-#include "maths\maths.h"
+#include "maths/maths.h"
 
 namespace hiraeth {
 	namespace graphics {

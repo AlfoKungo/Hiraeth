@@ -1,11 +1,11 @@
 #pragma once
 
-#include "utils\timer.h"
-#include "graphics\spritedrenderable.h"
-#include "graphics\texture.h"
-#include "game\character.h"
-#include "keyboard\keyboard.h"
-#include "keyboard\keyboard_event.h"
+#include "utils/timer.h"
+#include "graphics/spritedrenderable.h"
+#include "graphics/texture.h"
+#include "game/character.h"
+#include "keyboard/keyboard.h"
+#include "keyboard/keyboard_event.h"
 
 
 namespace hiraeth {

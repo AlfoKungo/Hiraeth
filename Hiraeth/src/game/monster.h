@@ -3,6 +3,7 @@
 #include "character.h"
 #include <ctime>
 #include <random>
+#include "monster_stats.h"
 
 namespace hiraeth {
 	namespace game {
@@ -13,7 +14,6 @@ namespace hiraeth {
 			std::random_device rd;
 			std::mt19937 gen;
 			std::uniform_int_distribution<> dis;
-			unsigned int level, maxHP, maxMP;
 			float m_AiTimer;
 
 		public:

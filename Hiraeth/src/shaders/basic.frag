@@ -3,7 +3,6 @@
 layout (location = 0) out vec4 color;
 
 uniform vec4 colour;
-uniform vec2 light_pos;
 
 in DATA
 {

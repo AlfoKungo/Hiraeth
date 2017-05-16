@@ -72,9 +72,14 @@ namespace hiraeth {
 				//for (const T* renderable : m_Renderables)
 				//	if (renderable->is_to_draw)
 				//		renderable->draw(m_Renderer);
-				for (const T* renderable : m_RefRenderables)
-					if (renderable->is_to_draw)
-						renderable->draw(m_Renderer);
+				for (auto renderable = m_RefRenderables.rbegin(); renderable != m_RefRenderables.rend(); ++renderable)
+				{
+					if ((*renderable)->is_to_draw)
+						(*renderable)->draw(m_Renderer);
+				}
+				//for (const T* renderable : m_RefRenderables)
+				//	if (renderable->is_to_draw)
+				//		renderable->draw(m_Renderer);
 
 				m_Renderer->end();
 				m_Renderer->flush();

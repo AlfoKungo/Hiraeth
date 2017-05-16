@@ -3,9 +3,9 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec2 pos, input::Keyboard* kb,
-			map::MapLayer* m_MapLayer)
-			: Creature(maths::Rectangle(pos, maths::vec2(45,31)), m_MapLayer),
+		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer)
+			: Creature(maths::Rectangle(pos, maths::vec2(45,31)), map_layer, CHARACTER_SPEED, CHARACTER_JUMP, 
+				new CharacterStats()),
 			m_Kb(kb)
 		{
 			m_StandRenderables.push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.4f, false, graphics::TextureManager::Load("char_body.png")));
@@ -45,13 +45,6 @@ namespace hiraeth {
 			if (control == input::Controls::jump)
 				m_Controls.jump = true;
 		}
-		
-		void Character::update()
-		{
-			if (is_hit && StaticTimer::timer.elapsed() - m_HitTimer > 0.0f)
-				is_hit = false;
-			Creature::update();
-		}
 
 		void Character::registerKeys()
 		{
@@ -60,23 +53,11 @@ namespace hiraeth {
 			m_Kb->registerToKey(input::Controls::right, this);
 			m_Kb->registerToKey(input::Controls::left, this);
 			m_Kb->registerToKey(input::Controls::jump, this);
-
 		}
 
-		void Character::getHit(Direction dir)
+		CharacterStats* Character::getCharacterStats() const
 		{
-			if (Direction::Left == dir)
-			{
-				m_Force = maths::vec2(20, 8);
-					m_Direction = Direction::Left;
-			}
-			else
-			{
-				m_Force = maths::vec2(-20, 8);
-					m_Direction = Direction::Right;
-			}
-			is_hit = true;
-			m_HitTimer = StaticTimer::timer.elapsed() + 1.5f;
+			return static_cast<CharacterStats*>(m_Stats);
 		}
 	}
 }

@@ -9,9 +9,10 @@ namespace hiraeth {
 		{
 		private:
 			std::vector<Renderable2D*> m_Renderables;
-			maths::mat4 m_TransformationMatrix;
+			maths::mat4& m_TransformationMatrix;
 		public:
-			Group(const maths::mat4& transform);
+			Group(maths::mat4& transform);
+			Group(const maths::vec2& transform);
 			~Group();
 			void add(Renderable2D* renderable);
 			void draw(Renderer2D* renderer) const override;

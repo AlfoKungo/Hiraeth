@@ -37,9 +37,9 @@ namespace hiraeth {
 					{
 						std::cout << "colliding" << std::endl;
 						if (monster->getBounds().GetBottomMiddle().x < m_Char->getBounds().GetBottomMiddle().x)
-							m_Char->getHit(game::Direction::Left);
+							m_Char->getHit(game::Direction::Left, monster->getDamage());
 						else
-							m_Char->getHit(game::Direction::Right);
+							m_Char->getHit(game::Direction::Right, monster->getDamage());
 						return true;
 					}
 				}

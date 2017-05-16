@@ -1,33 +1,33 @@
 #pragma once
 
-#include "utils\timer.h"
+#include "utils/timer.h"
 #include <vector>
 #include "tile.h"
-#include "graphics\texture.h"
-#include "graphics\layers\tilelayer.h"
-#include "graphics\shader.h"
-#include "maths\maths.h"
-#include "graphics\sprite.h"
-#include "graphics\window.h"
+#include "graphics/texture.h"
+#include "graphics/layers/tilelayer.h"
+#include "graphics/shader.h"
+#include "maths/maths.h"
+#include "graphics/sprite.h"
+#include "graphics/window.h"
 
 #include "maprenderer.h"
 #include "portal.h"
-#include "graphics\batchrenderer2d.h"
-#include "graphics\spritedrenderable.h"
-#include "game\character.h"
-#include "game\monster.h"
-#include "view\camera.h"
-#include "basic\drawable.h"
-#include "basic\updatable.h"
-#include "graphics\label.h"
-#include "graphics\font_manager.h"
+#include "graphics/batchrenderer2d.h"
+#include "graphics/spritedrenderable.h"
+#include "game/character.h"
+#include "game/monster.h"
+#include "view/camera.h"
+#include "basic/drawable.h"
+#include "basic/updatable.h"
+#include "graphics/label.h"
+#include "graphics/font_manager.h"
 
 #include "maplayer.h"
 
-#include <cereal\archives\binary.hpp>
+#include <cereal/archives/binary.hpp>
 #include <fstream>
-#include <cereal\types\memory.hpp>
-#include <cereal\types\vector.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace hiraeth {
 	namespace map {

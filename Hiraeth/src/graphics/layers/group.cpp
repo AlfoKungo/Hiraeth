@@ -3,8 +3,14 @@
 namespace hiraeth {
 	namespace graphics {
 
-		Group::Group(const maths::mat4& transform)
+		Group::Group(maths::mat4& transform)
 			: m_TransformationMatrix(transform)
+		{
+
+		}
+
+		Group::Group(const maths::vec2& transform)
+			: m_TransformationMatrix((*new maths::mat4(maths::mat4::Translate(transform))))
 		{
 
 		}
@@ -15,6 +21,7 @@ namespace hiraeth {
 			{
 				delete m_Renderables[i];
 			}
+			delete (&m_TransformationMatrix);
 		}
 
 		void Group::add(Renderable2D* renderable)

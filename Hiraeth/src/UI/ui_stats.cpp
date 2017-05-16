@@ -1,12 +1,17 @@
-#include "stats.h"
+#include "ui_stats.h"
 
 namespace hiraeth {
 	namespace ui {
 
-		Stats::Stats(maths::vec2 pos, input::Controls control_key)
+		UiStats::UiStats(maths::vec2 pos, input::Controls control_key,
+			game::CharacterStats *character_stats)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 212, 373), control_key),
-			m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 4, 45,
-						   "Good Music", 4300, 2000, 9999, 3, 4, 9, 9, 4 }
+		m_StatsStruct(character_stats->getStatsStruct_()), m_DetailsStruct(character_stats->getDetailsStruct_())
+		{
+			fillGroup();
+		}
+
+		void UiStats::fillGroup()
 		{
 			m_Group.add(new graphics::Sprite(0, 0, graphics::TextureManager::Load("Stat.main.backgrnd.png")));
 			m_Group.add(new graphics::Sprite(6, 5, graphics::TextureManager::Load("Stat.main.backgrnd2.png")));
@@ -29,5 +34,6 @@ namespace hiraeth {
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Job, 74, 311, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Name, 74, 329, 0xff000000));
 		}
+
 	}
 }

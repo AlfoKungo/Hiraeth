@@ -1,22 +1,22 @@
 #include <time.h>
-#include <cereal\archives\binary.hpp>
+#include <cereal/archives/binary.hpp>
 #include <fstream>
-#include <cereal\types\memory.hpp>
-#include <cereal\types\vector.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/vector.hpp>
 
-#include "utils\static_timer.h"
-#include "src\maths\maths.h"
+#include "utils/static_timer.h"
+#include "src/maths/maths.h"
 
-#include "src\graphics\window.h"
-#include "keyboard\keyboard.h"
-#include "view\camera.h"
+#include "src/graphics/window.h"
+#include "keyboard/keyboard.h"
+#include "view/camera.h"
 
-#include "src\graphics\shader.h"
-#include "src\map\map.h"
-#include "graphics\texturemanager.h"
-#include "graphics\label.h"
-#include "UI\ui_manager.h"
-#include "game\monster_manager.h"
+#include "src/graphics/shader.h"
+#include "src/map/map.h"
+#include "graphics/texturemanager.h"
+#include "graphics/label.h"
+#include "UI/ui_manager.h"
+#include "game/monster_manager.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -95,9 +95,9 @@ int main()
 
     //Camera camera(&window);
 
-    Map map("map4.png", 2, &window);
 
-    ui::UiManager uiManager(&keyboard);
+    Map map("map4.png", 2, &window);
+    ui::UiManager uiManager(&keyboard, map.getCharacter()->getCharacterStats());
     game::MonsterManager monsterManager(map.getMapLayer(), map.getCharacter());
 
     unsigned int frames = 0;

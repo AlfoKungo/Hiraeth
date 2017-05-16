@@ -1,9 +1,9 @@
 #pragma once
 
-#include "graphics\renderable2d.h"
-#include "maths\maths.h"
-#include "graphics\window.h"
-#include "utils\static_timer.h"
+#include "graphics/renderable2d.h"
+#include "maths/maths.h"
+#include "graphics/window.h"
+#include "utils/static_timer.h"
 
 namespace hiraeth {
 	namespace view {
@@ -34,7 +34,7 @@ namespace hiraeth {
 		private:
 			static void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
 
-			Camera();
+			Camera() {}
 		};
 	}
 }

@@ -31,7 +31,7 @@ namespace hiraeth {
 			std::vector<maths::vec2> m_UV;
 			Texture* m_Texture;
 		protected:
-			Renderable2D() : m_Texture(nullptr) { setUVDefaults(); }
+			Renderable2D() : m_Texture(nullptr), m_Color(0xffffffff) { setUVDefaults(); }
 		public:
 			Renderable2D(maths::vec3 position, maths::vec2 size, unsigned int color)
 				: m_Bounds(position, size), m_Color(color)
@@ -51,12 +51,6 @@ namespace hiraeth {
 			{
 			}
 
-			//virtual void submit(Renderer2D* renderer) const
-			//{
-			//	renderer->submit(this);
-			//}
-
-			inline void setColor(unsigned int color) { m_Color = color; }
 
 			// gets
 			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
@@ -69,14 +63,18 @@ namespace hiraeth {
 			inline const GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
 
 			// sets
+			inline void setColor(unsigned int color) { m_Color = color; }
 			inline void setPosition(const maths::vec2& position) { m_Bounds.position = position; }
 			inline void setSize(const maths::vec2& size) { m_Bounds.size = size; }
-			inline void move(const maths::vec2& step) { m_Bounds.position += step; }
 
 			virtual void update() {}
 			virtual void draw(Renderer2D* renderer) const
 			{ 
 				renderer->submit(this); 
+			}
+			virtual void draw(Renderer2D* renderer, unsigned int color)
+			{ 
+				renderer->submit(this, color); 
 			}
 		private:
 			void setUVDefaults()

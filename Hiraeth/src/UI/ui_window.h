@@ -1,10 +1,10 @@
 #pragma once
-#include "keyboard\keyboard_event.h"
-#include "keyboard\mouse_event.h"
-#include "graphics\layers\group.h"
-#include "graphics\layers\layer.h"
-#include "basic\drawable.h"
-#include "basic\updatable.h"
+#include "keyboard/keyboard_event.h"
+#include "keyboard/mouse_event.h"
+#include "graphics/layers/group.h"
+#include "graphics/layers/layer.h"
+#include "basic/drawable.h"
+#include "basic/updatable.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -14,17 +14,23 @@ namespace hiraeth {
 		{
 		private:
 			input::Controls m_ControlKey;
+			maths::mat4 testMat;
 		protected:
 			graphics::Group m_Group;
 			maths::vec2 m_WindowSize;
 			bool m_IsAttached;
 		public:
 			UiWindow(maths::Rectangle rec, input::Controls control_key)
-			 : m_Group(maths::mat4::Translate(rec.position)), 
+			 : m_Group(rec.position), 
+			 //: testMat(maths::mat4::Translate(rec.position)), 
+			 //m_Group(testMat), 
 				m_WindowSize(rec.size),
 				m_IsAttached(false),
 				m_ControlKey(control_key)
 			{
+				testMat *= maths::mat4::Translate(maths::vec2(400));
+
+				//m_Group.translate(maths::vec2(400));
 			}
 			
 			void controlKeyClicked()

@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
-#include "keyboard\keyboard.h"
+#include "keyboard/keyboard.h"
 
 namespace hiraeth {
 	namespace graphics {

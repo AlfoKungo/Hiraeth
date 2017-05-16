@@ -1,10 +1,10 @@
 #pragma once
 
-#include "graphics\shader.h"
-#include "graphics\Texture.h"
-#include "view\camera.h"
+#include "graphics/shader.h"
+#include "graphics/Texture.h"
+#include "view/camera.h"
 #include "tile.h"
-#include "physics\foothold.h"
+#include "physics/foothold.h"
 
 namespace hiraeth {
 	namespace map {

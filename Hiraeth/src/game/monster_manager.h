@@ -3,9 +3,9 @@
 #include <vector>
 
 #include "monster.h"
-#include "map\maplayer.h"
-#include "graphics\layers\layer.h"
-#include "game\character.h"
+#include "map/maplayer.h"
+#include "graphics/layers/layer.h"
+#include "game/character.h"
 
 namespace hiraeth {
 	namespace game {
