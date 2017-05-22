@@ -21,7 +21,7 @@ namespace hiraeth {
 			virtual ~Monster() {}
 
 			void update() override;
-			bool checkCollision(const maths::Rectangle& rec);
+			bool checkCollision(const maths::Rectangle& rec) const;
 		private:
 		};
 	}

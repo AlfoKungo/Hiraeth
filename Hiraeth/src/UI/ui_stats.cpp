@@ -13,11 +13,12 @@ namespace hiraeth {
 
 		void UiStats::fillGroup()
 		{
-			m_Group.add(new graphics::Sprite(0, 0, graphics::TextureManager::Load("Stat.main.backgrnd.png")));
-			m_Group.add(new graphics::Sprite(6, 5, graphics::TextureManager::Load("Stat.main.backgrnd2.png")));
-			m_Group.add(new graphics::Sprite(7, 114, graphics::TextureManager::Load("Stat.main.backgrnd3.png")));
+			m_Group.clear();
+			m_Group.add(new graphics::Sprite(0, 0, graphics::TextureManager::Load("Assets/Stats/Stat.main.backgrnd.png")));
+			m_Group.add(new graphics::Sprite(6, 5, graphics::TextureManager::Load("Assets/Stats/Stat.main.backgrnd2.png")));
+			m_Group.add(new graphics::Sprite(7, 114, graphics::TextureManager::Load("Assets/Stats/Stat.main.backgrnd3.png")));
 			//m_Group.add(new graphics::Sprite(120, 120, graphics::TextureManager::Load("Stat.main.BtAuto.normal.1.png")));
-			m_Group.add(new graphics::SpritedRenderable(maths::vec3(120, 120, 0), 4, 0.15f, true, graphics::TextureManager::Load("Stat.main.BtAuto.normal.png")));
+			m_Group.add(new graphics::SpritedRenderable(maths::vec3(120, 120, 0), 4, 0.15f, true, graphics::TextureManager::Load("Assets/Stats/Stat.main.BtAuto.normal.png")));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Luk, 74, 44, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Int, 74, 62, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Dex, 74, 80, 0xff000000));
@@ -33,6 +34,17 @@ namespace hiraeth {
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Level, 74, 293, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Job, 74, 311, 0xff000000));
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Name, 74, 329, 0xff000000));
+		}
+
+		void UiStats::update()
+		{
+			if (m_StatsStruct.is_changed)
+			{
+				//fillGroup();
+				static_cast<graphics::Label*>(m_Group.m_Renderables.at(11))->setText(m_StatsStruct.Hp);
+				m_StatsStruct.is_changed = false;
+			}
+			UiWindow::update();
 		}
 
 	}

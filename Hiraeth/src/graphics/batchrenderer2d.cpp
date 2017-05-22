@@ -275,7 +275,7 @@ namespace hiraeth {
 			glBindVertexArray(0);
 			m_IndexCount = 0;
 
-			//m_TextureSlots.clear();
+			m_TextureSlots.clear();
 		}
 	}
 }

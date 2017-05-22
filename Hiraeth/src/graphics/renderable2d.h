@@ -31,7 +31,7 @@ namespace hiraeth {
 			std::vector<maths::vec2> m_UV;
 			Texture* m_Texture;
 		protected:
-			Renderable2D() : m_Texture(nullptr), m_Color(0xffffffff) { setUVDefaults(); }
+			Renderable2D() : m_Color(0xffffffff), m_Texture(nullptr) { setUVDefaults(); }
 		public:
 			Renderable2D(maths::vec3 position, maths::vec2 size, unsigned int color)
 				: m_Bounds(position, size), m_Color(color)

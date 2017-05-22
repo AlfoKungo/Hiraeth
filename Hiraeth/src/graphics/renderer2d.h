@@ -22,6 +22,8 @@ namespace hiraeth {
 				m_TransformationBack = &m_TransformationStack.back();
 			}
 		public:
+			virtual ~Renderer2D() = default;
+
 			void push(const maths::mat4& matrix, bool override = false)
 			{
 				if (override)

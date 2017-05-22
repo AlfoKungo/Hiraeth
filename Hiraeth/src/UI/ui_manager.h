@@ -3,6 +3,7 @@
 #include <vector>
 #include "ui_window.h"
 #include "ui_stats.h"
+#include "ui_inventory.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "game/character_stats.h"

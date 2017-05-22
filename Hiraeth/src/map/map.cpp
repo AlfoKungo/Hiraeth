@@ -1,6 +1,6 @@
 #include "map.h"
 
- 
+
 namespace hiraeth {
 	namespace map {
 

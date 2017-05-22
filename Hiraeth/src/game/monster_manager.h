@@ -19,11 +19,10 @@ namespace hiraeth {
 			graphics::Layer<Monster> m_Layer;
 			game::Character* const m_Char;
 			//graphics::Layer<graphics::Renderable2D> m_Layer;
-			view::Camera* m_Camera;
 		public:
 			MonsterManager(map::MapLayer* map_layer, game::Character* character);
 			void draw();
-			void update();
+			void update() override;
 			bool checkCollision();
 
 		};

@@ -64,12 +64,11 @@ namespace hiraeth {
 			Creature::update();
 		}
 
-		bool Monster::checkCollision(const maths::Rectangle& rec)
+		bool Monster::checkCollision(const maths::Rectangle& rec) const
 		{
 
-			if (abs(rec.GetBottomMiddle().x - m_Bounds.GetBottomMiddle().x) - rec.width / 2 - m_Bounds.width / 2 < 0)
-				return true;
-			return false;
+			return ((rec.x < m_Bounds.x + m_Bounds.width) && (m_Bounds.x < rec.x + rec.width)
+				&& (rec.y < m_Bounds.y + m_Bounds.height) && (m_Bounds.y < rec.y + rec.height));
 		}
 	}
 }

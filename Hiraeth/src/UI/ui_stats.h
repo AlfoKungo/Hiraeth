@@ -23,6 +23,7 @@ namespace hiraeth {
 		public:
 			UiStats(maths::vec2 pos, input::Controls control_key, 
 				game::CharacterStats *character_stats);
+			void update() override;
 			void mouse_clicked() override {}
 			void mouse_released() override {}
 			void mouse_moved(float mx, float my) override {}

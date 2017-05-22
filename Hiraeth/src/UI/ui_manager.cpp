@@ -1,4 +1,5 @@
 #include "ui_manager.h"
+#include "ui_inventory.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -35,8 +36,9 @@ namespace hiraeth {
 
 		void UiManager::init_all_windows()
 		{
+			m_Layer.add_ref(new UiInventory(maths::vec2(-300, 0), input::Controls::stats_b));
 			m_Layer.add_ref(&m_StatsA);
-			m_Layer.add_ref(&m_StatsB);
+			//m_Layer.add_ref(&m_StatsB);
 			m_Layer.add_ref(&m_StatsC);
 			//m_Layer_b.add(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
 			//m_Layer_c.add(new Stats(maths::vec2(300, 0), input::Controls::stats_c));

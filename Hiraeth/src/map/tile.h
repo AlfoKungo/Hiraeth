@@ -35,15 +35,15 @@ namespace hiraeth {
 		public:
 			Tile(maths::vec3 pos, float scale, maths::vec2 uv_pos, maths::vec2 uv_size, unsigned int type);
 			Tile(maths::vec2 pos, float scale, maths::vec2 uv_pos, maths::vec2 uv_size, unsigned int type);
-			Tile(Serializer s);
+			explicit Tile(Serializer s);
 			~Tile();
 
-			float get_scale() { return m_Scale; }
-			maths::vec2 get_uv_pos() { return m_Uv_pos; }
-			maths::vec2 get_uv_size() { return m_Uv_size; }
-			unsigned int get_type() { return m_Type; }
+			float get_scale() const { return m_Scale; }
+			maths::vec2 get_uv_pos() const { return m_Uv_pos; }
+			maths::vec2 get_uv_size() const { return m_Uv_size; }
+			unsigned int get_type() const { return m_Type; }
 			
-			maths::Rectangle get_rec()
+			maths::Rectangle get_rec() const
 			{
 				return maths::Rectangle(m_Position, m_Uv_size * m_Scale);
 			}
@@ -61,7 +61,7 @@ namespace hiraeth {
 		//}
 
 		private:
-			Tile::Tile();
+			Tile::Tile() = default;
 			friend class cereal::access;
 
 			std::vector<maths::vec2> create_uv_by_pos_size(maths::vec2 pos, maths::vec2 size, maths::vec2 tex_size);

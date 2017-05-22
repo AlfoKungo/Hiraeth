@@ -6,7 +6,7 @@ namespace hiraeth {
 		class Drawable
 		{
 		public:
-			bool is_to_draw = true;
+			bool is_to_draw = false;
 			virtual void draw(graphics::Renderer2D* renderer) const = 0;
 			virtual ~Drawable() {}
 		};

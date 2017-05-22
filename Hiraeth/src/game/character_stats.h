@@ -15,6 +15,7 @@ namespace hiraeth {
 			unsigned int Fame;
 			unsigned int AbilityPoints;
 			unsigned int Str, Int, Luk, Dex;
+			bool is_changed;
 		};
 		struct DetailsStruct
 		{

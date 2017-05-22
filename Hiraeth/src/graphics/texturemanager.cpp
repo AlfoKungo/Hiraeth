@@ -1,4 +1,5 @@
 #include "texturemanager.h"
+#include <iostream>
 
 namespace hiraeth {
 	namespace graphics {
@@ -14,7 +15,8 @@ namespace hiraeth {
 					return texture;
 			}
 			m_Textures.push_back(new Texture(name));
-			return m_Textures.back();
+			std::cout << "Tid is " +std::to_string( m_Textures.back()->getID()) + " and name is: " + name << std::endl;
+				return m_Textures.back();
 		}
 
 		Texture* TextureManager::Get(const std::string& name)
