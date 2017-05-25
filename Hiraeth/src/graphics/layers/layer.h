@@ -31,7 +31,7 @@ namespace hiraeth {
 				m_Shader->disable();
 			}
 			Layer(Shader* shader)
-				: Layer(new BatchRenderer2D(), shader, maths::mat4::Orthographic(-800.0f, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
+				: Layer(new BatchRenderer2D(), shader, maths::mat4::Orthographic(-800, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
 			{
 
 			}
@@ -52,15 +52,18 @@ namespace hiraeth {
 			{
 				m_RefRenderables.push_back(renderable);
 			}
-			void update()
+
+			virtual void update()
 			{
 
 				for (T* rend : m_RefRenderables)
-					rend->update();
+					if (rend->is_to_update)
+						rend->update();
 				for (T* rend : m_Renderables)
-					rend->update();
+					if (rend->is_to_update)
+						rend->update();
 			}
-			virtual void render()
+			virtual void render() const
 			{
 				m_Shader->enable();
 				m_Renderer->begin();

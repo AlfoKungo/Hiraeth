@@ -18,8 +18,8 @@ namespace hiraeth {
 		class UiStats : public UiWindow
 		{
 		private:
-			game::StatsStruct& m_StatsStruct;
-			game::DetailsStruct& m_DetailsStruct;
+			game::StatsStruct* m_StatsStruct;
+			game::DetailsStruct* m_DetailsStruct;
 		public:
 			UiStats(maths::vec2 pos, input::Controls control_key, 
 				game::CharacterStats *character_stats);

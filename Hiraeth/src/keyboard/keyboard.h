@@ -12,7 +12,7 @@ namespace hiraeth {
 		enum Controls
 		{
 			none, up, down, left, right, jump, escape,
-			stats_a, stats_b, stats_c 
+			stats_a, stats_b, inventory 
 		};
 
 		class Keyboard

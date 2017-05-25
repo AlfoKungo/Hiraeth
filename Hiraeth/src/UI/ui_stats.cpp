@@ -19,30 +19,32 @@ namespace hiraeth {
 			m_Group.add(new graphics::Sprite(7, 114, graphics::TextureManager::Load("Assets/Stats/Stat.main.backgrnd3.png")));
 			//m_Group.add(new graphics::Sprite(120, 120, graphics::TextureManager::Load("Stat.main.BtAuto.normal.1.png")));
 			m_Group.add(new graphics::SpritedRenderable(maths::vec3(120, 120, 0), 4, 0.15f, true, graphics::TextureManager::Load("Assets/Stats/Stat.main.BtAuto.normal.png")));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Luk, 74, 44, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Int, 74, 62, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Dex, 74, 80, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Str, 74, 98, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.AbilityPoints, 78, 124, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Fame, 74, 167, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Mp, 74, 185, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Hp, 74, 203, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Guild, 74, 221, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.HonorExp, 74, 239, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.HonorLvl, 74, 257, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Exp, 74, 275, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Level, 74, 293, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Job, 74, 311, 0xff000000));
-			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct.Name, 74, 329, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Luk, 74, 44, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Int, 74, 62, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Dex, 74, 80, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Str, 74, 98, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->AbilityPoints, 78, 124, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Fame, 74, 167, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Mp, 74, 185, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Hp, 74, 203, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Guild, 74, 221, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->HonorExp, 74, 239, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->HonorLvl, 74, 257, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Exp, 74, 275, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Level, 74, 293, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Job, 74, 311, 0xff000000));
+			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Name, 74, 329, 0xff000000));
 		}
 
 		void UiStats::update()
 		{
-			if (m_StatsStruct.is_changed)
+			if (m_StatsStruct->is_changed)
 			{
 				//fillGroup();
-				static_cast<graphics::Label*>(m_Group.m_Renderables.at(11))->setText(m_StatsStruct.Hp);
-				m_StatsStruct.is_changed = false;
+				static_cast<graphics::Label*>(m_Group.m_Renderables.at(11))->setText(m_StatsStruct->Hp);
+				//unsigned int d = offsetof(game::StatsStruct, game::StatsStruct::Hp);
+				//static_cast<graphics::Label*>(m_Group.m_Renderables.at(d))->setText(m_StatsStruct->Hp);
+				m_StatsStruct->is_changed = false;
 			}
 			UiWindow::update();
 		}

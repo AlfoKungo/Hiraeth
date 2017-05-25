@@ -114,7 +114,7 @@ namespace hiraeth {
 			setKeyControl(Controls::escape, GLFW_KEY_ESCAPE);
 			setKeyControl(Controls::stats_a, GLFW_KEY_S);
 			setKeyControl(Controls::stats_b, GLFW_KEY_D);
-			setKeyControl(Controls::stats_c, GLFW_KEY_A);
+			setKeyControl(Controls::inventory, GLFW_KEY_A);
 		}
 
 		void Keyboard::setKeyControl(Controls control, unsigned int key)

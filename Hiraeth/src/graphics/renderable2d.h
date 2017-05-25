@@ -34,13 +34,13 @@ namespace hiraeth {
 			Renderable2D() : m_Color(0xffffffff), m_Texture(nullptr) { setUVDefaults(); }
 		public:
 			Renderable2D(maths::vec3 position, maths::vec2 size, unsigned int color)
-				: m_Bounds(position, size), m_Color(color)
+				: m_Bounds(position, size), m_Color(color), m_Texture(nullptr)
 			{
 				setColor(color);
 				setUVDefaults();
 			}
 			Renderable2D(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv, Texture* texture)
-				: m_Bounds(position, size), m_Color(0xffffffff)
+				: m_Bounds(position, size), m_Color(0xffffffff) 
 			{
 				m_Texture = texture;
 				for (std::vector<maths::vec2>::const_iterator it = uv.begin(); it != uv.end(); it++)
@@ -60,7 +60,13 @@ namespace hiraeth {
 			inline Texture* getTexture() const { return m_Texture; }
 			inline const unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
-			inline const GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
+			//inline GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
+			GLuint getTID() const
+			{
+				if (m_Texture == nullptr)
+					return 0;
+				return m_Texture->getID();
+			}
 
 			// sets
 			inline void setColor(unsigned int color) { m_Color = color; }

@@ -16,7 +16,7 @@ namespace hiraeth {
 			}
 			m_Textures.push_back(new Texture(name));
 			std::cout << "Tid is " +std::to_string( m_Textures.back()->getID()) + " and name is: " + name << std::endl;
-				return m_Textures.back();
+			return m_Textures.back();
 		}
 
 		Texture* TextureManager::Get(const std::string& name)

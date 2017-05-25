@@ -1,13 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
+
 #include "ui_window.h"
 #include "ui_stats.h"
 #include "ui_inventory.h"
+#include "main_ui.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "game/character_stats.h"
-#include <algorithm>
 
 namespace hiraeth {
 	namespace ui {
@@ -18,11 +20,11 @@ namespace hiraeth {
 			graphics::Layer<UiWindow> m_Layer;
 			std::vector<UiWindow*>& m_Windows;
 			input::Keyboard* m_Kb;
-			UiStats m_StatsA, m_StatsB, m_StatsC;
+			MainUi m_MainUi;
 		public:
 			UiManager(input::Keyboard* kb, game::CharacterStats *character_stats);
-			void draw();
 			void update();
+			void draw() const;
 			void set_keyboard(input::Keyboard* keyboard) { m_Kb = keyboard; }
 			void leftButtonClicked(float mx, float my) override;
 			void leftButtonReleased(float mx, float my) const override;
@@ -30,7 +32,7 @@ namespace hiraeth {
 			void ButtonClicked(input::Controls c) override;
 			void ButtonReleased(input::Controls c) override;
 		private:
-			void init_all_windows();
+			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
 		};
 
 	}

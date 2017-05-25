@@ -3,8 +3,8 @@
 namespace hiraeth {
 	namespace game {
 		CharacterStats::CharacterStats()
-			: m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 4, 45,
-						   "Good Music", 4300, 2000, 9999, 3, 4, 9, 9, 4 , false},
+			: m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 2042185, 4, 45,
+						   "Good Music", 430, 430, 200, 180, 9999, 3, 4, 9, 9, 4 , false},
 			m_DetailsStruct{ 100, 40, 10, 10, 20, 20, 30, 30, 100, 100 }
 		{
 		}

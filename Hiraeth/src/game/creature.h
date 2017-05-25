@@ -34,7 +34,7 @@ namespace hiraeth {
 #define CHARACTER_SPEED 25.0f
 #define MONSTER_SPEED 15.0f
 #define AIR_SPEED_MODIFIER calculateAirModifier()
-#define CHARACTER_JUMP 12.0f
+#define CHARACTER_JUMP 13.0f
 #define FRICTION maths::vec2(0.2f, 1.0f)
 #define FRICTION_AIR maths::vec2(0.99f, 1.0f)
 #define CHARACTER_TIME_BETWEEN_ADDS 1.0f/60.0f

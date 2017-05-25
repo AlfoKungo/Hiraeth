@@ -63,7 +63,7 @@ namespace hiraeth {
 			graphics::Texture* m_Tex;
 
 		public:
-			MapRenderer(graphics::Texture* tex);
+			explicit MapRenderer(graphics::Texture* tex);
 			~MapRenderer();
 			void begin();
 			void submit(const MapRenderable* renderable);

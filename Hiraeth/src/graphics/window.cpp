@@ -14,18 +14,6 @@ namespace hiraeth {
 				glfwTerminate();
 			glfwSetWindowPos(m_Window, (1920 - width) / 2, (1080 - height) / 2);
 
-			//for (int i = 0; i < GLFW_KEY_LAST; i++)
-			//{
-			//	m_Keys[i] = false;
-			//	m_LastKeys[i] = false;
-			//	m_KeyTyped[i] = false;
-			//}
-			//for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; i++)
-			//{
-			//	m_MouseButtons[i] = false;
-			//	m_MouseState[i] = false;
-			//	m_MouseClicked[i] = false;
-			//}
 		}
 
 		Window::~Window()

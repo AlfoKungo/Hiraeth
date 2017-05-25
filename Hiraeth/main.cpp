@@ -99,7 +99,6 @@ int main()
     Map map("map4.png", 2, &window);
     ui::UiManager uiManager(&keyboard, map.getCharacter()->getCharacterStats());
     game::MonsterManager monsterManager(map.getMapLayer(), map.getCharacter());
-
     unsigned int frames = 0;
     while (!window.closed())
     {
@@ -125,7 +124,7 @@ int main()
         if (StaticTimer::timer.elapsed() - timer > 1.0f)
         {
             timer += 1.0f;
-            printf("%d fps\n", frames);
+            printf("%d fps, %f frame time\n", frames, 1.0 /frames);
             frames = 0;
         }
 

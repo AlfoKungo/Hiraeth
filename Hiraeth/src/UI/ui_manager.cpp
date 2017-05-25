@@ -9,39 +9,32 @@ namespace hiraeth {
 			//: m_Layer(shader),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
-			m_StatsA(maths::vec2(0, 0), input::Controls::stats_a, character_stats),
-			m_StatsB(maths::vec2(-300, 0), input::Controls::stats_b, character_stats),
-			m_StatsC(maths::vec2(300, 0), input::Controls::stats_c, character_stats)
+			m_MainUi(character_stats->getStatsStruct_())
 		{
-			init_all_windows();
+			init_all_windows(kb, character_stats);
 			kb->registerToMouse(this);
 			kb->registerToKey(input::Controls::escape, this);
-			kb->registerToKey(input::Controls::stats_a, this);
-			kb->registerToKey(input::Controls::stats_b, this);
-			kb->registerToKey(input::Controls::stats_c, this);
 		}
-		void UiManager::draw()
+		void UiManager::draw() const
 		{
 			m_Layer.render();
-			//m_Layer_b.render();
-			//m_Layer_c.render();
+			m_MainUi.draw();
 		}
 
 		void UiManager::update()
 		{
+			m_MainUi.update();
 			m_Layer.update();
-			//m_Layer_b.update();
-			//m_Layer_c.update();
 		}
 
-		void UiManager::init_all_windows()
+		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats)
 		{
-			m_Layer.add_ref(new UiInventory(maths::vec2(-300, 0), input::Controls::stats_b));
-			m_Layer.add_ref(&m_StatsA);
-			//m_Layer.add_ref(&m_StatsB);
-			m_Layer.add_ref(&m_StatsC);
-			//m_Layer_b.add(new Stats(maths::vec2(-300, 0), input::Controls::stats_b));
-			//m_Layer_c.add(new Stats(maths::vec2(300, 0), input::Controls::stats_c));
+			m_Layer.add_ref(new UiInventory(maths::vec2(-300, 0), input::Controls::inventory));
+			kb->registerToKey(input::Controls::inventory, this);
+			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats_a, character_stats));
+			kb->registerToKey(input::Controls::stats_a, this);
+			m_Layer.add_ref(new UiStats(maths::vec2(300, 0), input::Controls::stats_b, character_stats));
+			kb->registerToKey(input::Controls::stats_b, this);
 		}
 
 		void UiManager::leftButtonClicked(float mx, float my)
@@ -50,7 +43,8 @@ namespace hiraeth {
 
 			for (auto window = m_Windows.begin(); window != m_Windows.end(); ++window)
 			{
-				if ((*window)->isWindowContains(mx, my))
+				if ((*window)->is_to_draw &&  (*window)->isWindowContains(mx, my))
+				//if ((*window)->isWindowContains(mx, my))
 				{
 					if ((*window)->isTitlebarContains(mx, my))
 					{

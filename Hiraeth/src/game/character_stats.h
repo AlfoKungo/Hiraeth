@@ -9,9 +9,9 @@ namespace hiraeth {
 		{
 			std::string Name, Job;
 			unsigned int Level;
-			unsigned int Exp, HonorLvl, HonorExp;
+			unsigned int MaxExp, Exp, HonorLvl, HonorExp;
 			std::string Guild;
-			unsigned int Hp, Mp;
+			unsigned int MaxHp, Hp, MaxMp, Mp;
 			unsigned int Fame;
 			unsigned int AbilityPoints;
 			unsigned int Str, Int, Luk, Dex;
@@ -34,8 +34,8 @@ namespace hiraeth {
 			CharacterStats();
 			Damage getDamage() const override;
 			void causeDamage(Damage damage) override;
-			inline StatsStruct& getStatsStruct_() { return m_StatsStruct; }
-			inline DetailsStruct& getDetailsStruct_() { return m_DetailsStruct; }
+			inline StatsStruct* getStatsStruct_() { return &m_StatsStruct; }
+			inline DetailsStruct* getDetailsStruct_() { return &m_DetailsStruct; }
 		};
 
 	}
