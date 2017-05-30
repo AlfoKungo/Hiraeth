@@ -13,7 +13,7 @@
 
 #include "src/graphics/shader.h"
 #include "src/map/map.h"
-#include "graphics/texturemanager.h"
+#include "graphics/texture_manager.h"
 #include "graphics/label.h"
 #include "UI/ui_manager.h"
 #include "game/monster_manager.h"

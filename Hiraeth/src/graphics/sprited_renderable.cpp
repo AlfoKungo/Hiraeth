@@ -1,10 +1,10 @@
-#include "spritedrenderable.h"
+#include "sprited_renderable.h"
 
 namespace hiraeth {
 	namespace graphics {
 
 		SpritedRenderable::SpritedRenderable(maths::vec3 position, int frames_amount, float frame_delay, bool is_loop, graphics::Texture* ptex)
-			: Renderable2D(position, maths::vec2(ptex->getWidth() / (float)(frames_amount), ptex->getHeight()), 0xffffffff),
+			: Renderable(position, maths::vec2(ptex->getWidth() / (float)(frames_amount), ptex->getHeight()), 0xffffffff),
 			m_FrameIndex(0), m_AnimationTimer(StaticTimer::timer.elapsed()), m_IsLoop(is_loop),
 			m_FrameWidth(ptex->getWidth() / (float)(frames_amount)), m_FrameDelay(frame_delay), m_FramesAmount(frames_amount)
 		{

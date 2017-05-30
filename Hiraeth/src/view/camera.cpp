@@ -4,10 +4,10 @@ namespace hiraeth {
 	namespace view {
 
 		maths::mat4 Camera::m_Ortho;
-		const graphics::Renderable2D* Camera::m_Char;
+		const graphics::Renderable* Camera::m_Char;
 		float Camera::m_PositionTimer;
 
-		void Camera::init(graphics::Renderable2D* character)
+		void Camera::init(graphics::Renderable* character)
 		{
 			m_Ortho = maths::mat4(maths::mat4::Orthographic(-800.0f, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f));
 			m_PositionTimer = StaticTimer::timer.elapsed();
@@ -41,7 +41,7 @@ namespace hiraeth {
 			}
 		}
 
-		void Camera::setCharacter(graphics::Renderable2D* character)
+		void Camera::setCharacter(graphics::Renderable* character)
 		{
 			m_Char = character;
 			setNewPosition(m_Char->getPosition(), m_Ortho.GetPosition(), 1);

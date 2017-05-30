@@ -1,13 +1,13 @@
 #pragma once
 
 #include "utils/static_timer.h"
-#include "renderable2d.h"
+#include "renderable.h"
 #include "maths/maths.h"
 
 namespace hiraeth {
 	namespace graphics {
 
-		class SpritedRenderable : public Renderable2D
+		class SpritedRenderable : public Renderable
 		{
 		private:
 			int m_Direction = 1;

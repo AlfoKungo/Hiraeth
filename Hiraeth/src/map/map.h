@@ -12,8 +12,8 @@
 
 #include "maprenderer.h"
 #include "portal.h"
-#include "../graphics/batchrenderer2d.h"
-#include "../graphics/spritedrenderable.h"
+#include "../graphics/renderer.h"
+#include "../graphics/sprited_renderable.h"
 #include "../game/character.h"
 #include "../game/monster.h"
 #include "../view/camera.h"
@@ -46,9 +46,9 @@ namespace hiraeth {
 			//graphics::TileLayer m_BgLayer;
 			//graphics::TileLayer m_CrLayer;
 
-			graphics::Layer<graphics::Renderable2D> m_PtLayer;
-			graphics::Layer<graphics::Renderable2D> m_BgLayer;
-			graphics::Layer<graphics::Renderable2D> m_CrLayer;
+			graphics::Layer<graphics::Renderable> m_PtLayer;
+			graphics::Layer<graphics::Renderable> m_BgLayer;
+			graphics::Layer<graphics::Renderable> m_CrLayer;
 
 			MapLayer m_MapLayer;
 

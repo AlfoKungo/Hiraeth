@@ -1,4 +1,4 @@
-#include "texturemanager.h"
+#include "texture_manager.h"
 #include <iostream>
 
 namespace hiraeth {

@@ -18,7 +18,7 @@ namespace hiraeth {
 			graphics::Shader m_Shader;
 			graphics::Layer<Monster> m_Layer;
 			Character* const m_Char;
-			//graphics::Layer<graphics::Renderable2D> m_Layer;
+			//graphics::Layer<graphics::Renderable> m_Layer;
 		public:
 			MonsterManager(map::MapLayer* map_layer, game::Character* character);
 			void draw();

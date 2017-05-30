@@ -1,23 +1,22 @@
 #pragma once
 
-#include "../renderer2d.h"
-#include "../renderable2d.h"
-#include "../batchrenderer2d.h"
+#include "../renderable.h"
+#include "../renderer.h"
 
 namespace hiraeth {
 	namespace graphics {
 
-		template <typename T = Renderable2D>
+		template <typename T = Renderable>
 		class Layer
 		{
 		protected:
-			Renderer2D* m_Renderer;
+			Renderer* m_Renderer;
 			Shader* m_Shader;
 			maths::mat4 m_ProjectionMatrix;
 		public:
 			std::vector<T*> m_Renderables;
 			std::vector<T*> m_RefRenderables;
-			Layer(Renderer2D* renderer, Shader* shader, maths::mat4 projectionMatrix)
+			Layer(Renderer* renderer, Shader* shader, maths::mat4 projectionMatrix)
 				: m_Renderer(renderer), m_Shader(shader), m_ProjectionMatrix(projectionMatrix)
 			{
 				m_Shader->enable();
@@ -31,7 +30,7 @@ namespace hiraeth {
 				m_Shader->disable();
 			}
 			Layer(Shader* shader)
-				: Layer(new BatchRenderer2D(), shader, maths::mat4::Orthographic(-800, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
+				: Layer(new Renderer(), shader, maths::mat4::Orthographic(-800, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
 			{
 
 			}

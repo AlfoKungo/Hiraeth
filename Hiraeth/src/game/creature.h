@@ -1,9 +1,9 @@
 #pragma once
 
-#include "graphics/spritedrenderable.h"
+#include "graphics/sprited_renderable.h"
 #include "keyboard/keyboard.h"
 #include "map/maplayer.h"
-#include "graphics/texturemanager.h"
+#include "graphics/texture_manager.h"
 #include "physics/collisionable.h"
 #include "stats.h"
 
@@ -28,7 +28,7 @@ namespace hiraeth {
 			Left,
 		};
 
-		class Creature : public graphics::Renderable2D, public physics::Collisionable
+		class Creature : public graphics::Renderable, public physics::Collisionable
 		{
 
 #define CHARACTER_SPEED 25.0f
@@ -62,7 +62,7 @@ namespace hiraeth {
 			virtual ~Creature();
 
 			virtual void update() override;
-			void draw(graphics::Renderer2D* renderable) const override;
+			void draw(graphics::Renderer* renderable) const override;
 			void getHit(Direction dir, Damage damage);
 			inline void move(const maths::vec2& step) override
 			{

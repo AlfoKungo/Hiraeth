@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/renderable2d.h"
+#include "graphics/renderable.h"
 #include "maths/maths.h"
 #include "graphics/window.h"
 #include "utils/static_timer.h"
@@ -20,17 +20,17 @@ namespace hiraeth {
 		{
 		private:
 			static maths::mat4 m_Ortho;
-			static const graphics::Renderable2D* m_Char;
+			static const graphics::Renderable* m_Char;
 			static float m_PositionTimer;
 		public:
-			static void init(graphics::Renderable2D* charcater);
+			static void init(graphics::Renderable* charcater);
 			static void update();
 
 			static maths::mat4 get_ortho()
 			{ 
 				return m_Ortho; 
 			}
-			static void setCharacter(graphics::Renderable2D* character);
+			static void setCharacter(graphics::Renderable* character);
 		private:
 			static void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
 

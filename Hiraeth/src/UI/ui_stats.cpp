@@ -8,6 +8,9 @@ namespace hiraeth {
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 212, 373), control_key),
 		m_StatsStruct(character_stats->getStatsStruct_()), m_DetailsStruct(character_stats->getDetailsStruct_())
 		{
+			//character_stats->registerToStatsUpdate(this);
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->subscribe("stats_update", this, &UiStats::StatsUpdated);
 			fillGroup();
 		}
 
@@ -36,17 +39,9 @@ namespace hiraeth {
 			m_Group.add(new graphics::Label("arial", 13, m_StatsStruct->Name, 74, 329, 0xff000000));
 		}
 
-		void UiStats::update()
+		void UiStats::StatsUpdated()
 		{
-			if (m_StatsStruct->is_changed)
-			{
-				//fillGroup();
 				static_cast<graphics::Label*>(m_Group.m_Renderables.at(11))->setText(m_StatsStruct->Hp);
-				//unsigned int d = offsetof(game::StatsStruct, game::StatsStruct::Hp);
-				//static_cast<graphics::Label*>(m_Group.m_Renderables.at(d))->setText(m_StatsStruct->Hp);
-				m_StatsStruct->is_changed = false;
-			}
-			UiWindow::update();
 		}
 
 	}

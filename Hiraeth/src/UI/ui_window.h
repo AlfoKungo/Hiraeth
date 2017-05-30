@@ -67,7 +67,7 @@ namespace hiraeth {
 			virtual void mouse_released() = 0;
 			virtual void mouse_moved(float mx, float my) = 0;
 			void update() override { m_Group.update(); }
-			void draw(graphics::Renderer2D* renderer) const override { m_Group.draw(renderer); }
+			void draw(graphics::Renderer* renderer) const override { m_Group.draw(renderer); }
 		private:
 			maths::Rectangle getTitlebar() const
 			{ 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/timer.h"
-#include "graphics/spritedrenderable.h"
+#include "graphics/sprited_renderable.h"
 #include "graphics/texture.h"
 #include "game/character.h"
 #include "keyboard/keyboard.h"

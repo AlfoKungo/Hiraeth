@@ -1,4 +1,5 @@
-#include "batchrenderer2d.h"
+#include "renderer.h"
+#include "renderable.h"
 
 
 //#define SHOW_ATLAS
@@ -6,19 +7,39 @@
 namespace hiraeth {
 	namespace graphics {
 
-		BatchRenderer2D::BatchRenderer2D()
+		Renderer::Renderer()
 			: m_IndexCount(0)
 		{
+			m_TransformationStack.push_back(maths::mat4::Identity());
+			m_TransformationBack = &m_TransformationStack.back();
 			init();
 		}
 
-		BatchRenderer2D::~BatchRenderer2D()
+		void Renderer::push(const maths::mat4& matrix, bool override)
+		{
+			if (override)
+				m_TransformationStack.push_back(matrix);
+			else
+				m_TransformationStack.push_back(m_TransformationStack.back() * matrix);
+			m_TransformationBack = &m_TransformationStack.back();
+		}
+
+		void Renderer::pop()
+		{
+			//TODO: Add to log!
+			if (m_TransformationStack.size() > 1)
+				m_TransformationStack.pop_back();
+
+			m_TransformationBack = &m_TransformationStack.back();
+		}
+
+		Renderer::~Renderer()
 		{
 			delete m_IBO;
 			glDeleteBuffers(1, &m_VBO);
 		}
 
-		void BatchRenderer2D::init()
+		void Renderer::init()
 		{
 			glGenVertexArrays(1, &m_VAO);
 			glGenBuffers(1, &m_VBO);
@@ -69,13 +90,15 @@ namespace hiraeth {
 #endif
 		}
 
-		void BatchRenderer2D::begin()
+		void Renderer::begin()
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 			m_Buffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		}
 
-		void  BatchRenderer2D::submit(const Renderable2D* renderable, unsigned int blendColor)
+		void Renderer::submit(const Renderable* renderable) { submit(renderable, renderable->getColor()); }
+
+		void  Renderer::submit(const Renderable* renderable, unsigned int blendColor)
 		{
 			const maths::vec3& position = renderable->getPosition();
 			const maths::vec2& size = renderable->getSize();
@@ -136,7 +159,7 @@ namespace hiraeth {
 			m_IndexCount += 6;
 		}
 
-		void BatchRenderer2D::drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color)
+		void Renderer::drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color)
 		{
 			using namespace ftgl;
 
@@ -206,13 +229,13 @@ namespace hiraeth {
 					m_Buffer++;
 
 					m_Buffer->vertex = *m_TransformationBack * maths::vec3(x1, y1, 0);
-					m_Buffer->uv = maths::vec2(u1-0.0005, v1);
+					m_Buffer->uv = maths::vec2(u1 - 0.0005, v1);
 					m_Buffer->tid = ts;
 					m_Buffer->color = color;
 					m_Buffer++;
 
 					m_Buffer->vertex = *m_TransformationBack * maths::vec3(x1, y0, 0);
-					m_Buffer->uv = maths::vec2(u1-0.0005, v0);
+					m_Buffer->uv = maths::vec2(u1 - 0.0005, v0);
 					m_Buffer->tid = ts;
 					m_Buffer->color = color;
 					m_Buffer++;
@@ -251,13 +274,13 @@ namespace hiraeth {
 #endif
 		}
 
-		void BatchRenderer2D::end()
+		void Renderer::end()
 		{
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
-		void BatchRenderer2D::flush()
+		void Renderer::flush()
 		{
 			for (int i = 0; i < m_TextureSlots.size(); i++)
 			{

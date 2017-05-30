@@ -1,7 +1,7 @@
 #pragma once
 
 #include "layer.h"
-#include "../batchrenderer2d.h"
+#include "../renderer.h"
 
 /** This class is currently unused */
 
@@ -9,7 +9,7 @@
 namespace hiraeth {
 	namespace graphics {
 
-		class TileLayer : public Layer<Renderable2D>
+		class TileLayer : public Layer<Renderable>
 		{
 		public:
 			TileLayer(Shader* shader);

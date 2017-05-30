@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "ui_window.h"
-#include "graphics/texturemanager.h"
-#include "graphics/spritedrenderable.h"
+#include "graphics/texture_manager.h"
+#include "graphics/sprited_renderable.h"
 #include "graphics/sprite.h"
 #include "graphics/label.h"
 

@@ -7,6 +7,8 @@ namespace hiraeth {
 						   "Good Music", 430, 430, 200, 180, 9999, 3, 4, 9, 9, 4 , false},
 			m_DetailsStruct{ 100, 40, 10, 10, 20, 20, 30, 30, 100, 100 }
 		{
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->createEvent("stats_update");
 		}
 
 		Damage CharacterStats::getDamage() const
@@ -17,7 +19,16 @@ namespace hiraeth {
 		void CharacterStats::causeDamage(Damage damage)
 		{
 			m_StatsStruct.Hp -= damage.RawDamage;
-			m_StatsStruct.is_changed = true;
+			
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->execute("stats_update");
+
+			//triggerEvent();
+
+			//for (auto const& listener : m_StatsUpdateListeners)
+			//{
+			//	listener->StatsUpdated();
+			//}
 		}
 	}
 }

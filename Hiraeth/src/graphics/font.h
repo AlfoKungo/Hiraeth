@@ -5,6 +5,8 @@
 #include FT_FREETYPE_H
 #include FT_STROKER_H
 #include "../../ext/freetype-gl/freetype-gl.h"
+#include <string>
+#include "maths/maths.h"
 
 namespace hiraeth {
 	namespace graphics {
@@ -32,7 +34,10 @@ namespace hiraeth {
 
 			void set_rendermode(ftgl::rendermode_t rendermode);
 			void set_rendermode(ftgl::rendermode_t rendermode, float outline_thickness);
-			void submitFont() const;
+			void submitFont() const; 
+			float GetWidth(const std::string& text) const;
+			float GetHeight(const std::string& text) const;
+			maths::vec2 GetSize(const std::string& text) const;
 		};
 
 	}

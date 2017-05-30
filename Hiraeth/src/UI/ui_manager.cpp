@@ -9,7 +9,7 @@ namespace hiraeth {
 			//: m_Layer(shader),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
-			m_MainUi(character_stats->getStatsStruct_())
+			m_MainUi(character_stats)
 		{
 			init_all_windows(kb, character_stats);
 			kb->registerToMouse(this);

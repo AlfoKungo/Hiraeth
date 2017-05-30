@@ -1,6 +1,6 @@
 #pragma once
 #include "maths/maths.h"
-#include "graphics/renderable2d.h"
+#include "graphics/renderable.h"
 #include "maprenderable.h"
 #include <cereal/access.hpp>
 #include <cereal/archives/binary.hpp>

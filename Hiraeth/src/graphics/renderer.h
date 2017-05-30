@@ -2,10 +2,11 @@
 
 #include <cstddef>
 
-#include "renderer2d.h"
-#include "renderable2d.h"
-
+#include <vector>
+#include <GL/glew.h>
+#include "font.h"
 #include "buffers/indexbuffer.h"
+#include "maths/maths.h"
 
 #if 0
 //#include "../../ext/freetype-gl/freetype-gl.h"
@@ -28,9 +29,20 @@ namespace hiraeth {
 #define SHADER_TID_INDEX		2
 #define SHADER_COLOR_INDEX		3
 		 
-		class BatchRenderer2D : public Renderer2D
+		struct VertexData
+		{
+			maths::vec3 vertex;
+			maths::vec2 uv;
+			float tid;
+			unsigned int color;
+		};
+
+		class Renderable;
+		class Renderer
 		{
 		private:
+			std::vector<maths::mat4> m_TransformationStack;
+			const maths::mat4* m_TransformationBack;
 			GLuint m_VAO;
 			GLuint m_VBO;
 			IndexBuffer* m_IBO;
@@ -39,14 +51,16 @@ namespace hiraeth {
 
 			std::vector<GLuint> m_TextureSlots;
 		public:
-			BatchRenderer2D();
-			~BatchRenderer2D();
-			void begin() override;
-			void submit(const Renderable2D* renderable) override { submit(renderable, renderable->getColor()); }
-			void submit(const Renderable2D* renderable, unsigned int blendColor) override;
-			void drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color) override;
-			void end() override;
-			void flush() override;
+			Renderer();
+			~Renderer();
+			void push(const maths::mat4& matrix, bool override = false);
+			void pop();
+			void begin();
+			void submit(const Renderable* renderable);
+			void submit(const Renderable* renderable, unsigned int blendColor);
+			void drawString(const Font& font, const std::string& text, const maths::vec3& position, unsigned int color);
+			void end();
+			void flush();
 		private:
 			void init();
 		};

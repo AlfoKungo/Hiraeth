@@ -4,7 +4,6 @@
 #include "buffers/indexbuffer.h"
 #include "buffers/vertexarray.h"
 
-#include "renderer2d.h"
 #include "texture.h"
 #include "basic/drawable.h"
 #include "basic/updatable.h"
@@ -15,15 +14,8 @@
 namespace hiraeth {
 	namespace graphics {
 
-		struct VertexData
-		{
-			maths::vec3 vertex;
-			maths::vec2 uv;
-			float tid;
-			unsigned int color;
-		};
 
-		class Renderable2D : public Drawable, public Updatable
+		class Renderable : public Drawable, public Updatable
 		{
 		protected:
 			maths::Rectangle m_Bounds;
@@ -31,15 +23,15 @@ namespace hiraeth {
 			std::vector<maths::vec2> m_UV;
 			Texture* m_Texture;
 		protected:
-			Renderable2D() : m_Color(0xffffffff), m_Texture(nullptr) { setUVDefaults(); }
+			Renderable() : m_Color(0xffffffff), m_Texture(nullptr) { setUVDefaults(); }
 		public:
-			Renderable2D(maths::vec3 position, maths::vec2 size, unsigned int color)
+			Renderable(maths::vec3 position, maths::vec2 size, unsigned int color)
 				: m_Bounds(position, size), m_Color(color), m_Texture(nullptr)
 			{
 				setColor(color);
 				setUVDefaults();
 			}
-			Renderable2D(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv, Texture* texture)
+			Renderable(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv, Texture* texture)
 				: m_Bounds(position, size), m_Color(0xffffffff) 
 			{
 				m_Texture = texture;
@@ -47,7 +39,7 @@ namespace hiraeth {
 					m_UV.push_back((*it) / maths::vec2((*m_Texture).getWidth(), (*m_Texture).getHeight()));
 			}
 
-			virtual ~Renderable2D()
+			virtual ~Renderable()
 			{
 			}
 
@@ -73,12 +65,12 @@ namespace hiraeth {
 			inline void setPosition(const maths::vec2& position) { m_Bounds.position = position; }
 			inline void setSize(const maths::vec2& size) { m_Bounds.size = size; }
 
-			virtual void update() {}
-			virtual void draw(Renderer2D* renderer) const
+			virtual void update() override {}
+			virtual void draw(Renderer* renderer) const override
 			{ 
 				renderer->submit(this); 
 			}
-			virtual void draw(Renderer2D* renderer, unsigned int color)
+			virtual void draw(Renderer* renderer, unsigned int color)
 			{ 
 				renderer->submit(this, color); 
 			}

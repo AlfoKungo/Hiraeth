@@ -24,16 +24,16 @@ namespace hiraeth {
 			delete (&m_TransformationMatrix);
 		}
 
-		void Group::add(Renderable2D* renderable)
+		void Group::add(Renderable* renderable)
 		{
 			m_Renderables.push_back(renderable);
 		}
 
-		void Group::draw(Renderer2D* renderer) const
+		void Group::draw(Renderer* renderer) const
 		{
 			renderer->push(m_TransformationMatrix);
 
-			for (const Renderable2D* renderable : m_Renderables)
+			for (const Renderable* renderable : m_Renderables)
 				renderable->draw(renderer);
 
 			renderer->pop();
@@ -46,7 +46,7 @@ namespace hiraeth {
 
 		void Group::update()
 		{
-			for (Renderable2D* rend : m_Renderables)
+			for (Renderable* rend : m_Renderables)
 				rend->update();
 		}
 	}

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "renderable2d.h"
+#include "renderable.h"
 
 namespace hiraeth {
 	namespace graphics {
 
-		class Sprite : public Renderable2D 
+		class Sprite : public Renderable 
 		{
 
 		private:
