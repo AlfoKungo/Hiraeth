@@ -3,6 +3,10 @@
 #include "game/creature.h"
 #include "keyboard/keyboard_event.h"
 #include "character_stats.h"
+#include "character/character_body.h"
+#include "character/character_arm.h"
+#include "monster.h"
+#include "graphics/layers/layer.h"
 
 namespace hiraeth {
 	namespace game {
@@ -12,6 +16,7 @@ namespace hiraeth {
 
 		private:
 			input::Keyboard* m_Kb;
+			std::vector<Monster*>* m_MonstersLayer;
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer);
 			~Character();
@@ -21,6 +26,8 @@ namespace hiraeth {
 			void ButtonReleased(input::Controls control) override;
 
 			void registerKeys();
+			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
+			void attack() override;
 			CharacterStats* getCharacterStats() const;
 		};
 	}

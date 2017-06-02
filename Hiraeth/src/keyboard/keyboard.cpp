@@ -106,15 +106,16 @@ namespace hiraeth {
 
 		void Keyboard::initControls()
 		{
-			setKeyControl(Controls::up, GLFW_KEY_UP);
-			setKeyControl(Controls::down, GLFW_KEY_DOWN);
-			setKeyControl(Controls::left, GLFW_KEY_LEFT);
-			setKeyControl(Controls::right, GLFW_KEY_RIGHT);
-			setKeyControl(Controls::jump, GLFW_KEY_SPACE);
-			setKeyControl(Controls::escape, GLFW_KEY_ESCAPE);
-			setKeyControl(Controls::stats_a, GLFW_KEY_S);
-			setKeyControl(Controls::stats_b, GLFW_KEY_D);
-			setKeyControl(Controls::inventory, GLFW_KEY_A);
+			setKeyControl(up, GLFW_KEY_UP);
+			setKeyControl(down, GLFW_KEY_DOWN);
+			setKeyControl(left, GLFW_KEY_LEFT);
+			setKeyControl(right, GLFW_KEY_RIGHT);
+			setKeyControl(jump, GLFW_KEY_SPACE);
+			setKeyControl(attack, GLFW_KEY_LEFT_CONTROL);
+			setKeyControl(escape, GLFW_KEY_ESCAPE);
+			setKeyControl(stats_a, GLFW_KEY_S);
+			setKeyControl(stats_b, GLFW_KEY_D);
+			setKeyControl(inventory, GLFW_KEY_A);
 		}
 
 		void Keyboard::setKeyControl(Controls control, unsigned int key)

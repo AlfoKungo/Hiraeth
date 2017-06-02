@@ -17,15 +17,19 @@ namespace hiraeth {
 			bool up = false;
 			bool down = false;
 			bool jump = false;
+			bool attack = false;
 		};
 
 		enum StanceState {
+			NoStance,
 			Stand,
 			Walk,
+			Attack,
+			Jump,
 		};
 		enum Direction {
-			Right,
-			Left,
+			Right = 1,
+			Left = -1,
 		};
 
 		class Creature : public graphics::Renderable, public physics::Collisionable
@@ -44,8 +48,8 @@ namespace hiraeth {
 			StanceState m_StanceState;
 			Direction m_Direction;
 			CreatureControls m_Controls;
-			std::vector<graphics::SpritedRenderable*> m_StandRenderables;
-			std::vector<graphics::SpritedRenderable*> m_WalkRenderables;
+			std::map<StanceState, std::vector<graphics::SpritedRenderable*>*> m_StatesRenderables;
+			std::vector<graphics::SpritedRenderable*>* m_CurrentRenderables;
 			Stats* m_Stats;
 
 		private:
@@ -71,6 +75,7 @@ namespace hiraeth {
 			}
 			Damage getDamage() const { return m_Stats->getDamage(); }
 			Stats* getStats() const { return m_Stats; }
+			virtual void attack() = 0;
 		private:
 			void analyze_controls();
 			void change_stance(StanceState next_state);

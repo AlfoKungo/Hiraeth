@@ -13,6 +13,7 @@ namespace hiraeth {
 			//m_Monsters.push_back(new Monster(maths::vec2(200, 0), m_MapLayer));
 			m_Layer.add(new Monster(maths::vec2(-200, 0), m_MapLayer));
 			m_Layer.add(new Monster(maths::vec2(200, 0), m_MapLayer));
+			m_Char->setMonsters(&m_Layer.m_Renderables);
 		}
 
 		void MonsterManager::draw()

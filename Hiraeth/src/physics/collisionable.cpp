@@ -4,7 +4,7 @@ namespace hiraeth {
     namespace physics {
 
         Collisionable::Collisionable(maths::Rectangle& box, map::MapLayer* m_MapLayer)
-            : m_MapLayer(m_MapLayer), m_Box(box), m_Foothold(NO_FOOTHOLD)
+            : m_Foothold(NO_FOOTHOLD), m_MapLayer(m_MapLayer), m_Box(box)
         {
         }
 

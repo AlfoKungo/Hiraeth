@@ -100,11 +100,15 @@ namespace hiraeth {
 
 		void  Renderer::submit(const Renderable* renderable, unsigned int blendColor)
 		{
-			const maths::vec3& position = renderable->getPosition();
+			maths::vec3 origin = maths::vec3(renderable->getOrigin());
+			const maths::vec3& position = maths::vec3(renderable->getPosition()) + origin;
+			//const maths::vec3& position = renderable->getPosition();
 			const maths::vec2& size = renderable->getSize();
 			const unsigned int color = renderable->getColor() & blendColor;
 			const std::vector<maths::vec2>& uv = renderable->getUV();
 			const GLuint tid = renderable->getTID();
+			
+			bool vertical_inversion = false;
 
 			float ts = 0.0f;
 			if (tid > 0)
@@ -132,7 +136,7 @@ namespace hiraeth {
 				}
 			}
 
-			m_Buffer->vertex = *m_TransformationBack * position;
+			m_Buffer->vertex = *m_TransformationBack * position; 
 			m_Buffer->uv = uv[0];
 			m_Buffer->tid = ts;
 			m_Buffer->color = color;

@@ -11,7 +11,7 @@ namespace hiraeth {
 
 		enum Controls
 		{
-			none, up, down, left, right, jump, escape,
+			none, up, down, left, right, jump, attack, escape,
 			stats_a, stats_b, inventory 
 		};
 

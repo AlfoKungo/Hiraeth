@@ -1,7 +1,8 @@
 #pragma once
 
-#include "character.h"
 #include <ctime>
+#include "game/creature.h"
+#include "keyboard/keyboard_event.h"
 #include <random>
 #include "monster_stats.h"
 
@@ -22,6 +23,7 @@ namespace hiraeth {
 
 			void update() override;
 			bool checkCollision(const maths::Rectangle& rec) const;
+			void attack() override {}
 		private:
 		};
 	}
