@@ -10,19 +10,20 @@ namespace hiraeth {
 			dis(0, 8),
 			m_AiTimer(StaticTimer::timer.elapsed())
 		{
-			srand(time(NULL));
-			m_StatesRenderables[Stand]->push_back(new graphics::SpritedRenderable(maths::vec2(), 3, 0.6f, true, graphics::TextureManager::Load("slime_stand.png")));
-			m_StatesRenderables[Walk]->push_back(new graphics::SpritedRenderable(maths::vec2(), 7, 0.2f, true, graphics::TextureManager::Load("slime_walk.png")));
-			m_StatesRenderables[Jump]->push_back(new graphics::SpritedRenderable(maths::vec2(), 1, 0.2f, true, graphics::TextureManager::Load("slime_hit.png")));
+			srand(time(nullptr));
+			unsigned int Er = 3;
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable<3>>(maths::vec2(), 0.6f, true, graphics::TextureManager::Load("slime_stand.png")));
+			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable<7>>(maths::vec2(), 0.2f, true, graphics::TextureManager::Load("slime_walk.png")));
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable<1>>(maths::vec2(), 0.2f, true, graphics::TextureManager::Load("slime_hit.png")));
 			m_Controls.left = true;
-			std::srand(std::time(0));
+			std::srand(std::time(nullptr));
 		}
 
 		void Monster::update()
 		{
 			if (m_Foothold != NO_FOOTHOLD)
 			{
-				const physics::FootHold& foothold = m_MapLayer->m_FootHolds.at(m_Foothold);
+				const physics::FootHold& foothold = m_MapLayer->m_FootHolds->at(m_Foothold);
 				const float&& length = foothold.p2.x - foothold.p1.x;
 				if (m_Bounds.x < (foothold.p1.x + length * 0.2))
 				{

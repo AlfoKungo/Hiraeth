@@ -42,27 +42,31 @@ namespace hiraeth {
 			maths::vec2 get_uv_pos() const { return m_Uv_pos; }
 			maths::vec2 get_uv_size() const { return m_Uv_size; }
 			unsigned int get_type() const { return m_Type; }
-			
+
 			maths::Rectangle get_rec() const
 			{
 				return maths::Rectangle(m_Position, m_Uv_size * m_Scale);
 			}
 
-		template<class Archive>
-		void serialize(Archive & ar) 
-		{ 
-			Serializer s{ m_Position, m_Scale, m_Uv_pos, m_Uv_size, m_Type };
-			ar(s); 
-		}
-		//void Tile::serialize_me(cereal::BinaryOutputArchive* oarchive)
-		//{
-		//	Serializer s{ m_Position, m_Scale, m_Uv_pos, m_Uv_size, m_Type };
-		//	(*oarchive)(s); 
-		//}
-
 		private:
-			Tile::Tile() = default;
+
 			friend class cereal::access;
+			template <class Archive>
+			static void load_and_construct(Archive & ar, cereal::construct<Tile> & construct)
+			{
+				maths::vec3 pos;
+				float scale;
+				maths::vec2 uv_pos;
+				maths::vec2 uv_size;
+				unsigned int type;
+				ar(pos, scale, uv_pos, uv_size, type);
+				construct(pos, scale, uv_pos, uv_size, type); // calls MyType( x )
+			}
+			template<class Archive>
+			void serialize(Archive & ar)
+			{
+				ar(m_Position, m_Scale, m_Uv_pos, m_Uv_size, m_Type);
+			}
 
 			std::vector<maths::vec2> create_uv_by_pos_size(maths::vec2 pos, maths::vec2 size, maths::vec2 tex_size);
 		};

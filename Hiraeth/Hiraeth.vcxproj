@@ -158,7 +158,6 @@
     <ClCompile Include="src\graphics\layers\tilelayer.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
-    <ClCompile Include="src\graphics\sprited_renderable.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_manager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
@@ -237,6 +236,7 @@
     <ClInclude Include="src\map\maplayer.h" />
     <ClInclude Include="src\map\maprenderable.h" />
     <ClInclude Include="src\map\maprenderer.h" />
+    <ClInclude Include="src\map\map_data.h" />
     <ClInclude Include="src\map\portal.h" />
     <ClInclude Include="src\map\tile.h" />
     <ClInclude Include="src\maths\mat4.h" />

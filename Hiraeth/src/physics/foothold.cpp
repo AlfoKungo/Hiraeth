@@ -5,7 +5,7 @@ namespace hiraeth {
 
 
 		FootHold::FootHold(maths::vec2 p1, maths::vec2 p2, maths::vec2 direction)
-			: p1(p1), p2(p2)
+			: p1(p1), p2(p2), m_Direction(direction)
 		{
 
 		}

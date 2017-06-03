@@ -53,7 +53,12 @@ namespace hiraeth {
 			inline const maths::vec3& getPosition() const { return m_Position; }
 			inline const maths::vec2& getSize() const { return m_Size; }
 			inline const unsigned int getColor() const { return m_Color; }
-			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
+			inline const std::vector<maths::vec2>& getUV() const
+			{
+				//if (m_UV.size() == 0)
+
+				return m_UV;
+			}
 		};
 	}
 }

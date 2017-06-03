@@ -36,8 +36,9 @@ namespace hiraeth {
 				: m_Bounds(position, size), m_Color(0xffffffff), m_Org(origin)
 			{
 				m_Texture = texture;
-				for (std::vector<maths::vec2>::const_iterator it = uv.begin(); it != uv.end(); it++)
-					m_UV.push_back((*it) / maths::vec2((*m_Texture).getWidth(), (*m_Texture).getHeight()));
+				m_UV = uv;
+				//for (std::vector<maths::vec2>::const_iterator it = uv.begin(); it != uv.end(); it++)
+				//	m_UV.push_back((*it) / maths::vec2((*m_Texture).getWidth(), (*m_Texture).getHeight()));
 			}
 
 			virtual ~Renderable()

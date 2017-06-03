@@ -21,7 +21,6 @@ namespace hiraeth {
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer);
 			~Character();
 
-			//void update() override;
 			void ButtonClicked(input::Controls control) override;
 			void ButtonReleased(input::Controls control) override;
 

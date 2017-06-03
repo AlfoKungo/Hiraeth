@@ -1,5 +1,6 @@
 #pragma once
 #include "maths/rectangle.h"
+#include <cereal/access.hpp>
 
 namespace hiraeth {
 	namespace physics {
@@ -24,16 +25,29 @@ namespace hiraeth {
 		private:
 		public:
 			maths::vec2 p1, p2;
+			maths::vec2 m_Direction;
 
 		public:
 			FootHold(maths::vec2 p1, maths::vec2 p2, maths::vec2 direction);
+			~FootHold() {}
 			bool Intersects(maths::Rectangle rec);
 			bool CohenSutherlandLineClipAndDraw(maths::Rectangle rec);
 			bool LinesIntersect(maths::vec2 lp1, maths::vec2 lp2);
 			inline bool is_solid() { return (p1.x - p2.x != 0); }
+			template<class Archive>
+			void serialize(Archive & ar)
+			{
+				ar(p1, p2, m_Direction);
+			}
+			FootHold() {}
 		private:
+			friend class cereal::access;
 			OutCode ComputeOutCode(double x, double y, maths::Rectangle rec);
 		};
+
+
+
+
 
 		class HorizontalFootHold : public FootHold
 		{

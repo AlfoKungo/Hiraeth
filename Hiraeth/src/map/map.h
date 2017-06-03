@@ -21,6 +21,7 @@
 #include "../basic/updatable.h"
 #include "../graphics/label.h"
 #include "../graphics/font_manager.h"
+#include "map_data.h"
 
 #include "maplayer.h"
 
@@ -32,7 +33,7 @@
 namespace hiraeth {
 	namespace map {
 
-		class Map :  Updatable
+		class Map :  Updatable, public input::KeyboardEvent
 		{
 		private:
 
@@ -42,13 +43,12 @@ namespace hiraeth {
 			graphics::Shader m_BgShader;
 			graphics::Shader m_CrShader;
 
-			//graphics::TileLayer m_PtLayer;
-			//graphics::TileLayer m_BgLayer;
-			//graphics::TileLayer m_CrLayer;
 
-			graphics::Layer<graphics::Renderable> m_PtLayer;
+			graphics::Layer<Portal> m_PtLayer;
 			graphics::Layer<graphics::Renderable> m_BgLayer;
 			graphics::Layer<graphics::Renderable> m_CrLayer;
+
+			MapData m_MapData{};
 
 			MapLayer m_MapLayer;
 
@@ -57,7 +57,6 @@ namespace hiraeth {
 
 			graphics::Window* m_Wnd;
 			game::Character m_Char;
-			//game::Monster m_Monster;
 		public:
 			Map(const std::string& filename, int map_index, graphics::Window* wind);
 			~Map();
@@ -68,10 +67,12 @@ namespace hiraeth {
 			MapLayer* getMapLayer() { return &m_MapLayer; }
 			game::Character* getCharacter() { return &m_Char; }
 
+			void ButtonClicked(input::Controls control) override;
+			void ButtonReleased(input::Controls control) override {}
+
 		private:
-			void serialize();
-			void deserialize(int map_index);
-			void deserialize_portals(cereal::BinaryInputArchive* iarchive);
+			void serialize_map_data();
+			void deserialize_map_data(unsigned int map_index);
 		};
 
 	}

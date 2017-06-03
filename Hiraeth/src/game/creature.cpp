@@ -12,27 +12,32 @@ namespace hiraeth {
 			m_MovementTimer(StaticTimer::timer.elapsed()),
 			m_TransformationMatrix(maths::mat4::Translate(bounds.position))
 		{
-			m_StatesRenderables[Stand] = new std::vector<graphics::SpritedRenderable*>();
-			m_StatesRenderables[Walk] = new std::vector<graphics::SpritedRenderable*>();
-			m_StatesRenderables[Attack] = new std::vector<graphics::SpritedRenderable*>();
-			m_StatesRenderables[Jump] = new std::vector<graphics::SpritedRenderable*>();
+			m_StatesRenderables[Stand] = std::vector<std::unique_ptr<graphics::Renderable>>();
+			m_StatesRenderables[Walk] = std::vector<std::unique_ptr<graphics::Renderable>>();
+			m_StatesRenderables[Attack] = std::vector<std::unique_ptr<graphics::Renderable>>();
+			m_StatesRenderables[Jump] = std::vector<std::unique_ptr<graphics::Renderable>>();
+			//m_StatesRenderables[Stand] = new std::vector<graphics::Renderable*>();
+			//m_StatesRenderables[Walk] = new std::vector<graphics::Renderable*>();
+			//m_StatesRenderables[Attack] = new std::vector<graphics::Renderable*>();
+			//m_StatesRenderables[Jump] = new std::vector<graphics::Renderable*>();
 			m_Bounds = bounds;
 		}
 
 		Creature::~Creature()
 		{
-			for (auto RenderablesVector : m_StatesRenderables)
-			{
-				for (auto Renderable : (*RenderablesVector.second))
-					delete Renderable;
-				delete (RenderablesVector.second);
-			}
+			//for (auto RenderablesVector : m_StatesRenderables)
+			//{
+			//	for (auto Renderable : (*RenderablesVector.second))
+			//		delete Renderable;
+			//	delete (RenderablesVector.second);
+			//}
 		}
 
 		void Creature::update()
 		{
 
-			for (graphics::SpritedRenderable* renderable : (*m_StatesRenderables[m_StanceState]))
+			//for (auto renderable : (*m_StatesRenderables[m_StanceState]))
+			for (auto & renderable : m_StatesRenderables.at(m_StanceState))
 				renderable->update();
 
 			if (is_hit)
@@ -114,8 +119,8 @@ namespace hiraeth {
 				renderer->push(m_TransformationMatrix*maths::mat4::Translate(maths::vec3(m_Bounds.width / 2, 0))*maths::mat4::Scale(maths::vec3(-1, 1, 1))*maths::mat4::Translate(-maths::vec3(m_Bounds.width / 2, 0)));
 				break;
 			}
-			for (Renderable* renderable : (*m_StatesRenderables.at(m_StanceState)))
-				renderer->submit(renderable, m_Color);
+			for (auto & renderable : m_StatesRenderables.at(m_StanceState))
+				renderer->submit(renderable.get(), m_Color);
 			renderer->pop();
 		}
 		

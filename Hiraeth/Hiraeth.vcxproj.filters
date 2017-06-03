@@ -174,9 +174,6 @@
     <ClCompile Include="src\basic\EventManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\sprited_renderable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\texture_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -408,6 +405,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\character\character_arm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\map\map_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

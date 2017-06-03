@@ -48,8 +48,8 @@ namespace hiraeth {
 			StanceState m_StanceState;
 			Direction m_Direction;
 			CreatureControls m_Controls;
-			std::map<StanceState, std::vector<graphics::SpritedRenderable*>*> m_StatesRenderables;
-			std::vector<graphics::SpritedRenderable*>* m_CurrentRenderables;
+			std::map<StanceState, std::vector<std::unique_ptr<Renderable>>> m_StatesRenderables;
+			std::vector<std::unique_ptr<Renderable>>* m_CurrentRenderables;
 			Stats* m_Stats;
 
 		private:
