@@ -12,7 +12,7 @@
 namespace hiraeth {
 	namespace map {
 		class Map;
-		class Portal : public graphics::SpritedRenderable<8>
+		class Portal : public graphics::SpritedRenderable
 		{
 
 			//#define PORTAL_ANIMATION_DELAY 12.0f
@@ -34,11 +34,9 @@ namespace hiraeth {
 			int m_NextMap{};
 
 		public:
-			Portal(maths::vec3 position, int next_map, input::Keyboard* kb, Map* map, game::Character* character);
-			Portal(Serializer s, input::Keyboard* kb, Map* map, game::Character* character)
-				: Portal(s.position, s.next_map, kb, map, character) {}
-			Portal(maths::vec3 position, int next_map)
-				: Portal(position, next_map, nullptr, nullptr, nullptr) {}
+			Portal(maths::vec3 position, int next_map);
+			//Portal(Serializer s)
+			//	: Portal(s.position, s.next_map) {}
 			~Portal();
 
 			int getNextMap() const { return m_NextMap; }

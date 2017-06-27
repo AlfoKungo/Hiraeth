@@ -64,7 +64,7 @@ namespace hiraeth {
 				{
 					if (m_Force.x < -0.1f || m_Force.x > 0.1f)
 						change_stance(Walk);
-					else
+					else if (Stand != m_StanceState)
 						change_stance(Stand);
 				}
 				else
@@ -91,7 +91,8 @@ namespace hiraeth {
 				change_stance(Attack);
 				return;
 			}
-			change_stance(NoStance);
+			if (Attack == m_StanceState)
+				change_stance(NoStance);
 			if (m_Controls.right)
 			{
 				m_Direction = Right;
@@ -120,27 +121,35 @@ namespace hiraeth {
 				break;
 			}
 			for (auto & renderable : m_StatesRenderables.at(m_StanceState))
-				renderer->submit(renderable.get(), m_Color);
+				renderable->draw(renderer, m_Color);
+				//renderer->submit(renderable.get(), m_Color);
 			renderer->pop();
 		}
 		
 		void Creature::change_stance(StanceState next_state)
 		{
+			if (m_StanceState != next_state)
+				for (auto & rend : m_StatesRenderables[m_StanceState])
+					rend->resetState();
 			m_StanceState = next_state;
 		}
 
 		void Creature::getHit(Direction dir, Damage damage)
 		{
-			m_Stats->causeDamage(damage);
-			if (Left == dir)
-				m_Force = calculateForce(maths::vec2(20, 8));
-			else
-				m_Force = calculateForce(maths::vec2(-20, 8));
-			m_Direction = dir;
-			is_hit = true;
-			m_HitTimer = StaticTimer::timer.elapsed() + 1.5f;
-			m_Color &= 0x80ffffff;
-			//m_Color = 0x80ffffff;
+			if (!is_hit)
+			{
+				//m_Stats->causeDamage(damage);
+				causeDamage(damage);
+				if (Left == dir)
+					m_Force = calculateForce(maths::vec2(20, 8));
+				else
+					m_Force = calculateForce(maths::vec2(-20, 8));
+				m_Direction = dir;
+				is_hit = true;
+				m_HitTimer = StaticTimer::timer.elapsed() + 1.5f;
+				m_Color &= 0x80ffffff;
+				//m_Color = 0x80ffffff;
+			}
 		}
 	}
 }

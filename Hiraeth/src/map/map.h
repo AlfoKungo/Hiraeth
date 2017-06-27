@@ -71,7 +71,7 @@ namespace hiraeth {
 			void ButtonReleased(input::Controls control) override {}
 
 		private:
-			void serialize_map_data();
+			void serialize_map_data() const;
 			void deserialize_map_data(unsigned int map_index);
 		};
 

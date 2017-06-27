@@ -3,19 +3,26 @@
 namespace hiraeth {
 	namespace game {
 		MonsterStats::MonsterStats()
-			: m_Stats{ "Slime", 5, 4444, 400, 250, 15, 40,
+			: Stats(stats.MaxHp, stats.Hp),
+		stats{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40,
 						   40, 40, 30, 30, 20, 20, 100, 100}
+		{
+		}
+
+		MonsterStats::MonsterStats(MonsterStatsStruct r_stats)
+			: Stats(stats.MaxHp, stats.Hp),
+		stats(r_stats)
 		{
 		}
 
 		Damage MonsterStats::getDamage() const
 		{
-			return Damage{ m_Stats.Attack, m_Stats.WeaponAcc };
+			return Damage{ stats.Attack, stats.WeaponAcc };
 		}
 
 		void MonsterStats::causeDamage(Damage damage)
 		{
-			m_Stats.Hp -= damage.RawDamage;
+			stats.Hp -= damage.RawDamage;
 		}
 	}
 }

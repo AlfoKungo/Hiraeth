@@ -10,19 +10,24 @@ namespace hiraeth {
 			std::string Name;
 			unsigned int Level;
 			unsigned int Exp;
-			unsigned int Hp, Mp;
+			unsigned int MaxHp, Hp, MaxMp, Mp;
 			unsigned int Attack, CritRate;
 			unsigned int WeaponDef, MagicDef;
 			unsigned int WeaponAcc, MagicAcc;
 			unsigned int WeaponAvd, MagicAvd;
 			unsigned int Speed, Jump;
+				template<class A> void serialize(A& ar) {
+					ar(Name, Level, Exp, MaxHp, Hp, MaxMp, Mp, Attack, CritRate, WeaponDef, MagicDef,
+						WeaponAcc, MagicAcc, WeaponAvd, MagicAvd, Speed, Jump);
+				}
 		};
 		
 		class MonsterStats : public Stats
 		{
 		public:
-			MonsterStatsStruct m_Stats;
+			MonsterStatsStruct stats;
 			MonsterStats();
+			explicit MonsterStats(MonsterStatsStruct r_stats);
 			Damage getDamage() const override;
 			void causeDamage(Damage damage) override;
 		};

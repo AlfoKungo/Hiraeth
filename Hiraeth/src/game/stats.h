@@ -12,7 +12,8 @@ namespace hiraeth {
 		class Stats
 		{
 		public:
-			Stats() {}
+			unsigned int &MaxHp, &Hp;
+			Stats(unsigned int &max_hp, unsigned int &hp) : MaxHp(max_hp), Hp(hp) {}
 			virtual ~Stats() {}
 			virtual Damage getDamage() const = 0;
 			virtual void causeDamage(Damage damage) = 0;

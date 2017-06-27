@@ -9,10 +9,11 @@ namespace hiraeth {
 			m_Layer(&m_Shader),
 			m_Char(character)
 		{
-			//m_Monsters.push_back(new Monster(maths::vec2(-200, 0), m_MapLayer));
-			//m_Monsters.push_back(new Monster(maths::vec2(200, 0), m_MapLayer));
-			m_Layer.add(new Monster(maths::vec2(-200, 0), m_MapLayer));
-			m_Layer.add(new Monster(maths::vec2(200, 0), m_MapLayer));
+			//m_Layer.add(new Monster(maths::vec2(-200, -90), m_MapLayer));
+			//m_Layer.add(new Monster(maths::vec2(200, -90), m_MapLayer));
+			serialize_data();
+			m_SummonQueue.push(Summoner{ StaticTimer::timer.elapsed() + 2.0f, 1, maths::vec2(-200, -90) });
+			m_SummonQueue.push(Summoner{ StaticTimer::timer.elapsed() + 2.0f, 2, maths::vec2(200, -90) });
 			m_Char->setMonsters(&m_Layer.m_Renderables);
 		}
 
@@ -26,6 +27,36 @@ namespace hiraeth {
 		void MonsterManager::update()
 		{
 			m_Layer.update();
+
+			//destroying dead monsters
+			for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
+			{
+				if ((*monster)->died)
+				{
+					maths::vec2 starting_position((*monster)->m_StartingPosition);
+					unsigned int type = (*monster)->getType();
+					delete (*monster);
+					monster = m_Layer.m_Renderables.erase(monster);
+					m_SummonQueue.push(Summoner{ StaticTimer::timer.elapsed() + 1.0f, type, starting_position });
+				}
+				else
+				{
+					++monster;
+				}
+			}
+
+			//resummoning dead monsters
+			while (!m_SummonQueue.empty())
+			{
+				if (StaticTimer::timer.elapsed() - m_SummonQueue.front().summonTime > 0.0f)
+				{
+					m_Layer.add(new Monster(deserialize_monster_data(m_SummonQueue.front().monsterType), m_SummonQueue.front().position, m_SummonQueue.front().monsterType, m_MapLayer));
+					m_SummonQueue.pop();
+				}
+				else
+					break;
+			}
+
 			checkCollision();
 		}
 
@@ -48,5 +79,35 @@ namespace hiraeth {
 			return false;
 		}
 
+		void MonsterManager::serialize_data()
+		{
+
+			std::ofstream file("monster.data");
+			cereal::BinaryOutputArchive oarchive(file);
+			//oarchive(int(2));
+			file.seekp(sizeof(int) * 2);
+			int map_data1_location = file.tellp();
+			oarchive(MonsterData{"slime", 3, 7, 1,
+				MonsterStatsStruct{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
+			int map_data2_location = file.tellp();
+			oarchive(MonsterData{"green_mushroom", 3, 4, 1,
+				MonsterStatsStruct{ "Green Mushroom", 5, 4444, 800, 800, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
+			file.seekp(0);
+			oarchive(map_data1_location);
+			oarchive(map_data2_location);
+		}
+
+		MonsterData MonsterManager::deserialize_monster_data(unsigned int map_index)
+		{
+			std::ifstream file("monster.data");
+			cereal::BinaryInputArchive iarchive(file);
+			int start_of_data;
+			file.seekg(sizeof(int) * (map_index - 1));
+			iarchive(start_of_data);
+			file.seekg(start_of_data);
+			MonsterData monster_data;
+			iarchive(monster_data);
+			return monster_data;
+		}
 	}
 }

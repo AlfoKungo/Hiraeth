@@ -56,7 +56,7 @@ namespace hiraeth {
 		void Map::update()
 		{
 			m_CrLayer.update();
-			m_PtLayer.update();
+			//m_PtLayer.update();
 			if (m_ChangeMapFlag) 
 			{
 				deserialize_map_data(m_MapIndex);
@@ -77,10 +77,11 @@ namespace hiraeth {
 						change_map(portal->getNextMap());
 		}
 
-		void Map::serialize_map_data()
+		void Map::serialize_map_data() const
 		{
 			MapData map_data1{}, map_data2{};
 
+			//Generate data
 			map_data1.m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(-800, -100), maths::vec2(800, -100)));
 			for (int i = 0; i < 2; i++)
 				map_data1.m_Portals.push_back(std::make_unique<Portal>(maths::vec3(i * 200, 0, 0), 1));
@@ -114,6 +115,7 @@ namespace hiraeth {
 			map_data2.m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(-800, -450), 350));
 			map_data2.m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(800, -450), 350));
 
+			//Serialize Data
 			std::ofstream file("map.data");
 			cereal::BinaryOutputArchive oarchive(file);
 			//oarchive(int(2));
@@ -139,8 +141,8 @@ namespace hiraeth {
 			m_MapLayer.m_Tiles = &m_MapData.m_Tiles;
 			m_MapLayer.m_FootHolds = &m_MapData.m_FootHolds;
 			m_PtLayer.clear();
-			for (auto& tile : m_MapData.m_Portals)
-				m_PtLayer.add_ref(tile.get());
+			for (auto& portal : m_MapData.m_Portals)
+				m_PtLayer.add_ref(portal.get());
 			m_ChangeMapFlag = false;
 		}
 

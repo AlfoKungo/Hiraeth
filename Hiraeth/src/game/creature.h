@@ -50,14 +50,14 @@ namespace hiraeth {
 			CreatureControls m_Controls;
 			std::map<StanceState, std::vector<std::unique_ptr<Renderable>>> m_StatesRenderables;
 			std::vector<std::unique_ptr<Renderable>>* m_CurrentRenderables;
-			Stats* m_Stats;
+			std::unique_ptr<Stats> m_Stats;
+			maths::mat4 m_TransformationMatrix;
 
 		private:
 			float m_Speed, m_Jump; //link to stats_struct
 			float m_HitTimer;
 			std::vector<int> actions; //this is to create a list of actions to do.
 			float m_MovementTimer;
-			maths::mat4 m_TransformationMatrix;
 		public:
 			bool is_hit = false;
 		public:
@@ -74,12 +74,13 @@ namespace hiraeth {
 				m_TransformationMatrix *= maths::mat4::Translate(m_Force);
 			}
 			Damage getDamage() const { return m_Stats->getDamage(); }
-			Stats* getStats() const { return m_Stats; }
+			//Stats* getStats() const { return m_Stats.get(); }
 			virtual void attack() = 0;
 		private:
 			void analyze_controls();
 			void change_stance(StanceState next_state);
 			void addGravity(maths::vec2& force) const { force.y -= FORCE_OF_GRAVITY; }
+			virtual void causeDamage(Damage damage) = 0;
 			float calculateForce(float force) const
 			{
 				if (m_Foothold != NO_FOOTHOLD)

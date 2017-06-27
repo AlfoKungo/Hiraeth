@@ -12,7 +12,6 @@ namespace hiraeth {
 			std::vector<std::unique_ptr<Tile>> m_Tiles;
 			std::vector<physics::FootHold> m_FootHolds;
 			std::vector<std::unique_ptr<Portal>> m_Portals;
-			//int d;
 		private:
 			MapData() = default;
 			friend class cereal::access;

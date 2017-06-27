@@ -28,6 +28,11 @@ namespace hiraeth {
 			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
 			void attack() override;
 			CharacterStats* getCharacterStats() const;
+		private:
+			void causeDamage(Damage damage) override
+			{
+				m_Stats->causeDamage(damage);
+			}
 		};
 	}
 }

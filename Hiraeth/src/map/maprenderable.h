@@ -43,20 +43,18 @@ namespace hiraeth {
 
 			void setColor(const maths::vec4& color)
 			{
-				int r = (int)(color.x * 255.0f);
-				int g = (int)(color.y * 255.0f);
-				int b = (int)(color.z * 255.0f);
-				int a = (int)(color.w * 255.0f);
+				int r = int(color.x * 255.0f);
+				int g = int(color.y * 255.0f);
+				int b = int(color.z * 255.0f);
+				int a = int(color.w * 255.0f);
 				m_Color = a << 24 | b << 16 | g << 8 | r;
 			}
 
 			inline const maths::vec3& getPosition() const { return m_Position; }
 			inline const maths::vec2& getSize() const { return m_Size; }
-			inline const unsigned int getColor() const { return m_Color; }
+			inline unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const
 			{
-				//if (m_UV.size() == 0)
-
 				return m_UV;
 			}
 		};

@@ -16,12 +16,12 @@ namespace hiraeth {
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, -730, -429, 0xff70cdd0));
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, -730, -441, 0xffffffff));
 			m_Layer.add(m_LabelGroup);
-			m_Layer.add(new graphics::Sprite(-551, -447, graphics::TextureManager::Load("Assets/MainUi/mainBar.gaugeCover.png")));
+			m_Layer.add(new graphics::Sprite(-551, -447, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.gaugeCover.png")));
 			m_Layer.add(m_GraphicGroup);
-			m_Layer.add(new graphics::Sprite(-580, -448, graphics::TextureManager::Load("Assets/MainUi/mainBar.gaugeBackgrd.png")));
-			m_Layer.add(new graphics::Sprite(-797, -430, graphics::TextureManager::Load("Assets/MainUi/mainBar.lvCover.png")));
-			m_Layer.add(new graphics::Sprite(-799, -448, graphics::TextureManager::Load("Assets/MainUi/mainBar.lvBacktrnd.png")));
-			m_Layer.add(new graphics::Sprite(-800, -450, graphics::TextureManager::Load("Assets/MainUi/mainBar.backgrnd.png")));
+			m_Layer.add(new graphics::Sprite(-580, -448, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.gaugeBackgrd.png")));
+			m_Layer.add(new graphics::Sprite(-797, -430, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.lvCover.png")));
+			m_Layer.add(new graphics::Sprite(-799, -448, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.lvBacktrnd.png")));
+			m_Layer.add(new graphics::Sprite(-800, -450, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.backgrnd.png")));
 		}
 
 		void MainUi::update()

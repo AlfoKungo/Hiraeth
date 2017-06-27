@@ -1,6 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <queue>
+#include <future>
+#include <fstream>
 
 #include "monster.h"
 #include "map/maplayer.h"
@@ -12,8 +15,14 @@ namespace hiraeth {
 
 		class MonsterManager : public Updatable
 		{
+			struct Summoner
+			{
+				float summonTime;
+				unsigned int monsterType;
+				maths::vec2 position;
+			};
 		private:
-			//std::vector<Monster*> m_Monsters;
+			std::queue<Summoner> m_SummonQueue;
 			map::MapLayer* m_MapLayer;
 			graphics::Shader m_Shader;
 			graphics::Layer<Monster> m_Layer;
@@ -24,6 +33,9 @@ namespace hiraeth {
 			void draw();
 			void update() override;
 			bool checkCollision();
+		private:
+			static void serialize_data();
+			static MonsterData deserialize_monster_data(unsigned int map_index);
 
 		};
 	}

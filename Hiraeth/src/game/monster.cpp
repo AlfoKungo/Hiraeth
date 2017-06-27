@@ -3,18 +3,20 @@
 namespace hiraeth {
 	namespace game {
 
-		Monster::Monster(maths::vec2 pos, map::MapLayer* mapLayer)
+		Monster::Monster(MonsterData monster_data, maths::vec2 pos, unsigned int type, map::MapLayer* mapLayer)
 			: Creature(maths::Rectangle(pos, maths::vec2(50, 50)), mapLayer, MONSTER_SPEED, CHARACTER_JUMP,
-				new MonsterStats()),
+				new MonsterStats(monster_data.stats)),
+			m_Type(type),
 			gen(rd()),
 			dis(0, 8),
-			m_AiTimer(StaticTimer::timer.elapsed())
+			m_AiTimer(StaticTimer::timer.elapsed()),
+			m_Hp(10, 40, float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
+			m_StartingPosition(pos)
 		{
 			srand(time(nullptr));
-			unsigned int Er = 3;
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable<3>>(maths::vec2(), 0.6f, true, graphics::TextureManager::Load("slime_stand.png")));
-			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable<7>>(maths::vec2(), 0.2f, true, graphics::TextureManager::Load("slime_walk.png")));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable<1>>(maths::vec2(), 0.2f, true, graphics::TextureManager::Load("slime_hit.png")));
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.stand_frames, 0.6f, false, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/stand.png"), 0));
+			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.walk_frames, 0.2f, true, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/walk.png"), 0));
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.hit_frames, 0.2f, true, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/hit.png"), 0));
 			m_Controls.left = true;
 			std::srand(std::time(nullptr));
 		}
@@ -65,12 +67,34 @@ namespace hiraeth {
 			}
 			Creature::update();
 		}
+			void Monster::draw(graphics::Renderer* renderer) const
+		{
+			Creature::draw(renderer);
+				renderer->push(m_TransformationMatrix);
+				renderer->submit(&m_Hp);
+				renderer->pop();
+		}
 
 		bool Monster::checkCollision(const maths::Rectangle& rec) const
 		{
 
 			return ((rec.x < m_Bounds.x + m_Bounds.width) && (m_Bounds.x < rec.x + rec.width)
 				&& (rec.y < m_Bounds.y + m_Bounds.height) && (m_Bounds.y < rec.y + rec.height));
+		}
+
+		void Monster::causeDamage(Damage damage)
+		{
+			m_Stats->causeDamage(damage);
+			if (m_Stats->Hp > m_Stats->MaxHp || m_Stats->Hp == 0)
+			{
+				killMonster();
+				return;
+			}
+			m_Hp = graphics::Sprite(10, 40, float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff);
+		}
+		void Monster::killMonster()
+		{
+			died = true;
 		}
 	}
 }

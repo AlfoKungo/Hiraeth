@@ -68,6 +68,7 @@ namespace hiraeth {
 			inline void setPosition(const maths::vec2& position) { m_Bounds.position = position; }
 			inline void setSize(const maths::vec2& size) { m_Bounds.size = size; }
 
+			virtual void resetState() {}
 			virtual void update() override {}
 			virtual void draw(Renderer* renderer) const override
 			{ 
