@@ -91,7 +91,7 @@ namespace hiraeth {
 				MonsterStatsStruct{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
 			int map_data2_location = file.tellp();
 			oarchive(MonsterData{"green_mushroom", 3, 4, 1,
-				MonsterStatsStruct{ "Green Mushroom", 5, 4444, 800, 800, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
+				MonsterStatsStruct{ "Green Mushroom", 5, 4444, 1000, 1000, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
 			file.seekp(0);
 			oarchive(map_data1_location);
 			oarchive(map_data2_location);
