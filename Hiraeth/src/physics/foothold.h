@@ -30,10 +30,10 @@ namespace hiraeth {
 		public:
 			FootHold(maths::vec2 p1, maths::vec2 p2, maths::vec2 direction);
 			~FootHold() {}
-			bool Intersects(maths::Rectangle rec);
-			bool CohenSutherlandLineClipAndDraw(maths::Rectangle rec);
-			bool LinesIntersect(maths::vec2 lp1, maths::vec2 lp2);
-			inline bool is_solid() { return (p1.x - p2.x != 0); }
+			bool Intersects(maths::Rectangle rec) const;
+			bool CohenSutherlandLineClipAndDraw(maths::Rectangle rec) const;
+			bool LinesIntersect(maths::vec2 lp1, maths::vec2 lp2) const;
+			inline bool is_solid() const { return (p1.x - p2.x != 0); }
 			template<class Archive>
 			void serialize(Archive & ar)
 			{
@@ -42,7 +42,7 @@ namespace hiraeth {
 			FootHold() {}
 		private:
 			friend class cereal::access;
-			OutCode ComputeOutCode(double x, double y, maths::Rectangle rec);
+			OutCode ComputeOutCode(double x, double y, maths::Rectangle rec) const;
 		};
 
 

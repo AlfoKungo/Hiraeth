@@ -58,7 +58,7 @@ namespace hiraeth {
 
 		void Character::registerKeys()
 		{
-			m_Kb->registerToKey(input::Controls::up, this);
+			//m_Kb->registerToKey(input::Controls::up, this);
 			m_Kb->registerToKey(input::Controls::down, this);
 			m_Kb->registerToKey(input::Controls::right, this);
 			m_Kb->registerToKey(input::Controls::left, this);
@@ -70,7 +70,7 @@ namespace hiraeth {
 		{
 			for (auto monster : (*m_MonstersLayer))
 			{
-				if (monster->checkCollision(getBounds() + (m_Direction * maths::vec2(30, 0))))
+				if (monster->checkCollision(getBounds() + (m_Direction * maths::vec2(45, 0))))
 				{
 					std::cout << "attacking" << std::endl;
 					if (getBounds().GetBottomMiddle().x < monster->getBounds().GetBottomMiddle().x)
@@ -85,5 +85,6 @@ namespace hiraeth {
 		{
 			return static_cast<CharacterStats*>(m_Stats.get());
 		}
+
 	}
 }

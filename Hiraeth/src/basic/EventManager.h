@@ -13,6 +13,14 @@
 
 using namespace std;
 namespace hiraeth {
+
+	enum EventList
+	{
+		StatsUpdate,
+		MapChanged,
+	};
+
+
 #define TEMPLATE template <typename Class> 
 
 	// Abstract Class for EventHandler to notify of a change
@@ -72,7 +80,7 @@ namespace hiraeth {
 	class EventManager {
 		struct EventType {
 			Event *event;
-			string name;
+			EventList name;
 		};
 
 		std::vector<EventType> _events;
@@ -88,10 +96,10 @@ namespace hiraeth {
 			return _Instance;
 		}
 
-		void createEvent(string name) {
+		void createEvent(EventList name) {
 			for (vector<EventType>::iterator it = _events.begin(); it != _events.end(); ++it) {
 				EventType e = *it;
-				if (e.name.compare(name) == 0)
+				if (e.name == name)
 					return;
 			}
 			EventType e;
@@ -101,10 +109,10 @@ namespace hiraeth {
 		}
 
 		template <typename Class>
-		bool subscribe(string name, Class *obj, void (Class::*func)(void)) {
+		bool subscribe(EventList name, Class *obj, void (Class::*func)(void)) {
 			for (vector<EventType>::iterator it = _events.begin(); it != _events.end(); ++it) {
 				EventType e = *it;
-				if (e.name.compare(name) == 0) {
+				if (e.name == name) {
 					e.event->addListener(obj, func);
 					return true;
 				}
@@ -112,10 +120,10 @@ namespace hiraeth {
 			return false;
 		}
 
-		void execute(string name) {
+		void execute(EventList name) {
 			for (vector<EventType>::iterator it = _events.begin(); it != _events.end(); ++it) {
 				EventType e = *it;
-				if (e.name.compare(name) == 0) {
+				if (e.name == name) {
 					e.event->execute();
 				}
 			}

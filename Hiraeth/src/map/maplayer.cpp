@@ -6,13 +6,12 @@ namespace hiraeth {
 		MapLayer::MapLayer(const std::string& filename)
 			:
 			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
-			m_Renderer(new graphics::Texture(filename)), m_Tiles(NULL)
+			m_Renderer(new graphics::Texture(filename))
 		{
 
 		}
-		MapLayer::~MapLayer()
-		{
-		}
+
+		MapLayer::~MapLayer() { }
 
 		void MapLayer::draw()
 		{
@@ -21,10 +20,11 @@ namespace hiraeth {
 			m_Shader.enable();
 			m_Shader.setUniformMat4("pr_matrix", view::Camera::get_ortho());
 			m_Renderer.begin();
-			for (auto const& tile : *m_Tiles)
+			for (auto const& tile : m_MapData.m_Tiles)
 				tile->submit(m_Renderer);
 			m_Renderer.end();
 			m_Renderer.flush();
 		}
+
 	}
 }

@@ -31,6 +31,7 @@ namespace hiraeth {
 				return m_Ortho; 
 			}
 			static void setCharacter(graphics::Renderable* character);
+			static maths::vec2 getCharacterPos();
 		private:
 			static void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
 

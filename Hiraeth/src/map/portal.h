@@ -3,15 +3,14 @@
 #include "utils/timer.h"
 #include "graphics/sprited_renderable.h"
 #include "graphics/texture.h"
-#include "game/character.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "graphics/texture_manager.h"
+#include <cereal/access.hpp>
 
 
 namespace hiraeth {
 	namespace map {
-		class Map;
 		class Portal : public graphics::SpritedRenderable
 		{
 

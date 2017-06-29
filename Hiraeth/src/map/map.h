@@ -41,22 +41,18 @@ namespace hiraeth {
 
 			graphics::Shader m_PtShader;
 			graphics::Shader m_BgShader;
-			graphics::Shader m_CrShader;
-
 
 			graphics::Layer<Portal> m_PtLayer;
 			graphics::Layer<graphics::Renderable> m_BgLayer;
-			graphics::Layer<graphics::Renderable> m_CrLayer;
-
-			MapData m_MapData{};
 
 			MapLayer m_MapLayer;
 
 			int m_MapIndex;
 			bool m_ChangeMapFlag;
 
+		//	std::vector<>
+
 			graphics::Window* m_Wnd;
-			game::Character m_Char;
 		public:
 			Map(const std::string& filename, int map_index, graphics::Window* wind);
 			~Map();
@@ -65,7 +61,6 @@ namespace hiraeth {
 			void update() override;
 			void change_map(int new_index);
 			MapLayer* getMapLayer() { return &m_MapLayer; }
-			game::Character* getCharacter() { return &m_Char; }
 
 			void ButtonClicked(input::Controls control) override;
 			void ButtonReleased(input::Controls control) override {}

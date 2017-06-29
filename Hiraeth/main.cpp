@@ -91,13 +91,17 @@ int main()
     StaticTimer::init();
 
     float timer = 0;
-
-    //Camera camera(&window);
-
-
     Map map("map4.png", 2, &window);
-    ui::UiManager uiManager(&keyboard, map.getCharacter()->getCharacterStats());
-    game::MonsterManager monsterManager(map.getMapLayer(), map.getCharacter());
+
+    graphics::Shader m_CrShader("src/shaders/basic.vert", "src/shaders/basic.frag");
+    graphics::Layer<game::Character> m_CrLayer(&m_CrShader);
+    game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer());
+    m_CrLayer.add_ref(&m_Char);
+    view::Camera::init(&m_Char);
+
+    ui::UiManager uiManager(&keyboard, m_Char.getCharacterStats());
+    game::MonsterManager monsterManager(map.getMapLayer(), &m_Char);
+
     unsigned int frames = 0;
     while (!window.closed())
     {
@@ -105,17 +109,21 @@ int main()
         window.clear();
         double x, y;
         window.getKeyboard()->getMousePosition(x, y);
-        std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y) ;
+        std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y);
         window.setTitle(s.c_str());
         Camera::update();
         map.update();
         monsterManager.update();
         uiManager.update();
-        
+        m_CrLayer.update();
+
 
         //draw
         map.draw();
         monsterManager.draw();
+        m_CrShader.enable();
+        m_CrShader.setUniformMat4("pr_matrix", view::Camera::get_ortho());
+        m_CrLayer.render();
         uiManager.draw();
 
         window.update();
@@ -123,7 +131,7 @@ int main()
         if (StaticTimer::timer.elapsed() - timer > 1.0f)
         {
             timer += 1.0f;
-            printf("%d fps, %f frame time\n", frames, 1.0 /frames);
+            printf("%d fps, %f frame time\n", frames, 1.0 / frames);
             frames = 0;
         }
 

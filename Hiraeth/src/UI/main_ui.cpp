@@ -10,7 +10,7 @@ namespace hiraeth {
 		m_LabelGroup(new graphics::Group(maths::vec2(-555, -450)))
 		{
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->subscribe("stats_update", this, &MainUi::StatsUpdated);
+			m_EventManager->subscribe(StatsUpdate, this, &MainUi::StatsUpdated);
 			//character_stats->registerToStatsUpdate(this);
 			fill_stats_group();
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, -730, -429, 0xff70cdd0));

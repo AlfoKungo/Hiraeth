@@ -9,7 +9,7 @@ namespace hiraeth {
 			m_DetailsStruct{ 40, 40, 10, 10, 20, 20, 30, 30, 100, 100 }
 		{
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->createEvent("stats_update");
+			m_EventManager->createEvent(StatsUpdate);
 		}
 
 		Damage CharacterStats::getDamage() const
@@ -22,14 +22,7 @@ namespace hiraeth {
 			m_StatsStruct.Hp -= damage.RawDamage;
 			
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->execute("stats_update");
-
-			//triggerEvent();
-
-			//for (auto const& listener : m_StatsUpdateListeners)
-			//{
-			//	listener->StatsUpdated();
-			//}
+			m_EventManager->execute(StatsUpdate);
 		}
 	}
 }

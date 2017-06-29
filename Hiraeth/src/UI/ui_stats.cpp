@@ -10,7 +10,7 @@ namespace hiraeth {
 		{
 			//character_stats->registerToStatsUpdate(this);
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->subscribe("stats_update", this, &UiStats::StatsUpdated);
+			m_EventManager->subscribe(StatsUpdate, this, &UiStats::StatsUpdated);
 			fillGroup();
 		}
 

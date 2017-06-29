@@ -9,11 +9,10 @@ namespace hiraeth {
 			m_Layer(&m_Shader),
 			m_Char(character)
 		{
-			//m_Layer.add(new Monster(maths::vec2(-200, -90), m_MapLayer));
-			//m_Layer.add(new Monster(maths::vec2(200, -90), m_MapLayer));
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->subscribe(MapChanged, this, &MonsterManager::mapChanged);
 			serialize_data();
-			m_SummonQueue.push(Summoner{ StaticTimer::timer.elapsed() + 2.0f, 1, maths::vec2(-200, -90) });
-			m_SummonQueue.push(Summoner{ StaticTimer::timer.elapsed() + 2.0f, 2, maths::vec2(200, -90) });
+			mapChanged();
 			m_Char->setMonsters(&m_Layer.m_Renderables);
 		}
 
@@ -37,7 +36,7 @@ namespace hiraeth {
 					unsigned int type = (*monster)->getType();
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
-					m_SummonQueue.push(Summoner{ StaticTimer::timer.elapsed() + 1.0f, type, starting_position });
+					m_SummonQueue.push(Summoner{map::Summon{type, starting_position} , StaticTimer::timer.elapsed() + 1.0f});
 				}
 				else
 				{
@@ -50,7 +49,7 @@ namespace hiraeth {
 			{
 				if (StaticTimer::timer.elapsed() - m_SummonQueue.front().summonTime > 0.0f)
 				{
-					m_Layer.add(new Monster(deserialize_monster_data(m_SummonQueue.front().monsterType), m_SummonQueue.front().position, m_SummonQueue.front().monsterType, m_MapLayer));
+					m_Layer.add(new Monster(deserialize_monster_data(m_SummonQueue.front().summon.monsterType), m_SummonQueue.front().summon.position, m_SummonQueue.front().summon.monsterType, m_MapLayer));
 					m_SummonQueue.pop();
 				}
 				else
@@ -87,10 +86,10 @@ namespace hiraeth {
 			//oarchive(int(2));
 			file.seekp(sizeof(int) * 2);
 			int map_data1_location = file.tellp();
-			oarchive(MonsterData{"slime", 3, 7, 1,
+			oarchive(MonsterData{ "slime", MonsterFramesAmount{3, 7, 1},
 				MonsterStatsStruct{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
 			int map_data2_location = file.tellp();
-			oarchive(MonsterData{"green_mushroom", 3, 4, 1,
+			oarchive(MonsterData{ "green_mushroom", MonsterFramesAmount{3, 4, 1},
 				MonsterStatsStruct{ "Green Mushroom", 5, 4444, 1000, 1000, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 100, 100}});
 			file.seekp(0);
 			oarchive(map_data1_location);
@@ -108,6 +107,17 @@ namespace hiraeth {
 			MonsterData monster_data;
 			iarchive(monster_data);
 			return monster_data;
+		}
+
+		void MonsterManager::mapChanged()
+		{
+			//clear summon queue
+			while (!m_SummonQueue.empty())
+				m_SummonQueue.pop();
+			m_Layer.clear();
+			//reload new summons
+			for (auto summon : (m_MapLayer->getSummons()))
+				m_SummonQueue.push(Summoner{ summon, StaticTimer::timer.elapsed() + 2.0f});
 		}
 	}
 }

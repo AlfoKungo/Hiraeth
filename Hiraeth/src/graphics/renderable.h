@@ -50,7 +50,7 @@ namespace hiraeth {
 			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
 			inline const maths::vec2& getSize() const { return m_Bounds.size; }
 			inline const maths::Rectangle& getBounds() const { return m_Bounds; }
-			inline maths::Rectangle& getBounds() { return m_Bounds; }
+			//inline maths::Rectangle& getBounds() { return m_Bounds; }
 			inline Texture* getTexture() const { return m_Texture; }
 			inline const unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }

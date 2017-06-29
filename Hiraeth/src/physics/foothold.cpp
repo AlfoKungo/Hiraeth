@@ -10,19 +10,19 @@ namespace hiraeth {
 
 		}
 
-		bool FootHold::Intersects(maths::Rectangle rec)
+		bool FootHold::Intersects(maths::Rectangle rec) const
 		{
 			return CohenSutherlandLineClipAndDraw(rec);
 		}
 
-		bool FootHold::LinesIntersect(maths::vec2 lp1, maths::vec2 lp2)
+		bool FootHold::LinesIntersect(maths::vec2 lp1, maths::vec2 lp2) const
 		{
 			return (((lp1.x - p1.x)*(p2.y - p1.y) - (lp1.y - p1.y)*(p2.x - p1.x)) * ((lp2.x - p1.x)*(p2.y - p1.y) - (lp2.y - p1.y)*(p2.x - p1.x)) < 0
 				&&
 				((p1.x - lp1.x)*(lp2.y - lp1.y) - (p1.y - lp1.y)*(lp2.x - lp1.x)) * ((p2.x - lp1.x)*(lp2.y - lp1.y) - (p2.y - lp1.y)*(lp2.x - lp1.x)) < 0);
 		}
 
-		OutCode FootHold::ComputeOutCode(double x, double y, maths::Rectangle rec)
+		OutCode FootHold::ComputeOutCode(double x, double y, maths::Rectangle rec) const
 		{
 			OutCode code;
 
@@ -43,7 +43,7 @@ namespace hiraeth {
 		// Cohen–Sutherland clipping algorithm clips a line from
 		// P0 = (x0, y0) to P1 = (x1, y1) against a rectangle with 
 		// diagonal from (xmin, ymin) to (xmax, ymax).
-		bool FootHold::CohenSutherlandLineClipAndDraw(maths::Rectangle rec)
+		bool FootHold::CohenSutherlandLineClipAndDraw(maths::Rectangle rec) const
 		{
 			double x0 = p1.x, y0 = p1.y, x1 = p2.x, y1 = p2.y;
 			double xmin = rec.x, ymin = rec.y, xmax = rec.x + rec.width, ymax = rec.y + rec.height;

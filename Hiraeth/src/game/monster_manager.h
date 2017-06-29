@@ -9,18 +9,18 @@
 #include "map/maplayer.h"
 #include "graphics/layers/layer.h"
 #include "game/character.h"
+#include "map/map_data.h"
 
 namespace hiraeth {
 	namespace game {
+		struct Summoner
+		{
+			map::Summon summon;
+			float summonTime;
+		};
 
 		class MonsterManager : public Updatable
 		{
-			struct Summoner
-			{
-				float summonTime;
-				unsigned int monsterType;
-				maths::vec2 position;
-			};
 		private:
 			std::queue<Summoner> m_SummonQueue;
 			map::MapLayer* m_MapLayer;
@@ -33,10 +33,11 @@ namespace hiraeth {
 			void draw();
 			void update() override;
 			bool checkCollision();
+			void mapChanged();
 		private:
 			static void serialize_data();
 			static MonsterData deserialize_monster_data(unsigned int map_index);
-
+			
 		};
 	}
 }

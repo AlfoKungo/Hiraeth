@@ -14,9 +14,9 @@ namespace hiraeth {
 			m_StartingPosition(pos)
 		{
 			srand(time(nullptr));
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.stand_frames, 0.6f, false, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/stand.png"), 0));
-			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.walk_frames, 0.2f, true, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/walk.png"), 0));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.hit_frames, 0.2f, true, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/hit.png"), 0));
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.monster_frames_amount.stand_frames, 0.6f, false, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/stand.png"), 0));
+			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.monster_frames_amount.walk_frames, 0.2f, true, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/walk.png"), 0));
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.monster_frames_amount.hit_frames, 0.2f, true, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/hit.png"), 0));
 			m_Controls.left = true;
 			std::srand(std::time(nullptr));
 		}
@@ -25,7 +25,7 @@ namespace hiraeth {
 		{
 			if (m_Foothold != NO_FOOTHOLD)
 			{
-				const physics::FootHold& foothold = m_MapLayer->m_FootHolds->at(m_Foothold);
+				const physics::FootHold& foothold = m_MapLayer->getFootHolds().at(m_Foothold);
 				const float&& length = foothold.p2.x - foothold.p1.x;
 				if (m_Bounds.x < (foothold.p1.x + length * 0.2))
 				{

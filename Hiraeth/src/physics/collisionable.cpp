@@ -48,13 +48,13 @@ namespace hiraeth {
 
         bool Collisionable::check_if_still_on_foothold() const
         {
-            const physics::FootHold& foothold = m_MapLayer->m_FootHolds->at(m_Foothold);
+            const physics::FootHold& foothold = m_MapLayer->getFootHolds().at(m_Foothold);
             return (m_Box.GetBottomMiddle().x > foothold.p1.x && m_Box.GetBottomMiddle().x < foothold.p2.x);
         }
 
         maths::vec2 Collisionable::force_by_vertical_foothold(const maths::vec2& force, int footholdIndex) const
         {
-            physics::FootHold foothold = m_MapLayer->m_FootHolds->at(footholdIndex);
+            physics::FootHold foothold = m_MapLayer->getFootHolds().at(footholdIndex);
             float x_force = force.x;
             if (force.x > 0)
                 x_force = foothold.p1.x - m_Box.width - m_Box.x;
@@ -65,7 +65,7 @@ namespace hiraeth {
 
         maths::vec2 Collisionable::set_y_by_foothold(const maths::vec2& force) const
         {
-            physics::FootHold foothold = m_MapLayer->m_FootHolds->at(m_Foothold);
+            physics::FootHold foothold = m_MapLayer->getFootHolds().at(m_Foothold);
             float d = 0;
             if (foothold.p1.x != foothold.p2.x)
                 d = (foothold.p1.x - m_Box.x) / (foothold.p1.x - foothold.p2.x);
@@ -75,15 +75,15 @@ namespace hiraeth {
 
         int Collisionable::analyzeCollisionX(const maths::vec2& char_speed) const
         {
-            std::vector<physics::FootHold> *m_FootHolds = m_MapLayer->m_FootHolds;
+            const std::vector<physics::FootHold>& m_FootHolds = m_MapLayer->getFootHolds();
             const maths::vec2 char_pos = m_Box.GetBottomMiddle();
             maths::vec2 next_char_pos = (m_Box + char_speed).GetBottomMiddle();
 
-            for (int i = 0; i < m_FootHolds->size(); i++)
+            for (int i = 0; i < m_FootHolds.size(); i++)
             {
-                if (m_FootHolds->at(i).LinesIntersect(char_pos, next_char_pos))
+                if (m_FootHolds.at(i).LinesIntersect(char_pos, next_char_pos))
                     if (char_speed.y < 0)
-                        if (m_FootHolds->at(i).is_solid())
+                        if (m_FootHolds.at(i).is_solid())
                             //if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
                         {
                             return i;
@@ -94,15 +94,15 @@ namespace hiraeth {
 
         int Collisionable::analyzeCollisionY(const maths::vec2& char_speed) const
         {
-            std::vector<physics::FootHold> *m_FootHolds = m_MapLayer->m_FootHolds;
+            const std::vector<physics::FootHold>& m_FootHolds = m_MapLayer->getFootHolds();
             maths::Rectangle next_char_rec = m_Box + char_speed;
 
-            for (int i = 0; i < m_FootHolds->size(); i++)
+            for (int i = 0; i < m_FootHolds.size(); i++)
             {
-                if (m_FootHolds->at(i).Intersects(next_char_rec)
+                if (m_FootHolds.at(i).Intersects(next_char_rec)
                     //&& !m_FootHolds->at(i).Intersects(char_rec)
-                    && next_char_rec.y != m_FootHolds->at(i).p2.y 
-                    && !m_FootHolds->at(i).is_solid()
+                    && next_char_rec.y != m_FootHolds.at(i).p2.y 
+                    && !m_FootHolds.at(i).is_solid()
                     )
                 {
                      return i;

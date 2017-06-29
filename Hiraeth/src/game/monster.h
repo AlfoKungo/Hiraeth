@@ -9,15 +9,22 @@
 
 namespace hiraeth {
 	namespace game {
-
+			
+			struct MonsterFramesAmount
+			{
+				unsigned int stand_frames, walk_frames, hit_frames;
+				template<class A> void serialize(A& ar) {
+					ar(stand_frames, walk_frames, hit_frames);
+				}
+			};
 			struct MonsterData
 			{
 				std::string monster_name;
-				unsigned int stand_frames, walk_frames, hit_frames;
+				MonsterFramesAmount monster_frames_amount;
 				MonsterStatsStruct stats;
 
 				template<class A> void serialize(A& ar) {
-					ar(monster_name, stand_frames, walk_frames, hit_frames, stats);
+					ar(monster_name, monster_frames_amount, stats);
 				}
 			};
 		class Monster : public Creature
