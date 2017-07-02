@@ -116,6 +116,7 @@ namespace hiraeth {
 			setKeyControl(stats_a, GLFW_KEY_S);
 			setKeyControl(stats_b, GLFW_KEY_D);
 			setKeyControl(inventory, GLFW_KEY_A);
+			setKeyControl(pick_up, GLFW_KEY_Z);
 		}
 
 		void Keyboard::setKeyControl(Controls control, unsigned int key)

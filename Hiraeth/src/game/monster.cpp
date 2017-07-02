@@ -3,15 +3,13 @@
 namespace hiraeth {
 	namespace game {
 
-		Monster::Monster(MonsterData monster_data, maths::vec2 pos, unsigned int type, map::MapLayer* mapLayer)
-			: Creature(maths::Rectangle(pos, maths::vec2(50, 50)), mapLayer, MONSTER_SPEED, CHARACTER_JUMP,
-				new MonsterStats(monster_data.stats)),
-			m_Type(type),
+		Monster::Monster(MonsterData monster_data, map::Summon summon, map::MapLayer* mapLayer)
+			: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
+				new MonsterStats(monster_data.stats), false),
 			gen(rd()),
 			dis(0, 8),
-			m_AiTimer(StaticTimer::timer.elapsed()),
 			m_Hp(10, 40, float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
-			m_StartingPosition(pos)
+			m_Summon(summon)
 		{
 			srand(time(nullptr));
 			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.monster_frames_amount.stand_frames, 0.6f, false, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/stand.png"), 0));
@@ -38,7 +36,7 @@ namespace hiraeth {
 					m_Controls.right = false;
 
 				}
-				if (StaticTimer::timer.elapsed() - m_AiTimer > 0.0f)
+				if (m_AiTimer.isExpired())
 				{
 					if (dis(gen) < 4)
 					{
@@ -61,18 +59,18 @@ namespace hiraeth {
 							}
 						}
 					}
-					m_AiTimer += (float)(rand() % 30) / 10 + 1;
+					m_AiTimer.reSet((float)(rand() % 30) / 10 + 1);
 					//m_AiTimer += 2.0f;
 				}
 			}
 			Creature::update();
 		}
-			void Monster::draw(graphics::Renderer* renderer) const
+		void Monster::draw(graphics::Renderer* renderer) const
 		{
 			Creature::draw(renderer);
-				renderer->push(m_TransformationMatrix);
-				renderer->submit(&m_Hp);
-				renderer->pop();
+			renderer->push(m_TransformationMatrix);
+			renderer->submit(&m_Hp);
+			renderer->pop();
 		}
 
 		bool Monster::checkCollision(const maths::Rectangle& rec) const
@@ -80,6 +78,14 @@ namespace hiraeth {
 
 			return ((rec.x < m_Bounds.x + m_Bounds.width) && (m_Bounds.x < rec.x + rec.width)
 				&& (rec.y < m_Bounds.y + m_Bounds.height) && (m_Bounds.y < rec.y + rec.height));
+		}
+
+		void Monster::getHit(Direction dir, Damage damage)
+		{
+			m_Controls.left = false;
+			m_Controls.right = false;
+			m_AiTimer.reSet(1.0f);
+			Creature::getHit(dir, damage);
 		}
 
 		void Monster::causeDamage(Damage damage)
@@ -95,6 +101,19 @@ namespace hiraeth {
 		void Monster::killMonster()
 		{
 			died = true;
+		}
+
+		MonsterData Monster::deserialize_monster_data(unsigned int monster_index)
+		{
+			std::ifstream file("monster.data");
+			cereal::BinaryInputArchive iarchive(file);
+			int start_of_data;
+			file.seekg(sizeof(int) * (monster_index - 1));
+			iarchive(start_of_data);
+			file.seekg(start_of_data);
+			MonsterData monster_data;
+			iarchive(monster_data);
+			return monster_data;
 		}
 	}
 }

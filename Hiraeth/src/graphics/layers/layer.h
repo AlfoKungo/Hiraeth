@@ -2,6 +2,7 @@
 
 #include "../renderable.h"
 #include "../renderer.h"
+#include "view/camera.h"
 
 namespace hiraeth {
 	namespace graphics {
@@ -13,11 +14,13 @@ namespace hiraeth {
 			Renderer* m_Renderer;
 			Shader* m_Shader;
 			maths::mat4 m_ProjectionMatrix;
+			bool m_IsTrackedByCamera;
 		public:
 			std::vector<T*> m_Renderables;
 			std::vector<T*> m_RefRenderables;
-			Layer(Renderer* renderer, Shader* shader, maths::mat4 projectionMatrix)
-				: m_Renderer(renderer), m_Shader(shader), m_ProjectionMatrix(projectionMatrix)
+			Layer(Renderer* renderer, Shader* shader, maths::mat4 projectionMatrix, bool is_tracked_by_camera = false)
+				: m_Renderer(renderer), m_Shader(shader), m_ProjectionMatrix(projectionMatrix), 
+				m_IsTrackedByCamera(is_tracked_by_camera)
 			{
 				m_Shader->enable();
 				m_Shader->setUniformMat4("pr_matrix", m_ProjectionMatrix);
@@ -29,8 +32,8 @@ namespace hiraeth {
 				m_Shader->setUniform1iv("textures", texIDs, 32);
 				m_Shader->disable();
 			}
-			Layer(Shader* shader)
-				: Layer(new Renderer(), shader, maths::mat4::Orthographic(-800, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f))
+			Layer(Shader* shader, bool is_tracked_by_camera = false)
+				: Layer(new Renderer(), shader, maths::mat4::Orthographic(-800, 800.0f, -450.0f, 450.0f, -1.0f, 1.0f), is_tracked_by_camera)
 			{
 
 			}
@@ -65,6 +68,8 @@ namespace hiraeth {
 			virtual void render() const
 			{
 				m_Shader->enable();
+				if (m_IsTrackedByCamera)
+					m_Shader->setUniformMat4("pr_matrix", view::Camera::get_ortho());
 				m_Renderer->begin();
 
 				for (auto renderable = m_Renderables.rbegin(); renderable != m_Renderables.rend(); ++renderable)
@@ -72,18 +77,11 @@ namespace hiraeth {
 					if ((*renderable)->is_to_draw)
 						(*renderable)->draw(m_Renderer);
 				}
-				//for (const T* renderable : m_Renderables)
-				//	if (renderable->is_to_draw)
-				//		renderable->draw(m_Renderer);
 				for (auto renderable = m_RefRenderables.rbegin(); renderable != m_RefRenderables.rend(); ++renderable)
 				{
 					if ((*renderable)->is_to_draw)
 						(*renderable)->draw(m_Renderer);
 				}
-				//for (const T* renderable : m_RefRenderables)
-				//	if (renderable->is_to_draw)
-				//		renderable->draw(m_Renderer);
-
 				m_Renderer->end();
 				m_Renderer->flush();
 			}

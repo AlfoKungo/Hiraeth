@@ -20,8 +20,16 @@ namespace hiraeth {
 			m_Weapon(10, 20,10, 10, 0xe0ffcc66)
 			{
 			}
+			CharacterArm(unsigned int frames_amount, std::vector<float> frames_delay, bool is_loop, graphics::Texture* ptex, std::vector<ArmConfigs> arm_configs)
+				: SpritedRenderable(maths::vec2(0), frames_amount, frames_delay, is_loop, ptex, createOriginsByConfigs(arm_configs)),
+			m_WeaponPositions(fillWeaponPositions(arm_configs)),
+			m_Weapon(10, 20,10, 10, 0xe0ffcc66)
+			{
+			}
 			CharacterArm(unsigned int frames_amount, float frame_delay, bool is_loop, graphics::Texture* ptex, std::vector<maths::vec2> origins_array)
 				: CharacterArm(frames_amount, frame_delay, is_loop, ptex, createConfigsByOrigins(origins_array)){}
+			CharacterArm(unsigned int frames_amount, std::vector<float> frames_delay, bool is_loop, graphics::Texture* ptex, std::vector<maths::vec2> origins_array)
+				: CharacterArm(frames_amount, frames_delay, is_loop, ptex, createConfigsByOrigins(origins_array)){}
 				~CharacterArm() {}
 
 			maths::vec2 getWeaponPosition() const

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{055CEB59-757B-4F3F-B1A0-1D208452E355}</ProjectGuid>
     <RootNamespace>Hiraeth</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -161,6 +161,7 @@
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_manager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
+    <ClCompile Include="src\item\item_manager.cpp" />
     <ClCompile Include="src\keyboard\key.cpp" />
     <ClCompile Include="src\keyboard\keyboard.cpp" />
     <ClCompile Include="src\map\map.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="ext\freetype-gl\vector.h" />
     <ClInclude Include="src\audio\sound.h" />
     <ClInclude Include="src\audio\sound_manager.h" />
+    <ClInclude Include="src\basic\a_timer.h" />
     <ClInclude Include="src\basic\drawable.h" />
     <ClInclude Include="src\basic\EventManager.h" />
     <ClInclude Include="src\basic\event_handler.h" />
@@ -207,6 +209,7 @@
     <ClInclude Include="src\game\character_stats.h" />
     <ClInclude Include="src\game\creature.h" />
     <ClInclude Include="src\game\monster.h" />
+    <ClInclude Include="src\game\monster_data_manager.h" />
     <ClInclude Include="src\game\monster_manager.h" />
     <ClInclude Include="src\game\monster_stats.h" />
     <ClInclude Include="src\game\stats.h" />
@@ -228,6 +231,8 @@
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\texture_manager.h" />
     <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="src\item\item.h" />
+    <ClInclude Include="src\item\item_manager.h" />
     <ClInclude Include="src\keyboard\key.h" />
     <ClInclude Include="src\keyboard\keyboard.h" />
     <ClInclude Include="src\keyboard\keyboard_event.h" />

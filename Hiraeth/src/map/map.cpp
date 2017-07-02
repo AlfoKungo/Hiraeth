@@ -80,7 +80,6 @@ namespace hiraeth {
 			MapData map_data1{}, map_data2{};
 
 			//Generate data
-			map_data1.m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(-800, -100), maths::vec2(800, -100)));
 			for (int i = 0; i < 2; i++)
 				map_data1.m_Portals.push_back(std::make_unique<Portal>(maths::vec3(i * 200, 0, 0), 1));
 			for (int y = -450; y < -100; y += 59)
@@ -91,9 +90,9 @@ namespace hiraeth {
 			map_data1.m_Tiles.push_back(std::make_unique<Tile>(maths::vec3(-190, 0,0), 1.0f, maths::vec2(1, 268), maths::vec2(90, 59), 0));
 			map_data1.m_Tiles.push_back(std::make_unique<Tile>(maths::vec3(0, 0,0), 1.0f, maths::vec2(0, 0), maths::vec2(621, 328), 0));
 			map_data1.m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(-800, -100), maths::vec2(800,-100)));
+			//map_data1.m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(-800, 0), maths::vec2(800,-200)));
 			map_data1.m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(800, -150), maths::vec2(1000,-150)));
 			map_data1.m_FootHolds.push_back(physics::HorizontalFootHold(maths::vec2(800, -50), maths::vec2(1000,-50)));
-			//map_data1.m_FootHolds.push_back(physics::FootHold(maths::vec2(-800, 0), maths::vec2(800,-200), maths::vec2(0, 1)));
 			map_data1.m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(1000, -200), 600));
 			map_data1.m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(-700, -200), 600));
 			map_data1.m_FootHolds.push_back(physics::VerticalFootHold(maths::vec2(-800, -450), 350));

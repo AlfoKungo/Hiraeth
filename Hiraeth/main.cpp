@@ -17,6 +17,7 @@
 #include "graphics/label.h"
 #include "UI/ui_manager.h"
 #include "game/monster_manager.h"
+#include "item/item_manager.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -100,7 +101,8 @@ int main()
     view::Camera::init(&m_Char);
 
     ui::UiManager uiManager(&keyboard, m_Char.getCharacterStats());
-    game::MonsterManager monsterManager(map.getMapLayer(), &m_Char);
+	item::ItemManager itemManager{map.getMapLayer()->getFootHolds()};
+    game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
 
     unsigned int frames = 0;
     while (!window.closed())
@@ -115,12 +117,14 @@ int main()
         map.update();
         monsterManager.update();
         uiManager.update();
+		itemManager.update();
         m_CrLayer.update();
 
 
         //draw
         map.draw();
         monsterManager.draw();
+		itemManager.draw();
         m_CrShader.enable();
         m_CrShader.setUniformMat4("pr_matrix", view::Camera::get_ortho());
         m_CrLayer.render();

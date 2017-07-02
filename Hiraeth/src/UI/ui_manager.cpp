@@ -52,7 +52,8 @@ namespace hiraeth {
 					}
 					else
 					{
-						(*window)->mouse_clicked();
+						 ;
+						(*window)->mouse_clicked((*window)->getRelativeLocation(mx, my));
 					}
 					std::rotate(m_Windows.begin(), window, window + 1);
 					break;

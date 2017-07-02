@@ -49,6 +49,13 @@ namespace hiraeth {
 					return true;
 				return false;
 			}
+			maths::vec2 getRelativeLocation(float mx, float my)
+			{
+				maths::mat4 transform = m_Group.getTransform();
+				maths::Rectangle rec = maths::Rectangle(0, m_WindowSize).Transoform(transform);
+				maths::vec2 relPos = maths::vec2(mx - 800, 450 - my) - rec.position;
+				return relPos;
+			}
 			bool isTitlebarContains(float x, float y) const
 			{
 				maths::mat4 transform = m_Group.getTransform();
@@ -63,8 +70,8 @@ namespace hiraeth {
 			inline bool is_attached() const { return m_IsAttached; }
 			inline input::Controls getControlKey() const { return m_ControlKey; }
 
-			virtual void mouse_clicked() = 0;
-			virtual void mouse_released() = 0;
+			virtual void mouse_clicked(maths::vec2 mousePos) = 0;
+			virtual void mouse_released(maths::vec2 mousePos) = 0;
 			virtual void mouse_moved(float mx, float my) = 0;
 			void update() override { m_Group.update(); }
 			void draw(graphics::Renderer* renderer) const override { m_Group.draw(renderer); }

@@ -9,7 +9,6 @@ namespace hiraeth {
 		class Collisionable
 		{
 
-#define NO_FOOTHOLD -1
 
 		protected:
 			int m_Foothold;

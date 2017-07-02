@@ -4,6 +4,9 @@
 
 namespace hiraeth {
 	namespace physics {
+
+#define NO_FOOTHOLD -1
+		typedef int FootHoldIndex;
 		struct CollisionStruct
 		{
 			int x, y;

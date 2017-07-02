@@ -15,6 +15,11 @@ namespace hiraeth {
 			{
 
 			}
+			CharacterBody(unsigned int frames_amount, std::vector<float> frames_delay, bool is_loop, graphics::Texture* ptex, maths::vec2 origin)
+				: SpritedRenderable(maths::vec2(0), frames_amount, frames_delay, is_loop, ptex, std::vector<maths::vec2>(frames_amount, origin))
+			{
+
+			}
 		};
 	}
 }

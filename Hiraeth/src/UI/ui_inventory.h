@@ -13,9 +13,9 @@ namespace hiraeth {
 
 		public:
 			UiInventory(maths::vec2 pos, input::Controls control_key);
-			void fillGroup();
-			void mouse_clicked() override {}
-			void mouse_released() override {}
+			void fillGroup(unsigned int selectedTab);
+			void mouse_clicked(maths::vec2 mousePos) override;
+			void mouse_released(maths::vec2 mousePos) override {}
 			void mouse_moved(float mx, float my) override {}
 		};
 

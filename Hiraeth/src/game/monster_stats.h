@@ -15,7 +15,7 @@ namespace hiraeth {
 			unsigned int WeaponDef, MagicDef;
 			unsigned int WeaponAcc, MagicAcc;
 			unsigned int WeaponAvd, MagicAvd;
-			unsigned int Speed, Jump;
+			float Speed, Jump;
 				template<class A> void serialize(A& ar) {
 					ar(Name, Level, Exp, MaxHp, Hp, MaxMp, Mp, Attack, CritRate, WeaponDef, MagicDef,
 						WeaponAcc, MagicAcc, WeaponAvd, MagicAvd, Speed, Jump);
