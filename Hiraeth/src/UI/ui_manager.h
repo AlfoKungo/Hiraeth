@@ -10,6 +10,7 @@
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "game/character_stats.h"
+#include "item/item_manager.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -22,7 +23,7 @@ namespace hiraeth {
 			input::Keyboard* m_Kb;
 			MainUi m_MainUi;
 		public:
-			UiManager(input::Keyboard* kb, game::CharacterStats *character_stats);
+			UiManager(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * item_manager);
 			void update();
 			void draw() const;
 			void set_keyboard(input::Keyboard* keyboard) { m_Kb = keyboard; }
@@ -32,7 +33,7 @@ namespace hiraeth {
 			void ButtonClicked(input::Controls c) override;
 			void ButtonReleased(input::Controls c) override;
 		private:
-			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
+			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * item_manager);
 		};
 
 	}

@@ -58,12 +58,12 @@ namespace hiraeth {
 			void clicked(unsigned int key, int action)
 			{
 				m_KeysClicked[key] = action == GLFW_PRESS;
-				Controls c = m_KeysControls[key];
+				Controls control_key = m_KeysControls[key];
 				if (keys_map[key] != NULL)
 					if (action == GLFW_PRESS || action == GLFW_REPEAT)
-						keys_map[key]->ButtonClicked(c);
+						keys_map[key]->ButtonClicked(control_key);
 					else
-						keys_map[key]->ButtonReleased(c);
+						keys_map[key]->ButtonReleased(control_key);
 			}
 			void initControls();
 			void setKeyControl(Controls control, unsigned int key);

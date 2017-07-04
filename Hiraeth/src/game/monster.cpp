@@ -3,13 +3,15 @@
 namespace hiraeth {
 	namespace game {
 
-		Monster::Monster(MonsterData monster_data, map::Summon summon, map::MapLayer* mapLayer)
+		Monster::Monster(const MonsterData& monster_data, map::Summon summon, map::MapLayer* mapLayer)
 			: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
 				new MonsterStats(monster_data.stats), false),
 			gen(rd()),
 			dis(0, 8),
 			m_Hp(10, 40, float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
-			m_Summon(summon)
+			m_Summon(summon),
+			m_XStart(NULL),
+			m_XEnd(NULL)
 		{
 			srand(time(nullptr));
 			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), monster_data.monster_frames_amount.stand_frames, 0.6f, false, graphics::TextureManager::Load("Assets/monsters/" + monster_data.monster_name + "/stand.png"), 0));
@@ -24,6 +26,11 @@ namespace hiraeth {
 			if (m_Foothold != NO_FOOTHOLD)
 			{
 				const physics::FootHold& foothold = m_MapLayer->getFootHolds().at(m_Foothold);
+				if (m_XStart == NULL && m_XEnd == NULL)
+				{
+					m_XStart = foothold.getXStart();
+					m_XEnd = foothold.getXEnd();
+				}
 				const float&& length = foothold.p2.x - foothold.p1.x;
 				if (m_Bounds.x < (foothold.p1.x + length * 0.2))
 				{
@@ -101,19 +108,6 @@ namespace hiraeth {
 		void Monster::killMonster()
 		{
 			died = true;
-		}
-
-		MonsterData Monster::deserialize_monster_data(unsigned int monster_index)
-		{
-			std::ifstream file("monster.data");
-			cereal::BinaryInputArchive iarchive(file);
-			int start_of_data;
-			file.seekg(sizeof(int) * (monster_index - 1));
-			iarchive(start_of_data);
-			file.seekg(start_of_data);
-			MonsterData monster_data;
-			iarchive(monster_data);
-			return monster_data;
 		}
 	}
 }

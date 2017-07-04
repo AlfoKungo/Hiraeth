@@ -18,6 +18,7 @@ namespace hiraeth {
 	{
 		StatsUpdate,
 		MapChanged,
+		InventoryUpdated,
 	};
 
 

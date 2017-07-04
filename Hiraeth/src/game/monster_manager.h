@@ -10,6 +10,7 @@
 #include "game/character.h"
 #include "map/map_data.h"
 #include "item/item_manager.h"
+#include "monster_data_manager.h"
 
 namespace hiraeth {
 	namespace game {
@@ -28,7 +29,6 @@ namespace hiraeth {
 			graphics::Layer<Monster> m_Layer;
 			item::ItemManager* m_ItemManager;
 			Character* const m_Char;
-			//graphics::Layer<graphics::Renderable> m_Layer;
 		public:
 			MonsterManager(map::MapLayer* map_layer, game::Character* character, item::ItemManager* item_manager);
 			void draw();

@@ -8,17 +8,22 @@
 namespace hiraeth {
 	namespace item {
 
-		class ItemManager
+		class ItemManager: public Updatable
 		{
 		private:
 			const std::vector<physics::FootHold>& m_FootHolds;
-			graphics::Layer<Item> m_Items;
+			graphics::Layer<Item> m_DroppedItems;
+			std::vector<Item*> m_InventoryItems;
 		public:
 			ItemManager(const std::vector<physics::FootHold>& foot_holds);
-			void update();
 			void draw() const;
+			void update() override;
 			void dropItem(const char* name, maths::vec2 pos);
 			void mapChanged();
+			Item * getItem(maths::vec2 pos);
+			const std::vector<Item*>& getInventoryItems() { return m_InventoryItems; }
+		private:
+			static void serialize_data();
 		};
 	}
 }

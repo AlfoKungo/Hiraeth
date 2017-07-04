@@ -69,6 +69,10 @@ namespace hiraeth {
 		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			Keyboard* kb = (Keyboard*)glfwGetWindowUserPointer(window);
+				if (key == GLFW_KEY_RIGHT_CONTROL)
+					key = GLFW_KEY_LEFT_CONTROL;
+				if (key == GLFW_KEY_RIGHT_ALT)
+					key = GLFW_KEY_LEFT_ALT;
 			kb->m_Keys[key] = action;
 			kb->clicked(key, action);
 		}

@@ -84,15 +84,15 @@ namespace hiraeth {
 			cereal::BinaryOutputArchive oarchive(file);
 			//oarchive(int(2));
 			file.seekp(sizeof(int) * 2);
-			int map_data1_location = file.tellp();
+			int monster_data1_location = file.tellp();
 			oarchive(MonsterData{ "slime", MonsterFramesAmount{3, 7, 1},
 				MonsterStatsStruct{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}});
-			int map_data2_location = file.tellp();
+			int monster_data2_location = file.tellp();
 			oarchive(MonsterData{ "green_mushroom", MonsterFramesAmount{3, 4, 1},
 				MonsterStatsStruct{ "Green Mushroom", 5, 4444, 1000, 1000, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}});
 			file.seekp(0);
-			oarchive(map_data1_location);
-			oarchive(map_data2_location);
+			oarchive(monster_data1_location);
+			oarchive(monster_data2_location);
 		}
 
 		void MonsterManager::mapChanged()
@@ -101,6 +101,7 @@ namespace hiraeth {
 			while (!m_SummonQueue.empty())
 				m_SummonQueue.pop();
 			m_Layer.clear();
+			MonsterDataManager::ReloadData(m_MapLayer->getSummons());
 			//reload new summons
 			for (auto summon : (m_MapLayer->getSummons()))
 				m_SummonQueue.push(Summoner{ summon, StaticTimer::timer.elapsed() + 2.0f});

@@ -94,14 +94,14 @@ int main()
     float timer = 0;
     Map map("map4.png", 2, &window);
 
-    graphics::Shader m_CrShader("src/shaders/basic.vert", "src/shaders/basic.frag");
-    graphics::Layer<game::Character> m_CrLayer(&m_CrShader);
-    game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer());
+	item::ItemManager itemManager{map.getMapLayer()->getFootHolds()};
+
+    graphics::Layer<game::Character> m_CrLayer(new Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true);
+    game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager);
     m_CrLayer.add_ref(&m_Char);
     view::Camera::init(&m_Char);
 
-    ui::UiManager uiManager(&keyboard, m_Char.getCharacterStats());
-	item::ItemManager itemManager{map.getMapLayer()->getFootHolds()};
+    ui::UiManager uiManager(&keyboard, m_Char.getCharacterStats(), &itemManager);
     game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
 
     unsigned int frames = 0;
@@ -116,18 +116,16 @@ int main()
         Camera::update();
         map.update();
         monsterManager.update();
-        uiManager.update();
 		itemManager.update();
+        uiManager.update();
         m_CrLayer.update();
 
 
         //draw
         map.draw();
         monsterManager.draw();
-		itemManager.draw();
-        m_CrShader.enable();
-        m_CrShader.setUniformMat4("pr_matrix", view::Camera::get_ortho());
         m_CrLayer.render();
+		itemManager.draw();
         uiManager.draw();
 
         window.update();

@@ -4,14 +4,14 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiManager::UiManager(input::Keyboard* kb, game::CharacterStats *character_stats)
+		UiManager::UiManager(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * item_manager)
 			: m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
 			//: m_Layer(shader),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
 			m_MainUi(character_stats)
 		{
-			init_all_windows(kb, character_stats);
+			init_all_windows(kb, character_stats, item_manager);
 			kb->registerToMouse(this);
 			kb->registerToKey(input::Controls::escape, this);
 		}
@@ -27,9 +27,9 @@ namespace hiraeth {
 			m_Layer.update();
 		}
 
-		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats)
+		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * itemManager)
 		{
-			m_Layer.add_ref(new UiInventory(maths::vec2(-300, 0), input::Controls::inventory));
+			m_Layer.add_ref(new UiInventory(maths::vec2(-300, 0), input::Controls::inventory, itemManager->getInventoryItems()));
 			kb->registerToKey(input::Controls::inventory, this);
 			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats_a, character_stats));
 			kb->registerToKey(input::Controls::stats_a, this);

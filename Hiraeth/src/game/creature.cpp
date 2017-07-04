@@ -165,7 +165,7 @@ namespace hiraeth {
 			{
 				causeDamage(damage);
 				m_Force = calculateForce(maths::vec2(dir * 20, 8));
-				m_Direction = oppositeDirection(dir);
+				//m_Direction = oppositeDirection(dir);
 				if (m_IsImmuneAfterHit)
 				{
 					is_hit = true;

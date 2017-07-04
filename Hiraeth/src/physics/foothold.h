@@ -43,6 +43,8 @@ namespace hiraeth {
 				ar(p1, p2, m_Direction);
 			}
 			FootHold() {}
+			float getXStart() const { return p1.x; }
+			float getXEnd() const { return p2.x; }
 		private:
 			friend class cereal::access;
 			OutCode ComputeOutCode(double x, double y, maths::Rectangle rec) const;

@@ -51,6 +51,7 @@ namespace hiraeth {
 			inline vec2 GetMinimumBound() const { return position; }
 			inline vec2 GetMaximumBound() const { return position + size; }
 			vec2 GetBottomMiddle() const { return maths::vec2(position.x + size.x/2, position.y); }
+			vec2 GetMiddle() const { return maths::vec2(position.x + size.x/2, position.y + size.y/2); }
 
 			bool operator==(const Rectangle& other) const;
 			bool operator!=(const Rectangle& other) const;

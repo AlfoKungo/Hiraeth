@@ -3,9 +3,10 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer)
+		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 35)), map_layer, new CharacterStats(), true),
-			m_Kb(kb)
+			m_Kb(kb),
+			m_ItemManager(item_manager)
 		{
 			m_StatesRenderables[Stand].push_back(make_unique<character::CharacterBody>(3, 0.4f, false, graphics::TextureManager::Load("char_body_stand.png"), maths::vec2(0)));
 			m_StatesRenderables[Stand].push_back(make_unique<character::CharacterArm>(3, 0.4f, false, graphics::TextureManager::Load("char_hand_stand.png"),
@@ -26,7 +27,15 @@ namespace hiraeth {
 
 		Character::~Character()
 		{
+		}
 
+		void Character::update()
+		{
+			if (m_Controls.pick_up)
+			{
+				pickItemUp();
+			}
+			Creature::update();
 		}
 
 		void Character::ButtonReleased(input::Controls control)
@@ -94,6 +103,13 @@ namespace hiraeth {
 		CharacterStats* Character::getCharacterStats() const
 		{
 			return static_cast<CharacterStats*>(m_Stats.get());
+		}
+
+		void Character::pickItemUp()
+		{
+			item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
+			if (item != NULL)
+				item->pickUp(&getBounds());
 		}
 	}
 }
