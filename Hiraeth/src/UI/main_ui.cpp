@@ -3,8 +3,9 @@
 namespace hiraeth {
 	namespace ui {
 
-		MainUi::MainUi(game::CharacterStats* character_stats)
-			: m_StatsStruct(character_stats->getStatsStruct_()),
+		MainUi::MainUi()
+			: m_CharacterStats(),
+			m_StatsStruct(m_CharacterStats.getStatsStruct_()),
 			m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
 		m_GraphicGroup(new graphics::Group(maths::vec2(-555, -450))),
 		m_LabelGroup(new graphics::Group(maths::vec2(-555, -450)))

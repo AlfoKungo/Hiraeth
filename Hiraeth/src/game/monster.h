@@ -29,7 +29,7 @@ namespace hiraeth {
 			Monster(const MonsterData& monster_data, map::Summon summon, map::MapLayer* mapLayer);
 			Monster(map::Summon summon, map::MapLayer* mapLayer) :
 				Monster(MonsterDataManager::Get(summon.monsterType), summon, mapLayer) {}
-			virtual ~Monster() {}
+			virtual ~Monster() { delete m_Stats; }
 
 			void update() override;
 			void draw(graphics::Renderer* renderer) const override;

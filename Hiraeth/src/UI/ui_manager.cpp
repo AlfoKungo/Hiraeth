@@ -4,14 +4,14 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiManager::UiManager(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * item_manager)
+		UiManager::UiManager(input::Keyboard* kb, item::ItemManager * item_manager)
 			: m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
 			//: m_Layer(shader),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
-			m_MainUi(character_stats)
+			m_MainUi()
 		{
-			init_all_windows(kb, character_stats, item_manager);
+			init_all_windows(kb, m_MainUi.getCharacterStats(), item_manager);
 			kb->registerToMouse(this);
 			kb->registerToKey(input::Controls::escape, this);
 		}
@@ -44,7 +44,6 @@ namespace hiraeth {
 			for (auto window = m_Windows.begin(); window != m_Windows.end(); ++window)
 			{
 				if ((*window)->is_to_draw &&  (*window)->isWindowContains(mx, my))
-				//if ((*window)->isWindowContains(mx, my))
 				{
 					if ((*window)->isTitlebarContains(mx, my))
 					{

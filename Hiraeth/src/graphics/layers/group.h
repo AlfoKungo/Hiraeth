@@ -13,8 +13,10 @@ namespace hiraeth {
 			std::vector<Renderable*> m_Renderables;
 			Group(maths::mat4& transform);
 			Group(const maths::vec2& transform);
+			Group();
 			~Group();
 			void add(Renderable* renderable);
+			void add(Renderable& renderable);
 			void draw(Renderer* renderer) const override;
 			void translate(const maths::vec3& pos);
 			void update() override;

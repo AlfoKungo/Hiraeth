@@ -15,10 +15,12 @@ namespace hiraeth {
 		{
 		private:
 			input::Controls m_ControlKey;
+			graphics::Group m_Group;
 		protected:
 			maths::vec2 m_WindowSize;
 			bool m_IsAttached;
-			graphics::Group m_Group;
+			graphics::Group m_ForegroundGroup;
+			graphics::Group m_BackgroundGroup;
 		public:
 			UiWindow(maths::Rectangle rec, input::Controls control_key)
 				: m_ControlKey(control_key),
@@ -26,7 +28,8 @@ namespace hiraeth {
 				m_IsAttached(false),
 				m_Group(rec.position)
 			{
-
+				m_Group.add(m_BackgroundGroup);
+				m_Group.add(m_ForegroundGroup);
 			}
 
 			void controlKeyClicked()

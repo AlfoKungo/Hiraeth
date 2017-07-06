@@ -20,7 +20,7 @@ namespace hiraeth {
 			std::vector<Monster*>* m_MonstersLayer;
 			item::ItemManager* m_ItemManager;
 		public:
-			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager);
+			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager, CharacterStats * character_stats);
 			~Character();
 
 			void update() override;
@@ -31,7 +31,7 @@ namespace hiraeth {
 			void registerKeys();
 			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
 			void attack() override;
-			CharacterStats* getCharacterStats() const;
+			//CharacterStats* getCharacterStats() const;
 		private:
 			void causeDamage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();

@@ -96,12 +96,13 @@ int main()
 
 	item::ItemManager itemManager{map.getMapLayer()->getFootHolds()};
 
+    ui::UiManager uiManager(&keyboard, &itemManager);
+
     graphics::Layer<game::Character> m_CrLayer(new Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true);
-    game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager);
+    game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, uiManager.getMainUi()->getCharacterStats());
     m_CrLayer.add_ref(&m_Char);
     view::Camera::init(&m_Char);
 
-    ui::UiManager uiManager(&keyboard, m_Char.getCharacterStats(), &itemManager);
     game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
 
     unsigned int frames = 0;
@@ -116,9 +117,9 @@ int main()
         Camera::update();
         map.update();
         monsterManager.update();
+        m_CrLayer.update();
 		itemManager.update();
         uiManager.update();
-        m_CrLayer.update();
 
 
         //draw

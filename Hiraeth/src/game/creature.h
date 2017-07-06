@@ -57,7 +57,8 @@ namespace hiraeth {
 			CreatureControls m_Controls;
 			std::map<StanceState, std::vector<std::unique_ptr<Renderable>>> m_StatesRenderables;
 			std::vector<std::unique_ptr<Renderable>>* m_CurrentRenderables;
-			std::unique_ptr<Stats> m_Stats;
+			//std::unique_ptr<Stats> m_Stats;
+			Stats * m_Stats;
 			maths::mat4 m_TransformationMatrix;
 
 		private:

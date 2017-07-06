@@ -17,15 +17,17 @@ namespace hiraeth {
 		class MainUi : public Updatable
 		{
 		private:
+			game::CharacterStats m_CharacterStats;
 			graphics::Sprite *m_Hp, *m_Mp, *m_Exp;
 			game::StatsStruct* m_StatsStruct;
 			graphics::Layer<graphics::Renderable> m_Layer;
 			graphics::Group *m_GraphicGroup, *m_LabelGroup;
 		public:
-			explicit MainUi(game::CharacterStats* character_stats);
+			explicit MainUi();
 			void update() override;
 			void draw() const;
 			void StatsUpdated();
+			game::CharacterStats * getCharacterStats() { return &m_CharacterStats; }
 		private:
 			void fill_stats_group();
 			std::string create_stats_string(unsigned int value, unsigned int maxValue) const ;

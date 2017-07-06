@@ -3,8 +3,8 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager)
-			: Creature(maths::Rectangle(pos, maths::vec2(32, 35)), map_layer, new CharacterStats(), true),
+		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager, CharacterStats * character_stats)
+			: Creature(maths::Rectangle(pos, maths::vec2(32, 35)), map_layer, character_stats, true),
 			m_Kb(kb),
 			m_ItemManager(item_manager)
 		{
@@ -100,10 +100,10 @@ namespace hiraeth {
 			}
 		}
 
-		CharacterStats* Character::getCharacterStats() const
-		{
-			return static_cast<CharacterStats*>(m_Stats.get());
-		}
+		//CharacterStats* Character::getCharacterStats() const
+		//{
+		//	return static_cast<CharacterStats*>(m_Stats.get());
+		//}
 
 		void Character::pickItemUp()
 		{

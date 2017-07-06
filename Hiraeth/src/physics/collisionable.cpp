@@ -75,21 +75,23 @@ namespace hiraeth {
 
         int Collisionable::analyzeCollisionX(const maths::vec2& char_speed) const
         {
+			if (char_speed.y > 0)
+				return NO_FOOTHOLD;
+
             const std::vector<physics::FootHold>& m_FootHolds = m_MapLayer->getFootHolds();
             const maths::vec2 char_pos = m_Box.GetBottomMiddle();
             maths::vec2 next_char_pos = (m_Box + char_speed).GetBottomMiddle();
 
-            for (int i = 0; i < m_FootHolds.size(); i++)
+            for (int index = 0; index < m_FootHolds.size(); index++)
             {
-                if (m_FootHolds.at(i).LinesIntersect(char_pos, next_char_pos))
-                    if (char_speed.y < 0)
-                        if (m_FootHolds.at(i).is_solid())
-                            //if (m_FootHolds->at(i).Intersects(next_char_rec) && !m_FootHolds->at(i).Intersects(char_rec)
+                if (m_FootHolds.at(index).LinesIntersect(char_pos, next_char_pos))
+                        if (m_FootHolds.at(index).is_solid())
+                            //if (m_FootHolds->at(index).Intersects(next_char_rec) && !m_FootHolds->at(index).Intersects(char_rec)
                         {
-                            return i;
+                            return index;
                         }
             }
-            return -1;
+            return NO_FOOTHOLD;
         }
 
         int Collisionable::analyzeCollisionY(const maths::vec2& char_speed) const
@@ -97,18 +99,18 @@ namespace hiraeth {
             const std::vector<physics::FootHold>& m_FootHolds = m_MapLayer->getFootHolds();
             maths::Rectangle next_char_rec = m_Box + char_speed;
 
-            for (int i = 0; i < m_FootHolds.size(); i++)
+            for (int index = 0; index < m_FootHolds.size(); index++)
             {
-                if (m_FootHolds.at(i).Intersects(next_char_rec)
-                    //&& !m_FootHolds->at(i).Intersects(char_rec)
-                    && next_char_rec.y != m_FootHolds.at(i).p2.y 
-                    && !m_FootHolds.at(i).is_solid()
+                if (m_FootHolds.at(index).Intersects(next_char_rec)
+                    //&& !m_FootHolds->at(index).Intersects(char_rec)
+                    && next_char_rec.y != m_FootHolds.at(index).p2.y 
+                    && !m_FootHolds.at(index).is_solid()
                     )
                 {
-                     return i;
+                     return index;
                 }
             }
-            return -1;
+            return NO_FOOTHOLD;
         }
     }
 }

@@ -15,6 +15,13 @@ namespace hiraeth {
 
 		}
 
+		Group::Group()
+			: Group(maths::vec2(0))
+		{
+
+		}
+
+
 		Group::~Group()
 		{
 			for (int i = 0; i < m_Renderables.size(); i++)
@@ -27,6 +34,11 @@ namespace hiraeth {
 		void Group::add(Renderable* renderable)
 		{
 			m_Renderables.push_back(renderable);
+		}
+		
+		void Group::add(Renderable& renderable)
+		{
+			m_Renderables.push_back(&renderable);
 		}
 
 		void Group::draw(Renderer* renderer) const
