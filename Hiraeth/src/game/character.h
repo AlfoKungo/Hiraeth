@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "game/creature.h"
 #include "keyboard/keyboard_event.h"
 #include "character_stats.h"

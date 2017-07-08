@@ -94,9 +94,9 @@ int main()
     float timer = 0;
     Map map("map4.png", 2, &window);
 
-	item::ItemManager itemManager{map.getMapLayer()->getFootHolds()};
+    ui::UiManager uiManager(&keyboard);
 
-    ui::UiManager uiManager(&keyboard, &itemManager);
+	item::ItemManager itemManager{map.getMapLayer()->getFootHolds(), uiManager.getUiInventory()};
 
     graphics::Layer<game::Character> m_CrLayer(new Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true);
     game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, uiManager.getMainUi()->getCharacterStats());
@@ -130,7 +130,7 @@ int main()
         uiManager.draw();
 
         window.update();
-        frames++;
+        ++frames;
         if (StaticTimer::timer.elapsed() - timer > 1.0f)
         {
             timer += 1.0f;

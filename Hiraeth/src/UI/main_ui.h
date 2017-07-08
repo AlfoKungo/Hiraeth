@@ -27,6 +27,7 @@ namespace hiraeth {
 			void update() override;
 			void draw() const;
 			void StatsUpdated();
+			void StatsUpdatedT(int X);
 			game::CharacterStats * getCharacterStats() { return &m_CharacterStats; }
 		private:
 			void fill_stats_group();

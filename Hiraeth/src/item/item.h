@@ -47,7 +47,7 @@ namespace hiraeth {
 			bool hasBeenTaken();
 			void pickUp(const maths::Rectangle * char_rec);
 			bool isAbleToPickUp() { return m_State == OnFloor; }
-			bool isPickedUp() { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.3f); }
+			bool isPickedUp() { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
 			item::Tab getTabType() const { return m_ItemInfo.type; }
 		};
 	}

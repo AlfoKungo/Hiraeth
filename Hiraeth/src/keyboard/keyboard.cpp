@@ -5,13 +5,13 @@ namespace hiraeth {
 		Keyboard::Keyboard()
 		{
 
-			for (int i = 0; i < GLFW_KEY_LAST; i++)
+			for (int i = 0; i < GLFW_KEY_LAST; ++i)
 				keys_map.insert(std::pair<unsigned int, KeyboardEvent*>(i, nullptr));
-			for (int i = 0; i < GLFW_KEY_LAST; i++)
+			for (int i = 0; i < GLFW_KEY_LAST; ++i)
 				m_Keys[i] = false;
-			for (int i = 0; i < GLFW_KEY_LAST; i++)
+			for (int i = 0; i < GLFW_KEY_LAST; ++i)
 				m_KeysClicked[i] = false;
-			for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; i++)
+			for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; ++i)
 				m_MouseButtons[i] = false;
 			initControls();
 		}

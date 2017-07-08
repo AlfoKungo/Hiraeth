@@ -10,7 +10,6 @@
 #include <string>
 #include "game/stats.h"
 #include "game/character_stats.h"
-#include "game/stats_update_event.h"
 
 namespace hiraeth {
 	namespace ui {

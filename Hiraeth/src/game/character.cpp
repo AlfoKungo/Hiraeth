@@ -8,20 +8,20 @@ namespace hiraeth {
 			m_Kb(kb),
 			m_ItemManager(item_manager)
 		{
-			m_StatesRenderables[Stand].push_back(make_unique<character::CharacterBody>(3, 0.4f, false, graphics::TextureManager::Load("char_body_stand.png"), maths::vec2(0)));
-			m_StatesRenderables[Stand].push_back(make_unique<character::CharacterArm>(3, 0.4f, false, graphics::TextureManager::Load("char_hand_stand.png"),
+			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(3, 0.4f, false, graphics::TextureManager::Load("char_body_stand.png"), maths::vec2(0)));
+			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterArm>(3, 0.4f, false, graphics::TextureManager::Load("char_hand_stand.png"),
 				std::vector<character::ArmConfigs>{character::ArmConfigs{ maths::vec2(18,10),  maths::vec2(14,10) }, character::ArmConfigs{ maths::vec2(18,10),
 				maths::vec2(15,10) }, character::ArmConfigs{ maths::vec2(18,10),  maths::vec2(14,10) } }));
-			m_StatesRenderables[Stand].push_back(make_unique<graphics::SpritedRenderable>(maths::vec2(0), 3, 0.4f, false, graphics::TextureManager::Load("char_head.png"), maths::vec2(-4, 29)));
-			m_StatesRenderables[Walk].push_back(make_unique<character::CharacterBody>(4, 0.4f, true, graphics::TextureManager::Load("char_body_walk.png"), maths::vec2(0)));
-			m_StatesRenderables[Walk].push_back(make_unique<character::CharacterArm>(4, 0.4f, true, graphics::TextureManager::Load("char_hand_walk.png"), std::vector<maths::vec2>{ maths::vec2(11, 11), maths::vec2(11, 11), maths::vec2(11, 11), maths::vec2(11, 11) }));
-			m_StatesRenderables[Walk].push_back(make_unique<graphics::SpritedRenderable>(maths::vec2(0), 3, 0.4f, true, graphics::TextureManager::Load("char_head.png"), maths::vec2(-4, 29)));
-			m_StatesRenderables[Attack].push_back(make_unique<character::CharacterBody>(2, std::vector<float>{0.1f, 0.3f}, true, graphics::TextureManager::Load("char_body_attack.png"), maths::vec2(0)));
-			m_StatesRenderables[Attack].push_back(make_unique<character::CharacterArm>(2, std::vector<float>{0.1f, 0.3f}, true, graphics::TextureManager::Load("char_hand_attack.png"), std::vector<maths::vec2>{ maths::vec2(30, 10), maths::vec2(-19, 11)}));
-			m_StatesRenderables[Attack].push_back(make_unique<graphics::SpritedRenderable>(maths::vec2(0), 2, std::vector<float>{0.1f, 0.3f}, true, graphics::TextureManager::Load("char_head_attack.png"), std::vector<maths::vec2>{ maths::vec2(6, 27), maths::vec2(-11, 26)}));
-			m_StatesRenderables[Jump].push_back(make_unique<character::CharacterBody>(1, 0.4f, false, graphics::TextureManager::Load("char_body_jump.png"), maths::vec2(0)));
-			m_StatesRenderables[Jump].push_back(make_unique<character::CharacterArm>(1, 0.4f, false, graphics::TextureManager::Load("char_hand_jump.png"), std::vector<maths::vec2>{ maths::vec2(17, 17)}));
-			m_StatesRenderables[Jump].push_back(make_unique<graphics::SpritedRenderable>(maths::vec2(0), 1, 0.4f, false, graphics::TextureManager::Load("char_head_jump.png"), std::vector<maths::vec2>{ maths::vec2(1, 28)}));
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(0), 3, 0.4f, false, graphics::TextureManager::Load("char_head.png"), maths::vec2(-4, 29)));
+			m_StatesRenderables[Walk].push_back(std::make_unique<character::CharacterBody>(4, 0.4f, true, graphics::TextureManager::Load("char_body_walk.png"), maths::vec2(0)));
+			m_StatesRenderables[Walk].push_back(std::make_unique<character::CharacterArm>(4, 0.4f, true, graphics::TextureManager::Load("char_hand_walk.png"), std::vector<maths::vec2>{ maths::vec2(11, 11), maths::vec2(11, 11), maths::vec2(11, 11), maths::vec2(11, 11) }));
+			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(0), 3, 0.4f, true, graphics::TextureManager::Load("char_head.png"), maths::vec2(-4, 29)));
+			m_StatesRenderables[Attack].push_back(std::make_unique<character::CharacterBody>(2, std::vector<float>{0.1f, 0.3f}, true, graphics::TextureManager::Load("char_body_attack.png"), maths::vec2(0)));
+			m_StatesRenderables[Attack].push_back(std::make_unique<character::CharacterArm>(2, std::vector<float>{0.1f, 0.3f}, true, graphics::TextureManager::Load("char_hand_attack.png"), std::vector<maths::vec2>{ maths::vec2(30, 10), maths::vec2(-19, 11)}));
+			m_StatesRenderables[Attack].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(0), 2, std::vector<float>{0.1f, 0.3f}, true, graphics::TextureManager::Load("char_head_attack.png"), std::vector<maths::vec2>{ maths::vec2(6, 27), maths::vec2(-11, 26)}));
+			m_StatesRenderables[Jump].push_back(std::make_unique<character::CharacterBody>(1, 0.4f, false, graphics::TextureManager::Load("char_body_jump.png"), maths::vec2(0)));
+			m_StatesRenderables[Jump].push_back(std::make_unique<character::CharacterArm>(1, 0.4f, false, graphics::TextureManager::Load("char_hand_jump.png"), std::vector<maths::vec2>{ maths::vec2(17, 17)}));
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(0), 1, 0.4f, false, graphics::TextureManager::Load("char_head_jump.png"), std::vector<maths::vec2>{ maths::vec2(1, 28)}));
 			registerKeys();
 		}
 

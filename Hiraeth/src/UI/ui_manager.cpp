@@ -4,14 +4,13 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiManager::UiManager(input::Keyboard* kb, item::ItemManager * item_manager)
+		UiManager::UiManager(input::Keyboard* kb)
 			: m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
-			//: m_Layer(shader),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
 			m_MainUi()
 		{
-			init_all_windows(kb, m_MainUi.getCharacterStats(), item_manager);
+			init_all_windows(kb, m_MainUi.getCharacterStats());
 			kb->registerToMouse(this);
 			kb->registerToKey(input::Controls::escape, this);
 		}
@@ -27,9 +26,10 @@ namespace hiraeth {
 			m_Layer.update();
 		}
 
-		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * itemManager)
+		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats)
 		{
-			m_Layer.add_ref(new UiInventory(maths::vec2(-300, 0), input::Controls::inventory, itemManager->getInventoryItems()));
+			m_UiInventory = new UiInventory(maths::vec2(-300, 0), input::Controls::inventory);
+			m_Layer.add_ref(m_UiInventory);
 			kb->registerToKey(input::Controls::inventory, this);
 			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats_a, character_stats));
 			kb->registerToKey(input::Controls::stats_a, this);
@@ -39,24 +39,16 @@ namespace hiraeth {
 
 		void UiManager::leftButtonClicked(float mx, float my)
 		{
-			//for (auto & window : m_Windows)
-
-			for (auto window = m_Windows.begin(); window != m_Windows.end(); ++window)
+			auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
+				[&](auto const& window) 
+			{ return window->is_to_draw && window->isWindowContains(mx, my); });
+			if (result_window != m_Windows.end())
 			{
-				if ((*window)->is_to_draw &&  (*window)->isWindowContains(mx, my))
-				{
-					if ((*window)->isTitlebarContains(mx, my))
-					{
-						(*window)->attach();
-					}
-					else
-					{
-						 ;
-						(*window)->mouse_clicked((*window)->getRelativeLocation(mx, my));
-					}
-					std::rotate(m_Windows.begin(), window, window + 1);
-					break;
-				}
+				if ((*result_window)->isTitlebarContains(mx, my))
+					(*result_window)->attach();
+				else
+					(*result_window)->mouse_clicked((*result_window)->getRelativeLocation(mx, my));
+				std::rotate(m_Windows.begin(), result_window, result_window + 1);
 			}
 		}
 
@@ -65,6 +57,8 @@ namespace hiraeth {
 			for (const auto& window : m_Windows)
 			{
 				window->unattach();
+				if (window->is_holding())
+					window->mouse_released(maths::vec2(mx, my));
 			}
 		}
 
@@ -74,8 +68,12 @@ namespace hiraeth {
 			{
 				if (window->is_attached())
 					window->move(pmx - mx, pmy - my);
+				else
+					if (window->is_holding())
+						window->mouse_moved(pmx - mx, pmy - my);
 			}
 		}
+
 		void UiManager::ButtonClicked(input::Controls c)
 		{
 			if (input::Controls::escape == c)
@@ -88,17 +86,16 @@ namespace hiraeth {
 			}
 			else
 			{
-				for (auto window = m_Windows.begin(); window != m_Windows.end(); ++window)
+				auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
+					[&](auto const& window)
+				{ return window->getControlKey() == c; });
+				if ((*result_window)->getControlKey() == c)
 				{
-					if ((*window)->getControlKey() == c)
-					{
-						(*window)->controlKeyClicked();
-						if ((*window)->is_to_draw)
-							std::rotate(m_Windows.begin(), window, window + 1);
-						else
-							std::rotate(window, window + 1, m_Windows.end());
-						break;
-					}
+					(*result_window)->controlKeyClicked();
+					if ((*result_window)->is_to_draw)
+						std::rotate(m_Windows.begin(), result_window, result_window + 1);
+					else
+						std::rotate(result_window, result_window + 1, m_Windows.end());
 				}
 			}
 		}

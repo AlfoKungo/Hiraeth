@@ -12,8 +12,6 @@ namespace hiraeth {
 		
 		class ItemDataManager
 		{
-		public:
-			std::map<item::Tab, std::unique_ptr<graphics::Group>> m_LayerItems;
 		private:
 			static std::map<unsigned int, ItemData> m_ItemData;
 		public:

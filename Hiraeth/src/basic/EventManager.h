@@ -7,11 +7,11 @@
 //  Copyright (c) 2012 Hashstash Studios. All rights reserved.
 //
 
+#include <functional>
 #include <vector>
 #include <map>
 #include <string>
 
-using namespace std;
 namespace hiraeth {
 
 	enum EventList
@@ -21,71 +21,35 @@ namespace hiraeth {
 		InventoryUpdated,
 	};
 
-
-#define TEMPLATE template <typename Class> 
-
-	// Abstract Class for EventHandler to notify of a change
-	class EventHandlerBase {
+	class BaseEvent {
 	public:
-		virtual ~EventHandlerBase() = default;
-		virtual void execute() = 0;
+		virtual ~BaseEvent() = default;
 	};
 
-	// Event Handler Class : Handles Callback
-	template <typename Class>
-	class EventHandler : public EventHandlerBase {
-		// Defining type for function pointer
-		typedef void (Class::*_fptr)(void);
-
-
-
-	public:
-		// Object of the Listener
-		Class *object;
-		// Function for callback
-		_fptr function;
-
-		EventHandler(Class *obj, _fptr func) {
-			object = obj;
-			function = func;
-		}
-
-		void execute() override
-		{
-			(object->*function)();
-		}
-	};
 
 	// Class to create a event
-	class Event {
+	template <typename... Ts>
+	class Event : public BaseEvent {
 		// To store all listeners of the event
-		typedef std::map<int, EventHandlerBase*> EventHandlerMap;
-		EventHandlerMap handlers;
-		int count;
+		std::vector<std::function<void(Ts...)>> handlers;
 	public:
 
-		template <typename Class>
-		void addListener(Class *obj, void (Class::*func)(void)) {
-			handlers[count] = new EventHandler<Class>(obj, func);
-			count++;
+		void addListener(std::function<void(Ts...)> func) {
+			handlers.push_back(func);
 		}
 
-		void execute() {
-			for (EventHandlerMap::iterator it = handlers.begin(); it != handlers.end(); ++it) {
-				it->second->execute();
+		void execute(Ts... ts) {
+			for (auto & handler : handlers) {
+				handler(ts...);
 			}
 		}
-
 	};
 
+
 	class EventManager {
-		struct EventType {
-			Event *event;
-			EventList name;
-		};
 
-		std::vector<EventType> _events;
-
+	private:
+		std::map<EventList, BaseEvent*> m_Events;
 		static EventManager *_Instance;
 
 		EventManager() {};
@@ -98,37 +62,24 @@ namespace hiraeth {
 		}
 
 		void createEvent(EventList name) {
-			for (vector<EventType>::iterator it = _events.begin(); it != _events.end(); ++it) {
-				EventType e = *it;
-				if (e.name == name)
-					return;
-			}
-			EventType e;
-			e.event = new Event();
-			e.name = name;
-			_events.push_back(e);
 		}
 
-		template <typename Class>
-		bool subscribe(EventList name, Class *obj, void (Class::*func)(void)) {
-			for (vector<EventType>::iterator it = _events.begin(); it != _events.end(); ++it) {
-				EventType e = *it;
-				if (e.name == name) {
-					e.event->addListener(obj, func);
-					return true;
-				}
-			}
-			return false;
+		template <typename Class, typename... Ts>
+		//bool subscribe(EventList name, std::function<void(Ts...)>& func) {
+		void subscribe(EventList name, Class * object, void (Class::*func)(Ts...)) {
+			if (m_Events.find(name) == m_Events.end())
+				m_Events[name] = new Event<Ts...>();
+			Event<Ts...> * sEvent = dynamic_cast<Event<Ts...> *>(m_Events[name]);
+			if (sEvent == nullptr)
+				throw std::invalid_argument("argument 3 is unfit");
+
+			sEvent->addListener(std::function<void(Ts...)>([object, func](Ts... ts) {return (object->*func)(ts...); }));
 		}
 
-		void execute(EventList name) {
-			for (vector<EventType>::iterator it = _events.begin(); it != _events.end(); ++it) {
-				EventType e = *it;
-				if (e.name == name) {
-					e.event->execute();
-				}
-			}
+		template <typename... Ts>
+		void execute(EventList name, Ts... ts) {
+			if (m_Events.find(name) != m_Events.end())
+				static_cast<Event<Ts...> *>(m_Events[name])->execute(ts...);
 		}
 	};
-
 }

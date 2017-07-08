@@ -82,7 +82,7 @@ namespace hiraeth {
             const maths::vec2 char_pos = m_Box.GetBottomMiddle();
             maths::vec2 next_char_pos = (m_Box + char_speed).GetBottomMiddle();
 
-            for (int index = 0; index < m_FootHolds.size(); index++)
+            for (int index = 0; index < m_FootHolds.size(); ++index)
             {
                 if (m_FootHolds.at(index).LinesIntersect(char_pos, next_char_pos))
                         if (m_FootHolds.at(index).is_solid())
@@ -99,7 +99,7 @@ namespace hiraeth {
             const std::vector<physics::FootHold>& m_FootHolds = m_MapLayer->getFootHolds();
             maths::Rectangle next_char_rec = m_Box + char_speed;
 
-            for (int index = 0; index < m_FootHolds.size(); index++)
+            for (int index = 0; index < m_FootHolds.size(); ++index)
             {
                 if (m_FootHolds.at(index).Intersects(next_char_rec)
                     //&& !m_FootHolds->at(index).Intersects(char_rec)

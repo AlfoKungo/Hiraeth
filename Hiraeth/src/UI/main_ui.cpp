@@ -12,7 +12,8 @@ namespace hiraeth {
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(StatsUpdate, this, &MainUi::StatsUpdated);
-			//character_stats->registerToStatsUpdate(this);
+			//m_EventManager->subscribe(StatsUpdate, std::function<void(int)>(std::bind(&MainUi::StatsUpdatedT, this, _1)));
+			//m_EventManager->subscribe(StatsUpdate, std::function<void(void)>(std::bind(&MainUi::StatsUpdated, this)));
 			fill_stats_group();
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, -730, -429, 0xff70cdd0));
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, -730, -441, 0xffffffff));
@@ -24,6 +25,12 @@ namespace hiraeth {
 			m_Layer.add(new graphics::Sprite(-799, -448, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.lvBacktrnd.png")));
 			m_Layer.add(new graphics::Sprite(-800, -450, graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.backgrnd.png")));
 		}
+
+			void MainUi::StatsUpdatedT(int X)
+			{
+				m_CharacterStats.Hp = X;
+				StatsUpdated();
+			}
 
 		void MainUi::update()
 		{

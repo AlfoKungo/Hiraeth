@@ -8,7 +8,6 @@ namespace hiraeth {
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 212, 373), control_key),
 		m_StatsStruct(character_stats->getStatsStruct_()), m_DetailsStruct(character_stats->getDetailsStruct_())
 		{
-			//character_stats->registerToStatsUpdate(this);
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(StatsUpdate, this, &UiStats::StatsUpdated);
 			m_BackgroundGroup.add(new graphics::Sprite(0, 0, graphics::TextureManager::Load("Assets/UI/Stats/Stat.main.backgrnd.png")));
@@ -41,7 +40,8 @@ namespace hiraeth {
 
 		void UiStats::StatsUpdated()
 		{
-				static_cast<graphics::Label*>(m_ForegroundGroup.m_Renderables.at(11))->setText(m_StatsStruct->Hp);
+				//static_cast<graphics::Label*>(m_ForegroundGroup.m_Renderables.at(11))->setText(m_StatsStruct->Hp);
+			fillGroup();
 		}
 
 	}

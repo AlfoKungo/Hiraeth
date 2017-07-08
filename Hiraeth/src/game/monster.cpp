@@ -41,7 +41,6 @@ namespace hiraeth {
 				{
 					m_Controls.left = true;
 					m_Controls.right = false;
-
 				}
 				if (m_AiTimer.isExpired())
 				{
@@ -67,11 +66,11 @@ namespace hiraeth {
 						}
 					}
 					m_AiTimer.reSet((float)(rand() % 30) / 10 + 1);
-					//m_AiTimer += 2.0f;
 				}
 			}
 			Creature::update();
 		}
+
 		void Monster::draw(graphics::Renderer* renderer) const
 		{
 			Creature::draw(renderer);
@@ -82,16 +81,12 @@ namespace hiraeth {
 
 		bool Monster::checkCollision(const maths::Rectangle& rec) const
 		{
-
 			return ((rec.x < m_Bounds.x + m_Bounds.width) && (m_Bounds.x < rec.x + rec.width)
 				&& (rec.y < m_Bounds.y + m_Bounds.height) && (m_Bounds.y < rec.y + rec.height));
 		}
 
 		void Monster::getHit(Direction dir, Damage damage)
 		{
-			m_Controls.left = false;
-			m_Controls.right = false;
-			m_AiTimer.reSet(1.0f);
 			Creature::getHit(dir, damage);
 		}
 

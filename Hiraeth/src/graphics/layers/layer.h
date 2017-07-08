@@ -41,7 +41,7 @@ namespace hiraeth {
 			virtual ~Layer()
 			{
 				delete m_Renderer;
-				for (int i = 0; i < m_Renderables.size(); i++)
+				for (int i = 0; i < m_Renderables.size(); ++i)
 				{
 					delete m_Renderables[i];
 				}
@@ -87,7 +87,7 @@ namespace hiraeth {
 			}
 			void clear()
 			{
-				for (int i = 0; i < m_Renderables.size(); i++)
+				for (int i = 0; i < m_Renderables.size(); ++i)
 				{
 					delete m_Renderables[i];
 				}

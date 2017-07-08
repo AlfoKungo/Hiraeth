@@ -3,13 +3,13 @@
 namespace hiraeth {
 	namespace item {
 
-		ItemManager::ItemManager(const std::vector<physics::FootHold>& foot_holds)
+		ItemManager::ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory)
 			: 
 			m_DroppedItems(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true),
-			m_FootHolds(foot_holds)
+			m_FootHolds(foot_holds),
+			m_Inventory(inventory)
 		{
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->createEvent(InventoryUpdated);
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
 			serialize_data();
@@ -38,9 +38,8 @@ namespace hiraeth {
 				else if ((*item)->hasBeenTaken())
 				{
 					m_InventoryItems.push_back(*item);
+					m_Inventory->addItem(*item);
 					item = m_DroppedItems.m_Renderables.erase(item);
-					EventManager *m_EventManager = EventManager::Instance();
-					m_EventManager->execute(InventoryUpdated);
 				}
 				else
 				{
@@ -51,7 +50,6 @@ namespace hiraeth {
 
 		void ItemManager::dropItem(const char* name, maths::vec2 pos)
 		{
-			//m_DroppedItems.add(new Item(pos, 3, m_FootHolds));
 			m_DroppedItems.add(new Item(pos, ItemDataManager::Get(3), m_FootHolds));
 		}
 

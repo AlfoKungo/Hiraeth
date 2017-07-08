@@ -1,7 +1,6 @@
 #pragma once
 
 #include "stats.h"
-#include "stats_update_event.h"
 #include <vector>
 //#include "basic/event_handler.h"
 #include "basic/EventManager.h"

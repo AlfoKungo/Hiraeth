@@ -398,9 +398,6 @@
     <ClInclude Include="src\graphics\renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\stats_update_event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\basic\event_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>

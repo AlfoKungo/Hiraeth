@@ -66,28 +66,6 @@ namespace hiraeth {
 				m_FrameIndex = 0;
 				m_LoopDirection = 1;
 			}
-			//SpritedRenderable(const SpritedRenderable& other) // copy constructor
-			//	: m_FrameIndex(other.m_FrameIndex), m_FramesAmount(other.m_FramesAmount), m_FrameWidth(other.m_FrameWidth), 
-			//m_FrameDelay(other.m_FrameDelay), m_AnimationTimer(other.m_AnimationTimer), m_IsLoop(other.m_IsLoop)
-			//{
-			//	m_OriginsArray = new maths::vec2[other.m_FramesAmount];
-			//	std::copy(other.m_OriginsArray, other.m_OriginsArray + other.m_FramesAmount, m_OriginsArray);
-			//}
-
-			//SpritedRenderable& operator=(const SpritedRenderable& other) // copy assignment
-			//{
-			//	m_FrameIndex = other.m_FrameIndex;
-			//	m_FramesAmount = other.m_FramesAmount;
-			//	m_FrameWidth = other.m_FrameWidth;
-			//	m_FrameDelay = other.m_FrameDelay;
-			//	m_AnimationTimer = other.m_AnimationTimer;
-			//	m_IsLoop = other.m_IsLoop;
-			//	m_OriginsArray = new maths::vec2[other.m_FramesAmount];
-			//	std::copy(other.m_OriginsArray, other.m_OriginsArray + other.m_FramesAmount, m_OriginsArray);
-			//	delete[] other.m_OriginsArray;
-
-			//	return *this;
-			//}
 		private:
 			std::vector<maths::vec2> create_origins(maths::vec2 origin, unsigned int frames_amount)
 			{

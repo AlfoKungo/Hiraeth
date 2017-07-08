@@ -18,7 +18,7 @@ namespace hiraeth {
 			graphics::Group m_Group;
 		protected:
 			maths::vec2 m_WindowSize;
-			bool m_IsAttached;
+			bool m_IsAttached, m_IsHolding;
 			graphics::Group m_ForegroundGroup;
 			graphics::Group m_BackgroundGroup;
 		public:
@@ -26,6 +26,7 @@ namespace hiraeth {
 				: m_ControlKey(control_key),
 				m_WindowSize(rec.size),
 				m_IsAttached(false),
+				m_IsHolding(false),
 				m_Group(rec.position)
 			{
 				m_Group.add(m_BackgroundGroup);
@@ -45,39 +46,40 @@ namespace hiraeth {
 
 			bool isWindowContains(float x, float y) const
 			{
-				maths::mat4 transform = m_Group.getTransform();
-				maths::Rectangle rec = maths::Rectangle(0, m_WindowSize).Transoform(transform);
-				maths::vec2 cursorPos = maths::vec2(x - 800, -(y - 450));
-				if (rec.Contains(cursorPos))
+				maths::vec2 rPos(getRelativeLocation(x, y));
+				if (maths::Rectangle(0, m_WindowSize).Contains(rPos))
 					return true;
 				return false;
 			}
-			maths::vec2 getRelativeLocation(float mx, float my)
+			bool isTitlebarContains(float x, float y) const
+			{
+				maths::vec2 rPos(getRelativeLocation(x, y));
+				maths::Rectangle rec = getTitlebar();
+				if (rec.Contains(rPos))
+					return true;
+				return false;
+			}
+
+			void attach() { m_IsAttached = true; }
+			void unattach() { m_IsAttached = false; }
+			inline bool is_attached() const { return m_IsAttached; }
+			inline bool is_holding() const { return m_IsHolding; }
+			inline input::Controls getControlKey() const { return m_ControlKey; }
+
+			virtual void mouse_clicked(maths::vec2 mousePos) = 0;
+			virtual void mouse_released(maths::vec2 mousePos) = 0;
+			virtual void mouse_moved(float mx, float my) = 0;
+
+			void update() override { m_Group.update(); }
+			void draw(graphics::Renderer* renderer) const override { m_Group.draw(renderer); }
+		//protected:
+			maths::vec2 getRelativeLocation(float mx, float my) const
 			{
 				maths::mat4 transform = m_Group.getTransform();
 				maths::Rectangle rec = maths::Rectangle(0, m_WindowSize).Transoform(transform);
 				maths::vec2 relPos = maths::vec2(mx - 800, 450 - my) - rec.position;
 				return relPos;
 			}
-			bool isTitlebarContains(float x, float y) const
-			{
-				maths::mat4 transform = m_Group.getTransform();
-				maths::Rectangle rec = getTitlebar().Transoform(transform);
-				maths::vec2 cursorPos = maths::vec2(x - 800, -(y - 450));
-				if (rec.Contains(cursorPos))
-					return true;
-				return false;
-			}
-			void attach() { m_IsAttached = true; }
-			void unattach() { m_IsAttached = false; }
-			inline bool is_attached() const { return m_IsAttached; }
-			inline input::Controls getControlKey() const { return m_ControlKey; }
-
-			virtual void mouse_clicked(maths::vec2 mousePos) = 0;
-			virtual void mouse_released(maths::vec2 mousePos) = 0;
-			virtual void mouse_moved(float mx, float my) = 0;
-			void update() override { m_Group.update(); }
-			void draw(graphics::Renderer* renderer) const override { m_Group.draw(renderer); }
 		private:
 			maths::Rectangle getTitlebar() const
 			{ 

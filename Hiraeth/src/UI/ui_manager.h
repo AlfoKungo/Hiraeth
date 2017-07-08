@@ -22,8 +22,9 @@ namespace hiraeth {
 			std::vector<UiWindow*>& m_Windows;
 			input::Keyboard* m_Kb;
 			MainUi m_MainUi;
+			UiInventory * m_UiInventory;
 		public:
-			UiManager(input::Keyboard* kb, item::ItemManager * item_manager);
+			UiManager(input::Keyboard* kb);
 			void update();
 			void draw() const;
 			void set_keyboard(input::Keyboard* keyboard) { m_Kb = keyboard; }
@@ -33,8 +34,9 @@ namespace hiraeth {
 			void ButtonClicked(input::Controls c) override;
 			void ButtonReleased(input::Controls c) override;
 			MainUi * getMainUi() { return &m_MainUi; }
+			UiInventory * getUiInventory() { return m_UiInventory; }
 		private:
-			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats, item::ItemManager * item_manager);
+			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
 		};
 
 	}
