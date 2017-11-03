@@ -10,6 +10,8 @@ namespace hiraeth {
 	namespace item {
 
 #define PICK_UP_TIME 5.5f
+#define EXPIRING_TIME 10.0f
+#define EXPIRE_FADE_TIME 1.5f
 
 		class Item : public graphics::Sprite
 		{
@@ -26,6 +28,7 @@ namespace hiraeth {
 			const std::vector<physics::FootHold>& m_FootHolds;
 			float m_OsciliateYPos;
 			ATimer m_Timer;
+			bool m_IsExpiring = false;
 		public:
 			Item(maths::vec2 pos, ItemData item_data, const std::vector<physics::FootHold>& foot_holds)
 				: Sprite(pos.x, pos.y, graphics::TextureManager::Load("Assets/items/" + item_data.item_name + ".icon.png")), m_Force(0, 7),

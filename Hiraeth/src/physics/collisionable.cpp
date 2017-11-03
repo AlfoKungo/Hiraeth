@@ -14,8 +14,7 @@ namespace hiraeth {
             maths::vec2 FootHold = maths::vec2(NO_FOOTHOLD);
             if (m_Foothold != NO_FOOTHOLD)
             {
-                //if (m_Controls.jump)
-                if (m_Force.y > 5)
+                if (m_Force.y > 1)
                     m_Foothold = NO_FOOTHOLD;
                 else if (!check_if_still_on_foothold())
                     m_Foothold = NO_FOOTHOLD;

@@ -78,67 +78,78 @@ int main()
 int main()
 {
 
-    using namespace hiraeth;
-    using namespace maths;
-    using namespace graphics;
-    using namespace map;
-    using namespace view;
+	using namespace hiraeth;
+	using namespace maths;
+	using namespace graphics;
+	using namespace map;
+	using namespace view;
 
-    input::Keyboard keyboard;
-    Window window("Hiraeth", 1600, 900, &keyboard);
+	input::Keyboard keyboard;
+	Window window("Hiraeth", 1600, 900, &keyboard);
 
-    //mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+	std::ofstream out("serialized/texture.data", std::ios::out | std::ios::binary);
+	int zero = 0;
+	if (out.is_open())
+	{
+		cereal::BinaryOutputArchive ar(out);
+		out.seekp(0);
+		for (int i = 0; i < 100; i++)
+			ar(zero);
+		out.close();
+	}
 
-    StaticTimer::init();
+	//mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 
-    float timer = 0;
-    Map map("map4.png", 2, &window);
+	StaticTimer::init();
 
-    ui::UiManager uiManager(&keyboard);
+	float timer = 0;
+	Map map("map4.png", 2, &window);
 
-	item::ItemManager itemManager{map.getMapLayer()->getFootHolds(), uiManager.getUiInventory()};
+	ui::UiManager uiManager(&keyboard);
 
-    graphics::Layer<game::Character> m_CrLayer(new Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true);
-    game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, uiManager.getMainUi()->getCharacterStats());
-    m_CrLayer.add_ref(&m_Char);
-    view::Camera::init(&m_Char);
+	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory() };
 
-    game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
+	graphics::Layer<game::Character> m_CrLayer(new Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true);
+	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, uiManager.getMainUi()->getCharacterStats());
+	m_CrLayer.add_ref(&m_Char);
+	view::Camera::init(&m_Char);
 
-    unsigned int frames = 0;
-    while (!window.closed())
-    {
-        //update
-        window.clear();
-        double x, y;
-        window.getKeyboard()->getMousePosition(x, y);
-        std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y);
-        window.setTitle(s.c_str());
-        Camera::update();
-        map.update();
-        monsterManager.update();
-        m_CrLayer.update();
+	game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
+
+	unsigned int frames = 0;
+	while (!window.closed())
+	{
+		//update
+		window.clear();
+		double x, y;
+		window.getKeyboard()->getMousePosition(x, y);
+		std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y);
+		window.setTitle(s.c_str());
+		Camera::update();
+		map.update();
+		monsterManager.update();
+		m_CrLayer.update();
 		itemManager.update();
-        uiManager.update();
+		uiManager.update();
 
 
-        //draw
-        map.draw();
-        monsterManager.draw();
-        m_CrLayer.render();
+		//draw
+		map.draw();
+		monsterManager.draw();
+		m_CrLayer.render();
 		itemManager.draw();
-        uiManager.draw();
+		uiManager.draw();
 
-        window.update();
-        ++frames;
-        if (StaticTimer::timer.elapsed() - timer > 1.0f)
-        {
-            timer += 1.0f;
-            printf("%d fps, %f frame time\n", frames, 1.0 / frames);
-            frames = 0;
-        }
+		window.update();
+		++frames;
+		if (StaticTimer::timer.elapsed() - timer > 1.0f)
+		{
+			timer += 1.0f;
+			printf("%d fps, %f frame time\n", frames, 1.0 / frames);
+			frames = 0;
+		}
 
-    }
-    return 0;
+	}
+	return 0;
 }
 #endif

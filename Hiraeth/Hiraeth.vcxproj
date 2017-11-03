@@ -181,6 +181,7 @@
     <ClCompile Include="src\physics\foothold.cpp" />
     <ClCompile Include="src\save\serializer.cpp" />
     <ClCompile Include="src\UI\main_ui.cpp" />
+    <ClCompile Include="src\UI\ui_equip.cpp" />
     <ClCompile Include="src\UI\ui_inventory.cpp" />
     <ClCompile Include="src\UI\ui_manager.cpp" />
     <ClCompile Include="src\UI\ui_stats.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />
     <ClInclude Include="src\UI\main_ui.h" />
+    <ClInclude Include="src\UI\ui_equip.h" />
     <ClInclude Include="src\UI\ui_inventory.h" />
     <ClInclude Include="src\UI\ui_manager.h" />
     <ClInclude Include="src\UI\ui_stats.h" />

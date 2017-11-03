@@ -47,8 +47,8 @@ namespace hiraeth {
 
 			//if (m_Time->elapsed() - m_MovementTimer > CHARACTER_TIME_BETWEEN_ADDS)
 			//{
-			analyze_controls();
 			//m_Force *= (m_Time->elapsed() - m_MovementTimer)*60;
+			analyze_controls();
 			addGravity(m_Force);
 			multiplyByFriction(m_Force);
 			analyzeCollision();
@@ -85,7 +85,6 @@ namespace hiraeth {
 					break;
 
 				}
-			//change_stance(Jump);
 
 		//m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
 
@@ -147,7 +146,6 @@ namespace hiraeth {
 			}
 			for (auto & renderable : m_StatesRenderables.at(m_StanceState))
 				renderable->draw(renderer, m_Color);
-				//renderer->submit(renderable.get(), m_Color);
 			renderer->pop();
 		}
 		
@@ -164,15 +162,14 @@ namespace hiraeth {
 			if (!is_hit)
 			{
 				causeDamage(damage);
-				m_Force = calculateForce(maths::vec2(dir * 20, 8));
-				//m_Direction = oppositeDirection(dir);
+				m_Force = calculateForce(maths::vec2(dir * 4, 8));
+				m_Foothold = NO_FOOTHOLD;
 				if (m_IsImmuneAfterHit)
 				{
 					is_hit = true;
 					m_HitTimer.reSet(1.5f);
 					m_Color &= 0x80ffffff;
 				}
-				//m_Color = 0x80ffffff;
 			}
 		}
 	}

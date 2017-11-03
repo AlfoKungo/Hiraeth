@@ -15,7 +15,7 @@ namespace hiraeth {
 
 		 }
 
-		 Tile::Tile(Serializer s)
+		 Tile::Tile(TileData s)
 			 : Tile(s.position, s.scale, s.uv_pos, s.uv_size, s.type)
 		 {
 

@@ -13,6 +13,7 @@ namespace hiraeth {
 			m_BackgroundGroup.add(new graphics::Sprite(0, 0, graphics::TextureManager::Load("Assets/UI/Stats/Stat.main.backgrnd.png")));
 			m_BackgroundGroup.add(new graphics::Sprite(6, 5, graphics::TextureManager::Load("Assets/UI/Stats/Stat.main.backgrnd2.png")));
 			m_BackgroundGroup.add(new graphics::Sprite(7, 114, graphics::TextureManager::Load("Assets/UI/Stats/Stat.main.backgrnd3.png")));
+			m_BackgroundGroup.add(new graphics::SpritedRenderable(maths::vec3(120, 120, 0), 4, 0.15f, true, graphics::TextureManager::Load("Assets/UI/Stats/Stat.main.BtAuto.normal.png"), maths::vec2(0)));
 			fillGroup();
 		}
 
@@ -20,7 +21,6 @@ namespace hiraeth {
 		{
 			m_ForegroundGroup.clear();
 			//m_Group.add(new graphics::Sprite(120, 120, graphics::TextureManager::Load("Stat.main.BtAuto.normal.1.png")));
-			m_ForegroundGroup.add(new graphics::SpritedRenderable(maths::vec3(120, 120, 0), 4, 0.15f, true, graphics::TextureManager::Load("Assets/UI/Stats/Stat.main.BtAuto.normal.png"), maths::vec2(0)));
 			m_ForegroundGroup.add(new graphics::Label("arial", 13, m_StatsStruct->Luk, 74, 44, 0xff000000));
 			m_ForegroundGroup.add(new graphics::Label("arial", 13, m_StatsStruct->Int, 74, 62, 0xff000000));
 			m_ForegroundGroup.add(new graphics::Label("arial", 13, m_StatsStruct->Dex, 74, 80, 0xff000000));

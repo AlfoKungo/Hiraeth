@@ -6,7 +6,7 @@ namespace hiraeth {
 		MapLayer::MapLayer(const std::string& filename)
 			:
 			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
-			m_Renderer(new graphics::Texture(filename))
+			m_Renderer(new graphics::Texture(filename, 1))
 		{
 
 		}

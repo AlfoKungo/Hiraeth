@@ -11,6 +11,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <algorithm>
+#include <iterator>
 
 namespace hiraeth {
 
@@ -28,19 +30,20 @@ namespace hiraeth {
 
 
 	// Class to create a event
-	template <typename... Ts>
+	template <typename... Args>
 	class Event : public BaseEvent {
+
 		// To store all listeners of the event
-		std::vector<std::function<void(Ts...)>> handlers;
+		std::vector<std::function<void(Args...)>> handlers;
 	public:
 
-		void addListener(std::function<void(Ts...)> func) {
+		void addListener(std::function<void(Args...)> func) {
 			handlers.push_back(func);
 		}
 
-		void execute(Ts... ts) {
+		void execute(Args... args) {
 			for (auto & handler : handlers) {
-				handler(ts...);
+				handler(args...);
 			}
 		}
 	};
@@ -64,22 +67,22 @@ namespace hiraeth {
 		void createEvent(EventList name) {
 		}
 
-		template <typename Class, typename... Ts>
+		template <typename Class, typename... Args>
 		//bool subscribe(EventList name, std::function<void(Ts...)>& func) {
-		void subscribe(EventList name, Class * object, void (Class::*func)(Ts...)) {
+		void subscribe(EventList name, Class * object, void (Class::*func)(Args...)) {
 			if (m_Events.find(name) == m_Events.end())
-				m_Events[name] = new Event<Ts...>();
-			Event<Ts...> * sEvent = dynamic_cast<Event<Ts...> *>(m_Events[name]);
+				m_Events[name] = new Event<Args...>();
+			Event<Args...> * sEvent = dynamic_cast<Event<Args...> *>(m_Events[name]);
 			if (sEvent == nullptr)
 				throw std::invalid_argument("argument 3 is unfit");
 
-			sEvent->addListener(std::function<void(Ts...)>([object, func](Ts... ts) {return (object->*func)(ts...); }));
+			sEvent->addListener(std::function<void(Args...)>([object, func](Args... args) {return (object->*func)(args...); }));
 		}
 
-		template <typename... Ts>
-		void execute(EventList name, Ts... ts) {
+		template <typename... Args>
+		void execute(EventList name, Args... args) {
 			if (m_Events.find(name) != m_Events.end())
-				static_cast<Event<Ts...> *>(m_Events[name])->execute(ts...);
+				static_cast<Event<Args...> *>(m_Events[name])->execute(args...);
 		}
 	};
 }

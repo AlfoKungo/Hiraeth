@@ -13,11 +13,13 @@ namespace hiraeth {
 				if (isReachedFloor(maths::vec2(0, 10), m_Force))
 				{
 					m_State = OnFloor;
-					m_Timer.reSet(50.0f);
+					m_Timer.reSet(EXPIRING_TIME);
 				}
 				break;
 			case OnFloor:
 				m_Bounds.position.y = m_OsciliateYPos + sin(m_Timer.timeRemain() * 3.5f) * 3;
+				break;
+			case InInventory:
 				break;
 			case PickedUp:
 				float time_remains= m_Timer.timeRemain();
@@ -35,6 +37,10 @@ namespace hiraeth {
 				float m_Forcex = (char_pos.x - m_Bounds.GetMiddle().x) * (relativeTimePassed / 0.2f);
 				m_Bounds.position.x += m_Forcex;
 				break;
+			}
+			if (m_IsExpiring)
+			{
+				m_Color = 0x00ffffff | (uint32_t(256 * (m_Timer.timeRemain() / EXPIRE_FADE_TIME)) << 24);
 			}
 			Sprite::update();
 		}
@@ -63,6 +69,8 @@ namespace hiraeth {
 
 		bool Item::hasExpired()
 		{
+			if ((m_State == OnFloor) && m_Timer.timeRemain() < EXPIRE_FADE_TIME)
+				m_IsExpiring = true;
 			return ((m_State == OnFloor) && m_Timer.isExpired());
 		}
 

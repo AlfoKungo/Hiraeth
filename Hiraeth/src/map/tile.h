@@ -13,9 +13,9 @@ namespace hiraeth {
 		class Tile : public MapRenderable
 		{
 		public:
-			struct Serializer
+			struct TileData
 			{
-				maths::vec3 position;
+				maths::vec2 position;
 				float scale;
 				maths::vec2 uv_pos;
 				maths::vec2 uv_size;
@@ -35,7 +35,7 @@ namespace hiraeth {
 		public:
 			Tile(maths::vec3 pos, float scale, maths::vec2 uv_pos, maths::vec2 uv_size, unsigned int type);
 			Tile(maths::vec2 pos, float scale, maths::vec2 uv_pos, maths::vec2 uv_size, unsigned int type);
-			explicit Tile(Serializer s);
+			explicit Tile(TileData s);
 			~Tile();
 
 			float get_scale() const { return m_Scale; }

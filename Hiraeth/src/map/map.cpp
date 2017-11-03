@@ -6,7 +6,7 @@ namespace hiraeth {
 
 		Map::Map(const std::string& filename, int map_index, graphics::Window* wind)
 			: 
-		m_PtTex("portal_adv.png"),
+			m_PtTex("portal_adv.png"),
 			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
 			m_PtLayer(&m_PtShader),
@@ -16,7 +16,7 @@ namespace hiraeth {
 			m_Wnd(wind)
 		{
 			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", 400, 0, 0xffff0000);
-			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png")));
+			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg1.png", 0)));
 			m_BgLayer.add(fps);
 			m_Wnd->getKeyboard()->registerToKey(input::Controls::up, this);
 
@@ -130,6 +130,23 @@ namespace hiraeth {
 			oarchive(map_data2_location);
 		}
 
+		//void Map::deserialize_map_data(unsigned int map_index)
+		//{
+		//	std::ifstream file("serialized/map.data");
+		//	cereal::BinaryInputArchive iarchive(file);
+		//	file.seekg(sizeof(int) * map_index);
+		//	int start_of_data;
+		//	iarchive(start_of_data);
+		//	file.seekg(start_of_data);
+		//	iarchive(m_MapLayer.getMapData());
+
+		//	m_PtLayer.clear();
+		//	for (auto& portal : m_MapLayer.m_MapData.m_Portals)
+		//		m_PtLayer.add_ref(portal.get());
+
+		//	m_ChangeMapFlag = false;
+		//}
+
 		void Map::deserialize_map_data(unsigned int map_index)
 		{
 			std::ifstream file("map.data");
@@ -139,11 +156,9 @@ namespace hiraeth {
 			iarchive(start_of_data);
 			file.seekg(start_of_data);
 			iarchive(m_MapLayer.getMapData());
-
 			m_PtLayer.clear();
 			for (auto& portal : m_MapLayer.m_MapData.m_Portals)
 				m_PtLayer.add_ref(portal.get());
-
 			m_ChangeMapFlag = false;
 		}
 
