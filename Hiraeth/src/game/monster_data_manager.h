@@ -2,6 +2,10 @@
 #include <map>
 #include <vector>
 #include <fstream>
+#include <istream>
+#include <cereal/cereal.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/memory.hpp>
 #include "monster_stats.h"
 #include "map/map_data.h"
 

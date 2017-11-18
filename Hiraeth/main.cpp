@@ -87,23 +87,12 @@ int main()
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);
 
-	std::ofstream out("serialized/texture.data", std::ios::out | std::ios::binary);
-	int zero = 0;
-	if (out.is_open())
-	{
-		cereal::BinaryOutputArchive ar(out);
-		out.seekp(0);
-		for (int i = 0; i < 100; i++)
-			ar(zero);
-		out.close();
-	}
-
 	//mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 
 	StaticTimer::init();
 
 	float timer = 0;
-	Map map("map4.png", 2, &window);
+	Map map(0, &window);
 
 	ui::UiManager uiManager(&keyboard);
 

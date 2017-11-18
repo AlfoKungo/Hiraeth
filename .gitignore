@@ -280,3 +280,6 @@ __pycache__/
 ## MY INCLUDES ##
 # Include compiled dependencies
 !Dependencies/**
+
+# Dont include data files
+*.data

@@ -81,6 +81,7 @@ namespace hiraeth {
 			{
 				m_Color = 0xffffffff;
 				m_State = InInventory;
+				m_IsExpiring = false;
 				return true;
 			}
 			return false;

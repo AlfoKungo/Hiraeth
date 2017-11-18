@@ -18,13 +18,12 @@ namespace hiraeth {
 		{
 		protected:
 			maths::vec3 m_Position;
-			maths::vec2 m_Size;
 			unsigned int m_Color;
-			std::vector<maths::vec2> m_UV;
+			unsigned int m_Type;
 		protected:
 			MapRenderable()	{ }
-			MapRenderable(maths::vec3 position, maths::vec2 size, std::vector<maths::vec2> uv)
-				: m_Position(position), m_Size(size), m_UV(uv)
+			MapRenderable(maths::vec3 position, unsigned int type)
+				: m_Position(position), m_Type(type)
 			{
 				setColor(maths::vec4(1, 1, 1, 1));
 			}
@@ -51,12 +50,8 @@ namespace hiraeth {
 			}
 
 			inline const maths::vec3& getPosition() const { return m_Position; }
-			inline const maths::vec2& getSize() const { return m_Size; }
 			inline unsigned int getColor() const { return m_Color; }
-			inline const std::vector<maths::vec2>& getUV() const
-			{
-				return m_UV;
-			}
+			unsigned int getType() const { return m_Type; }
 		};
 	}
 }

@@ -8,6 +8,7 @@
 #include "keyboard/keyboard_event.h"
 #include <queue>
 #include "map_data.h"
+#include "portal.h"
 
 namespace hiraeth {
 	namespace map {
@@ -17,16 +18,20 @@ namespace hiraeth {
 		private:
 			graphics::Shader m_Shader;
 			MapRenderer m_Renderer;
+			std::vector<Tile> m_Tiles;
+			//std::vector<Portal> m_Portals;
+			std::vector<physics::FootHold> m_FootHolds;
 		public:
 			MapData m_MapData{};
-			MapLayer(const std::string& filename);
+			MapLayer();
 			~MapLayer();
 
 			MapData& getMapData() { return m_MapData; }
-			const std::vector<std::unique_ptr<Portal>>& getPortals() const { return m_MapData.m_Portals; }
+			//const std::vector<Portal>& getPortals() const { return m_Portals; }
 			const std::vector<Summon>& getSummons() const { return m_MapData.m_Summons; }
-			const std::vector<physics::FootHold>& getFootHolds() const { return m_MapData.m_FootHolds; }
+			const std::vector<physics::FootHold>& getFootHolds() const { return m_FootHolds; }
 
+			void reloadData();
 
 			void draw();
 		};

@@ -1,10 +1,8 @@
 #pragma once
-#include "tile.h"
-#include "physics/foothold.h"
 #include <vector>
-#include "portal.h"
 #include "cereal/types/vector.hpp"
 #include "cereal/types/queue.hpp"
+#include "maths/maths.h"
 
 namespace hiraeth {
 	namespace map {
@@ -12,13 +10,13 @@ namespace hiraeth {
 		{
 			maths::vec2 position;
 			float scale;
-			maths::vec2 uv_pos;
-			maths::vec2 uv_size;
+			//maths::vec2 uv_pos;
+			//maths::vec2 uv_size;
 			unsigned int type;
 			template<class Archive>
 			void serialize(Archive & ar)
 			{
-				ar(position, scale, uv_pos, uv_size, type);
+				ar(position, scale, type);
 			}
 		};
 		struct FootHoldData
@@ -55,15 +53,16 @@ namespace hiraeth {
 
 		struct MapData
 		{
-			std::vector<std::unique_ptr<Tile>> m_Tiles;
-			std::vector<physics::FootHold> m_FootHolds;
-			std::vector<std::unique_ptr<Portal>> m_Portals;
+			std::vector<TileData> m_Tiles;
+			std::vector<FootHoldData> m_FootHolds;
+			std::vector<PortalData> m_Portals;
 			std::vector<Summon> m_Summons;
+			int m_TileTexture;
 		private:
 			MapData() = default;
 			friend class cereal::access;
 			template<class A> void serialize(A& ar) {
-				ar(m_Tiles, m_FootHolds, m_Portals, m_Summons);
+				ar(m_Tiles, m_FootHolds, m_Portals, m_Summons, m_TileTexture);
 			}
 		};
 	}

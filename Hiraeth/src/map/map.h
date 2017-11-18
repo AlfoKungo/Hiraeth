@@ -50,11 +50,10 @@ namespace hiraeth {
 			int m_MapIndex;
 			bool m_ChangeMapFlag;
 
-		//	std::vector<>
 
 			graphics::Window* m_Wnd;
 		public:
-			Map(const std::string& filename, int map_index, graphics::Window* wind);
+			Map(int map_index, graphics::Window* wind);
 			~Map();
 
 			void draw();
@@ -66,7 +65,6 @@ namespace hiraeth {
 			void ButtonReleased(input::Controls control) override {}
 
 		private:
-			void serialize_map_data() const;
 			void deserialize_map_data(unsigned int map_index);
 		};
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "maths/rectangle.h"
+#include "map/map_data.h"
 #include <cereal/access.hpp>
 
 namespace hiraeth {
@@ -30,23 +31,26 @@ namespace hiraeth {
 			maths::vec2 p1, p2;
 			maths::vec2 m_Direction;
 
-		public:
+		private:
 			FootHold(maths::vec2 p1, maths::vec2 p2, maths::vec2 direction);
+		public:
+			explicit FootHold(map::FootHoldData fh_data)
+				: FootHold(fh_data.p1, fh_data.p2, fh_data.m_Direction) {}
 			~FootHold() {}
 			bool Intersects(maths::Rectangle rec) const;
 			bool CohenSutherlandLineClipAndDraw(maths::Rectangle rec) const;
 			bool LinesIntersect(maths::vec2 lp1, maths::vec2 lp2) const;
 			inline bool is_solid() const { return (p1.x - p2.x != 0); }
-			template<class Archive>
-			void serialize(Archive & ar)
-			{
-				ar(p1, p2, m_Direction);
-			}
-			FootHold() {}
+			//template<class Archive>
+			//void serialize(Archive & ar)
+			//{
+			//	ar(p1, p2, m_Direction);
+			//}
+			//FootHold() {}
 			float getXStart() const { return p1.x; }
 			float getXEnd() const { return p2.x; }
 		private:
-			friend class cereal::access;
+			//friend class cereal::access;
 			OutCode ComputeOutCode(double x, double y, maths::Rectangle rec) const;
 		};
 
@@ -54,26 +58,26 @@ namespace hiraeth {
 
 
 
-		class HorizontalFootHold : public FootHold
-		{
-		public:
-			HorizontalFootHold(maths::vec2 p1, float length)
-				: FootHold(p1 - maths::vec2(22.5f, -3), maths::vec2(p1.x + length + 22.5f, p1.y + 3), maths::vec2(0, 1))
-			{}
-			HorizontalFootHold(maths::vec2 p1, maths::vec2 p2)
-				: FootHold(p1 - maths::vec2(22.5f, -3), p2 + maths::vec2(22.5f, 3), maths::vec2(0, 1))
-			{}
-		};
+		//class HorizontalFootHold : public FootHold
+		//{
+		//public:
+		//	HorizontalFootHold(maths::vec2 p1, float length)
+		//		: FootHold(p1 - maths::vec2(22.5f, -3), maths::vec2(p1.x + length + 22.5f, p1.y + 3), maths::vec2(0, 1))
+		//	{}
+		//	HorizontalFootHold(maths::vec2 p1, maths::vec2 p2)
+		//		: FootHold(p1 - maths::vec2(22.5f, -3), p2 + maths::vec2(22.5f, 3), maths::vec2(0, 1))
+		//	{}
+		//};
 
-		class VerticalFootHold : public FootHold
-		{
-		public:
-			VerticalFootHold(maths::vec2 p1, float length)
-				: FootHold(p1, maths::vec2(p1.x, p1.y + length), maths::vec2(1, 0))
-			{}
-			VerticalFootHold(maths::vec2 p1, maths::vec2 p2)
-				: FootHold(p1, p2, maths::vec2(1, 0))
-			{}
-		};
+		//class VerticalFootHold : public FootHold
+		//{
+		//public:
+		//	VerticalFootHold(maths::vec2 p1, float length)
+		//		: FootHold(p1, maths::vec2(p1.x, p1.y + length), maths::vec2(1, 0))
+		//	{}
+		//	VerticalFootHold(maths::vec2 p1, maths::vec2 p2)
+		//		: FootHold(p1, p2, maths::vec2(1, 0))
+		//	{}
+		//};
 	}
 }

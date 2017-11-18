@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <GL/glew.h>
+#include <cereal/types/vector.hpp>
 #include "maths/maths.h"
 
 #include <cstddef>
@@ -17,6 +18,31 @@ namespace hiraeth {
 			maths::vec3 vertex;
 			maths::vec2 uv;
 			unsigned int color;
+		};
+
+		struct TileUv
+		{
+			maths::vec2 UvPos;
+			maths::vec2 UvSize;
+			template<class Archive>
+			void serialize(Archive & ar)
+			{
+				ar(UvPos, UvSize);
+			}
+		};
+
+		struct TileTextureData
+		{
+			int width, height, texture_data_size;
+			std::vector<TileUv> TilesUV;
+			BYTE* pic;
+			template<class Archive>
+			void serialize(Archive & ar)
+			{
+				ar(width, height, texture_data_size, TilesUV);
+				pic = new BYTE[texture_data_size];
+				ar(cereal::binary_data(pic, texture_data_size));
+			}
 		};
 
 #define MAP_RENDERER_MAX_SPRITES    60000
@@ -60,7 +86,8 @@ namespace hiraeth {
 			graphics::IndexBuffer* m_IBO;
 			GLsizei m_IndexCount;
 			VertexData* m_Buffer;
-			graphics::Texture* m_Tex;
+			unsigned int m_Ttid;
+			TileTextureData m_TTD;
 
 		public:
 			explicit MapRenderer(graphics::Texture* tex);
@@ -69,8 +96,10 @@ namespace hiraeth {
 			void submit(const MapRenderable* renderable);
 			void end();
 			void flush();
+			void setTexture(int tile_index);
 		private:
 			void init();
+			std::vector<maths::vec2> create_uv_by_pos_size(maths::vec2 pos, maths::vec2 size, maths::vec2 tex_size);
 		};
 	}
 }
