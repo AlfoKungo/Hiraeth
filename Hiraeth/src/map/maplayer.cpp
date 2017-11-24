@@ -5,7 +5,7 @@ namespace hiraeth {
 
 		MapLayer::MapLayer()
 			:
-			m_Shader("src/shaders/map.vert", "src/shaders/map.frag"),
+			m_Shader("Assets/shaders/map.vert", "Assets/shaders/map.frag"),
 			m_Renderer(nullptr)
 		{
 
@@ -29,7 +29,7 @@ namespace hiraeth {
 		void MapLayer::reloadData()
 		{
 			m_Tiles.clear();
-			for (auto& tile_data : m_MapData.m_Tiles)
+			for (auto& tile_data : m_MapData.Tiles)
 				m_Tiles.push_back(Tile(tile_data));
 
 			//m_Portals.clear();
@@ -37,10 +37,10 @@ namespace hiraeth {
 			//	m_Portals.push_back(Portal(portal_data));
 
 			m_FootHolds.clear();
-			for (auto& foothold_data : m_MapData.m_FootHolds)
+			for (auto& foothold_data : m_MapData.FootHolds)
 				m_FootHolds.push_back(physics::FootHold(foothold_data));
 
-			m_Renderer.setTexture(m_MapData.m_TileTexture);
+			m_Renderer.changeTexture(m_MapData.TileTexture);
 		}
 	}
 }

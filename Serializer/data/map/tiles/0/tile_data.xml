@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<TilesUV size="dynamic">
+		<value0>
+			<uv_pos>
+				<x>1</x>
+				<y>268</y>
+			</uv_pos>
+			<uv_size>
+				<x>90</x>
+				<y>59</y>
+			</uv_size>
+		</value0>
+		<value1>
+			<uv_pos>
+				<x>92</x>
+				<y>268</y>
+			</uv_pos>
+			<uv_size>
+				<x>90</x>
+				<y>59</y>
+			</uv_size>
+		</value1>
+		<value2>
+			<uv_pos>
+				<x>183</x>
+				<y>268</y>
+			</uv_pos>
+			<uv_size>
+				<x>90</x>
+				<y>59</y>
+			</uv_size>
+		</value2>
+		<value3>
+			<uv_pos>
+				<x>274</x>
+				<y>268</y>
+			</uv_pos>
+			<uv_size>
+				<x>90</x>
+				<y>59</y>
+			</uv_size>
+		</value3>
+		<value4>
+			<uv_pos>
+				<x>365</x>
+				<y>268</y>
+			</uv_pos>
+			<uv_size>
+				<x>90</x>
+				<y>59</y>
+			</uv_size>
+		</value4>
+		<value5>
+			<uv_pos>
+				<x>456</x>
+				<y>268</y>
+			</uv_pos>
+			<uv_size>
+				<x>90</x>
+				<y>59</y>
+			</uv_size>
+		</value5>
+	</TilesUV>
+</cereal>
+

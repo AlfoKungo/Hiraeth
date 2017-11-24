@@ -6,7 +6,7 @@
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "graphics/texture_manager.h"
-#include "map_data.h"
+#include "srl/map_data.h"
 #include <cereal/access.hpp>
 
 
@@ -24,7 +24,7 @@ namespace hiraeth {
 
 		public:
 			Portal(maths::vec3 position, int next_map);
-			Portal(PortalData pl_data)
+			Portal(SRL::PortalData pl_data)
 				: Portal(pl_data.position, pl_data.next_map) {}
 			~Portal();
 

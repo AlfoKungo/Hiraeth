@@ -13,6 +13,7 @@ namespace hiraeth {
 			static std::vector<Texture*> m_Textures;
 		public:
 			static Texture* Load(const std::string& name);
+			static Texture* Load(const std::string& name, SRL::TextureData texture_data);
 			static Texture* Get(const std::string& name);
 			static void Clean();
 		private:

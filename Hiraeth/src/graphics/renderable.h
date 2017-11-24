@@ -8,7 +8,7 @@
 #include "basic/drawable.h"
 #include "basic/updatable.h"
 
-#include "../maths/maths.h"
+#include "maths/maths.h"
 #include "shader.h"
 
 namespace hiraeth {

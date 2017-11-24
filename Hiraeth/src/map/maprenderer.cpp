@@ -10,12 +10,24 @@ namespace hiraeth {
 			m_TransformationStack.push_back(maths::mat4::Identity());
 			m_TransformationBack = &m_TransformationStack.back();
 			init();
+			
+			//reloadTTD(0);
+			GLuint result;
+			glGenTextures(1, &result);
+			glBindTexture(GL_TEXTURE_2D, result);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_TTD.width, m_TTD.height, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.pic);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.texture_data.pic);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			//delete[] m_TTD.pic;
+			m_Ttid = result;
 		}
 
 		MapRenderer::~MapRenderer() 
 		{
 			delete m_IBO;
-			//delete m_Tex;`
 			glDeleteBuffers(1, &m_VBO);
 		}
 
@@ -68,10 +80,9 @@ namespace hiraeth {
 		{
 			const maths::vec3& position = renderable->getPosition();
 			const unsigned int type = renderable->getType();
-			const TileUv tile_uv = m_TTD.TilesUV[type];
+			const SRL::TileUv tile_uv = m_TTD.TilesUV[type];
 			const maths::vec2& size = tile_uv.UvSize;
 			const unsigned int color = renderable->getColor();
-			//const std::vector<maths::vec2>& uv = renderable->getUV();
 			const std::vector<maths::vec2>& uv = create_uv_by_pos_size(tile_uv.UvPos, tile_uv.UvSize, maths::vec2(621,328));
 
 
@@ -119,7 +130,15 @@ namespace hiraeth {
 			m_IndexCount = 0;
 		}
 
-		void MapRenderer::setTexture(int tile_index)
+		void MapRenderer::changeTexture(int tile_index)
+		{
+			reloadTTD(tile_index);
+			update_texture();
+
+			delete[] m_TTD.texture_data.pic;
+		}
+
+		void MapRenderer::reloadTTD(int tile_index)
 		{
 			std::ifstream file("serialized/map.data", std::ios::in | std::ios::binary);
 			cereal::BinaryInputArchive iarchive(file);
@@ -127,18 +146,15 @@ namespace hiraeth {
 			int start_of_data;
 			iarchive(start_of_data);
 			file.seekg(start_of_data);
+			m_TTD = SRL::TileTextureData{};
 			iarchive(m_TTD);
+		}
 
-			GLuint result;
-			glGenTextures(1, &result);
-			glBindTexture(GL_TEXTURE_2D, result);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_TTD.width, m_TTD.height, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.pic);
+		void MapRenderer::update_texture()
+		{
+			glBindTexture(GL_TEXTURE_2D, m_Ttid);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_TTD.texture_data.width, m_TTD.texture_data.height, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.texture_data.pic);
 			glBindTexture(GL_TEXTURE_2D, 0);
-
-			delete[] m_TTD.pic;
-			m_Ttid = result;
 		}
 
 		std::vector<maths::vec2> MapRenderer::create_uv_by_pos_size(maths::vec2 pos, maths::vec2 size, maths::vec2 tex_size)

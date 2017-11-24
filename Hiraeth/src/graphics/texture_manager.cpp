@@ -15,7 +15,19 @@ namespace hiraeth {
 					return texture;
 			}
 			m_Textures.push_back(new Texture(name));
-			std::cout << "Tid is " +std::to_string( m_Textures.back()->getID()) + " and name is: " + name << std::endl;
+			std::cout << "Tid is " + std::to_string( m_Textures.back()->getID()) + " and name is: " + name << std::endl;
+			return m_Textures.back();
+		}
+		Texture* TextureManager::Load(const std::string& name, SRL::TextureData texture_data)
+		{
+
+			for (Texture* texture : m_Textures)
+			{
+				if (texture->getName() == name)
+					return texture;
+			}
+			m_Textures.push_back(new Texture(name, texture_data));
+			std::cout << "Tid is " + std::to_string( m_Textures.back()->getID()) + " and name is: " + name << std::endl;
 			return m_Textures.back();
 		}
 

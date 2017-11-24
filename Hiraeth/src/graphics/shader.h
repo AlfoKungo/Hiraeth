@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <GL/glew.h>
-#include "../maths/maths.h"
+#include "maths/maths.h"
 #include "../utils/fileutils.h"
 
 namespace hiraeth {

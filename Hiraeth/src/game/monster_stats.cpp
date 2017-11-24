@@ -9,7 +9,7 @@ namespace hiraeth {
 		{
 		}
 
-		MonsterStats::MonsterStats(MonsterStatsStruct r_stats)
+		MonsterStats::MonsterStats(SRL::MonsterStatsStruct r_stats)
 			: Stats(stats.MaxHp, stats.Hp, stats.Speed, stats.Jump),
 		stats(r_stats)
 		{

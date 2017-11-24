@@ -5,7 +5,7 @@
 #include <cereal/types/vector.hpp>
 
 #include "utils/static_timer.h"
-#include "src/maths/maths.h"
+#include "maths/maths.h"
 
 #include "src/graphics/window.h"
 #include "keyboard/keyboard.h"
@@ -98,7 +98,7 @@ int main()
 
 	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory() };
 
-	graphics::Layer<game::Character> m_CrLayer(new Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true);
+	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
 	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, uiManager.getMainUi()->getCharacterStats());
 	m_CrLayer.add_ref(&m_Char);
 	view::Camera::init(&m_Char);

@@ -10,7 +10,7 @@
 extern "C" {
 namespace ftgl {
 #endif
-
+#pragma warning(push, 0)        
 
 /**
  * Tuple of 4 ints.
@@ -203,6 +203,7 @@ typedef union
 } vec2;
 
 
+#pragma warning(pop)
 #ifdef __cplusplus
 }
 }

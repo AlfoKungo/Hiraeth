@@ -8,7 +8,7 @@
 #include "map/maplayer.h"
 #include "graphics/layers/layer.h"
 #include "game/character.h"
-#include "map/map_data.h"
+#include "srl/map_data.h"
 #include "item/item_manager.h"
 #include "monster_data_manager.h"
 
@@ -17,7 +17,7 @@ namespace hiraeth {
 
 		struct Summoner
 		{
-			map::Summon summon;
+			SRL::Summon summon;
 			float summonTime;
 		};
 		class MonsterManager : public Updatable

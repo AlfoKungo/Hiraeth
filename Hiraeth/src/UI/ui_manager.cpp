@@ -5,7 +5,7 @@ namespace hiraeth {
 	namespace ui {
 
 		UiManager::UiManager(input::Keyboard* kb)
-			: m_Layer(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag")),
+			: m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag")),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
 			m_MainUi()

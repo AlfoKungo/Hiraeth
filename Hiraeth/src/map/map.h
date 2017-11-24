@@ -6,7 +6,7 @@
 #include "../graphics/texture.h"
 #include "../graphics/layers/tilelayer.h"
 #include "../graphics/shader.h"
-#include "../maths/maths.h"
+#include "maths/maths.h"
 #include "../graphics/sprite.h"
 #include "../graphics/window.h"
 
@@ -21,7 +21,7 @@
 #include "../basic/updatable.h"
 #include "../graphics/label.h"
 #include "../graphics/font_manager.h"
-#include "map_data.h"
+#include "srl/map_data.h"
 
 #include "maplayer.h"
 

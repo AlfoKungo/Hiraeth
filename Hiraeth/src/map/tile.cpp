@@ -13,7 +13,7 @@ namespace hiraeth {
 
 		 }
 
-		 Tile::Tile(TileData s)
+		 Tile::Tile(SRL::TileData s)
 			 : Tile(s.position, s.scale, s.type)
 		 {
 

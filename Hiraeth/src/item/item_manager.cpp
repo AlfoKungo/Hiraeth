@@ -5,7 +5,7 @@ namespace hiraeth {
 
 		ItemManager::ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory)
 			: 
-			m_DroppedItems(new graphics::Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), true),
+			m_DroppedItems(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
 			m_FootHolds(foot_holds),
 			m_Inventory(inventory)
 		{

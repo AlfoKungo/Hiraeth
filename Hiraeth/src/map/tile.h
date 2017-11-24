@@ -2,7 +2,7 @@
 #include "maths/maths.h"
 #include "graphics/renderable.h"
 #include "maprenderable.h"
-#include "map_data.h"
+#include "srl/map_data.h"
 #include <cereal/access.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
@@ -22,7 +22,7 @@ namespace hiraeth {
 		private:
 			Tile(maths::vec3 pos, float scale, unsigned int type);
 		public:
-			explicit Tile(TileData s);
+			explicit Tile(SRL::TileData s);
 			~Tile();
 
 			float get_scale() const { return m_Scale; }

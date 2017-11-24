@@ -24,11 +24,11 @@ namespace hiraeth {
 			float m_XStart, m_XEnd;
 
 		public:
-			map::Summon m_Summon;
+			SRL::Summon m_Summon;
 			bool died = false;
-			Monster(const MonsterData& monster_data, map::Summon summon, map::MapLayer* mapLayer);
-			Monster(map::Summon summon, map::MapLayer* mapLayer) :
-				Monster(MonsterDataManager::Get(summon.monsterType), summon, mapLayer) {}
+			Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer);
+			Monster(SRL::Summon summon, map::MapLayer* mapLayer) :
+				Monster(MonsterDataManager::Get(summon.monster_type), summon, mapLayer) {}
 			virtual ~Monster() { delete m_Stats; }
 
 			void update() override;
@@ -37,7 +37,7 @@ namespace hiraeth {
 			void attack() override {}
 
 			void getHit(Direction dir, Damage damage) override;
-			map::Summon getSummon() const { return m_Summon; }
+			SRL::Summon getSummon() const { return m_Summon; }
 
 		private:
 			void causeDamage(Damage damage) override;

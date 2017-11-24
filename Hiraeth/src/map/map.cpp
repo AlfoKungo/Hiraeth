@@ -7,8 +7,8 @@ namespace hiraeth {
 		Map::Map(int map_index, graphics::Window* wind)
 			:
 			m_PtTex("portal_adv.png"),
-			m_PtShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
-			m_BgShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
+			m_PtShader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
+			m_BgShader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_PtLayer(&m_PtShader),
 			m_BgLayer(&m_BgShader),
 			m_MapLayer(),
@@ -86,7 +86,7 @@ namespace hiraeth {
 			m_MapLayer.reloadData();
 
 			m_PtLayer.clear();
-			for (auto& portal : m_MapLayer.m_MapData.m_Portals)
+			for (auto& portal : m_MapLayer.m_MapData.Portals)
 				m_PtLayer.add(new Portal(portal));
 
 			m_ChangeMapFlag = false;

@@ -5,14 +5,14 @@ namespace hiraeth {
 
 		MonsterManager::MonsterManager(map::MapLayer* map_layer, game::Character* character, item::ItemManager* item_manager)
 			: m_MapLayer(map_layer), 
-			m_Shader("src/shaders/basic.vert", "src/shaders/basic.frag"), 
+			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), 
 			m_Layer(&m_Shader, true),
 			m_Char(character),
 			m_ItemManager(item_manager)
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &MonsterManager::mapChanged);
-			serialize_data();
+			//serialize_data();
 			mapChanged();
 			m_Char->setMonsters(&m_Layer.m_Renderables);
 		}
@@ -32,7 +32,7 @@ namespace hiraeth {
 				if ((*monster)->died)
 				{
 					m_ItemManager->dropItem("Assets/items/wing.icon.png", (*monster)->getBounds().GetBottomMiddle());
-					map::Summon summon = (*monster)->getSummon();
+					SRL::Summon summon = (*monster)->getSummon();
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
 					m_SummonQueue.push(Summoner{summon, StaticTimer::timer.elapsed() + 1.0f});
@@ -77,23 +77,22 @@ namespace hiraeth {
 			return false;
 		}
 
-		void MonsterManager::serialize_data()
-		{
-
-			std::ofstream file("monster.data");
-			cereal::BinaryOutputArchive oarchive(file);
-			//oarchive(int(2));
-			file.seekp(sizeof(int) * 2);
-			int monster_data1_location = file.tellp();
-			oarchive(MonsterData{ "slime", MonsterFramesAmount{3, 7, 1},
-				MonsterStatsStruct{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}});
-			int monster_data2_location = file.tellp();
-			oarchive(MonsterData{ "green_mushroom", MonsterFramesAmount{3, 4, 1},
-				MonsterStatsStruct{ "Green Mushroom", 5, 4444, 1000, 1000, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}});
-			file.seekp(0);
-			oarchive(monster_data1_location);
-			oarchive(monster_data2_location);
-		}
+		//void MonsterManager::serialize_data()
+		//{
+		//	std::ofstream file("monster.data");
+		//	cereal::BinaryOutputArchive oarchive(file);
+		//	//oarchive(int(2));
+		//	file.seekp(sizeof(int) * 2);
+		//	int monster_data1_location = file.tellp();
+		//	oarchive(MonsterData{ "slime", MonsterFramesAmount{3, 7, 1},
+		//		MonsterStatsStruct{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}});
+		//	int monster_data2_location = file.tellp();
+		//	oarchive(MonsterData{ "green_mushroom", MonsterFramesAmount{3, 4, 1},
+		//		MonsterStatsStruct{ "Green Mushroom", 5, 4444, 1000, 1000, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}});
+		//	file.seekp(0);
+		//	oarchive(monster_data1_location);
+		//	oarchive(monster_data2_location);
+		//}
 
 		void MonsterManager::mapChanged()
 		{

@@ -84,12 +84,15 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype271.lib;glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;OpenAL32.lib;gorillaD.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -105,7 +108,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -113,6 +116,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>freetype271.lib;glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -128,6 +134,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Debug\ext\freetype-gl\distance-field.c" />
+    <ClCompile Include="Debug\ext\freetype-gl\edtaa3func.c" />
+    <ClCompile Include="Debug\ext\freetype-gl\platform.c" />
+    <ClCompile Include="Debug\ext\freetype-gl\texture-atlas.c" />
+    <ClCompile Include="Debug\ext\freetype-gl\texture-font.c" />
+    <ClCompile Include="Debug\ext\freetype-gl\utf8-utils.c" />
+    <ClCompile Include="Debug\ext\freetype-gl\vector.c" />
     <ClCompile Include="ext\freetype-gl\distance-field.c" />
     <ClCompile Include="ext\freetype-gl\edtaa3func.c" />
     <ClCompile Include="ext\freetype-gl\platform.c" />
@@ -172,11 +185,6 @@
     <ClCompile Include="src\map\maprenderer.cpp" />
     <ClCompile Include="src\map\portal.cpp" />
     <ClCompile Include="src\map\tile.cpp" />
-    <ClCompile Include="src\maths\mat4.cpp" />
-    <ClCompile Include="src\maths\rectangle.cpp" />
-    <ClCompile Include="src\maths\vec2.cpp" />
-    <ClCompile Include="src\maths\vec3.cpp" />
-    <ClCompile Include="src\maths\vec4.cpp" />
     <ClCompile Include="src\physics\collisionable.cpp" />
     <ClCompile Include="src\physics\foothold.cpp" />
     <ClCompile Include="src\save\serializer.cpp" />
@@ -190,6 +198,16 @@
     <ClCompile Include="src\view\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Debug\ext\freetype-gl\distance-field.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\edtaa3func.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\freetype-gl.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\opengl.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\platform.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\texture-atlas.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\texture-font.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\utf8-utils.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\vec234.h" />
+    <ClInclude Include="Debug\ext\freetype-gl\vector.h" />
     <ClInclude Include="ext\freetype-gl\distance-field.h" />
     <ClInclude Include="ext\freetype-gl\edtaa3func.h" />
     <ClInclude Include="ext\freetype-gl\freetype-gl.h" />
@@ -246,16 +264,8 @@
     <ClInclude Include="src\map\maplayer.h" />
     <ClInclude Include="src\map\maprenderable.h" />
     <ClInclude Include="src\map\maprenderer.h" />
-    <ClInclude Include="src\map\map_data.h" />
     <ClInclude Include="src\map\portal.h" />
     <ClInclude Include="src\map\tile.h" />
-    <ClInclude Include="src\maths\mat4.h" />
-    <ClInclude Include="src\maths\maths.h" />
-    <ClInclude Include="src\maths\maths_funcs.h" />
-    <ClInclude Include="src\maths\rectangle.h" />
-    <ClInclude Include="src\maths\vec2.h" />
-    <ClInclude Include="src\maths\vec3.h" />
-    <ClInclude Include="src\maths\vec4.h" />
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />
@@ -266,16 +276,17 @@
     <ClInclude Include="src\UI\ui_stats.h" />
     <ClInclude Include="src\UI\ui_window.h" />
     <ClInclude Include="src\utils\fileutils.h" />
-    <ClInclude Include="src\utils\ImageLoad.h" />
     <ClInclude Include="src\utils\static_timer.h" />
     <ClInclude Include="src\utils\timer.h" />
     <ClInclude Include="src\view\camera.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\basic.frag" />
-    <None Include="src\shaders\basic.vert" />
-    <None Include="src\shaders\map.frag" />
-    <None Include="src\shaders\map.vert" />
+    <ProjectReference Include="..\MathLib\MathLib.vcxproj">
+      <Project>{5cdb3164-3976-48b0-9569-b4770a4bb032}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SerializeLib\SerializeLib.vcxproj">
+      <Project>{d7d76bde-7dca-40d5-92af-f83ede064043}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
