@@ -30,5 +30,11 @@
     <ClInclude Include="srl\tile_texture_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="srl\deserial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="srl\item_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

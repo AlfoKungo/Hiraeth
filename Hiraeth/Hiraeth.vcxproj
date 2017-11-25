@@ -253,7 +253,6 @@
     <ClInclude Include="src\graphics\texture_manager.h" />
     <ClInclude Include="src\graphics\window.h" />
     <ClInclude Include="src\item\item.h" />
-    <ClInclude Include="src\item\item_data.h" />
     <ClInclude Include="src\item\item_data_manager.h" />
     <ClInclude Include="src\item\item_manager.h" />
     <ClInclude Include="src\keyboard\key.h" />

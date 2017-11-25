@@ -6,7 +6,7 @@ namespace hiraeth {
 		MapLayer::MapLayer()
 			:
 			m_Shader("Assets/shaders/map.vert", "Assets/shaders/map.frag"),
-			m_Renderer(nullptr)
+			m_Renderer()
 		{
 
 		}
@@ -26,8 +26,10 @@ namespace hiraeth {
 			m_Renderer.flush();
 		}
 
-		void MapLayer::reloadData()
+		void MapLayer::reloadData(unsigned int map_index)
 		{
+			m_MapData = SRL::deserial<SRL::MapData>("serialized/map.data", map_index);
+
 			m_Tiles.clear();
 			for (auto& tile_data : m_MapData.Tiles)
 				m_Tiles.push_back(Tile(tile_data));

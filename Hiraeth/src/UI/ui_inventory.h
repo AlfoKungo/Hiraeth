@@ -4,16 +4,17 @@
 //#include "basic/EventManager.h"
 #include <algorithm>
 #include <iterator>
+#include "srl/item_data.h"
+#include "item/item.h"
 
 
 namespace hiraeth {
-	namespace item { class Item; enum Tab; }
 	namespace ui {
 		class UiInventory : public UiWindow
 		{
 		private:
-			item::Tab m_Tab;
-			std::map<item::Tab, std::unique_ptr<graphics::Group>> m_Items;
+			SRL::Tab m_Tab;
+			std::map<SRL::Tab, std::unique_ptr<graphics::Group>> m_Items;
 			item::Item * m_HoldItem;
 			maths::vec2 m_OldItemPos;
 		public:

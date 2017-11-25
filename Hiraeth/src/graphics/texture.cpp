@@ -65,30 +65,19 @@ namespace hiraeth {
 		GLuint Texture::deserialize(int id)
 		{
 			GLuint result = 0;
-			std::ifstream in("serialized/map.data", std::ios::in | std::ios::binary);
-			if (in.is_open())
-			{
-				cereal::BinaryInputArchive ar(in);
-				int offset;
-				in.seekg(id * sizeof(int) + 100 * sizeof(int));
-				ar(offset);
-				in.seekg(offset);
-				SRL::TextureData m_Data;
-				ar(m_Data);
+			SRL::TextureData tData = SRL::deserial<SRL::TextureData>("serialized/map.data", (100 + id));
 
-				m_Width = m_Data.width;
-				m_Height = m_Data.height;
+			m_Width = tData.width;
+			m_Height = tData.height;
 
-				glGenTextures(1, &result);
-				glBindTexture(GL_TEXTURE_2D, result);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_Data.pic);
-				glBindTexture(GL_TEXTURE_2D, 0);
+			glGenTextures(1, &result);
+			glBindTexture(GL_TEXTURE_2D, result);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, tData.pic);
+			glBindTexture(GL_TEXTURE_2D, 0);
 
-				delete[] m_Data.pic;
-			}
-
+			delete[] tData.pic;
 			return result;
 		}
 

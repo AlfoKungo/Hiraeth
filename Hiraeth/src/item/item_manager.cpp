@@ -12,12 +12,11 @@ namespace hiraeth {
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
-			serialize_data();
 			for (int i = -400; i < 400; i+= 100)
-				m_DroppedItems.add(new Item(maths::vec2(i, 0), ItemDataManager::Get((i + 1000) % 3 + 1), m_FootHolds));
-			m_DroppedItems.add(new Item(maths::vec2(0),	ItemDataManager::Get(1), m_FootHolds));
-			m_DroppedItems.add(new Item(maths::vec2(-200, 0), ItemDataManager::Get(2), m_FootHolds));
-			m_DroppedItems.add(new Item(maths::vec2(200, 0), ItemDataManager::Get(3), m_FootHolds));
+				m_DroppedItems.add(new Item(maths::vec2(i, 0), ItemDataManager::Get((i + 1000) % 3), m_FootHolds));
+			m_DroppedItems.add(new Item(maths::vec2(0),	ItemDataManager::Get(0), m_FootHolds));
+			m_DroppedItems.add(new Item(maths::vec2(-200, 0), ItemDataManager::Get(1), m_FootHolds));
+			m_DroppedItems.add(new Item(maths::vec2(200, 0), ItemDataManager::Get(2), m_FootHolds));
 		}
 
 		void ItemManager::draw() const
@@ -48,9 +47,9 @@ namespace hiraeth {
 			}
 		}
 
-		void ItemManager::dropItem(const char* name, maths::vec2 pos)
+		void ItemManager::dropItem(maths::vec2 pos)
 		{
-			m_DroppedItems.add(new Item(pos, ItemDataManager::Get(3), m_FootHolds));
+			m_DroppedItems.add(new Item(pos, ItemDataManager::Get(2), m_FootHolds));
 		}
 
 		void ItemManager::mapChanged()
@@ -69,25 +68,6 @@ namespace hiraeth {
 					if (pos.Distance((*item)->getBounds().GetBottomMiddle()) < 30)
 						return (*item);
 			return NULL;
-		}
-
-		void ItemManager::serialize_data()
-		{
-
-			std::ofstream file("item.data");
-			cereal::BinaryOutputArchive oarchive(file);
-			//oarchive(int(2));
-			file.seekp(sizeof(int) * 4);
-			int item_data1_location = file.tellp();
-			oarchive(ItemData{"dagger", ItemInfo{Equip}});
-			int item_data2_location = file.tellp();
-			oarchive(ItemData{"staff", ItemInfo{Equip}});
-			int item_data3_location = file.tellp();
-			oarchive(ItemData{ "wing", ItemInfo{Use} });
-			file.seekp(0);
-			oarchive(item_data1_location);
-			oarchive(item_data2_location);
-			oarchive(item_data3_location);
 		}
 	}
 }

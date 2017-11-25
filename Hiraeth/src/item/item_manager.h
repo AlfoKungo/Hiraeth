@@ -22,11 +22,10 @@ namespace hiraeth {
 			ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory);
 			void draw() const;
 			void update() override;
-			void dropItem(const char* name, maths::vec2 pos);
+			void dropItem(maths::vec2 pos);
 			void mapChanged();
 			Item * getItem(maths::vec2 pos);
 		private:
-			static void serialize_data();
 		};
 	}
 }

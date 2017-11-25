@@ -9,6 +9,7 @@
 #include "graphics/sprite.h"
 #include "monster_data_manager.h"
 #include "monster_data_manager.h"
+#include "srl/deserial.h"
 
 namespace hiraeth {
 	namespace game {

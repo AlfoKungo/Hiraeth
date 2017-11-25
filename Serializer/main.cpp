@@ -13,6 +13,7 @@
 #include "srl/map_data.h"
 #include "srl/tile_texture_data.h"
 #include "srl/monster_data.h"
+#include "srl/item_data.h"
 
 #define MAX_ADDRESSES 100
 
@@ -34,6 +35,13 @@
 #define MONSTER_DATA_ADDRESS_BEGIN 0
 #define MONSTER_TEXTURES_ADDRESS_BEGIN (MONSTER_AMOUNT * sizeof(Address))
 #define MONSTER_DATA_DATA_BEGIN (MONSTER_ADDRESSES_AMOUNT * sizeof(Address))
+
+
+#define ITEM_AMOUNT MAX_ADDRESSES
+#define ITEM_ADDRESSES_AMOUNT (ITEM_AMOUNT)
+
+#define ITEM_ADDRESS_BEGIN 0
+#define ITEM_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
 
 #define USED_MAPS 2
 
@@ -70,7 +78,7 @@ int main()
 
 	// Serialize Map Data
 	{
-		std::ofstream map_data_file("output/map.data", std::ios::out | std::ios::binary);
+		std::ofstream map_data_file("../Hiraeth/serialized/map.data", std::ios::out | std::ios::binary);
 		if (map_data_file.is_open())
 		{
 			cereal::BinaryOutputArchive arout(map_data_file);
@@ -81,7 +89,7 @@ int main()
 			{
 				std::ifstream in(p.path(), std::ios::in);
 				cereal::XMLInputArchive arin(in);
-				SRL::MapData map_data = SRL::MapData{};
+				SRL::MapData map_data{};
 				arin(map_data);
 				v_mapData.push_back(map_data);
 			}
@@ -104,14 +112,14 @@ int main()
 			for (auto & p : fs::directory_iterator("data/map/tiles"))
 			{
 				std::string path = p.path().string();
-				std::string tile_name = path + "\\tile.png";
-				std::string tile_data_name = path + "\\tile_data.xml";
-				std::ifstream in(tile_data_name, std::ios::in);
+				std::string tex_path = path + "\\tex.png";
+				std::string data_path = path + "\\data.xml";
+				std::ifstream in(data_path, std::ios::in);
 				cereal::XMLInputArchive arin(in);
 				SRL::TileTextureData Td{};
 
 				arin(Td.TilesUV);
-				Td.texture_data.load_texture(tile_name);
+				Td.texture_data.load_texture(tex_path);
 				v_tileTextureData.push_back(Td);
 			}
 			map_data_file.seekp(0, map_data_file.end);
@@ -124,7 +132,7 @@ int main()
 
 	// Serialize Monster Data
 	{
-		std::ofstream monster_data_file("output/monster.data", std::ios::out | std::ios::binary);
+		std::ofstream monster_data_file("../Hiraeth/serialized/monster.data", std::ios::out | std::ios::binary);
 		if (monster_data_file.is_open())
 		{
 			cereal::BinaryOutputArchive arout(monster_data_file);
@@ -135,7 +143,7 @@ int main()
 			{
 				std::ifstream in(p.path(), std::ios::in);
 				cereal::XMLInputArchive arin(in);
-				SRL::MonsterData monster_data = SRL::MonsterData{};
+				SRL::MonsterData monster_data{};
 				arin(monster_data);
 				v_monsterData.push_back(monster_data);
 			}
@@ -160,6 +168,33 @@ int main()
 			}
 			monster_data_file.seekp(0, monster_data_file.end);
 			serialize_data(v_monsterTexturesData, MONSTER_TEXTURES_ADDRESS_BEGIN, monster_data_file, arout);
+		}
+	}
+
+	// Serialize Item Data
+	{
+		std::ofstream item_data_file("../Hiraeth/serialized/item.data", std::ios::out | std::ios::binary);
+		if (item_data_file.is_open())
+		{
+			cereal::BinaryOutputArchive arout(item_data_file);
+
+			std::vector<SRL::ItemData> v_itemData;
+			v_itemData.reserve(100);
+			for (auto & p : fs::directory_iterator("data/item"))
+			{
+				std::string path = p.path().string();
+				std::string tex_path = path + "\\tex.png";
+				std::string data_path = path + "\\data.xml";
+				std::ifstream in(data_path, std::ios::in);
+				cereal::XMLInputArchive arin(in);
+				SRL::ItemData Td{};
+
+				arin(Td.item_info);
+				Td.texture_data.load_texture(tex_path);
+				v_itemData.push_back(Td);
+			}
+			item_data_file.seekp(ITEM_DATA_BEGIN);
+			serialize_data(v_itemData, ITEM_ADDRESS_BEGIN, item_data_file, arout);
 		}
 	}
 

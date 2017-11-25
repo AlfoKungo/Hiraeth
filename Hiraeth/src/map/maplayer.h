@@ -31,7 +31,7 @@ namespace hiraeth {
 			const std::vector<SRL::Summon>& getSummons() const { return m_MapData.Summons; }
 			const std::vector<physics::FootHold>& getFootHolds() const { return m_FootHolds; }
 
-			void reloadData();
+			void reloadData(unsigned int map_index);
 
 			void draw();
 		};

@@ -20,15 +20,7 @@ namespace hiraeth {
 
 			SRL::MonsterData MonsterDataManager::deserialize_monster_data(unsigned int monster_index)
 			{
-				std::ifstream file("serialized/monster.data");
-				cereal::BinaryInputArchive iarchive(file);
-				int start_of_data;
-				file.seekg(sizeof(int) * (monster_index - 1));
-				iarchive(start_of_data);
-				file.seekg(start_of_data);
-				SRL::MonsterData monster_data;
-				iarchive(monster_data);
-				return monster_data;
+				return SRL::deserial<SRL::MonsterData>("serialized/monster.data", monster_index - 1);
 			}
 	}
 }

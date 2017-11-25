@@ -4,20 +4,18 @@
 namespace hiraeth {
 	namespace map {
 
-		MapRenderer::MapRenderer(graphics::Texture* tex)
+		MapRenderer::MapRenderer()
 			//: m_Tex(tex)
 		{
 			m_TransformationStack.push_back(maths::mat4::Identity());
 			m_TransformationBack = &m_TransformationStack.back();
 			init();
 			
-			//reloadTTD(0);
 			GLuint result;
 			glGenTextures(1, &result);
 			glBindTexture(GL_TEXTURE_2D, result);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_TTD.width, m_TTD.height, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.pic);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.texture_data.pic);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -140,14 +138,7 @@ namespace hiraeth {
 
 		void MapRenderer::reloadTTD(int tile_index)
 		{
-			std::ifstream file("serialized/map.data", std::ios::in | std::ios::binary);
-			cereal::BinaryInputArchive iarchive(file);
-			file.seekg((200 + tile_index) * sizeof(int));
-			int start_of_data;
-			iarchive(start_of_data);
-			file.seekg(start_of_data);
-			m_TTD = SRL::TileTextureData{};
-			iarchive(m_TTD);
+			m_TTD = SRL::deserial<SRL::TileTextureData>("serialized/map.data", (200 + tile_index));
 		}
 
 		void MapRenderer::update_texture()

@@ -13,15 +13,9 @@ namespace hiraeth {
 			m_XStart(NULL),
 			m_XEnd(NULL)
 		{
-			std::ifstream file("serialized/monster.data", std::ios::in | std::ios::binary);
-			cereal::BinaryInputArchive iarchive(file);
-			SRL::MonsterTexturesData mtd{};
-			file.seekg((100 + monster_data.TextureIndex) * sizeof(int));
-			int start_of_data;
-			iarchive(start_of_data);
-			file.seekg(start_of_data);
-			iarchive(mtd);
-
+			
+			SRL::MonsterTexturesData mtd = SRL::deserial<SRL::MonsterTexturesData>("serialized/monster.data", 
+				(100 + monster_data.TextureIndex));
 
 			srand(time(nullptr));
 			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.stand_frames, 0.6f, false, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_stand", mtd.stand_texture), 0));

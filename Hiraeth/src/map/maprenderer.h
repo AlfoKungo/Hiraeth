@@ -8,7 +8,8 @@
 #include <cstddef>
 #include "graphics/texture.h"
 #include "graphics/buffers/indexbuffer.h"
-#include "srl\tile_texture_data.h"
+#include "srl/tile_texture_data.h"
+#include "srl/deserial.h"
 
 
 namespace hiraeth {
@@ -66,7 +67,7 @@ namespace hiraeth {
 			SRL::TileTextureData m_TTD;
 
 		public:
-			explicit MapRenderer(graphics::Texture* tex);
+			explicit MapRenderer();
 			~MapRenderer();
 			void begin();
 			void submit(const MapRenderable* renderable);

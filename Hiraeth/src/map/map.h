@@ -22,6 +22,7 @@
 #include "../graphics/label.h"
 #include "../graphics/font_manager.h"
 #include "srl/map_data.h"
+#include "srl/deserial.h"
 
 #include "maplayer.h"
 

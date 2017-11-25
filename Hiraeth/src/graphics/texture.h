@@ -14,6 +14,7 @@
 #include "maths/maths.h"
 #include "srl/ImageLoad.h"
 #include "srl/texture_data.h"
+#include "srl/deserial.h"
 
 namespace hiraeth {
 	namespace graphics {

@@ -6,6 +6,7 @@
 #include <cereal/types/string.hpp>
 #include "item.h"
 #include "UI/ui_inventory.h"
+#include "srl/deserial.h"
 
 namespace hiraeth {
 	namespace item {
@@ -13,12 +14,9 @@ namespace hiraeth {
 		class ItemDataManager
 		{
 		private:
-			static std::map<unsigned int, ItemData> m_ItemData;
+			static std::map<unsigned int, SRL::ItemData> m_ItemData;
 		public:
-			static const ItemData& Get(unsigned int index);
-
-		private:
-			static ItemData deserialize_item_data(unsigned int item_index);
+			static const SRL::ItemData& Get(unsigned int index);
 
 		private:
 			ItemDataManager();

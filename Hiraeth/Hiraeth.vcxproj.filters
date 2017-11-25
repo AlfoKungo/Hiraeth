@@ -386,9 +386,6 @@
     <ClInclude Include="src\item\item_data_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\item\item_data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\UI\ui_equip.h">
       <Filter>Header Files</Filter>
     </ClInclude>

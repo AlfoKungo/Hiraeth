@@ -71,19 +71,8 @@ namespace hiraeth {
 
 		void Map::deserialize_map_data(unsigned int map_index)
 		{
-			std::ifstream file("serialized/map.data");
-			if (file.is_open())
-			{
-				cereal::BinaryInputArchive iarchive(file);
-				file.seekg(sizeof(int) * map_index);
-				int start_of_data;
-				iarchive(start_of_data);
-				file.seekg(start_of_data);
-				iarchive(m_MapLayer.getMapData());
-			}
-			file.close();
 
-			m_MapLayer.reloadData();
+			m_MapLayer.reloadData(map_index);
 
 			m_PtLayer.clear();
 			for (auto& portal : m_MapLayer.m_MapData.Portals)

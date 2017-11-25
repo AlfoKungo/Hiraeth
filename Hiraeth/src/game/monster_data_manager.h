@@ -9,6 +9,7 @@
 #include "monster_stats.h"
 #include "srl/map_data.h"
 #include "srl/monster_data.h"
+#include "srl/deserial.h"
 
 namespace hiraeth {
 	namespace game {

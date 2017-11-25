@@ -99,16 +99,6 @@ namespace cereal
       //! Reads size bytes of data from the input stream
       void loadBinary( void * const data, std::size_t size )
       {
-		  //if (size == 814752)
-		  //{
-			 // //std::streambuf * pbuf = itsStream.rdbuf();
-			 // //pbuf->pubseekoff(0, itsStream.beg);
-			 // //auto ava = pbuf->in_avail();
-			 // //std::streamsize s2 = pbuf->pubseekoff(0, itsStream.end);
-			 // //pbuf->pubseekoff(0, itsStream.beg);
-		  //}
-		  //auto s = itsStream.rdbuf()->sgetn(reinterpret_cast<char*>(data), size);
-    //    auto const readSize = static_cast<std::size_t>( s );
         auto const readSize = static_cast<std::size_t>( itsStream.rdbuf()->sgetn( reinterpret_cast<char*>( data ), size ) );
 
         if(readSize != size)

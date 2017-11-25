@@ -3,6 +3,16 @@
 namespace hiraeth {
 	namespace item {
 
+		Item::Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds)
+			: Sprite(pos.x, pos.y, graphics::TextureManager::Load(item_data.item_info.item_name, item_data.texture_data)), m_Force(0, 7),
+			m_FootHolds(foot_holds),
+			m_ItemInfo(item_data.item_info),
+			m_State(InAir)
+		{
+
+		}
+
+
 		void Item::update()
 		{
 			switch (m_State)
