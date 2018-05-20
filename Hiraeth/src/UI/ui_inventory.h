@@ -13,8 +13,8 @@ namespace hiraeth {
 		class UiInventory : public UiWindow
 		{
 		private:
-			SRL::Tab m_Tab;
-			std::map<SRL::Tab, std::unique_ptr<graphics::Group>> m_Items;
+			SRL::ItemTab m_Tab;
+			std::map<SRL::ItemTab, std::unique_ptr<graphics::Group>> m_ItemTabs;
 			item::Item * m_HoldItem;
 			maths::vec2 m_OldItemPos;
 		public:

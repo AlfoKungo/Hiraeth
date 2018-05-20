@@ -36,5 +36,8 @@
     <ClInclude Include="srl\item_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="srl\quest_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

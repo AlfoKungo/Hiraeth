@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{055CEB59-757B-4F3F-B1A0-1D208452E355}</ProjectGuid>
     <RootNamespace>Hiraeth</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -192,7 +192,10 @@
     <ClCompile Include="src\UI\ui_equip.cpp" />
     <ClCompile Include="src\UI\ui_inventory.cpp" />
     <ClCompile Include="src\UI\ui_manager.cpp" />
+    <ClCompile Include="src\UI\ui_quests.cpp" />
+    <ClCompile Include="src\UI\ui_skills.cpp" />
     <ClCompile Include="src\UI\ui_stats.cpp" />
+    <ClCompile Include="src\UI\ui_window.cpp" />
     <ClCompile Include="src\utils\static_timer.cpp" />
     <ClCompile Include="src\utils\timer.cpp" />
     <ClCompile Include="src\view\camera.cpp" />
@@ -223,7 +226,6 @@
     <ClInclude Include="src\basic\a_timer.h" />
     <ClInclude Include="src\basic\drawable.h" />
     <ClInclude Include="src\basic\EventManager.h" />
-    <ClInclude Include="src\basic\event_handler.h" />
     <ClInclude Include="src\basic\updatable.h" />
     <ClInclude Include="src\character\character_arm.h" />
     <ClInclude Include="src\character\character_body.h" />
@@ -265,13 +267,22 @@
     <ClInclude Include="src\map\maprenderer.h" />
     <ClInclude Include="src\map\portal.h" />
     <ClInclude Include="src\map\tile.h" />
+    <ClInclude Include="src\NPC\npc.h" />
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />
     <ClInclude Include="src\UI\main_ui.h" />
+    <ClInclude Include="src\UI\ui_basic\buttons_group.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_button.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_button_flashing.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_button_normal.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_button_side_menu.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_tabs.h" />
     <ClInclude Include="src\UI\ui_equip.h" />
     <ClInclude Include="src\UI\ui_inventory.h" />
     <ClInclude Include="src\UI\ui_manager.h" />
+    <ClInclude Include="src\UI\ui_quests.h" />
+    <ClInclude Include="src\UI\ui_skills.h" />
     <ClInclude Include="src\UI\ui_stats.h" />
     <ClInclude Include="src\UI\ui_window.h" />
     <ClInclude Include="src\utils\fileutils.h" />

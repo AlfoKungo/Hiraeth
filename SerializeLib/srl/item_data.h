@@ -5,7 +5,7 @@
 
 namespace SRL {
 
-	enum Tab {
+	enum ItemTab {
 		Equip = 0,
 		Use = 1,
 		SetUp = 2,
@@ -16,7 +16,7 @@ namespace SRL {
 	struct ItemInfo
 	{
 		std::string item_name;
-		Tab type;
+		ItemTab type;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(item_name), CEREAL_NVP(type));
 		}

@@ -16,7 +16,7 @@ namespace hiraeth {
 			m_Wnd(wind)
 		{
 			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", 400, 0, 0xffff0000);
-			m_BgLayer.add(new graphics::Sprite(-900, -450, 1920, 1080, new graphics::Texture("bg.png", 0)));
+			m_BgLayer.add(new graphics::Sprite(maths::vec2(-900, -450), 1920, 1080, new graphics::Texture("bg.png", 0)));
 			m_BgLayer.add(fps);
 			m_Wnd->getKeyboard()->registerToKey(input::Controls::up, this);
 

@@ -100,7 +100,7 @@ namespace hiraeth {
 			kb->pmy = kb->my;
 			kb->mx = xpos;
 			kb->my = ypos;
-			if (kb->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+			//if (kb->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 				for (auto const& window : kb->m_MouseEventMap)
 				{
 					window->mouseMove(kb->pmx, kb->pmy, xpos, ypos);
@@ -110,17 +110,23 @@ namespace hiraeth {
 
 		void Keyboard::initControls()
 		{
-			setKeyControl(up, GLFW_KEY_UP);
-			setKeyControl(down, GLFW_KEY_DOWN);
-			setKeyControl(left, GLFW_KEY_LEFT);
-			setKeyControl(right, GLFW_KEY_RIGHT);
-			setKeyControl(jump, GLFW_KEY_SPACE);
-			setKeyControl(attack, GLFW_KEY_LEFT_CONTROL);
-			setKeyControl(escape, GLFW_KEY_ESCAPE);
-			setKeyControl(stats_a, GLFW_KEY_S);
-			setKeyControl(stats_b, GLFW_KEY_D);
-			setKeyControl(inventory, GLFW_KEY_A);
-			setKeyControl(pick_up, GLFW_KEY_Z);
+			setKeyControl(up);
+			setKeyControl(down);
+			setKeyControl(left);
+			setKeyControl(right);
+			setKeyControl(jump);
+			setKeyControl(attack);
+			setKeyControl(escape);
+			setKeyControl(stats);
+			setKeyControl(skills);
+			setKeyControl(quests);
+			setKeyControl(inventory);
+			setKeyControl(pick_up);
+		}
+
+		void Keyboard::setKeyControl(Controls control)
+		{
+			setKeyControl(control, control);
 		}
 
 		void Keyboard::setKeyControl(Controls control, unsigned int key)

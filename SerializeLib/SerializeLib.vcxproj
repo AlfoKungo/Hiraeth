@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{D7D76BDE-7DCA-40D5-92AF-F83EDE064043}</ProjectGuid>
     <RootNamespace>SerializeLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -133,6 +133,7 @@
     <ClInclude Include="srl\item_data.h" />
     <ClInclude Include="srl\map_data.h" />
     <ClInclude Include="srl\monster_data.h" />
+    <ClInclude Include="srl\quest_data.h" />
     <ClInclude Include="srl\texture_data.h" />
     <ClInclude Include="srl\tile_texture_data.h" />
   </ItemGroup>

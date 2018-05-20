@@ -11,8 +11,19 @@ namespace hiraeth {
 
 		enum Controls
 		{
-			none, up, down, left, right, jump, attack, escape,
-			stats_a, stats_b, inventory, pick_up
+			none,
+			up = GLFW_KEY_UP,
+			down = GLFW_KEY_DOWN,
+			left = GLFW_KEY_LEFT,
+			right = GLFW_KEY_RIGHT,
+			jump = GLFW_KEY_SPACE,
+			attack = GLFW_KEY_LEFT_CONTROL,
+			escape = GLFW_KEY_ESCAPE,
+			stats = GLFW_KEY_S,
+			skills = GLFW_KEY_D,
+			quests = GLFW_KEY_Q,
+			inventory = GLFW_KEY_A,
+			pick_up = GLFW_KEY_Z,
 		};
 
 		class Keyboard
@@ -66,6 +77,7 @@ namespace hiraeth {
 						keys_map[key]->ButtonReleased(control_key);
 			}
 			void initControls();
+			void setKeyControl(Controls control);
 			void setKeyControl(Controls control, unsigned int key);
 		};
 

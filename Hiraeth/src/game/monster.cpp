@@ -8,7 +8,7 @@ namespace hiraeth {
 				new MonsterStats(monster_data.StatsStruct), false),
 			gen(rd()),
 			dis(0, 8),
-			m_Hp(10, 40, float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
+			m_Hp(maths::vec2(10, 40), float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
 			m_Summon(summon),
 			m_XStart(NULL),
 			m_XEnd(NULL)
@@ -102,7 +102,7 @@ namespace hiraeth {
 				killMonster();
 				return;
 			}
-			m_Hp = graphics::Sprite(10, 40, float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff);
+			m_Hp = graphics::Sprite(maths::vec2(10, 40), float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff);
 		}
 		void Monster::killMonster()
 		{

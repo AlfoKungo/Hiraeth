@@ -31,10 +31,12 @@ namespace hiraeth {
 			m_UiInventory = new UiInventory(maths::vec2(-300, 0), input::Controls::inventory);
 			m_Layer.add_ref(m_UiInventory);
 			kb->registerToKey(input::Controls::inventory, this);
-			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats_a, character_stats));
-			kb->registerToKey(input::Controls::stats_a, this);
-			m_Layer.add_ref(new UiStats(maths::vec2(300, 0), input::Controls::stats_b, character_stats));
-			kb->registerToKey(input::Controls::stats_b, this);
+			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats, character_stats));
+			kb->registerToKey(input::Controls::stats, this);
+			m_Layer.add_ref(new UiSkills(maths::vec2(300, 0), input::Controls::skills));
+			kb->registerToKey(input::Controls::skills, this);
+			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), input::Controls::quests));
+			kb->registerToKey(input::Controls::quests, this);
 		}
 
 		void UiManager::leftButtonClicked(float mx, float my)
@@ -47,7 +49,7 @@ namespace hiraeth {
 				if ((*result_window)->isTitlebarContains(mx, my))
 					(*result_window)->attach();
 				else
-					(*result_window)->mouse_clicked((*result_window)->getRelativeLocation(mx, my));
+					(*result_window)->mouse_clicked_full((*result_window)->getRelativeLocation(mx, my));
 				std::rotate(m_Windows.begin(), result_window, result_window + 1);
 			}
 		}
@@ -57,8 +59,8 @@ namespace hiraeth {
 			for (const auto& window : m_Windows)
 			{
 				window->unattach();
-				if (window->is_holding())
-					window->mouse_released(maths::vec2(mx, my));
+				//if (window->is_holding())
+					window->mouse_released_full(maths::vec2(mx, my));
 			}
 		}
 
@@ -69,8 +71,9 @@ namespace hiraeth {
 				if (window->is_attached())
 					window->move(pmx - mx, pmy - my);
 				else
-					if (window->is_holding())
-						window->mouse_moved(pmx - mx, pmy - my);
+					//if (window->is_holding())
+					window->mouse_moved_full(window->getRelativeLocation(mx, my), 
+						window->getRelativeLocation(pmx, pmy));
 			}
 		}
 
