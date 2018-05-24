@@ -7,6 +7,7 @@
 #include "basic/updatable.h"
 #include "keyboard/keyboard.h"
 #include "ui_basic/ui_button.h"
+#include "graphics/layers/t_group.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -22,7 +23,7 @@ namespace hiraeth {
 			bool m_IsAttached, m_IsHolding;
 			graphics::Group m_ForegroundGroup;
 			graphics::Group m_BackgroundGroup;
-			std::vector<std::unique_ptr<ui::UiButton>> m_Buttons;
+			graphics::TGroup<ui::UiButton> m_Buttons;
 		public:
 			UiWindow(maths::Rectangle rec, input::Controls control_key);
 
@@ -46,13 +47,15 @@ namespace hiraeth {
 
 			virtual void mouse_clicked(maths::vec2 mousePos) = 0;
 			virtual void mouse_released(maths::vec2 mousePos) = 0;
-			virtual void mouse_moved(float mx, float my) = 0;
+			virtual void mouse_moved(float mx, float my, maths::vec2 mousePos) = 0;
 
 			void update() override { m_Group.update(); }
 			void draw(graphics::Renderer* renderer) const override { m_Group.draw(renderer); }
 		//protected:
 			maths::vec2 getRelativeLocation(maths::vec2 mouse_pos) const;
 			maths::vec2 getRelativeLocation(float mx, float my) const;
+		protected:
+			void add_button(UiButton * new_button);
 		private:
 			maths::Rectangle getTitlebar() const;
 		};

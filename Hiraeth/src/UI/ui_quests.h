@@ -4,6 +4,7 @@
 #include "graphics/sprite.h"
 #include "graphics/sprited_renderable.h"
 #include "srl/quest_data.h"
+#include "ui_basic/ui_tabs.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -14,13 +15,12 @@ namespace hiraeth {
 		class UiQuests : public UiWindow
 		{
 		private:
-			std::map<SRL::QuestTab, std::unique_ptr<graphics::Group>> m_QuestTabs;
-			SRL::QuestTab m_Tab;
+			UiTabs m_Tabs;
 		public:
 			UiQuests(maths::vec2 pos, input::Controls control_key);
 			void mouse_clicked(maths::vec2 mousePos);
 			void mouse_released(maths::vec2 mousePos) override {}
-			void mouse_moved(float mx, float my) override {}
+			void mouse_moved(float mx, float my, maths::vec2 mousePos) override {}
 			void fillGroup();
 		};
 

@@ -17,7 +17,6 @@ namespace hiraeth {
 			SRL::MonsterTexturesData mtd = SRL::deserial<SRL::MonsterTexturesData>("serialized/monster.data", 
 				(100 + monster_data.TextureIndex));
 
-			srand(time(nullptr));
 			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.stand_frames, 0.6f, false, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_stand", mtd.stand_texture), 0));
 			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.walk_frames, 0.2f, true, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_walk", mtd.walk_texture), 0));
 			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.hit_frames, 0.2f, true, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_hit", mtd.hit_texture), 0));

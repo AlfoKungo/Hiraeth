@@ -6,6 +6,7 @@
 #include <iterator>
 #include "srl/item_data.h"
 #include "item/item.h"
+#include "ui_basic/ui_tabs.h"
 
 
 namespace hiraeth {
@@ -13,8 +14,9 @@ namespace hiraeth {
 		class UiInventory : public UiWindow
 		{
 		private:
-			SRL::ItemTab m_Tab;
-			std::map<SRL::ItemTab, std::unique_ptr<graphics::Group>> m_ItemTabs;
+			//std::map<SRL::ItemTab, std::unique_ptr<graphics::Group>> m_ItemTabs;
+			//SRL::ItemTab m_Tab;
+			UiTabs m_Tabs;
 			item::Item * m_HoldItem;
 			maths::vec2 m_OldItemPos;
 		public:
@@ -22,7 +24,7 @@ namespace hiraeth {
 			void fillGroup();
 			void mouse_clicked(maths::vec2 mousePos) override;
 			void mouse_released(maths::vec2 mousePos) override;
-			void mouse_moved(float mx, float my) override;
+			void mouse_moved(float mx, float my, maths::vec2 mousePos) override;
 			void addItem(item::Item * new_item);
 		};
 

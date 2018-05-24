@@ -8,6 +8,8 @@ namespace hiraeth {
 	namespace ui {
 
 		typedef unsigned int TabType;
+
+		//template <class TabType>
 		class UiTabs : public graphics::Renderable
 		{
 		private:
@@ -16,22 +18,18 @@ namespace hiraeth {
 			graphics::Group * m_ForegroundGroup;
 		public:
 			UiTabs(graphics::Group * foreground_group)
-				: m_ForegroundGroup(foreground_group)
+				: m_ForegroundGroup(foreground_group),
+				m_TabIndex(0)
 			{
 
 			}
 
-			void add_tab(unsigned int tab_id, std::string window_name, std::string tab_name, graphics::Group * back_group)
+			void add_tab(unsigned int tab_id, maths::vec2 tab_pos, std::string window_name, std::string tab_name, graphics::Group * back_group)
 			{
 				m_Tabs.insert(std::pair<unsigned int, std::unique_ptr<graphics::Group>>(tab_id, new graphics::Group()));
-				back_group->add(new graphics::Sprite(maths::vec2(9 + 31 * tab_id, 252), graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + "." + tab_name + ".Tab.disabled." + std::to_string(tab_id) + ".png")));
-				m_Tabs[tab_id]->add(new graphics::Sprite(maths::vec2(9 + 31 * tab_id, 252), graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + "." + tab_name + ".Tab.enabled." + std::to_string(tab_id) + ".png")));
-			}
-
-			void fillGroup()
-			{
-				m_ForegroundGroup->clear();
-				m_ForegroundGroup->add(m_Tabs[m_TabIndex].get());
+				back_group->add(new graphics::Sprite(tab_pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + tab_name + ".Tab.disabled." + std::to_string(tab_id) + ".png")));
+				m_Tabs[tab_id]->add(new graphics::Sprite(tab_pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + tab_name + ".Tab.enabled." + std::to_string(tab_id) + ".png")));
+				updateActiveTab();
 			}
 
 			void mouse_clicked(maths::vec2 mousePos)
@@ -41,10 +39,25 @@ namespace hiraeth {
 					if (tab.second.get()->m_Renderables[0]->getBounds().Contains(mousePos))
 					{
 						m_TabIndex = tab.first;
-						fillGroup();
+						updateActiveTab();
 					}
 			}
 
+			graphics::Group * getCurrentTabGroup()
+			{
+				return m_Tabs[m_TabIndex].get();
+			}
+
+			graphics::Group * getTabByIndex(TabType tab_index)
+			{
+				return m_Tabs[tab_index].get();
+			}
+		private:
+			void updateActiveTab()
+			{
+				m_ForegroundGroup->clear();
+				m_ForegroundGroup->add(m_Tabs[m_TabIndex].get());
+			}
 		};
 	}
 }

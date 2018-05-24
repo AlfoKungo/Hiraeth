@@ -7,6 +7,7 @@
 #include "basic/EventManager.h"
 #include "item_data_manager.h"
 #include "UI/ui_inventory.h"
+#include "use_item.h"
 
 namespace hiraeth {
 	namespace item {
@@ -22,7 +23,7 @@ namespace hiraeth {
 			ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory);
 			void draw() const;
 			void update() override;
-			void dropItem(maths::vec2 pos);
+			void dropItem(maths::vec2 pos, unsigned int item_id);
 			void mapChanged();
 			Item * getItem(maths::vec2 pos);
 		private:

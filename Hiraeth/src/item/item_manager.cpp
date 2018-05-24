@@ -4,7 +4,7 @@ namespace hiraeth {
 	namespace item {
 
 		ItemManager::ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory)
-			: 
+			:
 			m_DroppedItems(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
 			m_FootHolds(foot_holds),
 			m_Inventory(inventory)
@@ -12,11 +12,11 @@ namespace hiraeth {
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
-			for (int i = -400; i < 400; i+= 100)
-				m_DroppedItems.add(new Item(maths::vec2(i, 0), ItemDataManager::Get((i + 1000) % 3), m_FootHolds));
-			m_DroppedItems.add(new Item(maths::vec2(0),	ItemDataManager::Get(0), m_FootHolds));
-			m_DroppedItems.add(new Item(maths::vec2(-200, 0), ItemDataManager::Get(1), m_FootHolds));
-			m_DroppedItems.add(new Item(maths::vec2(200, 0), ItemDataManager::Get(2), m_FootHolds));
+			for (int i = -400; i < 400; i += 100)
+				dropItem(maths::vec2(i, 0), (i + 1000) % 2);
+			dropItem(maths::vec2(0), 0);
+			dropItem(maths::vec2(-200, 0), 1);
+			dropItem(maths::vec2(200, 0), 2);
 		}
 
 		void ItemManager::draw() const
@@ -38,6 +38,7 @@ namespace hiraeth {
 				{
 					m_InventoryItems.push_back(*item);
 					m_Inventory->addItem(*item);
+					//(*item)->setDrawDetails(true);
 					item = m_DroppedItems.m_Renderables.erase(item);
 				}
 				else
@@ -47,9 +48,12 @@ namespace hiraeth {
 			}
 		}
 
-		void ItemManager::dropItem(maths::vec2 pos)
+		void ItemManager::dropItem(maths::vec2 pos, unsigned int item_id)
 		{
-			m_DroppedItems.add(new Item(pos, ItemDataManager::Get(2), m_FootHolds));
+			if (item_id == 2)
+				m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
+			else
+				m_DroppedItems.add(new Item(pos, ItemDataManager::Get(item_id), m_FootHolds));
 		}
 
 		void ItemManager::mapChanged()

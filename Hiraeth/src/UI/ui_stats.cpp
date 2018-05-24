@@ -13,12 +13,9 @@ namespace hiraeth {
 			m_BackgroundGroup.add(new graphics::Sprite(maths::vec2(0, 0), graphics::TextureManager::Load("Assets/UI/Stats/Stats.main.backgrnd.png")));
 			m_BackgroundGroup.add(new graphics::Sprite(maths::vec2(6, 5), graphics::TextureManager::Load("Assets/UI/Stats/Stats.main.backgrnd2.png")));
 			m_BackgroundGroup.add(new graphics::Sprite(maths::vec2(7, 114), graphics::TextureManager::Load("Assets/UI/Stats/Stats.main.backgrnd3.png")));
-			m_Buttons.push_back(std::make_unique<ui::UiButtonFlashing>(maths::vec2(120, 120), "Stats", "BtAuto", std::bind(&UiStats::auto_assign_clicked, this)));
-			m_Buttons.push_back(std::make_unique<ui::UiButtonSideMenu>(maths::vec2(130, 12), "Stats", "BtDetail", std::bind(&UiStats::details_clicked, this)));
-			for (auto & value : m_Buttons) 
-			{
-				m_BackgroundGroup.add(value.get());
-			}
+
+			add_button(new UiButtonFlashing(maths::vec2(120, 120), "Stats", "BtAuto", std::bind(&UiStats::auto_assign_clicked, this)));
+			add_button(new UiButtonSideMenu(maths::vec2(130, 12), "Stats", "BtDetail", std::bind(&UiStats::details_clicked, this)));
 			fillGroup();
 		}
 

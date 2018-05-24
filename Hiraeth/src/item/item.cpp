@@ -7,11 +7,24 @@ namespace hiraeth {
 			: Sprite(pos, graphics::TextureManager::Load(item_data.item_info.item_name, item_data.texture_data)), m_Force(0, 7),
 			m_FootHolds(foot_holds),
 			m_ItemInfo(item_data.item_info),
-			m_State(InAir)
+			m_State(InAir),
+			m_IsDrawDetails(false),
+			m_DetailsBoxSprite(maths::vec2(30, -75), 100, 80, 0x88008888),
+			m_DetailsBoxLabel("arial", 13, "item 1", 40, -10, 0xffffffff, graphics::Label::Alignment::CENTER)
+
 		{
 
 		}
 
+		void Item::draw(graphics::Renderer * renderer) const
+		{
+			if (m_IsDrawDetails)
+			{
+				m_DetailsBoxSprite.draw(renderer);
+				m_DetailsBoxLabel.draw(renderer);
+			}
+			graphics::Sprite::draw(renderer);
+		}
 
 		void Item::update()
 		{
@@ -87,7 +100,7 @@ namespace hiraeth {
 		bool Item::hasBeenTaken()
 		{
 			//if ((m_State == PickedUp) && m_Force.y < 0 && (m_CharRec->GetMiddle() + maths::vec2(0, 15)).Distance(m_Bounds.GetMiddle()) < 4.5f)
-			if ((m_State == PickedUp) && (m_Force.y < 0) && (abs((m_CharRec->y + 15) - m_Bounds.y) < 5.0f) )
+			if ((m_State == PickedUp) && (m_Force.y < 0) && (abs((m_CharRec->y + 15) - m_Bounds.y) < 5.0f))
 			{
 				m_Color = 0xffffffff;
 				m_State = InInventory;

@@ -8,6 +8,7 @@
 #include "ui_inventory.h"
 #include "ui_skills.h"
 #include "ui_quests.h"
+#include "ui_equip.h"
 #include "main_ui.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"

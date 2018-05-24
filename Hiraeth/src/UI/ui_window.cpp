@@ -12,6 +12,7 @@ namespace hiraeth {
 		{
 			m_Group.add(m_BackgroundGroup);
 			m_Group.add(m_ForegroundGroup);
+			m_Group.add(m_Buttons);
 		}
 
 		void UiWindow::controlKeyClicked()
@@ -44,7 +45,7 @@ namespace hiraeth {
 
 		void UiWindow::mouse_clicked_full(maths::vec2 mousePos)
 		{
-			for (auto & value : m_Buttons) 
+			for (auto & value : m_Buttons.m_Renderables) 
 			{
 				value->onClick(mousePos);
 			}
@@ -54,7 +55,7 @@ namespace hiraeth {
 		void UiWindow::mouse_released_full(maths::vec2 mousePos)
 		{
 			maths::vec2 relMousePos(getRelativeLocation(mousePos.x, mousePos.y));
-			for (auto & value : m_Buttons) 
+			for (auto & value : m_Buttons.m_Renderables) 
 			{
 				value->onRelease(relMousePos);
 			}
@@ -64,19 +65,25 @@ namespace hiraeth {
 
 		void UiWindow::mouse_moved_full(maths::vec2 mousePos, maths::vec2 pMousePos)
 		{
-			for (auto & value : m_Buttons) 
+			for (auto & value : m_Buttons.m_Renderables)
 			{
 				value->onMove(mousePos);
 			}
 			maths::vec2 mouseMove(pMousePos - mousePos);
-			if (is_holding())
-				mouse_moved(mouseMove.x, -mouseMove.y);
+			//if (is_holding())
+			mouse_moved(mouseMove.x, -mouseMove.y, mousePos);
 		}
 
 		maths::vec2 UiWindow::getRelativeLocation(float mx, float my) const
 		{
 			return getRelativeLocation(maths::vec2(mx, my));
 		}
+
+		void UiWindow::add_button(UiButton * new_button)
+		{
+			m_Buttons.add(new_button);
+		}
+
 		maths::vec2 UiWindow::getRelativeLocation(maths::vec2 mouse_pos) const
 		{
 			maths::mat4 transform = m_Group.getTransform();
@@ -89,6 +96,8 @@ namespace hiraeth {
 		{
 			return maths::Rectangle(0, m_WindowSize.y - TITLE_BAR_SIZE, m_WindowSize.x, TITLE_BAR_SIZE);
 		}
+
+
 
 	}
 }

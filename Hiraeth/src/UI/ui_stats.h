@@ -32,7 +32,7 @@ namespace hiraeth {
 			void auto_assign_clicked();
 			void details_clicked();
 			void mouse_released(maths::vec2 mousePos) override {}
-			void mouse_moved(float mx, float my) override {}
+			void mouse_moved(float mx, float my, maths::vec2 mousePos) override {}
 			void fillGroup();
 			void StatsUpdated();
 		};

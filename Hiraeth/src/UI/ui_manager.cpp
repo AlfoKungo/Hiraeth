@@ -37,6 +37,8 @@ namespace hiraeth {
 			kb->registerToKey(input::Controls::skills, this);
 			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), input::Controls::quests));
 			kb->registerToKey(input::Controls::quests, this);
+			m_Layer.add_ref(new UiEquip(maths::vec2(500, 0), input::Controls::equip));
+			kb->registerToKey(input::Controls::equip, this);
 		}
 
 		void UiManager::leftButtonClicked(float mx, float my)
@@ -72,14 +74,14 @@ namespace hiraeth {
 					window->move(pmx - mx, pmy - my);
 				else
 					//if (window->is_holding())
-					window->mouse_moved_full(window->getRelativeLocation(mx, my), 
+					window->mouse_moved_full(window->getRelativeLocation(mx, my),
 						window->getRelativeLocation(pmx, pmy));
 			}
 		}
 
 		void UiManager::ButtonClicked(input::Controls c)
 		{
-			if (input::Controls::escape == c)
+		if (input::Controls::escape == c)
 			{
 				auto window = m_Windows.begin();
 				(*window)->is_to_draw = false;

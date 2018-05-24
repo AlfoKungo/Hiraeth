@@ -172,6 +172,7 @@
     <ClCompile Include="src\graphics\layers\tilelayer.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\sprite.cpp" />
+    <ClCompile Include="src\graphics\sprited_renderable.cpp" />
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_manager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="src\game\monster_manager.h" />
     <ClInclude Include="src\game\monster_stats.h" />
     <ClInclude Include="src\game\stats.h" />
+    <ClInclude Include="src\graphics\layers\t_group.h" />
     <ClInclude Include="src\graphics\renderer.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\indexbuffer.h" />
@@ -254,9 +256,11 @@
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\texture_manager.h" />
     <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="src\item\equip_item.h" />
     <ClInclude Include="src\item\item.h" />
     <ClInclude Include="src\item\item_data_manager.h" />
     <ClInclude Include="src\item\item_manager.h" />
+    <ClInclude Include="src\item\use_item.h" />
     <ClInclude Include="src\keyboard\key.h" />
     <ClInclude Include="src\keyboard\keyboard.h" />
     <ClInclude Include="src\keyboard\keyboard_event.h" />
@@ -277,6 +281,7 @@
     <ClInclude Include="src\UI\ui_basic\ui_button_flashing.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_normal.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_side_menu.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_tab.h" />
     <ClInclude Include="src\UI\ui_basic\ui_tabs.h" />
     <ClInclude Include="src\UI\ui_equip.h" />
     <ClInclude Include="src\UI\ui_inventory.h" />

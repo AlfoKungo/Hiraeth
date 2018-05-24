@@ -22,6 +22,7 @@ namespace hiraeth {
 			stats = GLFW_KEY_S,
 			skills = GLFW_KEY_D,
 			quests = GLFW_KEY_Q,
+			equip = GLFW_KEY_E,
 			inventory = GLFW_KEY_A,
 			pick_up = GLFW_KEY_Z,
 		};

@@ -216,6 +216,9 @@
     <ClCompile Include="src\UI\ui_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\sprited_renderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utils\fileutils.h">
@@ -480,6 +483,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UI\ui_basic\ui_tabs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\layers\t_group.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\item\use_item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\item\equip_item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ui_basic\ui_tab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

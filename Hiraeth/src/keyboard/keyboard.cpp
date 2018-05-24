@@ -120,6 +120,7 @@ namespace hiraeth {
 			setKeyControl(stats);
 			setKeyControl(skills);
 			setKeyControl(quests);
+			setKeyControl(equip);
 			setKeyControl(inventory);
 			setKeyControl(pick_up);
 		}

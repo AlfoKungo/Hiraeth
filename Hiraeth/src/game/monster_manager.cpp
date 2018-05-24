@@ -14,6 +14,7 @@ namespace hiraeth {
 			m_EventManager->subscribe(MapChanged, this, &MonsterManager::mapChanged);
 			mapChanged();
 			m_Char->setMonsters(&m_Layer.m_Renderables);
+			std::srand(std::time(nullptr));
 		}
 
 		void MonsterManager::draw()
@@ -30,7 +31,7 @@ namespace hiraeth {
 			{
 				if ((*monster)->died)
 				{
-					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle());
+					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 3));
 					SRL::Summon summon = (*monster)->getSummon();
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
