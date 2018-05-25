@@ -10,6 +10,9 @@ namespace hiraeth {
 			m_IsHolding(false),
 			m_Group(rec.position)
 		{
+			m_ForegroundGroup = new graphics::Group();
+			m_BackgroundGroup = new graphics::Group();
+			m_Buttons = new graphics::TGroup<ui::UiButton>();
 			m_Group.add(m_BackgroundGroup);
 			m_Group.add(m_ForegroundGroup);
 			m_Group.add(m_Buttons);
@@ -45,7 +48,7 @@ namespace hiraeth {
 
 		void UiWindow::mouse_clicked_full(maths::vec2 mousePos)
 		{
-			for (auto & value : m_Buttons.m_Renderables) 
+			for (auto & value : m_Buttons->m_Renderables) 
 			{
 				value->onClick(mousePos);
 			}
@@ -55,7 +58,7 @@ namespace hiraeth {
 		void UiWindow::mouse_released_full(maths::vec2 mousePos)
 		{
 			maths::vec2 relMousePos(getRelativeLocation(mousePos.x, mousePos.y));
-			for (auto & value : m_Buttons.m_Renderables) 
+			for (auto & value : m_Buttons->m_Renderables) 
 			{
 				value->onRelease(relMousePos);
 			}
@@ -65,7 +68,7 @@ namespace hiraeth {
 
 		void UiWindow::mouse_moved_full(maths::vec2 mousePos, maths::vec2 pMousePos)
 		{
-			for (auto & value : m_Buttons.m_Renderables)
+			for (auto & value : m_Buttons->m_Renderables)
 			{
 				value->onMove(mousePos);
 			}
@@ -81,7 +84,7 @@ namespace hiraeth {
 
 		void UiWindow::add_button(UiButton * new_button)
 		{
-			m_Buttons.add(new_button);
+			m_Buttons->add(new_button);
 		}
 
 		maths::vec2 UiWindow::getRelativeLocation(maths::vec2 mouse_pos) const

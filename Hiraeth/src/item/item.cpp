@@ -9,8 +9,10 @@ namespace hiraeth {
 			m_ItemInfo(item_data.item_info),
 			m_State(InAir),
 			m_IsDrawDetails(false),
-			m_DetailsBoxSprite(maths::vec2(30, -75), 100, 80, 0x88008888),
-			m_DetailsBoxLabel("arial", 13, "item 1", 40, -10, 0xffffffff, graphics::Label::Alignment::CENTER)
+			m_DetailsBoxSprite(maths::vec2(30, -75), 180, 80, 0x88331a00),
+			m_DetailsBoxLabelHeader("arial", 16, m_ItemInfo.item_name, 40, -10, 0xffffffff, graphics::Label::Alignment::LEFT),
+			m_DetailsBoxLabelContent("arial", 13, m_ItemInfo.item_description, 40, -30, 0xffffffff, graphics::Label::Alignment::LEFT)
+
 
 		{
 
@@ -18,12 +20,13 @@ namespace hiraeth {
 
 		void Item::draw(graphics::Renderer * renderer) const
 		{
+			graphics::Sprite::draw(renderer);
 			if (m_IsDrawDetails)
 			{
 				m_DetailsBoxSprite.draw(renderer);
-				m_DetailsBoxLabel.draw(renderer);
+				m_DetailsBoxLabelHeader.draw(renderer);
+				m_DetailsBoxLabelContent.draw(renderer);
 			}
-			graphics::Sprite::draw(renderer);
 		}
 
 		void Item::update()

@@ -12,7 +12,7 @@ namespace hiraeth {
 	namespace item {
 
 #define PICK_UP_TIME 5.5f
-#define EXPIRING_TIME 10.0f
+#define EXPIRING_TIME 20.0f
 #define EXPIRE_FADE_TIME 1.5f
 
 		class Item : public graphics::Sprite
@@ -34,7 +34,7 @@ namespace hiraeth {
 		protected:
 			//graphics::Group m_DetailsBox;
 			graphics::Sprite m_DetailsBoxSprite;
-			graphics::Label m_DetailsBoxLabel;
+			graphics::Label m_DetailsBoxLabelHeader, m_DetailsBoxLabelContent;
 			bool m_IsDrawDetails;
 		public:
 			Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
@@ -54,8 +54,12 @@ namespace hiraeth {
 			void setDrawDetails(bool is_draw_details)
 			{
 				m_IsDrawDetails = is_draw_details;
-				m_DetailsBoxSprite.setPosition(m_Bounds.position + maths::vec2(30, -75));
-				m_DetailsBoxLabel.setPosition(m_Bounds.position + maths::vec2(40, -10));
+				if (is_draw_details)
+				{
+					m_DetailsBoxSprite.setPosition(m_Bounds.position + maths::vec2(30, -75));
+					m_DetailsBoxLabelHeader.setPosition(m_Bounds.position + maths::vec2(40, -10));
+					m_DetailsBoxLabelContent.setPosition(m_Bounds.position + maths::vec2(40, -30));
+				}
 			}
 			SRL::ItemTab getTabType() const { return m_ItemInfo.type; }
 		};

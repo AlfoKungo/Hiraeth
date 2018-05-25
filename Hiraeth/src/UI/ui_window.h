@@ -17,13 +17,13 @@ namespace hiraeth {
 		{
 		private:
 			input::Controls m_ControlKey;
-			graphics::Group m_Group;
 		protected:
+			graphics::Group m_Group;
 			maths::vec2 m_WindowSize;
 			bool m_IsAttached, m_IsHolding;
-			graphics::Group m_ForegroundGroup;
-			graphics::Group m_BackgroundGroup;
-			graphics::TGroup<ui::UiButton> m_Buttons;
+			graphics::Group * m_ForegroundGroup;
+			graphics::Group * m_BackgroundGroup;
+			graphics::TGroup<ui::UiButton> * m_Buttons;
 		public:
 			UiWindow(maths::Rectangle rec, input::Controls control_key);
 
@@ -50,7 +50,10 @@ namespace hiraeth {
 			virtual void mouse_moved(float mx, float my, maths::vec2 mousePos) = 0;
 
 			void update() override { m_Group.update(); }
-			void draw(graphics::Renderer* renderer) const override { m_Group.draw(renderer); }
+			void draw(graphics::Renderer* renderer) const override 
+			{ 
+				m_Group.draw(renderer); 
+			}
 		//protected:
 			maths::vec2 getRelativeLocation(maths::vec2 mouse_pos) const;
 			maths::vec2 getRelativeLocation(float mx, float my) const;

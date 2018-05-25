@@ -14,7 +14,7 @@ namespace hiraeth {
 		class UiSkills : public UiWindow
 		{
 		private:
-			UiTabs m_SkillTabs;
+			UiTabs<graphics::Renderable> * m_Tabs;
 
 		public:
 			UiSkills(maths::vec2 pos, input::Controls control_key);

@@ -3,6 +3,7 @@
 	<value0>
 		<item_name>dagger</item_name>
 		<type>0</type>
+		<item_description>This can stab people</item_description>
 	</value0>
 </cereal>
 

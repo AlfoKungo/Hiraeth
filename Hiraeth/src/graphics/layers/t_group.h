@@ -11,7 +11,8 @@ namespace hiraeth {
 		private:
 			maths::mat4& m_TransformationMatrix;
 		public:
-			std::vector<RendType*> m_Renderables;
+			std::vector<std::unique_ptr<RendType>> m_Renderables;
+			//std::vector<std::weak_ptr<RendType>> m_RefRenderables;
 
 			TGroup(maths::mat4& transform)
 			: m_TransformationMatrix(transform)
@@ -28,28 +29,23 @@ namespace hiraeth {
 			{
 
 			}
-			~TGroup()
-			{
-				for (int i = 0; i < m_Renderables.size(); ++i)
-				{
-					delete m_Renderables[i];
-				}
-				delete (&m_TransformationMatrix);
-			}
 			void add(RendType* renderable)
 			{
-				m_Renderables.push_back(renderable);
+				m_Renderables.emplace_back(renderable);
 			}
-			void add(RendType& renderable)
-			{
-				m_Renderables.push_back(&renderable);
-			}
+			//void add(std::weak_ptr<Renderable> renderable)
+			//{
+			//	m_RefRenderables.emplace_back(renderable);
+			//}
 			void draw(Renderer* renderer) const override
 			{
 				renderer->push(m_TransformationMatrix);
 
-				for (const Renderable* renderable : m_Renderables)
+				for (const auto & renderable : m_Renderables)
 					renderable->draw(renderer);
+				//for (const auto & renderable : m_RefRenderables)
+				//	if (auto spt = renderable.lock())
+				//		spt->draw(renderer);
 
 				renderer->pop();
 			}
@@ -59,8 +55,11 @@ namespace hiraeth {
 			}
 			void update() override
 			{
-				for (Renderable* rend : m_Renderables)
-					rend->update();
+				for (auto & renderable : m_Renderables)
+					renderable->update();
+				//for (const auto & renderable : m_RefRenderables)
+				//	if (auto spt = renderable.lock())
+				//		spt->update();
 			}
 			maths::mat4 getTransform() const { return m_TransformationMatrix; }
 			void clear() { m_Renderables.clear(); }

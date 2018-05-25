@@ -3,6 +3,7 @@
 	<value0>
 		<item_name>wing</item_name>
 		<type>1</type>
+		<item_description>This can make you fly</item_description>
 	</value0>
 </cereal>
 

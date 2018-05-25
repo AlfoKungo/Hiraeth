@@ -15,7 +15,7 @@ namespace hiraeth {
 		class UiQuests : public UiWindow
 		{
 		private:
-			UiTabs m_Tabs;
+			UiTabs<graphics::Renderable> * m_Tabs;
 		public:
 			UiQuests(maths::vec2 pos, input::Controls control_key);
 			void mouse_clicked(maths::vec2 mousePos);

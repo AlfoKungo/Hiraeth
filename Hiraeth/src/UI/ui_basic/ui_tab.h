@@ -1,21 +1,39 @@
 #pragma once
 #include "graphics/layers/group.h"
 #include "graphics/layers/t_group.h"
+#include "graphics/texture_manager.h"
+#include "graphics/sprite.h"
 
 namespace hiraeth {
 	namespace ui {
 
-		template <class TabData>
-		class UiTab
-		{
-			graphics::Group m_Tab;
-			graphics::TGroup<TabData> m_TabData;
+		typedef unsigned int TabIdType;
 
-			UiTab()
+		template <class TabDataType = graphics::Renderable>
+		class UiTab : public graphics::Renderable
+		{
+		public:
+			graphics::Group m_Tab;
+			graphics::Sprite * m_Header;
+			graphics::TGroup<TabDataType> * m_TabContent;
+
+			UiTab(maths::vec2 tab_pos, std::string window_name, std::string tab_name, TabIdType tab_id)
+				:
+				m_Header(new graphics::Sprite(tab_pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + tab_name + ".Tab.enabled." + std::to_string(tab_id) + ".png"))),
+				m_TabContent(new graphics::TGroup<TabDataType>())
 			{
-				m_Tab.add(std::pair<unsigned int, std::unique_ptr<graphics::Group>>(tab_id, new graphics::Group()));
-				m_Tab.add(new graphics::Sprite(tab_pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + tab_name + ".Tab.enabled." + std::to_string(tab_id) + ".png")));
-				updateActiveTab();
+				m_Tab.add(m_Header);
+				m_Tab.add(m_TabContent);
+			}
+
+			void draw(graphics::Renderer* renderer) const override 
+			{ 
+				m_Tab.draw(renderer); 
+			}
+
+			void add_data(TabDataType * tab_data)
+			{
+				m_TabContent->add(tab_data);
 			}
 		};
 	}

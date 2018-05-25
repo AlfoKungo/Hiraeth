@@ -21,32 +21,33 @@ namespace hiraeth {
 
 		}
 
-
-		Group::~Group()
-		{
-			for (int i = 0; i < m_Renderables.size(); ++i)
-			{
-				delete m_Renderables[i];
-			}
-			//delete (&m_TransformationMatrix);
-		}
-
 		void Group::add(Renderable* renderable)
 		{
-			m_Renderables.push_back(renderable);
+			m_Renderables.emplace_back(renderable);
 		}
 		
-		void Group::add(Renderable& renderable)
+		void Group::add(std::unique_ptr<Renderable> renderable)
 		{
-			m_Renderables.push_back(&renderable);
+			m_Renderables.emplace_back(std::move(renderable));
 		}
-
+		void Group::add(std::unique_ptr<Renderable>& renderable)
+		{
+			m_Renderables.emplace_back(std::move(renderable));
+		}
+		//void Group::add(std::weak_ptr<Renderable> renderable)
+		//{
+		//	m_RefRenderables.emplace_back(renderable);
+		//}
 		void Group::draw(Renderer* renderer) const
 		{
 			renderer->push(m_TransformationMatrix);
 
-			for (const Renderable* renderable : m_Renderables)
-				renderable->draw(renderer);
+			for (const auto & renderable : m_Renderables)
+				if (renderable != nullptr)
+					renderable->draw(renderer);
+			//for (const auto & renderable : m_RefRenderables)
+			//	if (auto spt = renderable.lock())
+			//		spt->draw(renderer);
 
 			renderer->pop();
 		}
@@ -58,8 +59,12 @@ namespace hiraeth {
 
 		void Group::update()
 		{
-			for (Renderable* rend : m_Renderables)
-				rend->update();
+			for (auto & renderable : m_Renderables)
+				if (renderable != nullptr)
+					renderable->update();
+			//for (const auto & renderable : m_RefRenderables)
+			//	if (auto spt = renderable.lock())
+			//		spt->update();
 		}
 	}
 }
