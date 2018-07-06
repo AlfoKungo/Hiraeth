@@ -130,7 +130,7 @@ namespace hiraeth {
 
 		void MapRenderer::changeTexture(int tile_index)
 		{
-			reloadTTD(tile_index);
+			reloadTTD(tile_index - 1);
 			update_texture();
 
 			delete[] m_TTD.texture_data.pic;

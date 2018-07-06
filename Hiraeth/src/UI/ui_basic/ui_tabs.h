@@ -35,7 +35,7 @@ namespace hiraeth {
 				updateActiveTab();
 			}
 
-			void mouse_clicked(maths::vec2 mousePos)
+			void mouse_left_clicked(maths::vec2 mousePos)
 			{
 
 				for (auto const & tab : m_Tabs)

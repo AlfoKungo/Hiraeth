@@ -23,7 +23,7 @@ namespace hiraeth {
 			static const graphics::Renderable* m_Char;
 			static float m_PositionTimer;
 		public:
-			static void init(graphics::Renderable* charcater);
+			static void init(graphics::Renderable* character);
 			static void update();
 
 			static maths::mat4 get_ortho()
@@ -32,6 +32,7 @@ namespace hiraeth {
 			}
 			static void setCharacter(graphics::Renderable* character);
 			static maths::vec2 getCharacterPos();
+			static maths::vec2 mouse_to_map_position(maths::vec2 mouse_pos);
 		private:
 			static void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
 

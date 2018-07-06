@@ -82,7 +82,7 @@ namespace hiraeth {
 			renderer->pop();
 		}
 
-		bool Monster::checkCollision(const maths::Rectangle& rec) const
+		bool Monster::check_collision(const maths::Rectangle& rec) const
 		{
 			return ((rec.x < m_Bounds.x + m_Bounds.width) && (m_Bounds.x < rec.x + rec.width)
 				&& (rec.y < m_Bounds.y + m_Bounds.height) && (m_Bounds.y < rec.y + rec.height));
@@ -93,17 +93,17 @@ namespace hiraeth {
 			Creature::getHit(dir, damage);
 		}
 
-		void Monster::causeDamage(Damage damage)
+		void Monster::cause_damage(Damage damage)
 		{
 			m_Stats->causeDamage(damage);
 			if (m_Stats->Hp > m_Stats->MaxHp || m_Stats->Hp == 0)
 			{
-				killMonster();
+				kill_monster();
 				return;
 			}
 			m_Hp = graphics::Sprite(maths::vec2(10, 40), float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff);
 		}
-		void Monster::killMonster()
+		void Monster::kill_monster()
 		{
 			died = true;
 		}

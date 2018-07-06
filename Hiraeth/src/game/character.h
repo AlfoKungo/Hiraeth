@@ -34,7 +34,7 @@ namespace hiraeth {
 			void attack() override;
 			//CharacterStats* getCharacterStats() const;
 		private:
-			void causeDamage(Damage damage) override { m_Stats->causeDamage(damage); }
+			void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();
 		};
 	}

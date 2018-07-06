@@ -7,8 +7,8 @@ namespace hiraeth {
 			: m_MapLayer(map_layer), 
 			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), 
 			m_Layer(&m_Shader, true),
-			m_Char(character),
-			m_ItemManager(item_manager)
+			m_ItemManager(item_manager),
+			m_Char(character)
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &MonsterManager::mapChanged);
@@ -17,7 +17,7 @@ namespace hiraeth {
 			std::srand(std::time(nullptr));
 		}
 
-		void MonsterManager::draw()
+		void MonsterManager::draw() const
 		{
 			m_Layer.render();
 		}
@@ -32,7 +32,7 @@ namespace hiraeth {
 				if ((*monster)->died)
 				{
 					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 3));
-					SRL::Summon summon = (*monster)->getSummon();
+					SRL::Summon summon = (*monster)->get_summon();
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
 					m_SummonQueue.push(Summoner{summon, StaticTimer::timer.elapsed() + 1.0f});
@@ -58,23 +58,21 @@ namespace hiraeth {
 			checkCollision();
 		}
 
-		bool MonsterManager::checkCollision()
+		void MonsterManager::checkCollision()
 		{
 			if (!m_Char->is_hit)
 				for (auto monster : m_Layer.m_Renderables)
 				{
-					if (monster->checkCollision(m_Char->getBounds()))
+					if (monster->check_collision(m_Char->getBounds()))
 					{
 						std::cout << "colliding" << std::endl;
 						if (monster->getBounds().GetBottomMiddle().x < m_Char->getBounds().GetBottomMiddle().x)
 							m_Char->getHit(game::Direction::Right, monster->getDamage());
 						else
 							m_Char->getHit(game::Direction::Left, monster->getDamage());
-						return true;
+						return;
 					}
 				}
-
-			return false;
 		}
 
 		void MonsterManager::mapChanged()

@@ -18,12 +18,14 @@ namespace hiraeth {
 			maths::vec2 m_Force;
 
 			Collisionable(maths::Rectangle& box, map::MapLayer* m_MapLayer);
-			virtual ~Collisionable() {}
+			Collisionable(maths::Rectangle& empty_box, map::MapLayer* m_MapLayer,
+				unsigned int foothold);
+			virtual ~Collisionable() = default;
 		protected:
-			void analyzeCollision();
+			void analyze_collision();
 		private:
-			int analyzeCollisionX(const maths::vec2& char_speed) const;
-			int analyzeCollisionY(const maths::vec2& char_speed) const;
+			int analyze_collision_x(const maths::vec2& char_speed) const;
+			int analyze_collision_y(const maths::vec2& char_speed) const;
 			bool check_if_still_on_foothold() const;
 			virtual void move(const maths::vec2& step) = 0;
 			maths::vec2 force_by_vertical_foothold(const maths::vec2& force, int footholdIndex) const;

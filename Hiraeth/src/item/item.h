@@ -62,6 +62,7 @@ namespace hiraeth {
 				}
 			}
 			SRL::ItemTab getTabType() const { return m_ItemInfo.type; }
+			std::string getItemStats() { return m_ItemInfo.stats; }
 		};
 	}
 }

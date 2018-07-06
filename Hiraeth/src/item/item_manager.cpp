@@ -50,10 +50,11 @@ namespace hiraeth {
 
 		void ItemManager::dropItem(maths::vec2 pos, unsigned int item_id)
 		{
-			if (item_id == 2)
-				m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
+			SRL::ItemData item_data = ItemDataManager::Get(item_id);
+			if (item_data.item_info.type == 0)
+				m_DroppedItems.add(new EquipItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
 			else
-				m_DroppedItems.add(new Item(pos, ItemDataManager::Get(item_id), m_FootHolds));
+				m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
 		}
 
 		void ItemManager::mapChanged()

@@ -12,14 +12,16 @@
 #include "item/item_manager.h"
 #include "monster_data_manager.h"
 
-namespace hiraeth {
-	namespace game {
-
+namespace hiraeth
+{
+	namespace game
+	{
 		struct Summoner
 		{
 			SRL::Summon summon;
 			float summonTime;
 		};
+
 		class MonsterManager : public Updatable
 		{
 		private:
@@ -30,13 +32,11 @@ namespace hiraeth {
 			item::ItemManager* m_ItemManager;
 			Character* const m_Char;
 		public:
-			MonsterManager(map::MapLayer* map_layer, game::Character* character, item::ItemManager* item_manager);
-			void draw();
+			MonsterManager(map::MapLayer* map_layer, Character* character, item::ItemManager* item_manager);
+			void draw() const;
 			void update() override;
-			bool checkCollision();
+			void checkCollision();
 			void mapChanged();
-		private:
-			static void serialize_data();
 		};
 	}
 }

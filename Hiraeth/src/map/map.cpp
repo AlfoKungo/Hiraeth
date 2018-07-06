@@ -39,17 +39,15 @@ namespace hiraeth {
 			m_PtShader.enable();
 			m_PtShader.setUniformMat4("pr_matrix", view::Camera::get_ortho());
 			m_PtLayer.render();
-			
+
 		}
 
 		void Map::update()
 		{
 			m_PtLayer.update();
-			if (m_ChangeMapFlag) 
+			if (m_ChangeMapFlag)
 			{
 				deserialize_map_data(m_MapIndex);
-				EventManager *m_EventManager = EventManager::Instance();
-				m_EventManager->execute(MapChanged);
 			}
 		}
 
@@ -79,6 +77,9 @@ namespace hiraeth {
 				m_PtLayer.add(new Portal(portal));
 
 			m_ChangeMapFlag = false;
+
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->execute(MapChanged);
 		}
 	}
 }

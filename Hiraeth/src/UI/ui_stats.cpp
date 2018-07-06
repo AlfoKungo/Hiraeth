@@ -44,7 +44,7 @@ namespace hiraeth {
 			fillGroup();
 		}
 
-		void UiStats::mouse_clicked(maths::vec2 mousePos)
+		void UiStats::mouse_left_clicked(maths::vec2 mousePos)
 		{
 		}
 

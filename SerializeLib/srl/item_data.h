@@ -18,8 +18,9 @@ namespace SRL {
 		std::string item_name;
 		ItemTab type;
 		std::string item_description;
+		std::string stats;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_name), CEREAL_NVP(type), CEREAL_NVP(item_description));
+			ar(CEREAL_NVP(item_name), CEREAL_NVP(type), CEREAL_NVP(item_description), CEREAL_NVP(stats));
 		}
 	};
 	struct ItemData

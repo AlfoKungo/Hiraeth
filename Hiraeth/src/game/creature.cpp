@@ -1,20 +1,22 @@
 #include "creature.h"
 
-namespace hiraeth {
-	namespace game {
-
-		Creature::Creature(maths::Rectangle bounds, map::MapLayer* mapLayer,
-			Stats* stats, bool is_immune_after_hit)
-			: Collisionable(m_Bounds, mapLayer), m_StanceState(StanceState::Stand), m_Direction(Direction::Left),
-			m_Stats(stats),
-			m_Speed(stats->Speed), m_Jump(stats->Jump),
-			m_TransformationMatrix(maths::mat4::Translate(bounds.position)),
-			m_IsImmuneAfterHit(is_immune_after_hit)
+namespace hiraeth
+{
+	namespace game
+	{
+		Creature::Creature(maths::Rectangle bounds, map::MapLayer* map_layer,
+		                   Stats* stats, bool is_immune_after_hit)
+			: Collisionable(m_Bounds, map_layer), m_AttackState(), m_IsImmuneAfterHit(is_immune_after_hit),
+			  m_StanceState(Stand),
+			  m_Direction(Left), m_CurrentRenderables(nullptr),
+			  m_Stats(stats), m_TransformationMatrix(maths::mat4::Translate(bounds.position)),
+			  m_Speed(stats->Speed),
+			  m_Jump(stats->Jump)
 		{
-			m_StatesRenderables[Stand] = std::vector<std::unique_ptr<graphics::Renderable>>();
-			m_StatesRenderables[Walk] = std::vector<std::unique_ptr<graphics::Renderable>>();
-			m_StatesRenderables[Attack] = std::vector<std::unique_ptr<graphics::Renderable>>();
-			m_StatesRenderables[Jump] = std::vector<std::unique_ptr<graphics::Renderable>>();
+			m_StatesRenderables[Stand] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[Walk] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[Attack] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[Jump] = std::vector<std::unique_ptr<Renderable>>();
 			m_Bounds = bounds;
 		}
 
@@ -30,34 +32,21 @@ namespace hiraeth {
 
 		void Creature::update()
 		{
-
-			for (auto & renderable : m_StatesRenderables.at(m_StanceState))
+			for (auto& renderable : m_StatesRenderables.at(m_StanceState))
 				renderable->update();
 
-			if (is_hit && m_IsImmuneAfterHit)
-			{
-				if (m_HitTimer.isExpired())
-				{
-					is_hit = false;
-					m_Color = 0xffffffff;
-				}
-				else
-					m_Color = 0x00ffffff | ((unsigned char((m_HitTimer.timeRemain()) / 1.5f * 128 * 2) % 128 + 86) << 24);
-			}
-
-			//if (m_Time->elapsed() - m_MovementTimer > CHARACTER_TIME_BETWEEN_ADDS)
-			//{
-			//m_Force *= (m_Time->elapsed() - m_MovementTimer)*60;
+			apply_hit_state();
 			analyze_controls();
-			addGravity(m_Force);
-			multiplyByFriction(m_Force);
-			analyzeCollision();
+			add_gravity(m_Force);
+			multiply_by_friction(m_Force);
+			analyze_collision();
 			if (Attack != m_StanceState)
 			{
 				analyze_stance();
 			}
 			else
-				switch (m_AttackState) {
+				switch (m_AttackState)
+				{
 				case PreHit:
 					m_Force.x = 0;
 					if (m_AttackTimer.isExpired())
@@ -83,13 +72,22 @@ namespace hiraeth {
 						analyze_stance();
 					}
 					break;
-
 				}
+		}
 
-		//m_TransformationMatrix = m_TransformationMatrix.Translate(m_Bounds.position);
-
-		//m_MovementTimer = StaticTimer::timer.elapsed();
-		//}
+		void Creature::apply_hit_state()
+		{
+			if (is_hit && m_IsImmuneAfterHit)
+			{
+				if (m_HitTimer.isExpired())
+				{
+					is_hit = false;
+					m_Color = 0xffffffff;
+				}
+				else
+					m_Color = 0x00ffffff | ((unsigned char((m_HitTimer.timeRemain()) / 1.5f * 128 * 2) % 128 + 86) << 24
+					);
+			}
 		}
 
 		void Creature::analyze_controls()
@@ -106,12 +104,12 @@ namespace hiraeth {
 			if (m_Controls.right)
 			{
 				m_Direction = Right;
-				m_Force.x += calculateForce(m_Speed);
+				m_Force.x += calculate_force(m_Speed);
 			}
 			else if (m_Controls.left)
 			{
 				m_Direction = Left;
-				m_Force.x -= calculateForce(m_Speed);
+				m_Force.x -= calculate_force(m_Speed);
 			}
 			if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
 				m_Force.y = m_Jump;
@@ -119,7 +117,6 @@ namespace hiraeth {
 
 		void Creature::analyze_stance()
 		{
-
 			if (m_Foothold != NO_FOOTHOLD)
 			{
 				if (m_Force.x < -0.1f || m_Force.x > 0.1f)
@@ -135,24 +132,22 @@ namespace hiraeth {
 
 		void Creature::draw(graphics::Renderer* renderer) const
 		{
-			switch (m_Direction)
-			{
-			case Left:
+			if (m_Direction == Left)
 				renderer->push(m_TransformationMatrix);
-				break;
-			case Right:
-				renderer->push(m_TransformationMatrix*maths::mat4::Translate(maths::vec3(m_Bounds.width / 2, 0))*maths::mat4::Scale(maths::vec3(-1, 1, 1))*maths::mat4::Translate(-maths::vec3(m_Bounds.width / 2, 0)));
-				break;
-			}
-			for (auto & renderable : m_StatesRenderables.at(m_StanceState))
+			else
+				renderer->push(
+					m_TransformationMatrix * maths::mat4::Translate(maths::vec3(m_Bounds.width / 2, 0)) * maths::mat4::
+					Scale(maths::vec3(-1, 1, 1)) * maths::mat4::Translate(-maths::vec3(m_Bounds.width / 2, 0)));
+
+			for (auto& renderable : m_StatesRenderables.at(m_StanceState))
 				renderable->draw(renderer, m_Color);
 			renderer->pop();
 		}
-		
+
 		void Creature::change_stance(StanceState next_state)
 		{
 			if (m_StanceState != next_state)
-				for (auto & rend : m_StatesRenderables[next_state])
+				for (auto& rend : m_StatesRenderables[next_state])
 					rend->resetState();
 			m_StanceState = next_state;
 		}
@@ -161,8 +156,8 @@ namespace hiraeth {
 		{
 			if (!is_hit)
 			{
-				causeDamage(damage);
-				m_Force = calculateForce(maths::vec2(dir * 4, 8));
+				cause_damage(damage);
+				m_Force = calculate_force(maths::vec2(dir * 4, 8));
 				m_Foothold = NO_FOOTHOLD;
 				if (m_IsImmuneAfterHit)
 				{

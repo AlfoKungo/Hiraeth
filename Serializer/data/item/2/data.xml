@@ -4,6 +4,7 @@
 		<item_name>wing</item_name>
 		<type>1</type>
 		<item_description>This can make you fly</item_description>
+		<stats>spd 20</stats>
 	</value0>
 </cereal>
 

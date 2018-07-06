@@ -29,6 +29,7 @@ namespace hiraeth {
 			SRL::MapData& getMapData() { return m_MapData; }
 			//const std::vector<Portal>& getPortals() const { return m_Portals; }
 			const std::vector<SRL::Summon>& getSummons() const { return m_MapData.Summons; }
+			const std::vector<unsigned int>& getNpcs() const { return m_MapData.Npcs; }
 			const std::vector<physics::FootHold>& getFootHolds() const { return m_FootHolds; }
 
 			void reloadData(unsigned int map_index);

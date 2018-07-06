@@ -55,6 +55,7 @@ void serialize_map_data()
 	map_data[0].FootHolds.push_back(VerticalFootHold(vec2{ 800, -450 }, 350));
 	map_data[0].Summons.push_back(Summon{ 1, vec2{ -200, -90 } });
 	map_data[0].Summons.push_back(Summon{ 2, vec2{ 200, -90 } });
+	map_data[0].Npcs.push_back(0);
 
 	for (int i = 0; i < 2; i++)
 		map_data[1].Portals.push_back(PortalData{ vec2{ float((i * (-200)) - 200), 0 }, 0 });
@@ -72,6 +73,7 @@ void serialize_map_data()
 	map_data[1].FootHolds.push_back(VerticalFootHold(vec2{ 800, -450 }, 350));
 	map_data[1].Summons.push_back(Summon{ 1, vec2{ 20, -90 } });
 	map_data[1].Summons.push_back(Summon{ 2, vec2{ -20, -90 } });
+	map_data[1].Npcs.push_back(0);
 
 	//Serialize Data
 	for (int i = 0; i < USED_MAPS; i++)

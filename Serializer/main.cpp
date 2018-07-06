@@ -14,23 +14,26 @@
 #include "srl/tile_texture_data.h"
 #include "srl/monster_data.h"
 #include "srl/item_data.h"
+#include "srl/npc_data.h"
 
-#define MAX_ADDRESSES 100
+typedef int Address;
 
-#define MAP_AMOUNT MAX_ADDRESSES
-#define TEXTURES_AMOUNT MAX_ADDRESSES
-#define TILES_AMOUNT MAX_ADDRESSES
-#define MAP_ADDRESSES_AMOUNT (TEXTURES_AMOUNT + MAP_AMOUNT + TILES_AMOUNT)
+const int MAX_ADDRESSES = 100;
 
-#define MAP_DATA_ADDRESSES_BEGIN 0
-#define TEXTURES_ADDRESSES_BEGIN (MAP_AMOUNT * sizeof(Address))
-#define TILES_ADDRESSES_BEGIN ((MAP_AMOUNT + TEXTURES_AMOUNT) * sizeof(Address))
-#define MAP_DATA_DATA_BEGIN (MAP_ADDRESSES_AMOUNT * sizeof(Address))
+const int MAP_AMOUNT = MAX_ADDRESSES;
+const int TEXTURES_AMOUNT = MAX_ADDRESSES;
+const int TILES_AMOUNT = MAX_ADDRESSES;
+const int MAP_ADDRESSES_AMOUNT = (TEXTURES_AMOUNT + MAP_AMOUNT + TILES_AMOUNT);
+
+const int MAP_DATA_ADDRESSES_BEGIN = 0;
+const int TEXTURES_ADDRESSES_BEGIN = (MAP_AMOUNT * sizeof(Address));
+const int TILES_ADDRESSES_BEGIN = ((MAP_AMOUNT + TEXTURES_AMOUNT) * sizeof(Address));
+const int MAP_DATA_DATA_BEGIN = (MAP_ADDRESSES_AMOUNT * sizeof(Address));
 
 
-#define MONSTER_AMOUNT MAX_ADDRESSES
-#define MONSTER_TEXTURES_AMOUNT MAX_ADDRESSES
-#define MONSTER_ADDRESSES_AMOUNT (MONSTER_AMOUNT + MONSTER_TEXTURES_AMOUNT)
+const int MONSTER_AMOUNT = MAX_ADDRESSES;
+const int MONSTER_TEXTURES_AMOUNT = MAX_ADDRESSES;
+const int MONSTER_ADDRESSES_AMOUNT(MONSTER_AMOUNT + MONSTER_TEXTURES_AMOUNT);
 
 #define MONSTER_DATA_ADDRESS_BEGIN 0
 #define MONSTER_TEXTURES_ADDRESS_BEGIN (MONSTER_AMOUNT * sizeof(Address))
@@ -43,13 +46,19 @@
 #define ITEM_ADDRESS_BEGIN 0
 #define ITEM_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
 
+
+#define NPC_AMOUNT MAX_ADDRESSES
+#define NPC_ADDRESSES_AMOUNT (ITEM_AMOUNT)
+
+#define NPC_ADDRESS_BEGIN 0
+#define NPC_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
+
 #define USED_MAPS 2
 
 namespace fs = std::experimental::filesystem;
 
 const int zero = 0;
 
-typedef int Address;
 
 
 template<class DATA>
@@ -195,6 +204,33 @@ int main()
 			}
 			item_data_file.seekp(ITEM_DATA_BEGIN);
 			serialize_data(v_itemData, ITEM_ADDRESS_BEGIN, item_data_file, arout);
+		}
+	}
+
+	// Serialize Item Data
+	{
+		std::ofstream npc_data_file("../Hiraeth/serialized/npc.data", std::ios::out | std::ios::binary);
+		if (npc_data_file.is_open())
+		{
+			cereal::BinaryOutputArchive arout(npc_data_file);
+
+			std::vector<SRL::NpcData> v_npcData;
+			v_npcData.reserve(100);
+			for (auto & p : fs::directory_iterator("data/npc"))
+			{
+				std::string path = p.path().string();
+				std::string tex_path = path + "\\stand.0.png";
+				std::string data_path = path + "\\data.xml";
+				std::ifstream in(data_path, std::ios::in);
+				cereal::XMLInputArchive arin(in);
+				SRL::NpcData Td{};
+
+				arin(Td.npc_info);
+				Td.texture_data.load_texture(tex_path);
+				v_npcData.push_back(Td);
+			}
+			npc_data_file.seekp(NPC_DATA_BEGIN);
+			serialize_data(v_npcData, NPC_ADDRESS_BEGIN, npc_data_file, arout);
 		}
 	}
 

@@ -31,7 +31,7 @@ namespace hiraeth {
 
 			void move(float mx, float my);
 
-			bool isWindowContains(float x, float y) const;
+			bool isWindowContains(maths::vec2 pos) const;
 			bool isTitlebarContains(float x, float y) const;
 
 			void attach() { m_IsAttached = true; }
@@ -40,13 +40,15 @@ namespace hiraeth {
 			inline bool is_holding() const { return m_IsHolding; }
 			inline input::Controls getControlKey() const { return m_ControlKey; }
 
-			virtual void mouse_clicked_full(maths::vec2 mousePos);
-			virtual void mouse_released_full(maths::vec2 mousePos);
+			virtual void mouse_left_clicked_full(maths::vec2 mousePos);
+			virtual void mouse_left_released_full(maths::vec2 mousePos);
+			virtual void mouse_right_clicked_full(maths::vec2 mousePos);
 			virtual void mouse_moved_full(maths::vec2 mousePos, maths::vec2 pMousePos);
 
 
-			virtual void mouse_clicked(maths::vec2 mousePos) = 0;
-			virtual void mouse_released(maths::vec2 mousePos) = 0;
+			virtual void mouse_left_clicked(maths::vec2 mousePos) = 0;
+			virtual void mouse_left_released(maths::vec2 mousePos) = 0;
+			virtual void mouse_right_clicked(maths::vec2 mousePos) = 0;
 			virtual void mouse_moved(float mx, float my, maths::vec2 mousePos) = 0;
 
 			void update() override { m_Group.update(); }

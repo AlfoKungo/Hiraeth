@@ -28,7 +28,7 @@ namespace hiraeth {
 
 		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats)
 		{
-			m_UiInventory = new UiInventory(maths::vec2(-300, 0), input::Controls::inventory);
+			m_UiInventory = new UiInventory(maths::vec2(-300, 0), input::Controls::inventory, character_stats);
 			m_Layer.add_ref(m_UiInventory);
 			kb->registerToKey(input::Controls::inventory, this);
 			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats, character_stats));
@@ -45,13 +45,13 @@ namespace hiraeth {
 		{
 			auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
 				[&](auto const& window) 
-			{ return window->is_to_draw && window->isWindowContains(mx, my); });
+			{ return window->is_to_draw && window->isWindowContains(maths::vec2{ mx, my }); });
 			if (result_window != m_Windows.end())
 			{
 				if ((*result_window)->isTitlebarContains(mx, my))
 					(*result_window)->attach();
 				else
-					(*result_window)->mouse_clicked_full((*result_window)->getRelativeLocation(mx, my));
+					(*result_window)->mouse_left_clicked_full((*result_window)->getRelativeLocation(mx, my));
 				std::rotate(m_Windows.begin(), result_window, result_window + 1);
 			}
 		}
@@ -61,8 +61,15 @@ namespace hiraeth {
 			for (const auto& window : m_Windows)
 			{
 				window->unattach();
-				//if (window->is_holding())
-					window->mouse_released_full(maths::vec2(mx, my));
+					window->mouse_left_released_full(maths::vec2(mx, my));
+			}
+		}
+
+		void UiManager::rightButtonClicked(float mx, float my)
+		{
+			for (const auto& window : m_Windows)
+			{
+				window->mouse_right_clicked_full(maths::vec2(mx, my));
 			}
 		}
 
@@ -73,10 +80,17 @@ namespace hiraeth {
 				if (window->is_attached())
 					window->move(pmx - mx, pmy - my);
 				else
-					//if (window->is_holding())
 					window->mouse_moved_full(window->getRelativeLocation(mx, my),
 						window->getRelativeLocation(pmx, pmy));
 			}
+		}
+
+		bool UiManager::is_window_contains(maths::vec2 mouse_pos) const
+		{
+			auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
+				[&](auto const& window) 
+			{ return window->is_to_draw && window->isWindowContains(mouse_pos); });
+			return result_window != m_Windows.end();
 		}
 
 		void UiManager::ButtonClicked(input::Controls c)

@@ -23,9 +23,9 @@ namespace hiraeth {
 		{
 		}
 
-		void UiSkills::mouse_clicked(maths::vec2 mousePos)
+		void UiSkills::mouse_left_clicked(maths::vec2 mousePos)
 		{
-			m_Tabs->mouse_clicked(mousePos);
+			m_Tabs->mouse_left_clicked(mousePos);
 		}
 	}
 }

@@ -101,7 +101,7 @@ namespace hiraeth {
 		void  Renderer::submit(const Renderable* renderable, unsigned int blendColor)
 		{
 			maths::vec3 origin = maths::vec3(renderable->getOrigin());
-			const maths::vec3& position = maths::vec3(renderable->getPosition()) + origin;
+			const maths::vec3& position = maths::vec3(renderable->get_position()) + origin;
 			//const maths::vec3& position = renderable->getPosition();
 			const maths::vec2& size = renderable->getSize();
 			const unsigned int color = renderable->getColor() & blendColor;

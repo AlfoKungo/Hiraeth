@@ -8,6 +8,7 @@
 namespace SRL {
 
 	using namespace maths;
+	typedef unsigned int NpcIndex;
 
 	struct TileData
 	{
@@ -54,19 +55,21 @@ namespace SRL {
 
 	struct MapData
 	{
-		std::vector<TileData> Tiles;
-		std::vector<FootHoldData> FootHolds;
 		std::vector<PortalData> Portals;
 		std::vector<Summon> Summons;
+		std::vector<NpcIndex> Npcs;
+		std::vector<TileData> Tiles;
+		std::vector<FootHoldData> FootHolds;
 		int TileTexture = 1;
 	private:
 		MapData() = default;
 		friend class cereal::access;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(Tiles),
-				CEREAL_NVP(FootHolds),
-				CEREAL_NVP(Portals),
+			ar( CEREAL_NVP(Portals),
 				CEREAL_NVP(Summons),
+				CEREAL_NVP(Npcs),
+				CEREAL_NVP(Tiles),
+				CEREAL_NVP(FootHolds),
 				CEREAL_NVP(TileTexture));
 		}
 	};

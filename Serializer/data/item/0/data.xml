@@ -4,6 +4,7 @@
 		<item_name>staff</item_name>
 		<type>0</type>
 		<item_description>This can create magic</item_description>
+		<stats>dex 20</stats>
 	</value0>
 </cereal>
 

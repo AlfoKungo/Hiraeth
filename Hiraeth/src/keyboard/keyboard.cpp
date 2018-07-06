@@ -82,14 +82,23 @@ namespace hiraeth {
 			Keyboard* kb = (Keyboard*)glfwGetWindowUserPointer(window);
 			kb->m_MouseButtons[button] = action != GLFW_RELEASE;
 			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-				for (auto const& window : kb->m_MouseEventMap)
+				for (auto const& event_window : kb->m_MouseEventMap)
 				{
-					window->leftButtonClicked(kb->pmx, kb->pmy);
+					if (event_window->is_window_contains(maths::vec2{ float(kb->pmx), float(kb->pmy) }))
+					{
+						event_window->leftButtonClicked(kb->pmx, kb->pmy);
+						return;
+					}
 				}
 			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
-				for (auto const& window : kb->m_MouseEventMap)
+				for (auto const& event_window : kb->m_MouseEventMap)
 				{
-					window->leftButtonReleased(kb->pmx, kb->pmy);
+					event_window->leftButtonReleased(kb->pmx, kb->pmy);
+				}
+			if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+				for (auto const& event_window : kb->m_MouseEventMap)
+				{
+					event_window->rightButtonClicked(kb->pmx, kb->pmy);
 				}
 
 		}

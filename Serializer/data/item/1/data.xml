@@ -4,6 +4,7 @@
 		<item_name>dagger</item_name>
 		<type>0</type>
 		<item_description>This can stab people</item_description>
+		<stats>str 40</stats>
 	</value0>
 </cereal>
 

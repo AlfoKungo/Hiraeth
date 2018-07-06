@@ -27,7 +27,7 @@ namespace hiraeth {
 			Renderable() : m_Color(0xffffffff), m_Texture(nullptr) { setUVDefaults(); }
 		public:
 			Renderable(maths::vec3 position, maths::vec2 size, unsigned int color, maths::vec2 origin = maths::vec2(0))
-				: m_Bounds(position, size), m_Color(color), m_Texture(nullptr), m_Org(origin)
+				: m_Bounds(position, size), m_Color(color), m_Org(origin), m_Texture(nullptr)
 			{
 				setColor(color);
 				setUVDefaults();
@@ -47,12 +47,12 @@ namespace hiraeth {
 
 
 			// gets
-			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
+			inline const maths::vec2& get_position() const { return m_Bounds.position; }
 			inline const maths::vec2& getSize() const { return m_Bounds.size; }
 			inline const maths::Rectangle& getBounds() const { return m_Bounds; }
 			//inline maths::Rectangle& getBounds() { return m_Bounds; }
 			inline Texture* getTexture() const { return m_Texture; }
-			inline const unsigned int getColor() const { return m_Color; }
+			inline unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
 			inline const maths::vec2& getOrigin() const { return m_Org; }
 			//inline GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
@@ -69,8 +69,9 @@ namespace hiraeth {
 			inline void setSize(const maths::vec2& size) { m_Bounds.size = size; }
 
 			virtual void resetState() {}
-			virtual void update() override {}
-			virtual void draw(Renderer* renderer) const override
+			void update() override {}
+
+			void draw(Renderer* renderer) const override
 			{ 
 				renderer->submit(this); 
 			}

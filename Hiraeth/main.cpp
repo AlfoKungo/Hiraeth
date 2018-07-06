@@ -26,6 +26,7 @@
 //#include <gau.h>
 
 #include <stdio.h>
+#include "NPC/npc_manager.h"
 
 #if 0
 static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
@@ -104,6 +105,7 @@ int main()
 	view::Camera::init(&m_Char);
 
 	game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
+	game::NpcManager npcManager(map.getMapLayer(), &keyboard);
 
 	unsigned int frames = 0;
 	while (!window.closed())
@@ -117,6 +119,7 @@ int main()
 		Camera::update();
 		map.update();
 		monsterManager.update();
+		npcManager.update();
 		m_CrLayer.update();
 		itemManager.update();
 		uiManager.update();
@@ -125,6 +128,7 @@ int main()
 		//draw
 		map.draw();
 		monsterManager.draw();
+		npcManager.draw();
 		m_CrLayer.render();
 		itemManager.draw();
 		uiManager.draw();

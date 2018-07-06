@@ -219,6 +219,12 @@
     <ClCompile Include="src\graphics\sprited_renderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\base_creature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NPC\npc_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utils\fileutils.h">
@@ -495,6 +501,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UI\ui_basic\ui_tab.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\base_creature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NPC\npc_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

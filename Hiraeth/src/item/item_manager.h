@@ -8,6 +8,7 @@
 #include "item_data_manager.h"
 #include "UI/ui_inventory.h"
 #include "use_item.h"
+#include "equip_item.h"
 
 namespace hiraeth {
 	namespace item {

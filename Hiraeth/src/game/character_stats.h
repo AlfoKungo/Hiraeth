@@ -41,6 +41,16 @@ namespace hiraeth {
 			void causeDamage(Damage damage) override;
 			inline StatsStruct* getStatsStruct_() { return &m_StatsStruct; }
 			inline DetailsStruct* getDetailsStruct_() { return &m_DetailsStruct; }
+			void add_stats(std::string stats_string)
+			{
+				std::string stat_type = stats_string.substr(0, 3);
+				std::string stat_value = stats_string.substr(4);
+				unsigned int value = atoi(stat_value.c_str())/4;
+				if (stat_type == "spd")
+					m_DetailsStruct.Speed += value;
+				//else
+				//	std::cout << "added nothing" << "\n";
+			}
 			//void registerToStatsUpdate(StatsUpdateEvent* listener) { m_StatsUpdateListeners.push_back(listener); }
 		};
 

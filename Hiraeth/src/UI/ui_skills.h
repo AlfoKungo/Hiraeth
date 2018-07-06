@@ -18,8 +18,9 @@ namespace hiraeth {
 
 		public:
 			UiSkills(maths::vec2 pos, input::Controls control_key);
-			void mouse_clicked(maths::vec2 mousePos);
-			void mouse_released(maths::vec2 mousePos) override {}
+			void mouse_left_clicked(maths::vec2 mousePos);
+			void mouse_left_released(maths::vec2 mousePos) override {}
+			void mouse_right_clicked(maths::vec2 mousePos) override {}
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override {}
 			void fillGroup();
 		};

@@ -154,6 +154,7 @@
     <ClCompile Include="src\basic\EventManager.cpp" />
     <ClCompile Include="src\character\character_arm.cpp" />
     <ClCompile Include="src\character\character_body.cpp" />
+    <ClCompile Include="src\game\base_creature.cpp" />
     <ClCompile Include="src\game\character.cpp" />
     <ClCompile Include="src\game\character_stats.cpp" />
     <ClCompile Include="src\game\creature.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="src\map\maprenderer.cpp" />
     <ClCompile Include="src\map\portal.cpp" />
     <ClCompile Include="src\map\tile.cpp" />
+    <ClCompile Include="src\NPC\npc_manager.cpp" />
     <ClCompile Include="src\physics\collisionable.cpp" />
     <ClCompile Include="src\physics\foothold.cpp" />
     <ClCompile Include="src\save\serializer.cpp" />
@@ -230,6 +232,7 @@
     <ClInclude Include="src\basic\updatable.h" />
     <ClInclude Include="src\character\character_arm.h" />
     <ClInclude Include="src\character\character_body.h" />
+    <ClInclude Include="src\game\base_creature.h" />
     <ClInclude Include="src\game\character.h" />
     <ClInclude Include="src\game\character_stats.h" />
     <ClInclude Include="src\game\creature.h" />
@@ -272,6 +275,7 @@
     <ClInclude Include="src\map\portal.h" />
     <ClInclude Include="src\map\tile.h" />
     <ClInclude Include="src\NPC\npc.h" />
+    <ClInclude Include="src\NPC\npc_manager.h" />
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />

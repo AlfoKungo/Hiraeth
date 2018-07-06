@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cereal>
 	<value0>
+		<Portals size="dynamic">
+			<value0>
+				<position>
+					<value0>-200</value0>
+					<value1>0</value1>
+				</position>
+				<next_map>0</next_map>
+			</value0>
+			<value1>
+				<position>
+					<value0>-400</value0>
+					<value1>0</value1>
+				</position>
+				<next_map>0</next_map>
+			</value1>
+		</Portals>
+		<Summons size="dynamic">
+			<value0>
+				<monster_type>1</monster_type>
+				<position>
+					<value0>20</value0>
+					<value1>-90</value1>
+				</position>
+			</value0>
+			<value1>
+				<monster_type>2</monster_type>
+				<position>
+					<value0>-20</value0>
+					<value1>-90</value1>
+				</position>
+			</value1>
+		</Summons>
+		<Npcs size="dynamic">
+			<value0>0</value0>
+		</Npcs>
 		<Tiles size="dynamic">
 			<value0>
 				<position>
@@ -967,38 +1002,6 @@
 				</direction>
 			</value6>
 		</FootHolds>
-		<Portals size="dynamic">
-			<value0>
-				<position>
-					<value0>-200</value0>
-					<value1>0</value1>
-				</position>
-				<next_map>0</next_map>
-			</value0>
-			<value1>
-				<position>
-					<value0>-400</value0>
-					<value1>0</value1>
-				</position>
-				<next_map>0</next_map>
-			</value1>
-		</Portals>
-		<Summons size="dynamic">
-			<value0>
-				<monster_type>1</monster_type>
-				<position>
-					<value0>20</value0>
-					<value1>-90</value1>
-				</position>
-			</value0>
-			<value1>
-				<monster_type>2</monster_type>
-				<position>
-					<value0>-20</value0>
-					<value1>-90</value1>
-				</position>
-			</value1>
-		</Summons>
 		<TileTexture>1</TileTexture>
 	</value0>
 </cereal>

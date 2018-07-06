@@ -92,7 +92,7 @@ namespace hiraeth {
 			attack_rec.position += m_Direction * maths::vec2(15);
 			for (auto monster : (*m_MonstersLayer))
 			{
-				if (monster->checkCollision(attack_rec))
+				if (monster->check_collision(attack_rec))
 				{
 					std::cout << "attacking" << std::endl;
 					monster->getHit(m_Direction, getDamage());
