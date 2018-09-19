@@ -31,10 +31,10 @@ namespace hiraeth {
 			void update();
 			void draw() const;
 			//void set_keyboard(input::Keyboard* keyboard) { m_Kb = keyboard; }
-			void leftButtonClicked(float mx, float my) override;
-			void leftButtonReleased(float mx, float my) const override;
-			void rightButtonClicked(float mx, float my) override;
-			void mouseMove(float pmx, float pmy, float mx, float my) const override;
+			bool leftButtonClicked(float mx, float my) override;
+			bool leftButtonReleased(float mx, float my) const override;
+			bool rightButtonClicked(float mx, float my) override;
+			bool mouseMove(float pmx, float pmy, float mx, float my) const override;
 			bool is_window_contains(maths::vec2 mouse_pos) const override;
 			void ButtonClicked(input::Controls c) override;
 			void ButtonReleased(input::Controls c) override;

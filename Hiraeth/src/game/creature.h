@@ -85,7 +85,8 @@ namespace hiraeth
 			void move(const maths::vec2& step) override
 			{
 				m_Bounds.position += step;
-				m_TransformationMatrix *= maths::mat4::Translate(m_Force);
+				//m_TransformationMatrix *= maths::mat4::Translate(m_Force);
+				m_TransformationMatrix *= maths::mat4::Translate(step);
 			}
 
 			Damage getDamage() const { return m_Stats->getDamage(); }

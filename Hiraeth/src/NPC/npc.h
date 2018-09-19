@@ -7,7 +7,7 @@ namespace hiraeth
 {
 	namespace npc
 	{
-		class Npc : public game::BaseCreature, public input::MouseEvent
+		class Npc : public game::BaseCreature
 		{
 		private:
 			SRL::NpcData m_Data;
@@ -20,7 +20,6 @@ namespace hiraeth
 				m_Data(npc_data)
 			{
 
-				kb->registerToMouse(this);
 
 				m_StatesRenderables[game::Stand].push_back(std::make_unique<graphics::SpritedRenderable>(
 					maths::vec2(), m_Data.npc_frames_amount, 0.6f, false,
@@ -38,17 +37,9 @@ namespace hiraeth
 			{
 			}
 
-			void leftButtonClicked(float mx, float my) override
+			void onNpcClick() 
 			{
-				
-			}
-			void rightButtonClicked(float mx, float my) override {}
-			void leftButtonReleased(float mx, float my) const override {}
-			void mouseMove(float pmx, float pmy, float mx, float my) const override {}
-			bool is_window_contains(maths::vec2 mouse_pos) const override
-			{
-				const maths::vec2 relative_mouse_pos = view::Camera::mouse_to_map_position(mouse_pos);
-				return getBounds().Contains(relative_mouse_pos);
+				move(maths::vec2(10, 0));
 			}
 		};
 	}

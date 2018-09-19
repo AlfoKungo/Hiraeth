@@ -41,7 +41,7 @@ namespace hiraeth {
 			kb->registerToKey(input::Controls::equip, this);
 		}
 
-		void UiManager::leftButtonClicked(float mx, float my)
+		bool UiManager::leftButtonClicked(float mx, float my)
 		{
 			auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
 				[&](auto const& window) 
@@ -53,27 +53,31 @@ namespace hiraeth {
 				else
 					(*result_window)->mouse_left_clicked_full((*result_window)->getRelativeLocation(mx, my));
 				std::rotate(m_Windows.begin(), result_window, result_window + 1);
+				return true;
 			}
+			return false;
 		}
 
-		void UiManager::leftButtonReleased(float mx, float my) const
+		bool UiManager::leftButtonReleased(float mx, float my) const
 		{
 			for (const auto& window : m_Windows)
 			{
 				window->unattach();
 					window->mouse_left_released_full(maths::vec2(mx, my));
 			}
+			return false;
 		}
 
-		void UiManager::rightButtonClicked(float mx, float my)
+		bool UiManager::rightButtonClicked(float mx, float my)
 		{
 			for (const auto& window : m_Windows)
 			{
 				window->mouse_right_clicked_full(maths::vec2(mx, my));
 			}
+			return false;
 		}
 
-		void UiManager::mouseMove(float pmx, float pmy, float mx, float my) const
+		bool UiManager::mouseMove(float pmx, float pmy, float mx, float my) const
 		{
 			for (const auto& window : m_Windows)
 			{
@@ -83,6 +87,7 @@ namespace hiraeth {
 					window->mouse_moved_full(window->getRelativeLocation(mx, my),
 						window->getRelativeLocation(pmx, pmy));
 			}
+			return false;
 		}
 
 		bool UiManager::is_window_contains(maths::vec2 mouse_pos) const
@@ -95,7 +100,7 @@ namespace hiraeth {
 
 		void UiManager::ButtonClicked(input::Controls c)
 		{
-		if (input::Controls::escape == c)
+			if (input::Controls::escape == c)
 			{
 				auto window = m_Windows.begin();
 				(*window)->is_to_draw = false;

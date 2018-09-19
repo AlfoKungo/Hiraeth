@@ -77,7 +77,8 @@ namespace hiraeth {
 			void move(const maths::vec2& step) override
 			{
 				m_Bounds.position += step;
-				m_TransformationMatrix *= maths::mat4::Translate(m_Force);
+				//m_TransformationMatrix *= maths::mat4::Translate(m_Force);
+				m_TransformationMatrix *= maths::mat4::Translate(step);
 			}
 			//virtual void attack() = 0;
 		private:

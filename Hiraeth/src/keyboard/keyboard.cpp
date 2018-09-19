@@ -112,7 +112,8 @@ namespace hiraeth {
 			//if (kb->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 				for (auto const& window : kb->m_MouseEventMap)
 				{
-					window->mouseMove(kb->pmx, kb->pmy, xpos, ypos);
+					if (window->mouseMove(kb->pmx, kb->pmy, xpos, ypos))
+						return;
 				}
 
 		}
