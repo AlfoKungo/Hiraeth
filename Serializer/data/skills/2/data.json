@@ -1,0 +1,23 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 0,
+                    "data": 50
+                }
+            },
+            {
+                "key": 2,
+                "value": {
+                    "index": 1,
+                    "data": "x*1.5"
+                }
+            }
+        ],
+        "name": "Snails",
+        "mp_con": 30.0,
+        "damage": 35.0
+    }
+}

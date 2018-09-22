@@ -17,6 +17,8 @@
 #include "srl/item_data.h"
 #include "srl/npc_data.h"
 #include <cereal/archives/json.hpp>
+#include "srl/skill_data.h"
+#include "code_for_checks/skill_data_check.h"
 
 typedef int Address;
 
@@ -54,6 +56,12 @@ const int MONSTER_ADDRESSES_AMOUNT(MONSTER_AMOUNT + MONSTER_TEXTURES_AMOUNT);
 
 #define NPC_ADDRESS_BEGIN 0
 #define NPC_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
+
+#define SKILL_AMOUNT MAX_ADDRESSES
+#define SKILL_ADDRESSES_AMOUNT (ITEM_AMOUNT)
+
+#define SKILL_ADDRESS_BEGIN 0
+#define SKILL_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
 
 #define USED_MAPS 2
 
@@ -208,16 +216,18 @@ int main()
 		}
 	}
 
-	// Serialize Item Data
+	// Serialize NPC Data
 	{
-		std::ofstream npc_data_file("../Hiraeth/serialized/npc.data", std::ios::out | std::ios::binary);
+		const std::string SRL_TYPE = "npc";
+		std::ofstream npc_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
+			std::ios::out | std::ios::binary);
 		if (npc_data_file.is_open())
 		{
 			cereal::BinaryOutputArchive arout(npc_data_file);
 
 			std::vector<SRL::NpcData> v_npcData;
 			v_npcData.reserve(100);
-			for (auto & p : fs::directory_iterator("data/npc"))
+			for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
 			{
 				std::string path = p.path().string();
 				std::string tex_path = path + "\\stand.0.png";
@@ -232,6 +242,36 @@ int main()
 			}
 			npc_data_file.seekp(NPC_DATA_BEGIN);
 			serialize_data(v_npcData, NPC_ADDRESS_BEGIN, npc_data_file, arout);
+		}
+	}
+
+	// Serialize Skills Data
+	{
+		Checks::create_skill_data();
+		const std::string SRL_TYPE = "skills";
+		std::ofstream skill_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
+			std::ios::out | std::ios::binary);
+		if (skill_data_file.is_open())
+		{
+			cereal::BinaryOutputArchive arout(skill_data_file);
+
+			std::vector<SRL::SkillData> skill_data;
+			skill_data.reserve(100);
+			for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
+			{
+				std::string path = p.path().string();
+				std::string tex_path = path + "\\icon.png";
+				std::string data_path = path + "\\data.json";
+				std::ifstream in(data_path, std::ios::in);
+				cereal::JSONInputArchive arin(in);
+				SRL::SkillData Td{};
+
+				arin(Td.skill_info);
+				Td.texture_data.load_texture(tex_path);
+				skill_data.push_back(Td);
+			}
+			skill_data_file.seekp(SKILL_DATA_BEGIN);
+			serialize_data(skill_data, SKILL_ADDRESS_BEGIN, skill_data_file, arout);
 		}
 	}
 

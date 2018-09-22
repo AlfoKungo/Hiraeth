@@ -31,8 +31,9 @@
 #define CEREAL_TYPES_BOOST_VARIANT_HPP_
 
 #include <cereal/cereal.hpp>
-#include <boost/variant.hpp>
-#include <boost/mpl/size.hpp>
+//#include <boost/variant.hpp>
+#include <variant>
+//#include <boost/mpl/size.hpp>
 
 namespace cereal
 {

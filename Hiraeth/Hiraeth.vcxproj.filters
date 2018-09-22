@@ -506,7 +506,10 @@
     <ClInclude Include="src\NPC\npc_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\skills\skill.h">
+    <ClInclude Include="src\skills\skill_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\skills\skill_icon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,12 +31,17 @@ namespace hiraeth {
 			m_UiInventory = new UiInventory(maths::vec2(-300, 0), input::Controls::inventory, character_stats);
 			m_Layer.add_ref(m_UiInventory);
 			kb->registerToKey(input::Controls::inventory, this);
+
 			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats, character_stats));
 			kb->registerToKey(input::Controls::stats, this);
-			m_Layer.add_ref(new UiSkills(maths::vec2(300, 0), input::Controls::skills));
+
+			m_UiSkills = new UiSkills(maths::vec2(300, 0), input::Controls::skills);
+			m_Layer.add_ref(m_UiSkills);
 			kb->registerToKey(input::Controls::skills, this);
+
 			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), input::Controls::quests));
 			kb->registerToKey(input::Controls::quests, this);
+
 			m_Layer.add_ref(new UiEquip(maths::vec2(500, 0), input::Controls::equip));
 			kb->registerToKey(input::Controls::equip, this);
 		}

@@ -86,6 +86,7 @@
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype271.lib;glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;OpenAL32.lib;gorillaD.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -279,7 +280,8 @@
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />
-    <ClInclude Include="src\skills\skill.h" />
+    <ClInclude Include="src\skills\skill_icon.h" />
+    <ClInclude Include="src\skills\skill_manager.h" />
     <ClInclude Include="src\UI\main_ui.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_flashing.h" />

@@ -26,6 +26,7 @@ namespace hiraeth {
 			input::Keyboard* m_Kb;
 			MainUi m_MainUi;
 			UiInventory * m_UiInventory;
+			UiSkills * m_UiSkills;
 		public:
 			UiManager(input::Keyboard* kb);
 			void update();
@@ -40,6 +41,7 @@ namespace hiraeth {
 			void ButtonReleased(input::Controls c) override;
 			MainUi * getMainUi() { return &m_MainUi; }
 			UiInventory * getUiInventory() { return m_UiInventory; }
+			UiSkills * getUiSkills() { return m_UiSkills; }
 		private:
 			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
 		};

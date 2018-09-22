@@ -1,0 +1,23 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 0,
+                    "data": 50
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "index": 0,
+                    "data": 50
+                }
+            }
+        ],
+        "name": "Heal",
+        "mp_con": 40.0,
+        "damage": 50.0
+    }
+}

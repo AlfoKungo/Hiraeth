@@ -9,6 +9,7 @@
 #include "monster.h"
 #include "graphics/layers/layer.h"
 #include "item/item_manager.h"
+#include "skills/skill_manager.h"
 
 namespace hiraeth {
 	namespace game {
@@ -20,9 +21,11 @@ namespace hiraeth {
 			input::Keyboard* m_Kb;
 			std::vector<Monster*>* m_MonstersLayer;
 			item::ItemManager* m_ItemManager;
+			skills::SkillManager* m_SkillManager;
 			//graphics::Sprite m_HitSprite;
 		public:
-			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager, CharacterStats * character_stats);
+			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager,
+				skills::SkillManager *skill_manager, CharacterStats * character_stats);
 			~Character();
 
 			void update() override;
@@ -38,6 +41,7 @@ namespace hiraeth {
 		private:
 			void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();
+			void activate_skill(unsigned int skill_index);
 		};
 	}
 }

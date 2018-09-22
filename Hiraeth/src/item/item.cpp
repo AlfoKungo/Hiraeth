@@ -4,7 +4,8 @@ namespace hiraeth {
 	namespace item {
 
 		Item::Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds)
-			: Sprite(pos, graphics::TextureManager::Load(item_data.item_info.item_name, item_data.texture_data)), m_Force(0, 7),
+			: Sprite(pos, graphics::TextureManager::Load(item_data.item_info.item_name, item_data.texture_data)),
+			m_Force(0, 7),
 			m_FootHolds(foot_holds),
 			m_ItemInfo(item_data.item_info),
 			m_State(InAir),
@@ -51,13 +52,12 @@ namespace hiraeth {
 				float time_remains= m_Timer.timeRemain();
 				if (time_remains < 0.0f)
 					time_remains = 0.0f;
-				maths::vec2 char_pos = m_CharRec->GetMiddle() + maths::vec2(0,15);
+				maths::vec2 char_pos = m_CharRec->GetBottomMiddle() + maths::vec2(0,15);
 				float relativeTimePassed = pow(1.0f - (time_remains / PICK_UP_TIME), 1.0f);
 				m_Color = 0x00ffffff | (uint32_t(256 * (1.0f - relativeTimePassed * 10)) << 24);
 
-				m_Force = (((relativeTimePassed * ((char_pos)-m_Bounds.GetMiddle()))) +
-					((1.0f - relativeTimePassed) * m_Force))
-					*
+				m_Force = ((relativeTimePassed * (char_pos - m_Bounds.GetMiddle())) +
+					(1.0f - relativeTimePassed) * m_Force) *
 					(relativeTimePassed + 2.25f) / 3.25f;
 				m_Bounds.position.y += m_Force.y;
 				float m_Forcex = (char_pos.x - m_Bounds.GetMiddle().x) * (relativeTimePassed / 0.2f);
@@ -102,13 +102,16 @@ namespace hiraeth {
 
 		bool Item::hasBeenTaken()
 		{
-			//if ((m_State == PickedUp) && m_Force.y < 0 && (m_CharRec->GetMiddle() + maths::vec2(0, 15)).Distance(m_Bounds.GetMiddle()) < 4.5f)
-			if ((m_State == PickedUp) && (m_Force.y < 0) && (abs((m_CharRec->y + 15) - m_Bounds.y) < 5.0f))
-			{
-				m_Color = 0xffffffff;
-				m_State = InInventory;
-				m_IsExpiring = false;
-				return true;
+			if ((m_State == PickedUp)) {
+				if ((m_Force.y < 0 || m_Force.y < 0.1)) {
+					if ((abs((m_CharRec->y + 15) - m_Bounds.y) < 3.0f))
+					{
+						m_Color = 0xffffffff;
+						m_State = InInventory;
+						m_IsExpiring = false;
+						return true;
+					}
+				}
 			}
 			return false;
 		}

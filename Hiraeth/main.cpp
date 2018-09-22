@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include "NPC/npc_manager.h"
+#include "skills/skill_manager.h"
 
 #if 0
 static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
@@ -98,9 +99,11 @@ int main()
 	ui::UiManager uiManager(&keyboard);
 
 	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory() };
+	skills::SkillManager skillManager{uiManager.getUiSkills()};
+
 
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
-	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, uiManager.getMainUi()->getCharacterStats());
+	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, &skillManager, uiManager.getMainUi()->getCharacterStats());
 	m_CrLayer.add_ref(&m_Char);
 	view::Camera::init(&m_Char);
 

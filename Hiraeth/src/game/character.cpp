@@ -3,10 +3,12 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager, CharacterStats * character_stats)
+		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager,
+			skills::SkillManager *skill_manager, CharacterStats * character_stats)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
 			m_Kb(kb),
-			m_ItemManager(item_manager)
+			m_ItemManager(item_manager),
+			m_SkillManager(skill_manager)
 		{
 			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(
 				SRL::AnimationData{ {{{0, 0, 23, 31}, {15, 0}, 0.4f}, {{23, 0, 23, 31}, {15, 0}, 0.4f}, {{46, 0, 23, 31}, {15, 0}, 0.4f}}, true },
@@ -32,7 +34,7 @@ namespace hiraeth {
 				graphics::TextureManager::Load("char_head.png")));
 
 			m_StatesRenderables[Attack].push_back(std::make_unique<character::CharacterBody>(
-				SRL::AnimationData{ {{{0, 0, 45, 33}, {19, 0}, 0.35f}, {{45, 0, 45, 33}, {19, 0}, 0.45f }}, false},
+				SRL::AnimationData{ {{{0, 0, 45, 33}, {19, 0}, 0.35f}, {{45, 0, 45, 33}, {19, 0}, 0.45f }}, false },
 				graphics::TextureManager::Load("char_body_attack.png")));
 			m_StatesRenderables[Attack].push_back(std::make_unique<character::CharacterArm>(
 				SRL::AnimationData{ {{{0, 0, 30, 18}, {49, 10}, 0.35f}, {{30, 0, 30, 18}, {0, 11}, 0.45f}}, false },
@@ -62,6 +64,11 @@ namespace hiraeth {
 
 		void Character::update()
 		{
+			if (m_Controls.skill_a)
+			{
+				activate_skill(0);
+			}
+
 			if (m_Controls.pick_up)
 			{
 				pickItemUp();
@@ -133,6 +140,11 @@ namespace hiraeth {
 			item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
 			if (item != NULL)
 				item->pickUp(&getBounds());
+		}
+
+		void Character::activate_skill(unsigned skill_index)
+		{
+			m_SkillManager->get_skill(skill_index);
 		}
 	}
 }
