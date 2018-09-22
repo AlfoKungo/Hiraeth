@@ -25,6 +25,7 @@ namespace hiraeth {
 			equip = GLFW_KEY_E,
 			inventory = GLFW_KEY_A,
 			pick_up = GLFW_KEY_Z,
+			skill_a = GLFW_KEY_H,
 		};
 
 		class Keyboard

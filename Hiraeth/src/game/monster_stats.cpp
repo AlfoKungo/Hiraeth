@@ -3,26 +3,26 @@
 namespace hiraeth {
 	namespace game {
 		MonsterStats::MonsterStats()
-			: Stats(stats.MaxHp, stats.Hp, stats.Speed, stats.Jump),
-		stats{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40,
+			: Stats(m_Stats.MaxHp, m_Stats.Hp, m_Stats.Speed, m_Stats.Jump),
+		m_Stats{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40,
 						   40, 40, 30, 30, 20, 20, 10, 100}
 		{
 		}
 
 		MonsterStats::MonsterStats(SRL::MonsterStatsStruct r_stats)
-			: Stats(stats.MaxHp, stats.Hp, stats.Speed, stats.Jump),
-		stats(r_stats)
+			: Stats(m_Stats.MaxHp, m_Stats.Hp, m_Stats.Speed, m_Stats.Jump),
+		m_Stats(r_stats)
 		{
 		}
 
 		Damage MonsterStats::getDamage() const
 		{
-			return Damage{ stats.Attack, stats.WeaponAcc };
+			return Damage{ m_Stats.Attack, m_Stats.WeaponAcc };
 		}
 
 		void MonsterStats::causeDamage(Damage damage)
 		{
-			stats.Hp -= damage.RawDamage;
+			m_Stats.Hp -= damage.RawDamage;
 		}
 	}
 }

@@ -12,12 +12,14 @@ namespace hiraeth {
 	namespace game {
 
 		enum StanceState {
-			NoStance,
-			Stand,
-			Walk,
-			Attack,
-			Jump,
+			NoStance = 0,
+			Stand = 1,
+			Walk = 2,
+			Attack = 3,
+			Jump = 4,
+			Skill = 5,
 		};
+
 		struct CreatureControls
 		{
 			bool left = false;
@@ -27,12 +29,8 @@ namespace hiraeth {
 			bool jump = false;
 			bool attack = false;
 			bool pick_up = false;
+			bool skill_a = false;
 		};
-		//enum AttackState {
-		//	PreHit,
-		//	PostHit,
-		//	PostHitMovable,
-		//};
 		enum Direction {
 			Right = 1,
 			Left = -1,
@@ -48,21 +46,15 @@ namespace hiraeth {
 #define FORCE_OF_GRAVITY 0.94f
 
 		protected:
-			//AttackState m_AttackState;
-			ATimer m_AttackTimer;
-			//bool m_IsImmuneAfterHit;
 			StanceState m_StanceState;
 			Direction m_Direction;
 			CreatureControls m_Controls;
 			std::map<StanceState, std::vector<std::unique_ptr<Renderable>>> m_StatesRenderables;
 			std::vector<std::unique_ptr<Renderable>>* m_CurrentRenderables;
-			//Stats * m_Stats;
 			maths::mat4 m_TransformationMatrix;
 
 		private:
-			//float &m_Speed, &m_Jump; //link to stats_struct
 			std::unique_ptr<float> m_Speed, m_Jump; //link to stats_struct
-			ATimer m_HitTimer;
 			std::vector<int> actions; //this is to create a list of actions to do.
 		public:
 			bool is_hit = false;
@@ -70,19 +62,16 @@ namespace hiraeth {
 			BaseCreature(maths::Rectangle bounds, map::MapLayer* map_layer,
 				std::unique_ptr<float> speed, std::unique_ptr<float> jump,
 				unsigned int foothold);
-			//virtual ~BaseCreature() = default;
 
 			void update() override;
 			void draw(graphics::Renderer* renderer) const override;
 			void move(const maths::vec2& step) override
 			{
 				m_Bounds.position += step;
-				//m_TransformationMatrix *= maths::mat4::Translate(m_Force);
 				m_TransformationMatrix *= maths::mat4::Translate(step);
 			}
-			//virtual void attack() = 0;
-		private:
-			void analyze_controls();
+		protected:
+			virtual void analyze_controls();
 			void analyze_stance();
 			void change_stance(StanceState next_state);
 			static void add_gravity(maths::vec2& force) { force.y -= FORCE_OF_GRAVITY; }

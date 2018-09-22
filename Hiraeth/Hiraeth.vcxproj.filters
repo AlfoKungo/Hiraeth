@@ -473,9 +473,6 @@
     <ClInclude Include="src\UI\ui_basic\ui_button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UI\ui_basic\buttons_group.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\UI\ui_basic\ui_button_flashing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -507,6 +504,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\NPC\npc_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\skills\skill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

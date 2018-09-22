@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "../../Dependencies/Cereal/include/cereal/cereal.hpp"
 
 namespace maths {
 
@@ -81,7 +82,7 @@ namespace maths {
 		friend std::ostream& operator<<(std::ostream& stream, const vec3& vector);
 
 		template<class Archive>
-		void serialize(Archive & archive) { archive(x, y, z); }
+		void serialize(Archive & archive) { archive(CEREAL_NVP(x), CEREAL_NVP(y), CEREAL_NVP(z)); }
 
 	};
 

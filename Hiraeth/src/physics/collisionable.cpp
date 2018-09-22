@@ -3,16 +3,18 @@
 namespace hiraeth {
     namespace physics {
 
-        Collisionable::Collisionable(maths::Rectangle& box, map::MapLayer* m_MapLayer)
-            : m_Foothold(NO_FOOTHOLD), m_MapLayer(m_MapLayer), m_Box(box)
+		Collisionable::Collisionable(maths::Rectangle& box, map::MapLayer* map_layer)
+            //: m_Foothold(NO_FOOTHOLD), m_MapLayer(m_MapLayer), m_Box(box)
+            : Collisionable(box, map_layer, NO_FOOTHOLD)
         {
         }
 
-	    Collisionable::Collisionable(maths::Rectangle& empty_box, map::MapLayer* m_MapLayer, 
+	    Collisionable::Collisionable(maths::Rectangle& empty_box, map::MapLayer* map_layer, 
 			unsigned int foothold)
-            : m_Foothold(foothold), m_MapLayer(m_MapLayer), m_Box(empty_box)
+            : m_Foothold(foothold), m_MapLayer(map_layer), m_Box(empty_box)
 	    {
-			m_Force = set_y_by_foothold({ 0 });
+			if (m_Foothold != NO_FOOTHOLD)
+				m_Force = set_y_by_foothold({ 0 });
 	    }
 
 	    void Collisionable::analyze_collision()

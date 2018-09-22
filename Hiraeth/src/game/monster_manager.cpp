@@ -63,9 +63,10 @@ namespace hiraeth {
 			if (!m_Char->is_hit)
 				for (auto monster : m_Layer.m_Renderables)
 				{
-					if (monster->check_collision(m_Char->getBounds()))
+					if (monster->check_collision(m_Char->getHitBox()))
 					{
 						std::cout << "colliding" << std::endl;
+						//if (monster->getBounds().GetBottomMiddle().x < m_Char->getBounds().GetBottomMiddle().x)
 						if (monster->getBounds().GetBottomMiddle().x < m_Char->getBounds().GetBottomMiddle().x)
 							m_Char->getHit(game::Direction::Right, monster->getDamage());
 						else

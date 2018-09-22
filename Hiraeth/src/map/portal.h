@@ -17,7 +17,6 @@ namespace hiraeth {
 
 			//#define PORTAL_ANIMATION_DELAY 12.0f
 #define PORTAL_ANIMATION_DELAY 0.12f
-#define PORTAL_FRAME_WIDTH     110.0f
 
 		private:
 			int m_NextMap;
@@ -26,8 +25,9 @@ namespace hiraeth {
 			Portal(maths::vec3 position, int next_map);
 			Portal(SRL::PortalData pl_data)
 				: Portal(pl_data.position, pl_data.next_map) {}
-			~Portal();
+			~Portal() = default;
 
+			//void update() override {}
 			int getNextMap() const { return m_NextMap; }
 		private:
 		};

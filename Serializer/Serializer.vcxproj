@@ -134,6 +134,9 @@
       <Project>{d7d76bde-7dca-40d5-92af-f83ede064043}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code_for_checks\monster_data_check.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

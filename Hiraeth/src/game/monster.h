@@ -24,6 +24,7 @@ namespace hiraeth
 			ATimer m_AiTimer;
 			graphics::Sprite m_Hp;
 			float m_XStart, m_XEnd;
+			maths::vec2 m_HitBox;
 
 		public:
 			SRL::Summon m_Summon;
@@ -39,7 +40,7 @@ namespace hiraeth
 
 			void update() override;
 			void draw(graphics::Renderer* renderer) const override;
-			bool check_collision(const maths::Rectangle& rec) const;
+			bool check_collision(const maths::Rectangle& rec) ;
 
 			void attack() override
 			{
@@ -47,6 +48,7 @@ namespace hiraeth
 
 			void getHit(Direction dir, Damage damage) override;
 			SRL::Summon get_summon() const { return m_Summon; }
+			//maths::Rectangle getHitBox() { return }
 
 		private:
 			void cause_damage(Damage damage) override;

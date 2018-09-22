@@ -4,23 +4,32 @@ namespace hiraeth {
 	namespace game {
 
 		Monster::Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer)
+			//: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
 			: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
 				new MonsterStats(monster_data.StatsStruct), false),
 			gen(rd()),
 			dis(0, 8),
 			m_Hp(maths::vec2(10, 40), float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
-			m_Summon(summon),
 			m_XStart(NULL),
-			m_XEnd(NULL)
+			m_XEnd(NULL),
+			m_Summon(summon)
 		{
-			
-			SRL::MonsterTexturesData mtd = SRL::deserial<SRL::MonsterTexturesData>("serialized/monster.data", 
+
+			SRL::MonsterTexturesData mtd = SRL::deserial<SRL::MonsterTexturesData>("serialized/monster.data",
 				(100 + monster_data.TextureIndex));
 
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.stand_frames, 0.6f, false, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_stand", mtd.stand_texture), 0));
-			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.walk_frames, 0.2f, true, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_walk", mtd.walk_texture), 0));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.frames_amount.hit_frames, 0.2f, true, graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_hit", mtd.hit_texture), 0));
-			m_Controls.left = true;
+			m_HitBox = mtd.creature_sprites.hit_box;
+			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), m_HitBox.x, m_HitBox.y, 0xb066ccff };
+
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.creature_sprites.sprited_data[SRL::MoveState::Stand], 
+				graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_stand", mtd.textures_dict[SRL::MoveState::Stand])));
+			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.creature_sprites.sprited_data[SRL::MoveState::Walk],
+				graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_walk", mtd.textures_dict[SRL::MoveState::Walk])));
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.creature_sprites.sprited_data[SRL::MoveState::Hit], 
+				graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_hit", mtd.textures_dict[SRL::MoveState::Hit])));
+
+			m_Org = maths::vec2{ m_HitBox.x / 2, 0 };
+			//m_Controls.left = true;
 			std::srand(std::time(nullptr));
 		}
 
@@ -71,6 +80,7 @@ namespace hiraeth {
 					m_AiTimer.reSet((float)(rand() % 30) / 10 + 1);
 				}
 			}
+
 			Creature::update();
 		}
 
@@ -82,10 +92,17 @@ namespace hiraeth {
 			renderer->pop();
 		}
 
-		bool Monster::check_collision(const maths::Rectangle& rec) const
+		bool Monster::check_collision(const maths::Rectangle& rec) 
 		{
-			return ((rec.x < m_Bounds.x + m_Bounds.width) && (m_Bounds.x < rec.x + rec.width)
-				&& (rec.y < m_Bounds.y + m_Bounds.height) && (m_Bounds.y < rec.y + rec.height));
+			maths::Rectangle hit_box{ m_Bounds.position, m_HitBox };
+			//if (m_PrintTimer.isExpired())
+			//{
+			//	std::cout << "my name is : " + std::to_string(hit_box.x) + ", " + std::to_string(hit_box.y) + ", " + std::to_string(hit_box.width) + ", " + std::to_string(hit_box.height) << "\n";
+			//	std::cout << "my car name is : " + std::to_string(rec.x) + ", " + std::to_string(rec.y) + ", " + std::to_string(rec.width) + ", " + std::to_string(rec.height) << "\n";
+			//	m_PrintTimer.reSet(1.0f);
+			//}
+			return ((rec.x < hit_box.x + hit_box.width) && (hit_box.x < rec.x + rec.width)
+				&& (rec.y < hit_box.y + hit_box.height) && (hit_box.y < rec.y + rec.height));
 		}
 
 		void Monster::getHit(Direction dir, Damage damage)

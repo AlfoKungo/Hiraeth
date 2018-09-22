@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<cereal>
-	<frames_amount>
-		<stand_frames>3</stand_frames>
-		<walk_frames>4</walk_frames>
-		<hit_frames>1</hit_frames>
-	</frames_amount>
-</cereal>
-

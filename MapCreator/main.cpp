@@ -8,6 +8,7 @@
 #include <array>
 
 #include "srl/map_data.h"
+#include <cereal/archives/json.hpp>
 
 #define USED_MAPS 2
 
@@ -78,8 +79,16 @@ void serialize_map_data()
 	//Serialize Data
 	for (int i = 0; i < USED_MAPS; i++)
 	{
-		std::ofstream out("output/map_" + std::to_string(i) + ".xml", std::ios::out | std::ios::binary);
+		std::ofstream out("output/" + std::to_string(i) + ".xml", std::ios::out | std::ios::binary);
 		cereal::XMLOutputArchive ar(out);
+		ar(map_data[i]);
+	}
+
+	//Serialize Data
+	for (int i = 0; i < USED_MAPS; i++)
+	{
+		std::ofstream out("output/" + std::to_string(i) + ".json", std::ios::out | std::ios::binary);
+		cereal::JSONOutputArchive ar(out);
 		ar(map_data[i]);
 	}
 }

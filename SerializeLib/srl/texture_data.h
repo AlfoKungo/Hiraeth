@@ -26,4 +26,6 @@ namespace SRL {
 			texture_data_size = (sizeof(pic) / sizeof(pic[0])) * width * height;
 		}
 	};
+
+
 }

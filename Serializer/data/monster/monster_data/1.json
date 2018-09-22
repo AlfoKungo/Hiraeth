@@ -1,0 +1,24 @@
+{
+    "data": {
+        "StatsStruct": {
+            "Name": "Green Mushroom",
+            "Level": 5,
+            "Exp": 4444,
+            "MaxHp": 1000,
+            "Hp": 1000,
+            "MaxMp": 250,
+            "Mp": 250,
+            "Attack": 15,
+            "CritRate": 40,
+            "WeaponDef": 40,
+            "MagicDef": 40,
+            "WeaponAcc": 30,
+            "MagicAcc": 30,
+            "WeaponAvd": 20,
+            "MagicAvd": 20,
+            "Speed": 10.0,
+            "Jump": 100.0
+        },
+        "TextureIndex": 1
+    }
+}

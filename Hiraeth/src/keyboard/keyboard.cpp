@@ -133,6 +133,7 @@ namespace hiraeth {
 			setKeyControl(equip);
 			setKeyControl(inventory);
 			setKeyControl(pick_up);
+			setKeyControl(skill_a);
 		}
 
 		void Keyboard::setKeyControl(Controls control)

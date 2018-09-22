@@ -135,6 +135,8 @@
     <ClInclude Include="srl\monster_data.h" />
     <ClInclude Include="srl\npc_data.h" />
     <ClInclude Include="srl\quest_data.h" />
+    <ClInclude Include="srl\skill_data.h" />
+    <ClInclude Include="srl\sprite_data.h" />
     <ClInclude Include="srl\texture_data.h" />
     <ClInclude Include="srl\tile_texture_data.h" />
   </ItemGroup>

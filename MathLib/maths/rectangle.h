@@ -36,8 +36,8 @@ namespace maths {
 		Rectangle(const vec2& position, const vec2& size);
 		Rectangle(float x, float y, float width, float height);
 
-		Rectangle& Add(const vec2& value);
-		Rectangle& Transoform(const mat4& other);
+		Rectangle& Add(const vec2& other);
+		Rectangle& Transoform(const mat4& transform_mat);
 		friend Rectangle operator+(Rectangle left, const vec2& right);
 
 		bool Intersects(const Rectangle& other) const;
@@ -46,17 +46,20 @@ namespace maths {
 		vec2 Distance(const Rectangle& other) const;
 
 
-
-		inline vec2 GetMinimumBound() const { return position; }
-		inline vec2 GetMaximumBound() const { return position + size; }
-		vec2 GetBottomMiddle() const { return maths::vec2(position.x + size.x / 2, position.y); }
-		vec2 GetMiddle() const { return maths::vec2(position.x + size.x / 2, position.y + size.y / 2); }
+		vec2 GetMinimumBound() const { return position; }
+		vec2 GetMaximumBound() const { return position + size; }
+		vec2 GetBottomMiddle() const { return {position.x + size.x / 2, position.y}; }
+		vec2 GetMiddle() const { return {position.x + size.x / 2, position.y + size.y / 2}; }
 
 		bool operator==(const Rectangle& other) const;
 		bool operator!=(const Rectangle& other) const;
 
 		bool operator<(const Rectangle& other) const;
 		bool operator>(const Rectangle& other) const;
+
+		template<class Archive>
+		//void serialize(Archive & archive) { archive(CEREAL_NVP(position), CEREAL_NVP(size)); }
+		void serialize(Archive & archive) { archive(CEREAL_NVP(x), CEREAL_NVP(y), CEREAL_NVP(width), CEREAL_NVP(height)); }
 
 		friend std::ostream& operator<<(std::ostream& stream, const Rectangle& Rectangle);
 	};

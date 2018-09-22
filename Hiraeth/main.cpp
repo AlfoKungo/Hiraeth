@@ -114,7 +114,8 @@ int main()
 		window.clear();
 		double x, y;
 		window.getKeyboard()->getMousePosition(x, y);
-		std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y);
+		//std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y);
+		std::string s = "my name is : " + std::to_string(m_Char.getBounds().x) + ", "+ std::to_string(m_Char.getBounds().y) + ", " + std::to_string(m_Char.getBounds().width) + ", "  + std::to_string(m_Char.getBounds().height);
 		window.setTitle(s.c_str());
 		Camera::update();
 		map.update();

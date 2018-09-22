@@ -16,8 +16,10 @@ namespace hiraeth {
 		public:
 			UiButtonFlashing(maths::vec2 pos, std::string window_name, std::string button_name, std::function<void()>&& func_to_call)
 				: UiButton(&m_FlashingTexture,func_to_call),
+				//m_FlashingTexture(pos, 4, 0.15f, true, 
+				//	graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + ".main." + button_name + ".normal.0.png"), maths::vec2(0)),
 				m_FlashingTexture(pos, 4, 0.15f, true, 
-					graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + ".main." + button_name + ".normal.0.png"), maths::vec2(0)),
+					graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + ".main." + button_name + ".normal.0.png")),
 				m_MouseOver(pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + ".main." + button_name + ".mouseOver.0.png")),
 				m_Disabled(pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + ".main." + button_name + ".disabled.0.png")),
 				m_Pressed(pos, graphics::TextureManager::Load("Assets/UI/" + window_name + "/" + window_name + ".main." + button_name + ".pressed.0.png")),

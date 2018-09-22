@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include "vec3.h"
+#include "../../Dependencies/Cereal/include/cereal/cereal.hpp"
 
 namespace maths {
 
@@ -65,7 +66,7 @@ namespace maths {
 		friend std::ostream& operator<<(std::ostream& stream, const vec2& vector);
 
 		template<class Archive>
-		void serialize(Archive & archive) { archive(x, y); }
+		void serialize(Archive & archive) { archive(CEREAL_NVP(x), CEREAL_NVP(y)); }
 
 		friend std::ostream& operator<<(std::ostream& stream, const vec2& vector);
 	};

@@ -42,5 +42,11 @@
     <ClInclude Include="srl\npc_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="srl\skill_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="srl\sprite_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

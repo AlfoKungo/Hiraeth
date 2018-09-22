@@ -23,7 +23,7 @@ namespace hiraeth
 
 				m_StatesRenderables[game::Stand].push_back(std::make_unique<graphics::SpritedRenderable>(
 					maths::vec2(), m_Data.npc_frames_amount, 0.6f, false,
-					graphics::TextureManager::Load(m_Data.npc_info.npc_name + "_stand", m_Data.texture_data), 0));
+					graphics::TextureManager::Load(m_Data.npc_info.npc_name + "_stand", m_Data.texture_data)));
 				//m_StatesRenderables[game::Walk].push_back(std::make_unique<graphics::SpritedRenderable>(
 				//	maths::vec2(), mtd.frames_amount.walk_frames, 0.2f, true,
 				//	graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_walk", mtd.walk_texture), 0));
@@ -37,6 +37,7 @@ namespace hiraeth
 			{
 			}
 
+			//void update() override{}
 			void onNpcClick() 
 			{
 				move(maths::vec2(10, 0));

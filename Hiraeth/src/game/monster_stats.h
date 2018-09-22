@@ -9,7 +9,7 @@ namespace hiraeth {
 		class MonsterStats : public Stats
 		{
 		public:
-			SRL::MonsterStatsStruct stats;
+			SRL::MonsterStatsStruct m_Stats;
 			MonsterStats();
 			explicit MonsterStats(SRL::MonsterStatsStruct r_stats);
 			Damage getDamage() const override;

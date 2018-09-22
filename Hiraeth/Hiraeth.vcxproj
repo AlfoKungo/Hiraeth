@@ -279,8 +279,8 @@
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\save\serializer.h" />
+    <ClInclude Include="src\skills\skill.h" />
     <ClInclude Include="src\UI\main_ui.h" />
-    <ClInclude Include="src\UI\ui_basic\buttons_group.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_flashing.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_normal.h" />

@@ -20,6 +20,7 @@ namespace hiraeth {
 			input::Keyboard* m_Kb;
 			std::vector<Monster*>* m_MonstersLayer;
 			item::ItemManager* m_ItemManager;
+			//graphics::Sprite m_HitSprite;
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager, CharacterStats * character_stats);
 			~Character();
@@ -28,6 +29,7 @@ namespace hiraeth {
 
 			void ButtonClicked(input::Controls control) override;
 			void ButtonReleased(input::Controls control) override;
+			void ButtonUpdate(input::Controls control, bool state);
 
 			void registerKeys();
 			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }

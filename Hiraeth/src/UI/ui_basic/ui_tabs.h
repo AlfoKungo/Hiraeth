@@ -18,7 +18,8 @@ namespace hiraeth {
 			UiTab<TabDataType> * m_ActiveTab;
 		public:
 			UiTabs()
-				: m_TabIndex(0)
+				: m_TabIndex(0),
+				m_ActiveTab(nullptr)
 			{
 
 			}

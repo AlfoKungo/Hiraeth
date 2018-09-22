@@ -7,6 +7,7 @@
 #include <iostream>
 #include <filesystem>
 #include <array>
+#include "code_for_checks/monster_data_check.h"
 #include <string>
 
 #include "srl/ImageLoad.h"
@@ -15,6 +16,7 @@
 #include "srl/monster_data.h"
 #include "srl/item_data.h"
 #include "srl/npc_data.h"
+#include <cereal/archives/json.hpp>
 
 typedef int Address;
 
@@ -57,8 +59,6 @@ const int MONSTER_ADDRESSES_AMOUNT(MONSTER_AMOUNT + MONSTER_TEXTURES_AMOUNT);
 
 namespace fs = std::experimental::filesystem;
 
-const int zero = 0;
-
 
 
 template<class DATA>
@@ -84,7 +84,8 @@ void serialize_data(std::vector<DATA> data, int addresses_begin, std::ofstream& 
 
 int main()
 {
-
+	Checks::create_monster_data();
+		
 	// Serialize Map Data
 	{
 		std::ofstream map_data_file("../Hiraeth/serialized/map.data", std::ios::out | std::ios::binary);
@@ -97,7 +98,7 @@ int main()
 			for (auto & p : fs::directory_iterator("data/map/map_data"))
 			{
 				std::ifstream in(p.path(), std::ios::in);
-				cereal::XMLInputArchive arin(in);
+				cereal::JSONInputArchive arin(in);
 				SRL::MapData map_data{};
 				arin(map_data);
 				v_mapData.push_back(map_data);
@@ -151,7 +152,7 @@ int main()
 			for (auto & p : fs::directory_iterator("data/monster/monster_data"))
 			{
 				std::ifstream in(p.path(), std::ios::in);
-				cereal::XMLInputArchive arin(in);
+				cereal::JSONInputArchive arin(in);
 				SRL::MonsterData monster_data{};
 				arin(monster_data);
 				v_monsterData.push_back(monster_data);
@@ -166,13 +167,13 @@ int main()
 				SRL::MonsterTexturesData Mtd{};
 
 				std::string path = p.path().string();
-				std::ifstream in(path + "\\data.xml", std::ios::in);
-				cereal::XMLInputArchive arin(in);
+				std::ifstream in(path + "\\data.json", std::ios::in);
+				cereal::JSONInputArchive arin(in);
 
-				arin(Mtd.frames_amount);
-				Mtd.walk_texture.load_texture(path + "\\walk.png");
-				Mtd.stand_texture.load_texture(path + "\\stand.png");
-				Mtd.hit_texture.load_texture(path + "\\hit.png");
+				arin(Mtd.creature_sprites);
+				Mtd.textures_dict[SRL::MoveState::Walk].load_texture(path + "\\walk.png");
+				Mtd.textures_dict[SRL::MoveState::Stand].load_texture(path + "\\stand.png");
+				Mtd.textures_dict[SRL::MoveState::Hit].load_texture(path + "\\hit.png");
 				v_monsterTexturesData.push_back(Mtd);
 			}
 			monster_data_file.seekp(0, monster_data_file.end);
@@ -234,8 +235,9 @@ int main()
 		}
 	}
 
+
 	std::cout << "finished serializing " << "map" << std::endl;
 	std::cout << "finished";
-	std::cin.get();
+	//std::cin.get();
 	return 0;
 }

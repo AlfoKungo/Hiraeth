@@ -17,8 +17,8 @@ namespace hiraeth {
 			const maths::Rectangle& m_Box;
 			maths::vec2 m_Force;
 
-			Collisionable(maths::Rectangle& box, map::MapLayer* m_MapLayer);
-			Collisionable(maths::Rectangle& empty_box, map::MapLayer* m_MapLayer,
+			Collisionable(maths::Rectangle& box, map::MapLayer* map_layer);
+			Collisionable(maths::Rectangle& empty_box, map::MapLayer* map_layer,
 				unsigned int foothold);
 			virtual ~Collisionable() = default;
 		protected:
