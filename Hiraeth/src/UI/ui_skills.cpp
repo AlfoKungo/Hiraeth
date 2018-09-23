@@ -19,8 +19,6 @@ namespace hiraeth {
 			}
 			m_BackgroundGroup->add(m_Tabs);
 
-
-
 		}
 
 		

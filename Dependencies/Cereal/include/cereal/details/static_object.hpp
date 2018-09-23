@@ -28,7 +28,7 @@
 #ifndef CEREAL_DETAILS_STATIC_OBJECT_HPP_
 #define CEREAL_DETAILS_STATIC_OBJECT_HPP_
 
-#include <cereal/macros.hpp>
+#include "cereal/macros.hpp"
 
 #if CEREAL_THREAD_SAFE
 #include <mutex>
@@ -68,12 +68,12 @@ namespace cereal
     {
       private:
         //! Forces instantiation at pre-execution time
-        static void instantiate( T const & ) {}
+        static void instantiate( T const * ) {}
 
         static T & create()
         {
           static T t;
-          instantiate(instance);
+          instantiate(&instance);
           return t;
         }
 
@@ -95,6 +95,7 @@ namespace cereal
             std::unique_lock<std::mutex> lock;
           #else
           public:
+	    LockGuard(LockGuard const &) = default; // prevents implicit copy ctor warning
             ~LockGuard() CEREAL_NOEXCEPT {} // prevents variable not used
           #endif
         };
@@ -109,6 +110,7 @@ namespace cereal
         static LockGuard lock()
         {
           #if CEREAL_THREAD_SAFE
+          static std::mutex instanceMutex;
           return LockGuard{instanceMutex};
           #else
           return LockGuard{};
@@ -117,15 +119,9 @@ namespace cereal
 
       private:
         static T & instance;
-        #if CEREAL_THREAD_SAFE
-        static std::mutex instanceMutex;
-        #endif
     };
 
     template <class T> T & StaticObject<T>::instance = StaticObject<T>::create();
-    #if CEREAL_THREAD_SAFE
-    template <class T> std::mutex StaticObject<T>::instanceMutex;
-    #endif
   } // namespace detail
 } // namespace cereal
 
