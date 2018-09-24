@@ -3,7 +3,7 @@
 
 namespace hiraeth {
 	namespace ui {
-		UiInventory::UiInventory(maths::vec2 pos, input::Controls control_key, game::CharacterStats *character_stats)
+		UiInventory::UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 172, 335), control_key),
 			m_Tabs(new UiTabs<item::Item>()),
 			m_CharacterStats(character_stats),
@@ -77,19 +77,16 @@ namespace hiraeth {
 
 		void UiInventory::mouse_right_clicked(maths::vec2 mousePos)
 		{
-			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
-			auto result_item = std::find_if(std::begin(*tab_rends),
-				std::end(*tab_rends), [&](auto const& inv_item)
-			{ inv_item->setDrawDetails(false);
-			return inv_item->getBounds().Contains(mousePos); });
-			if (result_item != std::end(*tab_rends))
+			switch (m_Tabs->getTabIndex())
 			{
-				m_OldItemPos = (*result_item)->get_position();
-				std::string item_stats = (*result_item)->getItemStats();
-				m_CharacterStats->add_stats(item_stats);
-				tab_rends->erase(result_item);
-				m_IsHolding = true;
-				return;
+			case 0:
+				equip_item();
+				break;
+			case 1:
+				use_item(mousePos);
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -123,7 +120,7 @@ namespace hiraeth {
 			containing_tab->add_data(new_item);
 		}
 
-		maths::vec2 UiInventory::findEmptyPosition(unsigned int tab_type)
+		maths::vec2 UiInventory::findEmptyPosition(unsigned int tab_type) const
 		{
 			UiTab<item::Item> * containing_tab = m_Tabs->getTabByIndex(tab_type);
 			for (int index = 0; index < 50; ++index)
@@ -142,6 +139,44 @@ namespace hiraeth {
 					return pos;
 			}
 			return maths::vec2(11, 250);
+		}
+
+		item::Item * UiInventory::getItemByMousePos(maths::vec2 mousePos)
+		{
+			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
+			auto result_item = std::find_if(std::begin(*tab_rends),
+				std::end(*tab_rends), [&](auto const& inv_item)
+			{ inv_item->setDrawDetails(false);
+			return inv_item->getBounds().Contains(mousePos); });
+			if (result_item != std::end(*tab_rends))
+			{
+				return (*result_item).get();
+			}
+			return nullptr;
+		}
+
+		void UiInventory::use_item(maths::vec2 mousePos)
+		{
+
+			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
+			auto result_item = std::find_if(std::begin(*tab_rends),
+				std::end(*tab_rends), [&](auto const& inv_item)
+			{ inv_item->setDrawDetails(false);
+			return inv_item->getBounds().Contains(mousePos); });
+			if (result_item != std::end(*tab_rends))
+			{
+				m_OldItemPos = (*result_item)->get_position();
+				SRL::ItemPropertiesMap * item_stats = (*result_item)->getItemProperties();
+				if (m_CharacterStats->activate_use_item(item_stats))
+				{
+					tab_rends->erase(result_item);
+					m_IsHolding = true;
+				}
+			}
+		}
+
+		void UiInventory::equip_item()
+		{
 		}
 	}
 }

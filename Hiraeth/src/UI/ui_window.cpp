@@ -3,7 +3,7 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiWindow::UiWindow(maths::Rectangle rec, input::Controls control_key)
+		UiWindow::UiWindow(maths::Rectangle rec, UiKey control_key)
 			: m_ControlKey(control_key),
 			m_WindowSize(rec.size),
 			m_IsAttached(false),

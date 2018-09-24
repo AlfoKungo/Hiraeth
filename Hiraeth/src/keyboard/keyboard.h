@@ -9,31 +9,12 @@
 namespace hiraeth {
 	namespace input {
 
-		enum Controls
-		{
-			none,
-			up = GLFW_KEY_UP,
-			down = GLFW_KEY_DOWN,
-			left = GLFW_KEY_LEFT,
-			right = GLFW_KEY_RIGHT,
-			jump = GLFW_KEY_SPACE,
-			attack = GLFW_KEY_LEFT_CONTROL,
-			escape = GLFW_KEY_ESCAPE,
-			stats = GLFW_KEY_S,
-			skills = GLFW_KEY_D,
-			quests = GLFW_KEY_Q,
-			equip = GLFW_KEY_E,
-			inventory = GLFW_KEY_A,
-			pick_up = GLFW_KEY_Z,
-			skill_a = GLFW_KEY_H,
-		};
-
+			typedef unsigned int KeyCode;
 		class Keyboard
 		{
 		private:
-			std::map<unsigned int, KeyboardEvent*> keys_map;
-			std::map<Controls, unsigned int> m_Controls;
-			std::map<unsigned int, Controls> m_KeysControls;
+			std::map<KeyCode, KeyboardEvent*> m_KeysMap;
+			std::map<KeyCode, Key> m_KeyControls;
 			bool m_Keys[GLFW_KEY_LAST];
 			bool m_KeysClicked[GLFW_KEY_LAST];
 			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
@@ -42,14 +23,10 @@ namespace hiraeth {
 			double mx, my, pmx, pmy;
 			Keyboard();
 
-			void registerToKey(Controls control, KeyboardEvent* key_event)
+			void registerToKey(KeyCode keycode, Key key, KeyboardEvent* key_event)
 			{
-				keys_map[m_Controls[control]] = key_event;
-			}
-
-			void registerToKey(unsigned int key, KeyboardEvent* key_event)
-			{
-				keys_map[key] = key_event;
+				m_KeyControls[keycode] = key;
+				m_KeysMap[keycode] = key_event;
 			}
 
 			void registerToMouse(MouseEvent* mouse_event)
@@ -57,10 +34,8 @@ namespace hiraeth {
 				m_MouseEventMap.push_back(mouse_event);
 			}
 
-			bool isKeyPressed(unsigned int keycode) const;
-			bool isControlPressed(Controls control);
-			bool isKeyClicked(unsigned int keycode);
-			bool isControlClicked(Controls control);
+			bool isKeyPressed(KeyCode keycode) const;
+			bool isKeyClicked(KeyCode keycode);
 			bool isMouseButtonPressed(unsigned int button) const;
 			void getMousePosition(double& x, double& y) const;
 			friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -68,19 +43,18 @@ namespace hiraeth {
 			friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 		private:
 
-			void clicked(unsigned int key, int action)
+			void clicked(KeyCode keycode, int action)
 			{
-				m_KeysClicked[key] = action == GLFW_PRESS;
-				Controls control_key = m_KeysControls[key];
-				if (keys_map[key] != NULL)
+				m_KeysClicked[keycode] = (action == GLFW_PRESS);
+				const Key key = m_KeyControls[keycode];
+				if (m_KeysMap.find(keycode) != m_KeysMap.end())
+				{
 					if (action == GLFW_PRESS || action == GLFW_REPEAT)
-						keys_map[key]->ButtonClicked(control_key);
+						m_KeysMap[keycode]->ButtonClicked(key);
 					else
-						keys_map[key]->ButtonReleased(control_key);
+						m_KeysMap[keycode]->ButtonReleased(key);
+				}
 			}
-			void initControls();
-			void setKeyControl(Controls control);
-			void setKeyControl(Controls control, unsigned int key);
 		};
 
 #pragma region Keys

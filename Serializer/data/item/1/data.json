@@ -1,0 +1,16 @@
+{
+    "info": {
+        "item_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 0,
+                    "data": 10
+                }
+            }
+        ],
+        "item_name": "Dagger",
+        "type": 0,
+        "item_description": "Gives Attack Damage"
+    }
+}

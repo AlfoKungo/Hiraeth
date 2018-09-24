@@ -4,6 +4,10 @@
 #include <vector>
 //#include "basic/event_handler.h"
 #include "basic/EventManager.h"
+#include "srl/item_data.h"
+#include "basic/a_timer.h"
+#include <tuple>
+#include "stats/timed_stat.h"
 
 namespace hiraeth {
 	namespace game {
@@ -34,24 +38,36 @@ namespace hiraeth {
 		private:
 			StatsStruct m_StatsStruct;
 			DetailsStruct m_DetailsStruct;
-			//std::vector<StatsUpdateEvent*> m_StatsUpdateListeners;
+			std::vector<stats::TimedStat> m_TimedStats;
+			//std::vector<std::unique_ptr< TimedStat>> m_TimedStats;
 		public:
 			CharacterStats();
+
+
+			void updateStats();
 			Damage getDamage() const override;
 			void causeDamage(Damage damage) override;
 			inline StatsStruct* getStatsStruct_() { return &m_StatsStruct; }
 			inline DetailsStruct* getDetailsStruct_() { return &m_DetailsStruct; }
-			void add_stats(std::string stats_string)
+
+			bool activate_use_item(SRL::ItemPropertiesMap * item_properties);
+			float getSpeed() const override;
+			float getJump() const override;
+			bool consumeMana(unsigned mp_consume) override;
+			void recoverHp(unsigned heal_amount) override;
+			void recoverMp(unsigned heal_amount);
+
+			void setTimedStat(float& data_member, SRL::TimedValue timed_value)
 			{
-				std::string stat_type = stats_string.substr(0, 3);
-				std::string stat_value = stats_string.substr(4);
-				unsigned int value = atoi(stat_value.c_str())/4;
-				if (stat_type == "spd")
-					m_DetailsStruct.Speed += value;
-				//else
-				//	std::cout << "added nothing" << "\n";
+				m_TimedStats.emplace_back(stats::TimedStat{ &data_member, timed_value });
 			}
-			//void registerToStatsUpdate(StatsUpdateEvent* listener) { m_StatsUpdateListeners.push_back(listener); }
+
+			void update()
+			{
+				m_TimedStats.erase(
+					std::remove_if(begin(m_TimedStats), end(m_TimedStats), 
+					[](stats::TimedStat ts) {return ts.checkAndCancel(); }), end(m_TimedStats));
+			}
 		};
 
 	}

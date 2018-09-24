@@ -512,5 +512,8 @@
     <ClInclude Include="src\skills\skill_icon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\stats\timed_stat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

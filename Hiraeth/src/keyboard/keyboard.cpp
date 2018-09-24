@@ -4,19 +4,16 @@ namespace hiraeth {
 	namespace input {
 		Keyboard::Keyboard()
 		{
-
-			for (int i = 0; i < GLFW_KEY_LAST; ++i)
-				keys_map.insert(std::pair<unsigned int, KeyboardEvent*>(i, nullptr));
 			for (int i = 0; i < GLFW_KEY_LAST; ++i)
 				m_Keys[i] = false;
 			for (int i = 0; i < GLFW_KEY_LAST; ++i)
 				m_KeysClicked[i] = false;
 			for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; ++i)
 				m_MouseButtons[i] = false;
-			initControls();
+			//initControls();
 		}
 
-		bool Keyboard::isKeyPressed(unsigned int keycode) const
+		bool Keyboard::isKeyPressed(KeyCode keycode) const
 		{
 			if (keycode >= GLFW_KEY_LAST)
 				return false;
@@ -24,12 +21,7 @@ namespace hiraeth {
 			return m_Keys[keycode];
 		}
 
-		bool Keyboard::isControlPressed(Controls control)
-		{
-			return m_Keys[m_Controls[control]];
-		}
-
-		bool Keyboard::isKeyClicked(unsigned int keycode)
+		bool Keyboard::isKeyClicked(KeyCode keycode)
 		{
 			if (keycode >= GLFW_KEY_LAST)
 				return false;
@@ -37,17 +29,6 @@ namespace hiraeth {
 			if (m_KeysClicked[keycode])
 			{
 				m_KeysClicked[keycode] = false;
-				return true;
-			}
-			return false;
-		}
-
-		bool Keyboard::isControlClicked(Controls control)
-		{
-			unsigned int key = m_Controls[control];
-			if (m_KeysClicked[key])
-			{
-				m_KeysClicked[key] = false;
 				return true;
 			}
 			return false;
@@ -115,36 +96,6 @@ namespace hiraeth {
 					if (window->mouseMove(kb->pmx, kb->pmy, xpos, ypos))
 						return;
 				}
-
-		}
-
-		void Keyboard::initControls()
-		{
-			setKeyControl(up);
-			setKeyControl(down);
-			setKeyControl(left);
-			setKeyControl(right);
-			setKeyControl(jump);
-			setKeyControl(attack);
-			setKeyControl(escape);
-			setKeyControl(stats);
-			setKeyControl(skills);
-			setKeyControl(quests);
-			setKeyControl(equip);
-			setKeyControl(inventory);
-			setKeyControl(pick_up);
-			setKeyControl(skill_a);
-		}
-
-		void Keyboard::setKeyControl(Controls control)
-		{
-			setKeyControl(control, control);
-		}
-
-		void Keyboard::setKeyControl(Controls control, unsigned int key)
-		{
-			m_Controls[control] = key;
-			m_KeysControls[key] = control;
 
 		}
 	}

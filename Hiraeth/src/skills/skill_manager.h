@@ -6,7 +6,7 @@
 namespace hiraeth {
 	namespace skills {
 
-		class SkillManager: public Updatable
+		class SkillManager : public Updatable
 		{
 			std::map<unsigned int, SRL::SkillInfo > m_SkillsInfo;
 			ui::UiSkills * m_UiSkills;
@@ -17,10 +17,11 @@ namespace hiraeth {
 				add_skill(0);
 				add_skill(1);
 				add_skill(2);
-				
+				//activate_skill(1);
+
 			}
 
-			void update() override{}
+			void update() override {}
 
 			void add_skill(unsigned int index)
 			{
@@ -34,6 +35,11 @@ namespace hiraeth {
 				if (m_SkillsInfo.find(skill_index) != m_SkillsInfo.end())
 					return &m_SkillsInfo[skill_index];
 				return nullptr;
+			}
+
+			std::vector<unsigned int> get_available_skills()
+			{
+				return std::vector<unsigned int>{ 0, 1, 2 };
 			}
 		};
 	}

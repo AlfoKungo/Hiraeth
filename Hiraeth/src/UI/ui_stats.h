@@ -25,11 +25,11 @@ namespace hiraeth {
 			game::StatsStruct* m_StatsStruct;
 			game::DetailsStruct* m_DetailsStruct;
 		public:
-			UiStats(maths::vec2 pos, input::Controls control_key, 
+			UiStats(maths::vec2 pos, UiKey control_key, 
 				game::CharacterStats *character_stats);
 			void auto_assign_clicked();
 			void details_clicked();
-			void mouse_left_clicked(maths::vec2 mousePos);
+			void mouse_left_clicked(maths::vec2 mousePos) override;
 			void mouse_left_released(maths::vec2 mousePos) override {}
 			void mouse_right_clicked(maths::vec2 mousePos) override {}
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override {}

@@ -13,8 +13,12 @@ namespace hiraeth {
 			: m_Timer(0)
 		{
 		}
+		explicit ATimer(float time_to_wait)
+			: m_Timer(time_to_wait)
+		{
+		}
 		
-		bool isExpired()
+		bool isExpired() const
 		{
 			return (StaticTimer::timer.elapsed() - m_Timer > 0.0f);
 		}

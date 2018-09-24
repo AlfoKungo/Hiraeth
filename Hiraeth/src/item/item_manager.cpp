@@ -12,8 +12,8 @@ namespace hiraeth {
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
-			for (int i = -400; i < 400; i += 100)
-				dropItem(maths::vec2(i, 0), (i + 1000) % 3);
+			for (int i = 0; i < 12; ++i)
+				dropItem(maths::vec2((i - 6) * 80, 0), i % 5);
 			dropItem(maths::vec2(0), 0);
 			dropItem(maths::vec2(-200, 0), 1);
 			dropItem(maths::vec2(200, 0), 2);

@@ -15,10 +15,10 @@ namespace hiraeth {
 			m_MapIndex(map_index),
 			m_Wnd(wind)
 		{
-			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", 400, 0, 0xffff0000);
+			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", { 400, 0 }, 0xffff0000);
 			m_BgLayer.add(new graphics::Sprite(maths::vec2(-900, -450), new graphics::Texture("bg.png", 0)));
 			m_BgLayer.add(fps);
-			m_Wnd->getKeyboard()->registerToKey(input::Controls::up, this);
+			m_Wnd->getKeyboard()->registerToKey(GLFW_KEY_UP, up, this);
 
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->createEvent(MapChanged);
@@ -57,10 +57,10 @@ namespace hiraeth {
 			m_ChangeMapFlag = true;
 		}
 
-		void Map::ButtonClicked(input::Controls control)
+		void Map::ButtonClicked(input::Key control)
 		{
 			maths::vec2 char_pos = view::Camera::getCharacterPos();
-			if (input::Controls::up == control)
+			if (up == control)
 				//for (auto& portal : m_MapLayer.getPortals())
 				for (auto& portal : m_PtLayer.m_Renderables)
 					if (portal->getBounds().GetMinimumBound().Distance(char_pos) <= 100)

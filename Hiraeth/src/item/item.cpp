@@ -11,8 +11,8 @@ namespace hiraeth {
 			m_State(InAir),
 			m_IsDrawDetails(false),
 			m_DetailsBoxSprite(maths::vec2(30, -75), 180, 80, 0x88331a00),
-			m_DetailsBoxLabelHeader("arial", 16, m_ItemInfo.item_name, 40, -10, 0xffffffff, graphics::Label::Alignment::LEFT),
-			m_DetailsBoxLabelContent("arial", 13, m_ItemInfo.item_description, 40, -30, 0xffffffff, graphics::Label::Alignment::LEFT)
+			m_DetailsBoxLabelHeader("arial", 16, m_ItemInfo.item_name, { 40, -10 }, 0xffffffff, graphics::Label::Alignment::LEFT),
+			m_DetailsBoxLabelContent("arial", 13, m_ItemInfo.item_description, { 40, -30 }, 0xffffffff, graphics::Label::Alignment::LEFT)
 
 
 		{

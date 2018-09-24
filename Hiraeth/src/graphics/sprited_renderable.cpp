@@ -11,14 +11,13 @@ namespace hiraeth
 			                                   ptex->getHeight()), 0xffffffff, animation_data.frames_data[0].origin),
 			  m_FramesAmount(animation_data.frames_data.size()), //this
 			  m_FrameWidth(ptex->getWidth() / float(animation_data.frames_data.size())),
-			  m_AnimationTimer(StaticTimer::timer.elapsed()), //this
 			  m_IsLoop(animation_data.is_loop),
 			  m_AniData(animation_data)
 
 		{
 			m_Texture = ptex;
 			update_frame();
-			m_AnimationTimer = StaticTimer::timer.elapsed() + m_AniData.frames_data[m_FrameIndex].delay;
+			m_AnimationTimer.reSet(m_AniData.frames_data[m_FrameIndex].delay);
 		}
 
 		SpritedRenderable::SpritedRenderable(maths::vec3 position, unsigned int frames_amount,
@@ -30,7 +29,7 @@ namespace hiraeth
 
 		void SpritedRenderable::update()
 		{
-			if (StaticTimer::timer.elapsed() - m_AnimationTimer > 0)
+			if (m_AnimationTimer.isExpired())
 			{
 				m_FrameIndex += m_LoopDirection;
 				if (!m_IsLoop || m_FramesAmount == 1)
@@ -45,7 +44,7 @@ namespace hiraeth
 					}
 				}
 				update_frame();
-				m_AnimationTimer = StaticTimer::timer.elapsed() + m_AniData.frames_data[m_FrameIndex].delay;
+				m_AnimationTimer.reSet(m_AniData.frames_data[m_FrameIndex].delay);
 			}
 		}
 
@@ -53,7 +52,7 @@ namespace hiraeth
 		{
 			m_FrameIndex = 0;
 			m_LoopDirection = 1;
-			m_AnimationTimer = StaticTimer::timer.elapsed() + m_AniData.frames_data[m_FrameIndex].delay;
+			m_AnimationTimer.reSet(m_AniData.frames_data[m_FrameIndex].delay);
 			update_frame();
 		}
 

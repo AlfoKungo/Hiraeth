@@ -21,7 +21,7 @@ namespace hiraeth {
 			maths::vec2 m_OldItemPos;
 		public:
 
-			UiInventory(maths::vec2 pos, input::Controls control_key, game::CharacterStats *character_stats);
+			UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats);
 			void fillGroup();
 			void mouse_left_clicked(maths::vec2 mousePos) override;
 			void mouse_left_released(maths::vec2 mousePos) override;
@@ -34,7 +34,11 @@ namespace hiraeth {
 				UiWindow::draw(renderer);
 			}
 		private:
-			maths::vec2 findEmptyPosition(unsigned int tab_type);
+			maths::vec2 findEmptyPosition(unsigned int tab_type) const;
+			//item::Item * getItemByMousePos(maths::vec2 mousePos);
+			item::Item * getItemByMousePos(maths::vec2 mousePos);
+			void use_item(maths::vec2 mousePos);
+			void equip_item();
 		};
 
 	}

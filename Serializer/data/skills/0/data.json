@@ -5,19 +5,26 @@
                 "key": 0,
                 "value": {
                     "index": 0,
-                    "data": 50
+                    "data": 15
                 }
             },
             {
-                "key": 1,
+                "key": 2,
                 "value": {
                     "index": 0,
-                    "data": 50
+                    "data": 35
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "index": 0,
+                    "data": 300
                 }
             }
         ],
         "name": "Heal",
-        "mp_con": 40.0,
-        "damage": 50.0
+        "is_active": true,
+        "max_level": 3
     }
 }

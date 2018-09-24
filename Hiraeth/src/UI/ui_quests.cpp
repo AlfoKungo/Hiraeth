@@ -4,7 +4,7 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiQuests::UiQuests(maths::vec2 pos, input::Controls control_key)
+		UiQuests::UiQuests(maths::vec2 pos, UiKey control_key)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 295, 396), control_key),
 			m_Tabs(new UiTabs<graphics::Renderable>())
 		{

@@ -2,13 +2,14 @@
 
 namespace hiraeth {
 	namespace input {
-		enum Controls;
+		typedef unsigned int Key;
+
 		class KeyboardEvent
 		{
 		public:
-			virtual void ButtonClicked(Controls control) = 0;
-			virtual void ButtonReleased(Controls control) = 0;
-			virtual ~KeyboardEvent() {}
+			virtual void ButtonClicked(Key control) = 0;
+			virtual void ButtonReleased(Key control) = 0;
+			virtual ~KeyboardEvent() = default;
 		};
 	}
 }

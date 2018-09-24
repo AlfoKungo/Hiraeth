@@ -5,12 +5,13 @@ namespace hiraeth
 	namespace game
 	{
 		BaseCreature::BaseCreature(maths::Rectangle bounds, map::MapLayer* map_layer, 
-			std::unique_ptr<float> speed, std::unique_ptr<float> jump,
+			float speed, float jump,
 			unsigned int foothold)
 			: Collisionable(m_Bounds, map_layer, foothold),
 			  m_StanceState(Stand), m_Direction(Left), m_CurrentRenderables(nullptr),
 			  m_TransformationMatrix(maths::mat4::Translate(bounds.position)), 
-			  m_Speed(std::move(speed)), m_Jump(std::move(jump))
+			  //m_Speed(std::move(speed)), m_Jump(std::move(jump))
+			  m_Speed(speed), m_Jump(jump)
 		{
 			m_StatesRenderables[Stand] = std::vector<std::unique_ptr<Renderable>>();
 			m_StatesRenderables[Walk] = std::vector<std::unique_ptr<Renderable>>();
@@ -35,8 +36,6 @@ namespace hiraeth
 			if (m_Direction == Left)
 				renderer->push(m_TransformationMatrix * maths::mat4::Translate(-maths::vec3(m_Org)));
 			else
-				//renderer->push(m_TransformationMatrix * maths::mat4::Translate(-maths::vec3(m_Org)) * 
-				//	maths::mat4::Scale(maths::vec3(-1, 1, 1)));
 				renderer->push(m_TransformationMatrix * maths::mat4::Translate(maths::vec3(m_Org)) * 
 					maths::mat4::Scale(maths::vec3(-1, 1, 1)) * maths::mat4::Translate(- maths::vec3(2 * m_Org)));
 
@@ -50,15 +49,15 @@ namespace hiraeth
 			if (m_Controls.right)
 			{
 				m_Direction = Right;
-				m_Force.x += calculate_force(*m_Speed);
+				m_Force.x += calculate_force(m_Speed);
 			}
 			else if (m_Controls.left)
 			{
 				m_Direction = Left;
-				m_Force.x -= calculate_force(*m_Speed);
+				m_Force.x -= calculate_force(m_Speed);
 			}
 			if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
-				m_Force.y = *m_Jump;
+				m_Force.y = m_Jump;
 		}
 
 		void BaseCreature::analyze_stance()

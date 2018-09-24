@@ -37,8 +37,8 @@ namespace hiraeth {
 			bool rightButtonClicked(float mx, float my) override;
 			bool mouseMove(float pmx, float pmy, float mx, float my) const override;
 			bool is_window_contains(maths::vec2 mouse_pos) const override;
-			void ButtonClicked(input::Controls c) override;
-			void ButtonReleased(input::Controls c) override;
+			void ButtonClicked(input::Key key) override;
+			void ButtonReleased(input::Key key) override;
 			MainUi * getMainUi() { return &m_MainUi; }
 			UiInventory * getUiInventory() { return m_UiInventory; }
 			UiSkills * getUiSkills() { return m_UiSkills; }

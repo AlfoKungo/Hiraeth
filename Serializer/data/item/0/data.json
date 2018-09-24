@@ -1,0 +1,16 @@
+{
+    "info": {
+        "item_properties": [
+            {
+                "key": 3,
+                "value": {
+                    "index": 0,
+                    "data": 15
+                }
+            }
+        ],
+        "item_name": "Staff",
+        "type": 0,
+        "item_description": "Gives Magic Damage"
+    }
+}

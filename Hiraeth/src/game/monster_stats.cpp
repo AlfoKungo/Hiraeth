@@ -2,18 +2,6 @@
 
 namespace hiraeth {
 	namespace game {
-		MonsterStats::MonsterStats()
-			: Stats(m_Stats.MaxHp, m_Stats.Hp, m_Stats.Speed, m_Stats.Jump),
-		m_Stats{ "Slime", 5, 4444, 400, 400, 250, 250, 15, 40,
-						   40, 40, 30, 30, 20, 20, 10, 100}
-		{
-		}
-
-		MonsterStats::MonsterStats(SRL::MonsterStatsStruct r_stats)
-			: Stats(m_Stats.MaxHp, m_Stats.Hp, m_Stats.Speed, m_Stats.Jump),
-		m_Stats(r_stats)
-		{
-		}
 
 		Damage MonsterStats::getDamage() const
 		{
@@ -23,6 +11,27 @@ namespace hiraeth {
 		void MonsterStats::causeDamage(Damage damage)
 		{
 			m_Stats.Hp -= damage.RawDamage;
+		}
+
+		float MonsterStats::getSpeed() const
+		{
+			return m_Stats.Speed;
+		}
+
+		float MonsterStats::getJump() const
+		{
+			return m_Stats.Jump;
+		}
+
+		bool MonsterStats::consumeMana(unsigned mp_consume)
+		{
+			m_Stats.Mp -= mp_consume;
+			return true;
+		}
+
+		void MonsterStats::recoverHp(unsigned heal_amount)
+		{
+			m_Stats.Hp += heal_amount;
 		}
 	}
 }

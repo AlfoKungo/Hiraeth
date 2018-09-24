@@ -5,11 +5,11 @@
                 "key": 0,
                 "value": {
                     "index": 0,
-                    "data": 50
+                    "data": 5
                 }
             },
             {
-                "key": 2,
+                "key": 6,
                 "value": {
                     "index": 1,
                     "data": "x*1.5"
@@ -17,7 +17,7 @@
             }
         ],
         "name": "Snails",
-        "mp_con": 30.0,
-        "damage": 35.0
+        "is_active": true,
+        "max_level": 3
     }
 }

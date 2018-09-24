@@ -8,7 +8,8 @@ namespace hiraeth {
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
 			m_Kb(kb),
 			m_ItemManager(item_manager),
-			m_SkillManager(skill_manager)
+			m_SkillManager(skill_manager),
+			m_CharacterStats(character_stats)
 		{
 			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(
 				SRL::AnimationData{ {{{0, 0, 23, 31}, {15, 0}, 0.4f}, {{23, 0, 23, 31}, {15, 0}, 0.4f}, {{46, 0, 23, 31}, {15, 0}, 0.4f}}, true },
@@ -64,11 +65,10 @@ namespace hiraeth {
 
 		void Character::update()
 		{
-			if (m_Controls.skill_a)
-			{
-				activate_skill(0);
-			}
+			m_CharacterStats->update();
 
+			m_Speed = m_CharacterStats->getSpeed();
+			m_Jump = m_CharacterStats->getJump();
 			if (m_Controls.pick_up)
 			{
 				pickItemUp();
@@ -76,47 +76,57 @@ namespace hiraeth {
 			Creature::update();
 		}
 
-		void Character::ButtonReleased(input::Controls control)
+		void Character::ButtonReleased(input::Key control)
 		{
 			ButtonUpdate(control, false);
 		}
 
-		void Character::ButtonClicked(input::Controls control)
+		void Character::ButtonClicked(input::Key control)
 		{
 			ButtonUpdate(control, true);
 		}
 
-		void Character::ButtonUpdate(input::Controls control, bool state)
+		void Character::ButtonUpdate(input::Key key, bool state)
 		{
-			if (control == input::Controls::right)
+			if (key == right)
 				m_Controls.right = state;
-			else if (control == input::Controls::left)
+			else if (key == left)
 				m_Controls.left = state;
-			if (control == input::Controls::down)
+			else if (key == down)
 				m_Controls.down = state;
-			if (control == input::Controls::jump)
+			else if (key == jump)
 				m_Controls.jump = state;
-			if (control == input::Controls::attack)
+			else if (key == attack)
 				m_Controls.attack = state;
-			if (control == input::Controls::pick_up)
+			else if (key == pick_up)
 				m_Controls.pick_up = state;
-			if (control == input::Controls::skill_a)
-				m_Controls.skill_a = state;
+			else
+				if (state)
+				{
+					unsigned int skill_index = m_SkillKeysMap[key];
+					activate_skill(skill_index);
+				}
 		}
 
 		void Character::registerKeys()
 		{
-			//m_Kb->registerToKey(input::Controls::up, this);
-			m_Kb->registerToKey(input::Controls::down, this);
-			m_Kb->registerToKey(input::Controls::right, this);
-			m_Kb->registerToKey(input::Controls::left, this);
-			m_Kb->registerToKey(input::Controls::jump, this);
-			m_Kb->registerToKey(input::Controls::attack, this);
-			m_Kb->registerToKey(input::Controls::pick_up, this);
-			m_Kb->registerToKey(input::Controls::skill_a, this);
+			//m_Kb->registerToKey(GLFW_KEY_UP, up, this);
+			m_Kb->registerToKey(GLFW_KEY_DOWN, down, this);
+			m_Kb->registerToKey(GLFW_KEY_LEFT, left, this);
+			m_Kb->registerToKey(GLFW_KEY_RIGHT, right, this);
+			m_Kb->registerToKey(GLFW_KEY_SPACE, jump, this);
+			m_Kb->registerToKey(GLFW_KEY_LEFT_CONTROL, attack, this);
+			m_Kb->registerToKey(GLFW_KEY_Z, pick_up, this);
+			std::vector<unsigned int> skill_keys{ GLFW_KEY_X, GLFW_KEY_C, GLFW_KEY_V, GLFW_KEY_B, GLFW_KEY_N };
+			std::vector<unsigned int> available_skills = m_SkillManager->get_available_skills();
+			for (int i = 0; i < available_skills.size(); ++i)
+			{
+				m_SkillKeysMap[(pick_up + 1) + i] = available_skills[i];
+				m_Kb->registerToKey(skill_keys[i], (pick_up + 1) + i, this);
+			}
 		}
 
-		void Character::attack()
+		void Character::carryOutAttack()
 		{
 			maths::Rectangle attack_rec = getBounds();
 			if (Left == m_Direction)
@@ -144,7 +154,31 @@ namespace hiraeth {
 
 		void Character::activate_skill(unsigned skill_index)
 		{
-			m_SkillManager->get_skill(skill_index);
+			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_index);
+			SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
+			if (item_properties->find(SRL::SkillDataType::mpCon) != item_properties->end())
+				if (!m_Stats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
+					return;
+			for (SRL::SkillPropertiesMapPair element : (*item_properties))
+			{
+				switch (element.first)
+				{
+				case SRL::SkillDataType::dmg:
+					m_Stats->causeDamage(Damage{ unsigned int(std::get<int>(element.second)) });
+					break;
+				case SRL::SkillDataType::heal:
+					m_Stats->recoverHp(std::get<int>(element.second));
+					break;
+				case SRL::SkillDataType::speed:
+					//m_CharacterStats->setTimedStat(std::get<SRL::TimedValue>(element.second));
+					break;
+				case SRL::SkillDataType::dmgS:
+					m_Stats->causeDamage(Damage{ 25, 25 });
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 }

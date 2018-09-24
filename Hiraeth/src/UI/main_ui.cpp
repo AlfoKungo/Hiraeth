@@ -16,8 +16,8 @@ namespace hiraeth {
 			//m_EventManager->subscribe(StatsUpdate, std::function<void(int)>(std::bind(&MainUi::StatsUpdatedT, this, _1)));
 			//m_EventManager->subscribe(StatsUpdate, std::function<void(void)>(std::bind(&MainUi::StatsUpdated, this)));
 			fill_stats_group();
-			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, -730, -429, 0xff70cdd0));
-			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, -730, -441, 0xffffffff));
+			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, { -730, -429 }, 0xff70cdd0));
+			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff));
 			m_Layer.add(m_LabelGroup);
 			m_Layer.add(new graphics::Sprite(maths::vec2(-551, -447), graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.gaugeCover.png")));
 			m_Layer.add(m_GraphicGroup);
@@ -27,11 +27,11 @@ namespace hiraeth {
 			m_Layer.add(new graphics::Sprite(maths::vec2(-800, -450), graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.backgrnd.png")));
 		}
 
-			void MainUi::StatsUpdatedT(int X)
-			{
-				m_CharacterStats.Hp = X;
-				StatsUpdated();
-			}
+			//void MainUi::StatsUpdatedT(int X)
+			//{
+			//	m_CharacterStats.getStatsStruct_()->Hp = X;
+			//	StatsUpdated();
+			//}
 
 		void MainUi::update()
 		{
@@ -55,15 +55,15 @@ namespace hiraeth {
 			float relativeHp = float(m_StatsStruct->Hp) / m_StatsStruct->MaxHp;
 			m_Hp = new graphics::Sprite(maths::vec2(3, 19), relativeHp * 139, 12, 0xff0000ff);
 			m_GraphicGroup->add(m_Hp);
-			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Hp, m_StatsStruct->MaxHp), 140, 21, 0xffffffff, graphics::Label::Alignment::RIGHT));
+			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Hp, m_StatsStruct->MaxHp), { 140, 21 }, 0xffffffff, graphics::Label::Alignment::RIGHT));
 			float relativeMp = float(m_StatsStruct->Mp) / m_StatsStruct->MaxMp;
 			m_Mp = new graphics::Sprite(maths::vec2(174, 19), relativeMp * 139, 12, 0xfff5b626);
 			m_GraphicGroup->add(m_Mp);
-			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Mp, m_StatsStruct->MaxMp), 311, 21, 0xffffffff, graphics::Label::Alignment::RIGHT));
+			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Mp, m_StatsStruct->MaxMp), { 311, 21 }, 0xffffffff, graphics::Label::Alignment::RIGHT));
 			float relativeExp = float(m_StatsStruct->Exp) / m_StatsStruct->MaxExp;
 			m_Exp = new graphics::Sprite(maths::vec2(3, 3), relativeExp * 310, 12, 0xff18dba9);
 			m_GraphicGroup->add(m_Exp);
-			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Exp, m_StatsStruct->MaxExp), 311, 5, 0xffffffff, graphics::Label::Alignment::RIGHT));
+			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Exp, m_StatsStruct->MaxExp), { 311, 5 }, 0xffffffff, graphics::Label::Alignment::RIGHT));
 		}
 
 		std::string MainUi::create_stats_string(unsigned int value, unsigned int maxValue) const

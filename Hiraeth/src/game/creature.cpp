@@ -5,13 +5,22 @@ namespace hiraeth
 	namespace game
 	{
 		Creature::Creature(maths::Rectangle bounds, map::MapLayer* map_layer,
-			Stats* stats, bool is_immune_after_hit)
+			float speed, float jump, Stats* stats,
+			bool is_immune_after_hit)
 			: BaseCreature(bounds, map_layer,
-				std::make_unique<float>(stats->Speed), std::make_unique<float>(stats->Jump), NO_FOOTHOLD),
+				//std::make_unique<float>(stats->Speed), std::make_unique<float>(stats->Jump), 
+				speed, jump, 
+				NO_FOOTHOLD),
 			m_AttackState(),
 			m_IsImmuneAfterHit(is_immune_after_hit),
 			m_Stats(stats),
 			m_HitSprite(maths::vec2(0, 0), 0, 0, 0xe066ccff)
+		{
+		}
+
+		Creature::Creature(maths::Rectangle bounds, map::MapLayer* map_layer,
+			Stats* stats, bool is_immune_after_hit)
+			: Creature(bounds, map_layer, stats->getSpeed(), stats->getJump(), stats, is_immune_after_hit)
 		{
 		}
 
@@ -30,7 +39,7 @@ namespace hiraeth
 						m_Force.x = 0;
 					if (m_AttackTimer.isExpired())
 					{
-						attack();
+						carryOutAttack();
 						m_AttackState = PostHit;
 						m_AttackTimer.reSet(0.25f);
 					}

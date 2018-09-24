@@ -13,10 +13,19 @@ namespace hiraeth {
 	namespace ui {
 #define TITLE_BAR_SIZE 25
 
+		enum UiKey
+		{
+			escape,
+			stats,
+			skills,
+			quests,
+			equip,
+			inventory,
+		};
 		class UiWindow : public Drawable, public Updatable
 		{
 		private:
-			input::Controls m_ControlKey;
+			UiKey m_ControlKey;
 		protected:
 			graphics::Group m_Group;
 			maths::vec2 m_WindowSize;
@@ -25,7 +34,7 @@ namespace hiraeth {
 			graphics::Group * m_BackgroundGroup;
 			graphics::TGroup<ui::UiButton> * m_Buttons;
 		public:
-			UiWindow(maths::Rectangle rec, input::Controls control_key);
+			UiWindow(maths::Rectangle rec, UiKey control_key);
 
 			void controlKeyClicked();
 
@@ -38,7 +47,7 @@ namespace hiraeth {
 			void unattach() { m_IsAttached = false; }
 			inline bool is_attached() const { return m_IsAttached; }
 			inline bool is_holding() const { return m_IsHolding; }
-			inline input::Controls getControlKey() const { return m_ControlKey; }
+			inline UiKey getControlKey() const { return m_ControlKey; }
 
 			virtual void mouse_left_clicked_full(maths::vec2 mousePos);
 			virtual void mouse_left_released_full(maths::vec2 mousePos);

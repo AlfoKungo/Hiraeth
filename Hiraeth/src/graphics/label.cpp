@@ -4,34 +4,31 @@ namespace hiraeth
 {
 	namespace graphics
 	{
-		Label::Label(Font* font, std::string text, float x, float y, unsigned int color, Alignment alignment)
+		Label::Label(Font* font, std::string text, maths::vec2 pos, unsigned int color, Alignment alignment)
 			: Renderable(), m_Font(font), m_Text(text), m_Alignment(alignment)
 		{
 			updateBounds();
-			m_Bounds.x = x;
-			m_Bounds.y = y;
+			m_Bounds.position = pos;
 			m_Color = color;
 		}
 
-		Label::Label(const std::string& font, std::string text, float x, float y, unsigned int color, Alignment alignment)
+		Label::Label(const std::string& font, std::string text, maths::vec2 pos, unsigned int color, Alignment alignment)
 			: Renderable(), m_Font(FontManager::get(font)), m_Text(text), m_Alignment(alignment)
 		{
 			updateBounds();
-			m_Bounds.x = x;
-			m_Bounds.y = y;
+			m_Bounds.position = pos;
 			m_Color = color;
 		}
 
-		Label::Label(const std::string& font, unsigned int size, std::string text, float x, float y, unsigned int color, Alignment alignment)
+		Label::Label(const std::string& font, unsigned int size, std::string text, maths::vec2 pos, unsigned int color, Alignment alignment)
 			: Renderable(), m_Font(FontManager::get(font, size)), m_Text(text), m_Alignment(alignment)
 		{
 			updateBounds();
-			m_Bounds.x = x;
-			m_Bounds.y = y;
+			m_Bounds.position = pos;
 			m_Color = color;
 		}
-		Label::Label(const std::string& font, unsigned int size, int number, float x, float y, unsigned int color, Alignment alignment)
-			: Label(font, size, std::to_string(number), x, y, color, alignment)
+		Label::Label(const std::string& font, unsigned int size, int number, maths::vec2 pos, unsigned int color, Alignment alignment)
+			: Label(font, size, std::to_string(number), pos, color, alignment)
 		{
 		}
 

@@ -29,7 +29,6 @@ namespace hiraeth {
 			bool jump = false;
 			bool attack = false;
 			bool pick_up = false;
-			bool skill_a = false;
 		};
 		enum Direction {
 			Right = 1,
@@ -53,14 +52,15 @@ namespace hiraeth {
 			std::vector<std::unique_ptr<Renderable>>* m_CurrentRenderables;
 			maths::mat4 m_TransformationMatrix;
 
+			float m_Speed, m_Jump; //link to stats_struct
+
 		private:
-			std::unique_ptr<float> m_Speed, m_Jump; //link to stats_struct
 			std::vector<int> actions; //this is to create a list of actions to do.
 		public:
 			bool is_hit = false;
 
 			BaseCreature(maths::Rectangle bounds, map::MapLayer* map_layer,
-				std::unique_ptr<float> speed, std::unique_ptr<float> jump,
+				float speed, float jump,
 				unsigned int foothold);
 
 			void update() override;
@@ -89,7 +89,7 @@ namespace hiraeth {
 			}
 			float calculate_air_modifier() const
 			{
-				return ((*m_Speed) / (1 - FRICTION.x) * FRICTION.x) / (*m_Speed) * (1 - FRICTION_AIR.x);
+				return ((m_Speed) / (1 - FRICTION.x) * FRICTION.x) / (m_Speed) * (1 - FRICTION_AIR.x);
 			}
 			void multiply_by_friction(maths::vec2& force) const
 			{

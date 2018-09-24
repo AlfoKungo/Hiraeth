@@ -5,19 +5,19 @@
                 "key": 0,
                 "value": {
                     "index": 0,
-                    "data": 50
+                    "data": 10
                 }
             },
             {
-                "key": 1,
+                "key": 4,
                 "value": {
                     "index": 0,
-                    "data": 50
+                    "data": 20
                 }
             }
         ],
         "name": "Haste",
-        "mp_con": 10.0,
-        "damage": 15.0
+        "is_active": true,
+        "max_level": 3
     }
 }

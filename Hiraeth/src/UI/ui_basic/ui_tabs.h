@@ -56,6 +56,11 @@ namespace hiraeth {
 			{
 				return getTabByIndex(m_TabIndex);
 			}
+
+			TabIdType getTabIndex()
+			{
+				return m_TabIndex;
+			}
 		private:
 			void updateActiveTab()
 			{

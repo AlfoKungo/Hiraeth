@@ -7,35 +7,64 @@
 
 namespace SRL
 {
+	//struct TimedValue
+	//{
+	//	int value, duration;
+	//};
+
 	enum SkillDataType
 	{
-		mpCon,
+		// ints
+		mpCon, //skill mp consumption
 		dmg,
+		heal , // heal hp
+		actTime, // in mili-seconds
+		speed, //enhance speed
+		jump, //enhance speed
+		// TimedValue
+		// strings
 		dmgS,
 	};
 
+	typedef std::map<SkillDataType, std::variant<int, std::string>> SkillPropertiesMap;
+	typedef std::pair<SkillDataType, std::variant<int, std::string>> SkillPropertiesMapPair;
+	//typedef std::map<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMap;
+	//typedef std::pair<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMapPair;
+
 	struct SkillInfo
 	{
-		//std::map<SkillDataType, >
-		std::map<SkillDataType, std::variant<unsigned int, std::string>> skill_properties;
-		//std::map<SkillDataType, std::any> skill_properties;
-		//std::map<SkillDataType, unsigned int> skill_properties;
+		SkillPropertiesMap skill_properties;
 		std::string name;
-		//unsigned char skill_type;
-		float mp_con;
-		float damage;
-		//float cooltime;
+		bool is_active{true};
+		unsigned int max_level{1};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(skill_properties), CEREAL_NVP(name), CEREAL_NVP(mp_con), CEREAL_NVP(damage));
+			ar(CEREAL_NVP(skill_properties), CEREAL_NVP(name), CEREAL_NVP(is_active), CEREAL_NVP(max_level));
+		}
+	};
+
+	struct SkillIconsData
+	{
+		TextureData icon;
+		TextureData icon_disabled;
+		TextureData icon_mouse_over;
+		void load_data(const std::string& path)
+		{
+			icon.load_texture(path + "\\icon.png");
+			icon_disabled.load_texture(path + "\\iconDisabled.png");
+			icon_mouse_over.load_texture(path + "\\iconMouseOver.png");
+		}
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(icon), CEREAL_NVP(icon_disabled), CEREAL_NVP(icon_mouse_over));
 		}
 	};
 
 	struct SkillData
 	{
 		SkillInfo skill_info;
-		TextureData texture_data;
+		//TextureData texture_data;
+		SkillIconsData icon_data;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(skill_info), CEREAL_NVP(texture_data));
+			ar(CEREAL_NVP(skill_info), CEREAL_NVP(icon_data));
 		}
 	};
 }

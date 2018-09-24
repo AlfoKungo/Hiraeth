@@ -25,6 +25,8 @@ namespace hiraeth
 			graphics::Sprite m_Hp;
 			float m_XStart, m_XEnd;
 			maths::vec2 m_HitBox;
+			MonsterStats m_MonsterStats;
+			SRL::MonsterStatsStruct* m_StatsStruct;
 
 		public:
 			SRL::Summon m_Summon;
@@ -36,13 +38,13 @@ namespace hiraeth
 			{
 			}
 
-			virtual ~Monster() { delete m_Stats; }
+			virtual ~Monster() { }
 
 			void update() override;
 			void draw(graphics::Renderer* renderer) const override;
 			bool check_collision(const maths::Rectangle& rec) ;
 
-			void attack() override
+			void carryOutAttack() override
 			{
 			}
 

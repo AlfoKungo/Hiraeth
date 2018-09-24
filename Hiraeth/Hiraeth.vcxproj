@@ -242,6 +242,7 @@
     <ClInclude Include="src\game\monster_manager.h" />
     <ClInclude Include="src\game\monster_stats.h" />
     <ClInclude Include="src\game\stats.h" />
+    <ClInclude Include="src\game\stats\timed_stat.h" />
     <ClInclude Include="src\graphics\layers\t_group.h" />
     <ClInclude Include="src\graphics\renderer.h" />
     <ClInclude Include="src\graphics\buffers\buffer.h" />

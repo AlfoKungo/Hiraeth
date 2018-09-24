@@ -4,14 +4,18 @@ namespace hiraeth {
 	namespace game {
 
 		Monster::Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer)
-			//: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
 			: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
-				new MonsterStats(monster_data.StatsStruct), false),
+				//new MonsterStats(monster_data.StatsStruct), false),
+				//&m_MonsterStats, false),
+				monster_data.StatsStruct.Speed, monster_data.StatsStruct.Jump,
+				&m_MonsterStats, false),
 			gen(rd()),
 			dis(0, 8),
-			m_Hp(maths::vec2(10, 40), float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff),
+			m_Hp(maths::vec2(10, 40), 30, 6, 0xff0000ff),
+			m_MonsterStats{monster_data.StatsStruct},
 			m_XStart(NULL),
 			m_XEnd(NULL),
+			m_StatsStruct{&m_MonsterStats.m_Stats},
 			m_Summon(summon)
 		{
 
@@ -113,12 +117,14 @@ namespace hiraeth {
 		void Monster::cause_damage(Damage damage)
 		{
 			m_Stats->causeDamage(damage);
-			if (m_Stats->Hp > m_Stats->MaxHp || m_Stats->Hp == 0)
+			//float hp = m_Stats->getHp();
+			//float hp = m_Stats->getMaxHp();
+			if (m_StatsStruct->Hp > m_StatsStruct->MaxHp || m_StatsStruct->Hp == 0)
 			{
 				kill_monster();
 				return;
 			}
-			m_Hp = graphics::Sprite(maths::vec2(10, 40), float(m_Stats->Hp) / m_Stats->MaxHp * 30, 6, 0xff0000ff);
+			m_Hp = graphics::Sprite(maths::vec2(10, 40), float(m_StatsStruct->Hp) / m_StatsStruct->MaxHp * 30, 6, 0xff0000ff);
 		}
 		void Monster::kill_monster()
 		{

@@ -23,10 +23,10 @@ namespace hiraeth
 			Alignment m_Alignment;
 			maths::vec2 m_AlignmentOffset;
 		public:
-			Label(Font* font, std::string text, float x, float y, unsigned int color, Alignment alignment = Alignment::LEFT);
-			Label(const std::string& font, std::string text, float x, float y, unsigned int color, Alignment alignment = Alignment::LEFT);
-			Label(const std::string& font, unsigned int size, std::string text, float x, float y, unsigned int color, Alignment alignment = Alignment::LEFT);
-			Label(const std::string& font, unsigned int size, int number, float x, float y, unsigned int color, Alignment alignment = Alignment::LEFT);
+			Label(Font* font, std::string text, maths::vec2 pos, unsigned int color, Alignment alignment = Alignment::LEFT);
+			Label(const std::string& font, std::string text, maths::vec2 pos, unsigned int color, Alignment alignment = Alignment::LEFT);
+			Label(const std::string& font, unsigned int size, std::string text, maths::vec2 pos, unsigned int color, Alignment alignment = Alignment::LEFT);
+			Label(const std::string& font, unsigned int size, int number, maths::vec2 pos, unsigned int color, Alignment alignment = Alignment::LEFT);
 			void draw(Renderer* renderer) const override;
 			void setText(const std::string& new_text);
 			void setText(unsigned int new_text) { setText(std::to_string(new_text)); }

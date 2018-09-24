@@ -37,6 +37,7 @@ namespace hiraeth {
 		class Map :  Updatable, public input::KeyboardEvent
 		{
 		private:
+			const unsigned int up = 0;
 
 			graphics::Texture m_PtTex;
 
@@ -62,8 +63,8 @@ namespace hiraeth {
 			void change_map(int new_index);
 			MapLayer* getMapLayer() { return &m_MapLayer; }
 
-			void ButtonClicked(input::Controls control) override;
-			void ButtonReleased(input::Controls control) override {}
+			void ButtonClicked(input::Key control) override;
+			void ButtonReleased(input::Key control) override {}
 
 		private:
 			void deserialize_map_data(unsigned int map_index);

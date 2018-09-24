@@ -19,6 +19,7 @@
 #include <cereal/archives/json.hpp>
 #include "srl/skill_data.h"
 #include "code_for_checks/skill_data_check.h"
+#include "code_for_checks/item_data_check.h"
 
 typedef int Address;
 
@@ -92,7 +93,6 @@ void serialize_data(std::vector<DATA> data, int addresses_begin, std::ofstream& 
 
 int main()
 {
-	Checks::create_monster_data();
 		
 	// Serialize Map Data
 	{
@@ -149,6 +149,7 @@ int main()
 	}
 
 	// Serialize Monster Data
+	Checks::create_monster_data();
 	{
 		std::ofstream monster_data_file("../Hiraeth/serialized/monster.data", std::ios::out | std::ios::binary);
 		if (monster_data_file.is_open())
@@ -190,6 +191,7 @@ int main()
 	}
 
 	// Serialize Item Data
+	Checks::create_item_data();
 	{
 		std::ofstream item_data_file("../Hiraeth/serialized/item.data", std::ios::out | std::ios::binary);
 		if (item_data_file.is_open())
@@ -202,9 +204,9 @@ int main()
 			{
 				std::string path = p.path().string();
 				std::string tex_path = path + "\\tex.png";
-				std::string data_path = path + "\\data.xml";
+				std::string data_path = path + "\\data.json";
 				std::ifstream in(data_path, std::ios::in);
-				cereal::XMLInputArchive arin(in);
+				cereal::JSONInputArchive arin(in);
 				SRL::ItemData Td{};
 
 				arin(Td.item_info);
@@ -246,8 +248,8 @@ int main()
 	}
 
 	// Serialize Skills Data
+	Checks::create_skill_data();
 	{
-		Checks::create_skill_data();
 		const std::string SRL_TYPE = "skills";
 		std::ofstream skill_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
 			std::ios::out | std::ios::binary);
@@ -260,14 +262,17 @@ int main()
 			for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
 			{
 				std::string path = p.path().string();
-				std::string tex_path = path + "\\icon.png";
+				//std::string tex_path = path + "\\icon.png";
 				std::string data_path = path + "\\data.json";
 				std::ifstream in(data_path, std::ios::in);
 				cereal::JSONInputArchive arin(in);
 				SRL::SkillData Td{};
 
 				arin(Td.skill_info);
-				Td.texture_data.load_texture(tex_path);
+				//Td.texture_data.load_texture(tex_path);
+				Td.icon_data.load_data(path);
+				//Td.icon_data.icon.load_texture(path + "\\disabled_icon.png");
+				//Td.icon_data.icon.load_texture(path + "\\mouseover_icon.png");
 				skill_data.push_back(Td);
 			}
 			skill_data_file.seekp(SKILL_DATA_BEGIN);

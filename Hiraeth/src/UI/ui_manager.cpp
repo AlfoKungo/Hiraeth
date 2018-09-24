@@ -12,12 +12,12 @@ namespace hiraeth {
 		{
 			init_all_windows(kb, m_MainUi.getCharacterStats());
 			kb->registerToMouse(this);
-			kb->registerToKey(input::Controls::escape, this);
+			kb->registerToKey(GLFW_KEY_ESCAPE, escape, this);
 		}
 		void UiManager::draw() const
 		{
-			m_Layer.render();
 			m_MainUi.draw();
+			m_Layer.render();
 		}
 
 		void UiManager::update()
@@ -28,22 +28,22 @@ namespace hiraeth {
 
 		void UiManager::init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats)
 		{
-			m_UiInventory = new UiInventory(maths::vec2(-300, 0), input::Controls::inventory, character_stats);
+			m_UiInventory = new UiInventory(maths::vec2(-300, 0), inventory, character_stats);
 			m_Layer.add_ref(m_UiInventory);
-			kb->registerToKey(input::Controls::inventory, this);
+			kb->registerToKey(GLFW_KEY_A, inventory, this);
 
-			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), input::Controls::stats, character_stats));
-			kb->registerToKey(input::Controls::stats, this);
+			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), stats, character_stats));
+			kb->registerToKey(GLFW_KEY_S, stats, this);
 
-			m_UiSkills = new UiSkills(maths::vec2(300, 0), input::Controls::skills);
+			m_UiSkills = new UiSkills(maths::vec2(300, 0), skills);
 			m_Layer.add_ref(m_UiSkills);
-			kb->registerToKey(input::Controls::skills, this);
+			kb->registerToKey(GLFW_KEY_D, skills, this);
 
-			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), input::Controls::quests));
-			kb->registerToKey(input::Controls::quests, this);
+			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), quests));
+			kb->registerToKey(GLFW_KEY_Q, quests, this);
 
-			m_Layer.add_ref(new UiEquip(maths::vec2(500, 0), input::Controls::equip));
-			kb->registerToKey(input::Controls::equip, this);
+			m_Layer.add_ref(new UiEquip(maths::vec2(500, 0), equip));
+			kb->registerToKey(GLFW_KEY_E, equip, this);
 		}
 
 		bool UiManager::leftButtonClicked(float mx, float my)
@@ -103,9 +103,9 @@ namespace hiraeth {
 			return result_window != m_Windows.end();
 		}
 
-		void UiManager::ButtonClicked(input::Controls c)
+		void UiManager::ButtonClicked(input::Key key)
 		{
-			if (input::Controls::escape == c)
+			if (escape == key)
 			{
 				auto window = m_Windows.begin();
 				(*window)->is_to_draw = false;
@@ -117,8 +117,8 @@ namespace hiraeth {
 			{
 				auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
 					[&](auto const& window)
-				{ return window->getControlKey() == c; });
-				if ((*result_window)->getControlKey() == c)
+				{ return window->getControlKey() == key; });
+				if ((*result_window)->getControlKey() == key)
 				{
 					(*result_window)->controlKeyClicked();
 					if ((*result_window)->is_to_draw)
@@ -129,7 +129,7 @@ namespace hiraeth {
 			}
 		}
 
-		void UiManager::ButtonReleased(input::Controls c)
+		void UiManager::ButtonReleased(input::Key key)
 		{
 
 		}

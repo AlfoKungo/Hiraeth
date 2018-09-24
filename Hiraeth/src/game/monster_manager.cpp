@@ -31,7 +31,7 @@ namespace hiraeth {
 			{
 				if ((*monster)->died)
 				{
-					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 3));
+					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
 					SRL::Summon summon = (*monster)->get_summon();
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);

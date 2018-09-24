@@ -8,6 +8,7 @@ namespace Checks
 	static void create_monster_data()
 	{
 
+		const std::string SRL_TYPE{ "monster" };
 		{
 			SRL::CreatureSprites data{{}, maths::vec2{50, 50}};
 			data.sprited_data[SRL::MoveState::Stand] = { {
@@ -25,7 +26,7 @@ namespace Checks
 			};
 
 
-			std::ofstream map_data_file("data/monster/textures/0/data.json", std::ios::out);
+			std::ofstream map_data_file("data/" + SRL_TYPE + "/textures/0/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(map_data_file);
 			arout(CEREAL_NVP(data));
 		}
@@ -45,14 +46,13 @@ namespace Checks
 			};
 
 
-			std::ofstream map_data_file("data/monster/textures/1/data.json", std::ios::out);
+			std::ofstream map_data_file("data/" + SRL_TYPE + "/textures/1/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(map_data_file);
 			arout(CEREAL_NVP(data));
 		}
 
 		{
 			SRL::MonsterData data{ {"Slime", 5, 4444, 400, 400, 250, 250, 15, 40, 40, 40, 30, 30, 20, 20, 10, 100}, 0 };
-
 
 			std::ofstream map_data_file("0.json", std::ios::out);
 			cereal::JSONOutputArchive arout(map_data_file);

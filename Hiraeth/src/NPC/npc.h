@@ -15,7 +15,7 @@ namespace hiraeth
 		public:
 			Npc(SRL::NpcData npc_data, map::MapLayer* map_layer, input::Keyboard* kb)
 				: BaseCreature(maths::Rectangle{ maths::vec2{npc_data.npc_info.npc_x_value, 0}, maths::vec2(50, 50) }, map_layer,
-					std::make_unique<float>(25), std::make_unique<float>(13),
+					25, 13,
 					npc_data.npc_info.npc_foothold),
 				m_Data(npc_data)
 			{

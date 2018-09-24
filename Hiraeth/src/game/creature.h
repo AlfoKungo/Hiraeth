@@ -28,7 +28,7 @@ namespace hiraeth
 		public:
 			bool is_hit = false;
 		protected:
-			AttackState m_AttackState, m_SkillState;
+			AttackState m_AttackState;
 			bool AttackStatus = false;
 			ATimer m_AttackTimer;
 			bool m_IsImmuneAfterHit;
@@ -44,10 +44,15 @@ namespace hiraeth
 			Creature(maths::Rectangle bounds, map::MapLayer* map_layer,
 			         Stats* stats, bool is_immune_after_hit);
 
+			Creature(maths::Rectangle bounds, map::MapLayer* map_layer,
+				float speed, float jump,
+				Stats* stats, bool is_immune_after_hit);
+
 			void update() override;
 			virtual void getHit(Direction dir, Damage damage);
 
 			Damage getDamage() const { return m_Stats->getDamage(); }
+			//virtual Damage getDamage() const = 0;
 			void draw(graphics::Renderer* renderer) const override
 			{
 				BaseCreature::draw(renderer);
@@ -59,9 +64,10 @@ namespace hiraeth
 			{
 				return maths::Rectangle{ m_Bounds.position, m_HitBox };
 			}
-			virtual void attack() = 0;
+			virtual void carryOutAttack() = 0;
 		private:
-			virtual void cause_damage(Damage damage) = 0;
+			//virtual void cause_damage(Damage damage) = 0;
+			virtual void cause_damage(Damage damage)  { m_Stats->causeDamage(damage); }
 			void apply_hit_state();
 			void analyze_controls() override;
 		};

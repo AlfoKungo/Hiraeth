@@ -1,0 +1,23 @@
+{
+    "info": {
+        "item_properties": [
+            {
+                "key": 4,
+                "value": {
+                    "index": 0,
+                    "data": 50
+                }
+            },
+            {
+                "key": 6,
+                "value": {
+                    "index": 0,
+                    "data": 99
+                }
+            }
+        ],
+        "item_name": "Red Potion",
+        "type": 1,
+        "item_description": "Increase health by 50 health points"
+    }
+}

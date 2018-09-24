@@ -3,7 +3,7 @@
 namespace hiraeth {
 	namespace ui {
 
-		UiEquip::UiEquip(maths::vec2 pos, input::Controls control_key)
+		UiEquip::UiEquip(maths::vec2 pos, UiKey control_key)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 184, 290), control_key)
 		{
 			EventManager *m_EventManager = EventManager::Instance();

@@ -24,7 +24,7 @@ namespace hiraeth {
 		{
 		private:
 		public:
-			UiEquip(maths::vec2 pos, input::Controls control_key);
+			UiEquip(maths::vec2 pos, UiKey control_key);
 			void mouse_left_clicked(maths::vec2 mousePos);
 			void mouse_left_released(maths::vec2 mousePos) override {}
 			void mouse_right_clicked(maths::vec2 mousePos) override {}
