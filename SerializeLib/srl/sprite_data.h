@@ -3,13 +3,16 @@
 #include "maths/vec2.h"
 #include "maths/rectangle.h"
 #include <map>
+#include <cereal/archives/json.hpp>
+#include <vector>
 
 namespace SRL
 {
 	enum MoveState {
-		Stand = 1,
-		Walk = 2,
-		Hit = 3
+		Stand = 0,
+		Walk = 1,
+		Hit = 2,
+		Die = 3,
 	};
 
 	struct SpritedFrameData
@@ -31,12 +34,4 @@ namespace SRL
 		}
 	};
 
-	struct CreatureSprites
-	{
-		std::map<MoveState, AnimationData> sprited_data;
-		maths::vec2 hit_box;
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(sprited_data), CEREAL_NVP(hit_box));
-		}
-	};
 }

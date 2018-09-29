@@ -18,6 +18,7 @@
 #include "srl/npc_data.h"
 #include <cereal/archives/json.hpp>
 #include "srl/skill_data.h"
+#include "srl/animation_data.h"
 #include "code_for_checks/skill_data_check.h"
 #include "code_for_checks/item_data_check.h"
 
@@ -262,17 +263,28 @@ int main()
 			for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
 			{
 				std::string path = p.path().string();
-				//std::string tex_path = path + "\\icon.png";
 				std::string data_path = path + "\\data.json";
 				std::ifstream in(data_path, std::ios::in);
 				cereal::JSONInputArchive arin(in);
 				SRL::SkillData Td{};
 
 				arin(Td.skill_info);
-				//Td.texture_data.load_texture(tex_path);
 				Td.icon_data.load_data(path);
-				//Td.icon_data.icon.load_texture(path + "\\disabled_icon.png");
-				//Td.icon_data.icon.load_texture(path + "\\mouseover_icon.png");
+				for (auto & pp : fs::directory_iterator(p))
+				{
+					if (pp.path().filename().string() == "effect.png")
+					{
+						SRL::FullAnimationData fad;
+						fad.load_data(pp.path().parent_path().string(), "effect");
+						Td.animation_map[SRL::effectAnimation] = fad;
+					}
+					if (pp.path().filename().string() == "hit.png")
+					{
+						SRL::FullAnimationData fad;
+						fad.load_data(pp.path().parent_path().string(), "hit");
+						Td.animation_map[SRL::hitAnimation] = fad;
+					}
+				}
 				skill_data.push_back(Td);
 			}
 			skill_data_file.seekp(SKILL_DATA_BEGIN);

@@ -52,7 +52,7 @@ namespace hiraeth {
 			updateStats();
 		}
 
-		bool CharacterStats::activate_use_item(SRL::ItemPropertiesMap* item_properties)
+		bool CharacterStats::activateUseItem(SRL::ItemPropertiesMap* item_properties)
 		{
 
 			for (SRL::ItemPropertiesMapPair element : (*item_properties))
@@ -68,16 +68,12 @@ namespace hiraeth {
 				case SRL::ItemDataType::Int:
 					break;
 				case SRL::ItemDataType::Speed:
-					setTimedStat(m_DetailsStruct.Speed, std::get<2>(element.second));
+					setTimedStat(m_DetailsStruct.Speed, std::get<SRL::TimedValue>(element.second));
 					break;
 				case SRL::ItemDataType::hpInc:
-					//if (m_StatsStruct.MaxHp == m_StatsStruct.Hp)
-					//	return false;
 					recoverHp(std::get<int>(element.second));
 					break;
 				case SRL::ItemDataType::mpInc:
-					//if (m_StatsStruct.MaxMp == m_StatsStruct.Mp)
-					//	return false;
 					recoverMp(std::get<int>(element.second));
 					break;
 				default:

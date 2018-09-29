@@ -5,11 +5,11 @@
                 "key": 0,
                 "value": {
                     "index": 0,
-                    "data": 5
+                    "data": 3
                 }
             },
             {
-                "key": 6,
+                "key": 8,
                 "value": {
                     "index": 1,
                     "data": "x*1.5"

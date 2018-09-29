@@ -36,6 +36,10 @@ namespace hiraeth {
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
 			CharacterStats * m_CharacterStats;
+			//graphics::TGroup<graphics::SpritedRenderable> m_Animations;
+			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
+			std::map<unsigned int, ATimer> m_SkillsTimeouts;
+			ATimer m_SkillActivationTimer{};
 
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager,
@@ -43,6 +47,17 @@ namespace hiraeth {
 			~Character();
 
 			void update() override;
+			void draw(graphics::Renderer* renderer) const override
+			{
+				Creature::draw(renderer);
+				//m_Animations.draw(renderer);
+				if (m_Animation)
+				{
+					renderer->push(m_TransformationMatrix);
+					m_Animation->draw(renderer);
+					renderer->pop();
+				}
+			}
 
 			void ButtonClicked(input::Key control) override;
 			void ButtonReleased(input::Key control) override;
@@ -55,8 +70,8 @@ namespace hiraeth {
 		private:
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();
-			void use_skill(unsigned int skill_index);
-			void activate_skill(unsigned int skill_index);
+			void activateSkill(unsigned int skill_index);
+			void activateAttackSkill( SRL::FullAnimationData hit_animation_data, std::string skill_name);
 		};
 	}
 }

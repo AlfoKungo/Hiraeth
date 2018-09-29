@@ -8,6 +8,7 @@
 #include "basic/a_timer.h"
 #include <tuple>
 #include "stats/timed_stat.h"
+#include "srl/skill_data.h"
 
 namespace hiraeth {
 	namespace game {
@@ -38,8 +39,9 @@ namespace hiraeth {
 		private:
 			StatsStruct m_StatsStruct;
 			DetailsStruct m_DetailsStruct;
-			std::vector<stats::TimedStat> m_TimedStats;
-			//std::vector<std::unique_ptr< TimedStat>> m_TimedStats;
+			//std::vector<stats::TimedStat> m_TimedStats;
+			std::vector<stats::TimedStat> m_TimedItemStats;
+			std::map<unsigned int, std::vector<stats::TimedStat>> m_TimedSkillStats;
 		public:
 			CharacterStats();
 
@@ -50,7 +52,7 @@ namespace hiraeth {
 			inline StatsStruct* getStatsStruct_() { return &m_StatsStruct; }
 			inline DetailsStruct* getDetailsStruct_() { return &m_DetailsStruct; }
 
-			bool activate_use_item(SRL::ItemPropertiesMap * item_properties);
+			bool activateUseItem(SRL::ItemPropertiesMap * item_properties);
 			float getSpeed() const override;
 			float getJump() const override;
 			bool consumeMana(unsigned mp_consume) override;
@@ -59,14 +61,51 @@ namespace hiraeth {
 
 			void setTimedStat(float& data_member, SRL::TimedValue timed_value)
 			{
-				m_TimedStats.emplace_back(stats::TimedStat{ &data_member, timed_value });
+				m_TimedItemStats.emplace_back(stats::TimedStat{ &data_member, timed_value });
+			}
+			void setTimedStat(unsigned int skill_index, float& data_member, SRL::TimedValue timed_value)
+			{
+				if (m_TimedSkillStats.find(skill_index) != m_TimedSkillStats.end())
+					m_TimedSkillStats[skill_index].clear();
+				m_TimedSkillStats[skill_index].emplace_back( &data_member, timed_value );
 			}
 
+			void activateSkill(unsigned int skill_index, SRL::SkillPropertiesMap * skill_properties)
+			{
+				for (SRL::SkillPropertiesMapPair element : (*skill_properties))
+				{
+					switch (element.first)
+					{
+					//case SRL::SkillDataType::dmg:
+					//	causeDamage(Damage{ unsigned int(std::get<int>(element.second)) });
+					//	break;
+					case SRL::SkillDataType::heal:
+						recoverHp(std::get<int>(element.second));
+						break;
+					case SRL::SkillDataType::speed:
+						setTimedStat(skill_index, m_DetailsStruct.Speed, std::get<2>(element.second));
+						break;
+					//case SRL::SkillDataType::dmgS:
+					//	causeDamage(Damage{ 25, 25 });
+					//	break;
+					default:
+						break;
+					}
+				}
+			}
 			void update()
 			{
-				m_TimedStats.erase(
-					std::remove_if(begin(m_TimedStats), end(m_TimedStats), 
-					[](stats::TimedStat ts) {return ts.checkAndCancel(); }), end(m_TimedStats));
+				m_TimedItemStats.erase(
+					std::remove_if(begin(m_TimedItemStats), end(m_TimedItemStats), 
+					[](stats::TimedStat ts) {return ts.checkTimer(); }), end(m_TimedItemStats));
+				for (auto&[key, tsv] : m_TimedSkillStats)
+				{
+					tsv.erase(
+						std::remove_if(begin(tsv), end(tsv),
+							[](const stats::TimedStat& ts) {return ts.checkTimer(); }), end(tsv));
+					if (tsv.empty())
+						m_TimedSkillStats.erase(key);
+				}
 			}
 		};
 

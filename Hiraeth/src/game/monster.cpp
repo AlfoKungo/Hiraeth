@@ -58,7 +58,7 @@ namespace hiraeth {
 					m_Controls.left = true;
 					m_Controls.right = false;
 				}
-				if (m_AiTimer.isExpired())
+				if (m_AiTimer.hasExpired())
 				{
 					if (dis(gen) < 4)
 					{
@@ -85,6 +85,8 @@ namespace hiraeth {
 				}
 			}
 
+			m_Animations.update();
+			m_Animations.clear_done();
 			Creature::update();
 		}
 
@@ -92,6 +94,7 @@ namespace hiraeth {
 		{
 			Creature::draw(renderer);
 			renderer->push(m_TransformationMatrix);
+			m_Animations.draw(renderer);
 			renderer->submit(&m_Hp);
 			renderer->pop();
 		}
@@ -109,6 +112,12 @@ namespace hiraeth {
 				&& (rec.y < hit_box.y + hit_box.height) && (hit_box.y < rec.y + rec.height));
 		}
 
+		void Monster::getHit(Direction dir, Damage damage, std::unique_ptr<graphics::SpritedRenderable> hit_animation)
+		{
+			Creature::getHit(dir, damage);
+			m_Animations.add(std::move(hit_animation));
+
+		}
 		void Monster::getHit(Direction dir, Damage damage)
 		{
 			Creature::getHit(dir, damage);

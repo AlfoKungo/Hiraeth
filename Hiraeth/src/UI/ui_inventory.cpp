@@ -167,7 +167,7 @@ namespace hiraeth {
 			{
 				m_OldItemPos = (*result_item)->get_position();
 				SRL::ItemPropertiesMap * item_stats = (*result_item)->getItemProperties();
-				if (m_CharacterStats->activate_use_item(item_stats))
+				if (m_CharacterStats->activateUseItem(item_stats))
 				{
 					tab_rends->erase(result_item);
 					m_IsHolding = true;

@@ -6,13 +6,14 @@ namespace hiraeth
 	namespace graphics
 	{
 		SpritedRenderable::SpritedRenderable(maths::vec3 position, SRL::AnimationData animation_data,
-		                                     Texture* ptex)
+			Texture* ptex, bool is_one_time )
 			: Renderable(position, maths::vec2(ptex->getWidth() / float(animation_data.frames_data.size()),
-			                                   ptex->getHeight()), 0xffffffff, animation_data.frames_data[0].origin),
-			  m_FramesAmount(animation_data.frames_data.size()), //this
-			  m_FrameWidth(ptex->getWidth() / float(animation_data.frames_data.size())),
-			  m_IsLoop(animation_data.is_loop),
-			  m_AniData(animation_data)
+				ptex->getHeight()), 0xffffffff, animation_data.frames_data[0].origin),
+			m_FramesAmount(animation_data.frames_data.size()), //this
+			m_FrameWidth(ptex->getWidth() / float(animation_data.frames_data.size())),
+			m_IsLoop(animation_data.is_loop),
+			m_AniData(animation_data),
+			m_IsOneTime(is_one_time)
 
 		{
 			m_Texture = ptex;
@@ -29,8 +30,14 @@ namespace hiraeth
 
 		void SpritedRenderable::update()
 		{
-			if (m_AnimationTimer.isExpired())
+			if (m_AnimationTimer.hasExpired())
 			{
+				if (m_IsOneTime && m_FrameIndex + 1 == m_FramesAmount)
+				{
+					m_IsFinished = true;
+					m_Texture = nullptr;
+					return;
+				}
 				m_FrameIndex += m_LoopDirection;
 				if (!m_IsLoop || m_FramesAmount == 1)
 				{

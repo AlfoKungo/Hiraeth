@@ -18,6 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MathLib\MathLib.vcxproj">
+      <Project>{5cdb3164-3976-48b0-9569-b4770a4bb032}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SerializeLib\SerializeLib.vcxproj">
+      <Project>{d7d76bde-7dca-40d5-92af-f83ede064043}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{6430FDFF-DDDC-4BBB-9A80-DF579BAB172F}</ProjectGuid>

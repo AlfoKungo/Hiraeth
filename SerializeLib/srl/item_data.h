@@ -5,8 +5,7 @@
 #include <variant>
 #include "cereal/types/variant.hpp"
 #include "cereal/types/map.hpp"
-#include "cereal/types/tuple.hpp"
-#include <tuple>
+#include "types.h"
 
 namespace SRL {
 
@@ -33,14 +32,6 @@ namespace SRL {
 		Weapon,
 	};
 
-	struct TimedValue
-	{
-		int value, duration;
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(value), CEREAL_NVP(duration));
-		}
-	};
-
 	enum ItemDataType
 	{
 		// Ints
@@ -55,11 +46,6 @@ namespace SRL {
 		Speed,
 		Jump,
 	};
-
-	//typedef std::tuple<float, BYTE> TimedValue;
-
-	//typedef std::map<ItemDataType, std::variant<int, std::string>> ItemPropertiesMap;
-	//typedef std::pair<ItemDataType, std::variant<int, std::string>> ItemPropertiesMapPair;
 
 	typedef std::map<ItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMap;
 	typedef std::pair<ItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMapPair;

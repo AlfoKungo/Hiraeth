@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+//#include <memory>
 #include <cereal/archives/binary.hpp>
 #include "ImageLoad.h"
 
@@ -10,7 +10,7 @@ namespace SRL {
 		int width, height;
 		BYTE* pic = nullptr;
 	private: 
-		int texture_data_size;
+		int texture_data_size{};
 	public:
 		template<class Archive>
 		void serialize(Archive & ar)

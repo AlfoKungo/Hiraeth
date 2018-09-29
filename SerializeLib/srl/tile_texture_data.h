@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <cereal/archives/binary.hpp>
+//#include <cereal/archives/binary.hpp>
 #include "texture_data.h"
 #include "maths/maths.h"
 

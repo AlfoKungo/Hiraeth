@@ -3,33 +3,39 @@
 #include <cereal/cereal.hpp>
 #include "texture_data.h"
 #include "cereal/types/variant.hpp"
+#include "types.h"
 #include <map>
+#include "animation_data.h"
 
 namespace SRL
 {
-	//struct TimedValue
-	//{
-	//	int value, duration;
-	//};
-
 	enum SkillDataType
 	{
 		// ints
 		mpCon, //skill mp consumption
 		dmg,
 		heal , // heal hp
-		actTime, // in mili-seconds
+		actTime, // activation time in mili-seconds
+		timeOut, // in seconds
+		duration,
+		// TimedValue
 		speed, //enhance speed
 		jump, //enhance speed
-		// TimedValue
 		// strings
 		dmgS,
+		// Sprited Renderable
+		//skillAnimation
 	};
 
-	typedef std::map<SkillDataType, std::variant<int, std::string>> SkillPropertiesMap;
-	typedef std::pair<SkillDataType, std::variant<int, std::string>> SkillPropertiesMapPair;
-	//typedef std::map<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMap;
-	//typedef std::pair<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMapPair;
+	enum SkillAnimationTypes
+	{
+		effectAnimation,
+		hitAnimation,
+		ballAnimation,
+	};
+
+	typedef std::map<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMap;
+	typedef std::pair<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMapPair;
 
 	struct SkillInfo
 	{
@@ -58,13 +64,15 @@ namespace SRL
 		}
 	};
 
+	typedef std::map<SkillAnimationTypes, FullAnimationData> AnimationMap;
+
 	struct SkillData
 	{
 		SkillInfo skill_info;
-		//TextureData texture_data;
 		SkillIconsData icon_data;
+		AnimationMap animation_map;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(skill_info), CEREAL_NVP(icon_data));
+			ar(CEREAL_NVP(skill_info), CEREAL_NVP(icon_data), CEREAL_NVP(animation_map));
 		}
 	};
 }

@@ -2,7 +2,7 @@
     "data": {
         "sprited_data": [
             {
-                "key": 1,
+                "key": 0,
                 "value": {
                     "frames_data": [
                         {
@@ -49,7 +49,7 @@
                 }
             },
             {
-                "key": 2,
+                "key": 1,
                 "value": {
                     "frames_data": [
                         {
@@ -109,7 +109,7 @@
                 }
             },
             {
-                "key": 3,
+                "key": 2,
                 "value": {
                     "frames_data": [
                         {

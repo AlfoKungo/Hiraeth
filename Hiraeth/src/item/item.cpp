@@ -97,7 +97,7 @@ namespace hiraeth {
 		{
 			if ((m_State == OnFloor) && m_Timer.timeRemain() < EXPIRE_FADE_TIME)
 				m_IsExpiring = true;
-			return ((m_State == OnFloor) && m_Timer.isExpired());
+			return ((m_State == OnFloor) && m_Timer.hasExpired());
 		}
 
 		bool Item::hasBeenTaken()

@@ -6,6 +6,7 @@
 #include <array>
 #include "srl/sprite_data.h"
 #include "basic/a_timer.h"
+#include "srl/animation_data.h"
 
 namespace hiraeth {
 	namespace graphics {
@@ -22,16 +23,24 @@ namespace hiraeth {
 			int m_LoopDirection{ 1 };
 			bool m_IsLoop;
 			SRL::AnimationData m_AniData;
+			bool m_IsOneTime{ false };
+			bool m_IsFinished{ false };
 		public:
-			SpritedRenderable(maths::vec3 position, SRL::AnimationData animation_data, Texture* ptex);
+			SpritedRenderable(maths::vec3 position, SRL::AnimationData animation_data, Texture* ptex, bool is_one_time = false);
 
 			SpritedRenderable(maths::vec3 position, unsigned int frames_amount, float delay, bool is_loop,
 				Texture* ptex);
+
 			virtual ~SpritedRenderable() = default;
 
 			void update() override;
 
 			void resetState() override;
+
+			bool is_sprite_finished() const override
+			{
+				return m_IsFinished;
+			}
 		private:
 			void update_frame();
 
@@ -49,6 +58,7 @@ namespace hiraeth {
 				}
 				return ani_data;
 			}
+
 
 		};
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../renderable.h"
+#include <algorithm>
 
 namespace hiraeth {
 	namespace graphics {
@@ -28,6 +29,11 @@ namespace hiraeth {
 			: TGroup(maths::vec2(0))
 			{
 
+			}
+			
+			void add(std::unique_ptr<RendType> renderable)
+			{
+				m_Renderables.emplace_back(std::move(renderable));
 			}
 			void add(RendType* renderable)
 			{
@@ -63,6 +69,12 @@ namespace hiraeth {
 			}
 			maths::mat4 getTransform() const { return m_TransformationMatrix; }
 			void clear() { m_Renderables.clear(); }
+			void clear_done()
+			{
+			m_Renderables.erase(
+				std::remove_if(begin(m_Renderables), end(m_Renderables),
+					[](const auto& sr) {return sr->is_sprite_finished(); }), end(m_Renderables));
+			}
 		};
 	}
 }

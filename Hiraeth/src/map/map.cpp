@@ -61,7 +61,6 @@ namespace hiraeth {
 		{
 			maths::vec2 char_pos = view::Camera::getCharacterPos();
 			if (up == control)
-				//for (auto& portal : m_MapLayer.getPortals())
 				for (auto& portal : m_PtLayer.m_Renderables)
 					if (portal->getBounds().GetMinimumBound().Distance(char_pos) <= 100)
 						change_map(portal->getNextMap());

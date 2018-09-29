@@ -32,4 +32,14 @@ namespace SRL {
 
 		return result;
 	}
+
+	static void save_image(BYTE* pic, const char* filename, int width, int height)
+	{
+		//int pitch = ((((32 * width) + 31) / 32) * 4);
+		int pitch = width * 4;
+		FIBITMAP * dib = FreeImage_ConvertFromRawBitsEx(true, pic, FIT_BITMAP, width, height,pitch , 32, 0x00ff0000, 0x0000ff00, 0x000000FF);
+		//FIBITMAP * dib = FreeImage_ConvertFromRawBitsEx(true, pic, FIT_BITMAP, width, height, pitch , 32, 0x000000ff, 0x0000ff00, 0x00ff0000);
+		FreeImage_Save(FIF_PNG, dib , filename, PNG_Z_NO_COMPRESSION);
+	}
+
 }

@@ -10,6 +10,7 @@
 #include "monster_data_manager.h"
 #include "monster_data_manager.h"
 #include "srl/deserial.h"
+#include "graphics/layers/t_group.h"
 
 namespace hiraeth
 {
@@ -27,6 +28,7 @@ namespace hiraeth
 			maths::vec2 m_HitBox;
 			MonsterStats m_MonsterStats;
 			SRL::MonsterStatsStruct* m_StatsStruct;
+			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 
 		public:
 			SRL::Summon m_Summon;
@@ -49,6 +51,7 @@ namespace hiraeth
 			}
 
 			void getHit(Direction dir, Damage damage) override;
+			void getHit(Direction dir, Damage damage, std::unique_ptr<graphics::SpritedRenderable> hit_animation );
 			SRL::Summon get_summon() const { return m_Summon; }
 			//maths::Rectangle getHitBox() { return }
 

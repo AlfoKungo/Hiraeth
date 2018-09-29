@@ -10,27 +10,35 @@ namespace Checks
 	{
 		const std::string SRL_TYPE{ "skills" };
 		{
-			SRL::SkillInfo info{ {}, "Heal", true, 3 };
-			info.skill_properties[SRL::SkillDataType::mpCon] = 15;
-			info.skill_properties[SRL::SkillDataType::heal] = 35;
-			info.skill_properties[SRL::SkillDataType::actTime] = 300;
+			SRL::SkillInfo info{
+				{
+					{SRL::SkillDataType::mpCon, 15},
+					{SRL::SkillDataType::heal, 35},
+					{SRL::SkillDataType::actTime, 1000},
+					{SRL::SkillDataType::timeOut, 10},
+				}, "Heal", true, 3 };
 			std::ofstream data_file("data/" + SRL_TYPE + "/0/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
 		}
 		{
-			SRL::SkillInfo info{ {}, "Haste", true, 3 };
-			info.skill_properties[SRL::SkillDataType::mpCon] = 10;
-			info.skill_properties[SRL::SkillDataType::speed] = 20;
-			//info.skill_properties[SRL::SkillDataType::duration] = 120;
+			SRL::SkillInfo info{
+				{
+					{SRL::SkillDataType::mpCon, 10},
+					{SRL::SkillDataType::speed, SRL::TimedValue{ 5, 20 }},
+					{SRL::SkillDataType::actTime, 1000},
+					{SRL::SkillDataType::duration, 20},
+				}, "Haste", true, 3 };
 			std::ofstream data_file("data/" + SRL_TYPE + "/1/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
 		}
 		{
-			SRL::SkillInfo info{ {}, "Snails", true, 3 };
-			info.skill_properties[SRL::SkillDataType::mpCon] = 5;
-			info.skill_properties[SRL::SkillDataType::dmgS] = "x*1.5";
+			SRL::SkillInfo info{
+				{
+					{SRL::SkillDataType::mpCon, 3},
+					{SRL::SkillDataType::dmgS, "x*1.5"},
+				}, "Snails", true, 3 };
 			std::ofstream data_file("data/" + SRL_TYPE + "/2/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));

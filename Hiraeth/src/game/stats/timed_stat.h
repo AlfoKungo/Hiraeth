@@ -10,7 +10,6 @@ namespace hiraeth
 		{
 			float * m_Value;
 			float m_ValueInc;
-			//ItemIdType item_id;
 			ATimer m_Timer;
 
 		public:
@@ -22,15 +21,27 @@ namespace hiraeth
 				(*value) += float(timed_value.value);
 			}
 
-			bool checkAndCancel()
+			TimedStat(const TimedStat& other) = default;
+
+			TimedStat & operator = (TimedStat other)
 			{
-				if (m_Timer.isExpired())
-				{
-					(*m_Value) -= m_ValueInc;
-					return true;
-				}
-				return false;
+				std::swap(m_Value, other.m_Value);
+				std::swap(m_ValueInc, other.m_ValueInc);
+				std::swap(m_Timer, other.m_Timer);
+				return *this;
+			}
+
+			~TimedStat()
+			{
+				(*m_Value) -= m_ValueInc;
+			}
+
+			bool checkTimer() const
+			{
+				return (m_Timer.hasExpired());
 			}
 		};
+
+
 	}
 }

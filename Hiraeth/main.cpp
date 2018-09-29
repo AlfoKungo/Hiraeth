@@ -123,6 +123,7 @@ int main()
 		Camera::update();
 		map.update();
 		monsterManager.update();
+		skillManager.update();
 		npcManager.update();
 		m_CrLayer.update();
 		itemManager.update();
@@ -132,6 +133,7 @@ int main()
 		//draw
 		map.draw();
 		monsterManager.draw();
+		skillManager.draw();
 		npcManager.draw();
 		m_CrLayer.render();
 		itemManager.draw();

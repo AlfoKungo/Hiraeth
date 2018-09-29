@@ -10,7 +10,8 @@ namespace hiraeth {
 			m_ItemManager(item_manager),
 			m_SkillManager(skill_manager),
 			m_CharacterStats(character_stats)
-		{
+		//m_Animations(m_TransformationMatrix)
+	{
 			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(
 				SRL::AnimationData{ {{{0, 0, 23, 31}, {15, 0}, 0.4f}, {{23, 0, 23, 31}, {15, 0}, 0.4f}, {{46, 0, 23, 31}, {15, 0}, 0.4f}}, true },
 				graphics::TextureManager::Load("char_body_stand.png")));
@@ -66,12 +67,33 @@ namespace hiraeth {
 		void Character::update()
 		{
 			m_CharacterStats->update();
+			if (m_Animation)
+			{
+				m_Animation->update();
+				if (m_Animation->is_sprite_finished())
+					m_Animation.reset(nullptr);
+			}
+			//m_Animations.update();
+			//m_Animations.m_Renderables.erase(
+			//	std::remove_if(begin(m_Animations.m_Renderables), end(m_Animations.m_Renderables),
+			//		[](const auto& sr) {return sr->is_sprite_finished(); }), end(m_Animations.m_Renderables));
 
 			m_Speed = m_CharacterStats->getSpeed();
 			m_Jump = m_CharacterStats->getJump();
 			if (m_Controls.pick_up)
 			{
 				pickItemUp();
+			}
+
+			// delete finished timers in m_SkillTimeouts
+			auto iter = m_SkillsTimeouts.begin();
+			auto endIter = m_SkillsTimeouts.end();
+			for (; iter != endIter; )
+			{
+				if (iter->second.hasExpired())
+					m_SkillsTimeouts.erase(iter++);
+				else
+					++iter;
 			}
 			Creature::update();
 		}
@@ -104,7 +126,7 @@ namespace hiraeth {
 				if (state)
 				{
 					unsigned int skill_index = m_SkillKeysMap[key];
-					activate_skill(skill_index);
+					activateSkill(skill_index);
 				}
 		}
 
@@ -135,7 +157,7 @@ namespace hiraeth {
 			}
 			attack_rec.width = 85;
 			attack_rec.position += m_Direction * maths::vec2(15);
-			for (auto monster : (*m_MonstersLayer))
+			for (auto& monster : (*m_MonstersLayer))
 			{
 				if (monster->check_collision(attack_rec))
 				{
@@ -148,36 +170,80 @@ namespace hiraeth {
 		void Character::pickItemUp()
 		{
 			item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
-			if (item != NULL)
+			if (item != nullptr)
 				item->pickUp(&getBounds());
 		}
 
-		void Character::activate_skill(unsigned skill_index)
+
+		void Character::activateSkill(unsigned int skill_index)
 		{
+			//if (!m_SkillActivationTimer.hasExpired() || // check for skill's activation time
+			//if (!m_Animations.m_Renderables.empty())
+			//	return;
+			if (m_Animation)
+				return;
+			if (m_SkillsTimeouts.find(skill_index) != m_SkillsTimeouts.end() ) // check for skill's timeout
+				return; // Skill's criterions not met
+
 			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_index);
 			SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
 			if (item_properties->find(SRL::SkillDataType::mpCon) != item_properties->end())
-				if (!m_Stats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
+				if (!m_CharacterStats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
 					return;
-			for (SRL::SkillPropertiesMapPair element : (*item_properties))
+
+			if (item_properties->find(SRL::SkillDataType::timeOut) != item_properties->end())
+				m_SkillsTimeouts[skill_index] = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::timeOut)))};
+			//if (item_properties->find(SRL::SkillDataType::actTime) != item_properties->end())
+			//	m_SkillActivationTimer = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::actTime))) / 1000 };
+
+			if (item_properties->find(SRL::SkillDataType::duration) != item_properties->end())
+				m_SkillManager->add_icon(skill_info->name, float(std::get<int>(item_properties->at(SRL::SkillDataType::duration))));
+
+			SRL::AnimationMap* skill_animation_data = m_SkillManager->getAnimationData(skill_index);
+			for (const auto& element : (*skill_animation_data))
 			{
 				switch (element.first)
 				{
-				case SRL::SkillDataType::dmg:
-					m_Stats->causeDamage(Damage{ unsigned int(std::get<int>(element.second)) });
+				case SRL::SkillAnimationTypes::effectAnimation:
+					//m_Animations.add(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, element.second.animation_data,
+					//	graphics::TextureManager::Load(skill_info->name + "_animation", element.second.animation_texture), true});
+					m_Animation.reset(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, element.second.animation_data,
+						graphics::TextureManager::Load(skill_info->name + "_animation", element.second.animation_texture), true});
 					break;
-				case SRL::SkillDataType::heal:
-					m_Stats->recoverHp(std::get<int>(element.second));
+				case SRL::hitAnimation:
+					activateAttackSkill(element.second, skill_info->name);
 					break;
-				case SRL::SkillDataType::speed:
-					//m_CharacterStats->setTimedStat(std::get<SRL::TimedValue>(element.second));
-					break;
-				case SRL::SkillDataType::dmgS:
-					m_Stats->causeDamage(Damage{ 25, 25 });
-					break;
-				default:
-					break;
+				default: ;
 				}
+			}
+			m_CharacterStats->activateSkill(skill_index, item_properties);
+		}
+
+		void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, std::string skill_name)
+		{
+			std::vector<std::pair<float, Monster*>> monsters_in_range;
+			for (auto & monster : (*m_MonstersLayer))
+			{
+				const maths::vec2 mon_pos = monster->getBounds().GetMiddle();
+				const maths::vec2 char_pos = getBounds().GetMiddle();
+				maths::vec2 dis_vec = char_pos - mon_pos;
+				if (Right == m_Direction)
+					dis_vec *= -1;
+				if ((dis_vec.x < 500 && dis_vec.x > 0) && (dis_vec.y > -200 && dis_vec.y < 200))
+				{
+					//monster->getHit(m_Direction, Damage{ 30,30 });
+					float pyth = pow(dis_vec.x, 2) + pow(dis_vec.y, 2);
+					monsters_in_range.emplace_back(std::make_pair(pyth, monster));
+					//return;
+				}
+			}
+			if (!monsters_in_range.empty())
+			{
+				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
+					[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
+				hit_monster->getHit(m_Direction,
+					Damage{ 250,90 }, std::make_unique<graphics::SpritedRenderable>(maths::vec3{ 0, 0, 0 }, hit_animation_data.animation_data, 
+						graphics::TextureManager::Load(skill_name + "_hit", hit_animation_data.animation_texture), true));
 			}
 		}
 	}

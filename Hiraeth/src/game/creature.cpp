@@ -37,7 +37,7 @@ namespace hiraeth
 				case PreHit:
 					if (m_Foothold != NO_FOOTHOLD)
 						m_Force.x = 0;
-					if (m_AttackTimer.isExpired())
+					if (m_AttackTimer.hasExpired())
 					{
 						carryOutAttack();
 						m_AttackState = PostHit;
@@ -47,14 +47,14 @@ namespace hiraeth
 				case PostHit:
 					if (m_Foothold != NO_FOOTHOLD)
 						m_Force.x = 0;
-					if (m_AttackTimer.isExpired())
+					if (m_AttackTimer.hasExpired())
 					{
 						m_AttackState = PostHitMovable;
 						m_AttackTimer.reSet(0.2f);
 					}
 					break;
 				case PostHitMovable:
-					if (m_AttackTimer.isExpired() || (m_Force.x < -0.1f || m_Force.x > 0.1f))
+					if (m_AttackTimer.hasExpired() || (m_Force.x < -0.1f || m_Force.x > 0.1f))
 					{
 						m_StanceState = NoStance;
 						analyze_controls();
@@ -69,7 +69,7 @@ namespace hiraeth
 		{
 			if (is_hit && m_IsImmuneAfterHit)
 			{
-				if (m_HitTimer.isExpired())
+				if (m_HitTimer.hasExpired())
 				{
 					is_hit = false;
 					m_Color = 0xffffffff;

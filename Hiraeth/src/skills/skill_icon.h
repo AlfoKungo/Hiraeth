@@ -20,19 +20,20 @@ namespace hiraeth {
 			unsigned int m_Level{0};
 			graphics::Label m_LevelLabel;
 			graphics::Label m_NameLabel;
-
-
+			std::map<SRL::SkillAnimationTypes, SRL::FullAnimationData> m_AnimationData;
 			SRL::SkillInfo m_Info;
+
 		public:
 			SkillIcon(SRL::SkillData data, maths::vec2 pos)
 				: Sprite(pos),
 				m_Bg(pos + maths::vec2{ -1,-2 }, graphics::TextureManager::Load("Assets/UI/Skills/Skills.main.skill1.png")),
-				m_Info(data.skill_info),
 				m_Icon(graphics::TextureManager::Load(data.skill_info.name, data.icon_data.icon)),
 				m_IconDisabled(graphics::TextureManager::Load(data.skill_info.name + "_disabled", data.icon_data.icon_disabled)),
 				m_IconMouseOver(graphics::TextureManager::Load(data.skill_info.name + "_mouse_over", data.icon_data.icon_mouse_over)),
 				m_LevelLabel("arial", 12, m_Level, pos + maths::vec2{ 40, 3 }, 0xff000000, graphics::Label::Alignment::LEFT),
-				m_NameLabel("arial", 12, data.skill_info.name, pos + maths::vec2{ 40, 21 }, 0xff000000, graphics::Label::Alignment::LEFT)
+				m_NameLabel("arial", 12, data.skill_info.name, pos + maths::vec2{ 40, 21 }, 0xff000000, graphics::Label::Alignment::LEFT),
+				m_AnimationData(data.animation_map),
+				m_Info(data.skill_info)
 
 			{
 				updateIconState(false);
@@ -43,13 +44,17 @@ namespace hiraeth {
 				return &m_Info;
 			}
 
+			SRL::AnimationMap* get_animation_data()
+			{
+				return &m_AnimationData;
+			}
+
 			void draw(graphics::Renderer* renderer) const override
 			{
 				m_Bg.draw(renderer);
 				m_NameLabel.draw(renderer);
 				m_LevelLabel.draw(renderer);
 				Sprite::draw(renderer);
-				//m_LevelLabel.draw(renderer);
 			}
 
 			void inc_level()
@@ -68,7 +73,7 @@ namespace hiraeth {
 				}
 			}
 
-			maths::Rectangle getSpUpButtonBounds()
+			maths::Rectangle getSpUpButtonBounds() const
 			{
 				return getBounds();
 			}

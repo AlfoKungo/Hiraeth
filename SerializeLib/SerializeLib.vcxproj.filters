@@ -48,5 +48,11 @@
     <ClInclude Include="srl\sprite_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="srl\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="srl\animation_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

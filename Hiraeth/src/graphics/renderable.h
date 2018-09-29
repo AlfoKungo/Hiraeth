@@ -55,6 +55,7 @@ namespace hiraeth {
 			inline unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
 			inline const maths::vec2& getOrigin() const { return m_Org; }
+			virtual bool is_sprite_finished() const { return false; }
 			//inline GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
 			GLuint getTID() const
 			{

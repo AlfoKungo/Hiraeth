@@ -42,6 +42,14 @@ namespace SRL {
 		}
 	};
 
+	struct CreatureSprites
+	{
+		std::map<MoveState, AnimationData> sprited_data;
+		maths::vec2 hit_box;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(sprited_data), CEREAL_NVP(hit_box));
+		}
+	};
 
 	struct MonsterTexturesData
 	{
