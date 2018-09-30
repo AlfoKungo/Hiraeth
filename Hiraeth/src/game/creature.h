@@ -27,6 +27,7 @@ namespace hiraeth
 
 		public:
 			bool is_hit = false;
+			bool has_died = false;
 		protected:
 			AttackState m_AttackState;
 			bool AttackStatus = false;

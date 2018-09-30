@@ -11,6 +11,7 @@
 #include "monster_data_manager.h"
 #include "srl/deserial.h"
 #include "graphics/layers/t_group.h"
+#include "game/projectile.h"
 
 namespace hiraeth
 {
@@ -29,10 +30,11 @@ namespace hiraeth
 			MonsterStats m_MonsterStats;
 			SRL::MonsterStatsStruct* m_StatsStruct;
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
+			graphics::TGroup<skills::Projectile> m_ProjectileAnimations;
+			bool m_HasFinished{ false };
 
 		public:
 			SRL::Summon m_Summon;
-			bool died = false;
 			Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer);
 
 			Monster(SRL::Summon summon, map::MapLayer* map_layer) :
@@ -49,15 +51,20 @@ namespace hiraeth
 			void carryOutAttack() override
 			{
 			}
+			bool hasSpriteFinished() const override
+			{
+				return m_HasFinished;
+			}
 
 			void getHit(Direction dir, Damage damage) override;
-			void getHit(Direction dir, Damage damage, std::unique_ptr<graphics::SpritedRenderable> hit_animation );
-			SRL::Summon get_summon() const { return m_Summon; }
+			void getHit(std::unique_ptr<skills::Projectile> projectile_animation);
+			SRL::Summon getSummon() const { return m_Summon; }
+			//void change_stance(StanceState new_state) override;
 			//maths::Rectangle getHitBox() { return }
 
 		private:
 			void cause_damage(Damage damage) override;
-			void kill_monster();
+			void triggerDeathAnimation();
 		};
 	}
 }

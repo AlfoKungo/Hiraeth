@@ -73,7 +73,7 @@ namespace hiraeth {
 			{
 			m_Renderables.erase(
 				std::remove_if(begin(m_Renderables), end(m_Renderables),
-					[](const auto& sr) {return sr->is_sprite_finished(); }), end(m_Renderables));
+					[](const auto& sr) {return sr->hasSpriteFinished(); }), end(m_Renderables));
 			}
 		};
 	}

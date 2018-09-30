@@ -25,12 +25,14 @@ namespace hiraeth {
 			m_HitBox = mtd.creature_sprites.hit_box;
 			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), m_HitBox.x, m_HitBox.y, 0xb066ccff };
 
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.creature_sprites.sprited_data[SRL::MoveState::Stand], 
-				graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_stand", mtd.textures_dict[SRL::MoveState::Stand])));
-			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.creature_sprites.sprited_data[SRL::MoveState::Walk],
-				graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_walk", mtd.textures_dict[SRL::MoveState::Walk])));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), mtd.creature_sprites.sprited_data[SRL::MoveState::Hit], 
-				graphics::TextureManager::Load(monster_data.StatsStruct.Name + "_hit", mtd.textures_dict[SRL::MoveState::Hit])));
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), 
+				monster_data.StatsStruct.Name + "_stand", mtd.creature_sprites.sprited_data[SRL::MoveState::Stand]));
+			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+				monster_data.StatsStruct.Name + "_walk", mtd.creature_sprites.sprited_data[SRL::MoveState::Walk]));
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), 
+				monster_data.StatsStruct.Name + "_hit", mtd.creature_sprites.sprited_data[SRL::MoveState::Hit]));
+			m_StatesRenderables[Die].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), 
+				monster_data.StatsStruct.Name + "_die", mtd.creature_sprites.sprited_data[SRL::MoveState::Die], true));
 
 			m_Org = maths::vec2{ m_HitBox.x / 2, 0 };
 			//m_Controls.left = true;
@@ -87,6 +89,23 @@ namespace hiraeth {
 
 			m_Animations.update();
 			m_Animations.clear_done();
+			m_ProjectileAnimations.update();
+				//for (auto it = m_ProjectileAnimations.m_Renderables.begin(); it != m_ProjectileAnimations.m_Renderables.end() /* not hoisted */; /* no increment */)
+			//auto iter = m_ProjectileAnimations.m_Renderables.begin();
+			//auto endIter = m_ProjectileAnimations.m_Renderables.end();
+			//for (; iter != endIter; )
+			for (auto iter = m_ProjectileAnimations.m_Renderables.begin(); iter != m_ProjectileAnimations.m_Renderables.end() ;)
+			{
+				if ((*iter)->hasHitClashed())
+				{
+					m_Animations.add(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0,0 }, (*iter)->getSkillName() + "_hit", (*iter)->getAnimationData(), true));
+					Creature::getHit((*iter)->getDirection(), (*iter)->getDamage());
+					m_ProjectileAnimations.m_Renderables.erase(iter);
+					break;
+				}
+				else
+					++iter;
+			}
 			Creature::update();
 		}
 
@@ -97,25 +116,20 @@ namespace hiraeth {
 			m_Animations.draw(renderer);
 			renderer->submit(&m_Hp);
 			renderer->pop();
+			m_ProjectileAnimations.draw(renderer);
 		}
 
 		bool Monster::check_collision(const maths::Rectangle& rec) 
 		{
 			maths::Rectangle hit_box{ m_Bounds.position, m_HitBox };
-			//if (m_PrintTimer.isExpired())
-			//{
-			//	std::cout << "my name is : " + std::to_string(hit_box.x) + ", " + std::to_string(hit_box.y) + ", " + std::to_string(hit_box.width) + ", " + std::to_string(hit_box.height) << "\n";
-			//	std::cout << "my car name is : " + std::to_string(rec.x) + ", " + std::to_string(rec.y) + ", " + std::to_string(rec.width) + ", " + std::to_string(rec.height) << "\n";
-			//	m_PrintTimer.reSet(1.0f);
-			//}
 			return ((rec.x < hit_box.x + hit_box.width) && (hit_box.x < rec.x + rec.width)
 				&& (rec.y < hit_box.y + hit_box.height) && (hit_box.y < rec.y + rec.height));
 		}
 
-		void Monster::getHit(Direction dir, Damage damage, std::unique_ptr<graphics::SpritedRenderable> hit_animation)
+		void Monster::getHit(std::unique_ptr<skills::Projectile> projectile_animation)
 		{
-			Creature::getHit(dir, damage);
-			m_Animations.add(std::move(hit_animation));
+			//Creature::getHit(dir, damage);
+			m_ProjectileAnimations.add(std::move(projectile_animation));
 
 		}
 		void Monster::getHit(Direction dir, Damage damage)
@@ -126,18 +140,16 @@ namespace hiraeth {
 		void Monster::cause_damage(Damage damage)
 		{
 			m_Stats->causeDamage(damage);
-			//float hp = m_Stats->getHp();
-			//float hp = m_Stats->getMaxHp();
 			if (m_StatsStruct->Hp > m_StatsStruct->MaxHp || m_StatsStruct->Hp == 0)
 			{
-				kill_monster();
-				return;
+				m_StatsStruct->Hp = 0;
+				triggerDeathAnimation();
 			}
 			m_Hp = graphics::Sprite(maths::vec2(10, 40), float(m_StatsStruct->Hp) / m_StatsStruct->MaxHp * 30, 6, 0xff0000ff);
 		}
-		void Monster::kill_monster()
+		void Monster::triggerDeathAnimation()
 		{
-			died = true;
+			change_stance(Die);
 		}
 	}
 }

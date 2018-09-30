@@ -15,7 +15,7 @@
 #include "../graphics/renderer.h"
 #include "../graphics/sprited_renderable.h"
 #include "../game/character.h"
-#include "../game/monster.h"
+#include "../game/monsters/monster.h"
 #include "../view/camera.h"
 #include "../basic/drawable.h"
 #include "../basic/updatable.h"

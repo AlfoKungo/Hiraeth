@@ -42,7 +42,7 @@ namespace hiraeth {
 				return inv_item->getBounds().Contains(mousePos); });
 				if (result_item != std::end(*tab_rends))
 				{
-					m_OldItemPos = (*result_item)->get_position();
+					m_OldItemPos = (*result_item)->getPosition();
 					m_HoldItem = (*result_item).get();
 					m_IsHolding = true;
 					return;
@@ -66,7 +66,7 @@ namespace hiraeth {
 					auto result_item = std::find_if(std::begin(*tab_rends),
 						std::end(*tab_rends),
 						[&](auto const& inv_item)
-					{ return (inv_item.get() != m_HoldItem && inv_item->get_position() == newPos); });
+					{ return (inv_item.get() != m_HoldItem && inv_item->getPosition() == newPos); });
 					if (result_item != std::end(*tab_rends))
 						(*result_item)->setPosition(m_OldItemPos);
 				}
@@ -165,7 +165,7 @@ namespace hiraeth {
 			return inv_item->getBounds().Contains(mousePos); });
 			if (result_item != std::end(*tab_rends))
 			{
-				m_OldItemPos = (*result_item)->get_position();
+				m_OldItemPos = (*result_item)->getPosition();
 				SRL::ItemPropertiesMap * item_stats = (*result_item)->getItemProperties();
 				if (m_CharacterStats->activateUseItem(item_stats))
 				{

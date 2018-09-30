@@ -47,7 +47,7 @@ namespace hiraeth {
 
 
 			// gets
-			inline const maths::vec2& get_position() const { return m_Bounds.position; }
+			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
 			inline const maths::vec2& getSize() const { return m_Bounds.size; }
 			inline const maths::Rectangle& getBounds() const { return m_Bounds; }
 			//inline maths::Rectangle& getBounds() { return m_Bounds; }
@@ -55,7 +55,7 @@ namespace hiraeth {
 			inline unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
 			inline const maths::vec2& getOrigin() const { return m_Org; }
-			virtual bool is_sprite_finished() const { return false; }
+			virtual bool hasSpriteFinished() const { return false; }
 			//inline GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
 			GLuint getTID() const
 			{
@@ -66,7 +66,7 @@ namespace hiraeth {
 
 			// sets
 			inline void setColor(unsigned int color) { m_Color = color; }
-			inline void setPosition(const maths::vec2& position) { m_Bounds.position = position; }
+			inline virtual void setPosition(const maths::vec2& position) { m_Bounds.position = position; }
 			inline void setSize(const maths::vec2& size) { m_Bounds.size = size; }
 
 			virtual void resetState() {}

@@ -16,8 +16,9 @@ namespace hiraeth {
 			Stand = 1,
 			Walk = 2,
 			Attack = 3,
-			Jump = 4,
-			Skill = 5,
+			Die = 4,
+			Jump = 5,
+			Skill = 6,
 		};
 
 		struct CreatureControls
@@ -45,7 +46,6 @@ namespace hiraeth {
 #define FORCE_OF_GRAVITY 0.94f
 
 		protected:
-			StanceState m_StanceState;
 			Direction m_Direction;
 			CreatureControls m_Controls;
 			std::map<StanceState, std::vector<std::unique_ptr<Renderable>>> m_StatesRenderables;
@@ -53,6 +53,7 @@ namespace hiraeth {
 			maths::mat4 m_TransformationMatrix;
 
 			float m_Speed, m_Jump; //link to stats_struct
+			StanceState m_StanceState;
 
 		private:
 			std::vector<int> actions; //this is to create a list of actions to do.

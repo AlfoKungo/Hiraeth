@@ -1,0 +1,46 @@
+{
+    "animation_data": {
+        "frames_data": [
+			{
+				"frame_box": {
+					"x": 0.0,
+					"y": 0.0,
+					"width": 69.0,
+					"height": 50.0
+				},
+				"origin": {
+					"x": 25.0,
+					"y": 0.0
+				},
+				"delay": 0.20000000298023225
+			},
+			{
+				"frame_box": {
+					"x": 69.0,
+					"y": 0.0,
+					"width": 69.0,
+					"height": 50.0
+				},
+				"origin": {
+					"x": 25.0,
+					"y": 0.0
+				},
+				"delay": 0.30000001192092898
+			},
+			{
+				"frame_box": {
+					"x": 138.0,
+					"y": 0.0,
+					"width": 69.0,
+					"height": 50.0
+				},
+				"origin": {
+					"x": 25.0,
+					"y": 0.0
+				},
+				"delay": 0.25
+			}
+		],
+        "is_loop": false
+    }
+}

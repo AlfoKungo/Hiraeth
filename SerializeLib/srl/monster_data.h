@@ -8,6 +8,7 @@
 #include <map>
 #include "maths/rectangle.h"
 #include "sprite_data.h"
+#include "srl/animation_data.h"
 
 namespace SRL {
 	
@@ -44,7 +45,7 @@ namespace SRL {
 
 	struct CreatureSprites
 	{
-		std::map<MoveState, AnimationData> sprited_data;
+		std::map<MoveState, FullAnimationData> sprited_data;
 		maths::vec2 hit_box;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(sprited_data), CEREAL_NVP(hit_box));
@@ -55,10 +56,10 @@ namespace SRL {
 	{
 		//TextureData stand_texture, walk_texture, hit_texture;
 		CreatureSprites creature_sprites;
-		std::map<MoveState, TextureData> textures_dict;
+		//std::map<MoveState, TextureData> textures_dict;
 		template<class A> void serialize(A& ar) {
 			//ar(CEREAL_NVP(stand_texture), CEREAL_NVP(walk_texture), CEREAL_NVP(hit_texture), CEREAL_NVP(frames_amount));
-			ar(CEREAL_NVP(textures_dict), CEREAL_NVP(creature_sprites));
+			ar(CEREAL_NVP(creature_sprites));
 		}
 	};
 }

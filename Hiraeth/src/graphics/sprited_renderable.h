@@ -15,6 +15,7 @@ namespace hiraeth {
 		{
 		protected:
 			unsigned int m_FrameIndex{ 0 };
+			bool m_IsOneTime{ false };
 		private:
 			unsigned int m_FramesAmount;
 			float m_FrameWidth;
@@ -23,10 +24,12 @@ namespace hiraeth {
 			int m_LoopDirection{ 1 };
 			bool m_IsLoop;
 			SRL::AnimationData m_AniData;
-			bool m_IsOneTime{ false };
 			bool m_IsFinished{ false };
 		public:
 			SpritedRenderable(maths::vec3 position, SRL::AnimationData animation_data, Texture* ptex, bool is_one_time = false);
+
+			SpritedRenderable(maths::vec3 position, const std::string& tex_name,
+				SRL::FullAnimationData animation_data, bool is_one_time = false);
 
 			SpritedRenderable(maths::vec3 position, unsigned int frames_amount, float delay, bool is_loop,
 				Texture* ptex);
@@ -37,7 +40,7 @@ namespace hiraeth {
 
 			void resetState() override;
 
-			bool is_sprite_finished() const override
+			bool hasSpriteFinished() const override
 			{
 				return m_IsFinished;
 			}

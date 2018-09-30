@@ -98,14 +98,28 @@ namespace hiraeth {
 				m_TimedItemStats.erase(
 					std::remove_if(begin(m_TimedItemStats), end(m_TimedItemStats), 
 					[](stats::TimedStat ts) {return ts.checkTimer(); }), end(m_TimedItemStats));
-				for (auto&[key, tsv] : m_TimedSkillStats)
+				for (auto it = m_TimedSkillStats.begin(); it != m_TimedSkillStats.end() /* not hoisted */; /* no increment */)
 				{
-					tsv.erase(
-						std::remove_if(begin(tsv), end(tsv),
-							[](const stats::TimedStat& ts) {return ts.checkTimer(); }), end(tsv));
-					if (tsv.empty())
-						m_TimedSkillStats.erase(key);
+					(it)->second.erase(
+						std::remove_if(begin((it)->second), end((it)->second),
+							[](const stats::TimedStat& ts) {return ts.checkTimer(); }), end((it)->second));
+					if (it->second.empty())
+					{
+						m_TimedSkillStats.erase(it++);    // or "it = m.erase(it)" since C++11
+					}
+					else
+					{
+						++it;
+					}
 				}
+				//for (auto&[key, tsv] : m_TimedSkillStats)
+				//{
+				//	tsv.erase(
+				//		std::remove_if(begin(tsv), end(tsv),
+				//			[](const stats::TimedStat& ts) {return ts.checkTimer(); }), end(tsv));
+				//	if (tsv.empty())
+				//		m_TimedSkillStats.erase(key);
+				//}
 			}
 		};
 

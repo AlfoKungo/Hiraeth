@@ -2,6 +2,8 @@
 #include "basic/updatable.h"
 #include "skill_icon.h"
 #include "UI/ui_skills.h"
+#include "graphics/percented_sprite.h"
+#include "top_right_icon.h"
 
 namespace hiraeth {
 	namespace skills {
@@ -12,7 +14,7 @@ namespace hiraeth {
 			std::map<unsigned int, std::tuple<SRL::SkillInfo*, SRL::AnimationMap*>> m_SkillsData;
 			ui::UiSkills * m_UiSkills;
 		public:
-			graphics::Layer<graphics::Renderable> m_Layer;
+			graphics::Layer<TopRightIcon> m_Layer;
 			SkillManager(ui::UiSkills * ui_skills)
 				: m_UiSkills(ui_skills),
 				m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false)
@@ -29,7 +31,7 @@ namespace hiraeth {
 				size_t size_before{ m_Layer.m_Renderables.size() };
 				m_Layer.m_Renderables.erase(
 					std::remove_if(begin(m_Layer.m_Renderables), end(m_Layer.m_Renderables),
-						[](graphics::Renderable* ts) {return ts->is_sprite_finished(); }), end(m_Layer.m_Renderables));
+						[](graphics::Renderable* ts) {return ts->hasSpriteFinished(); }), end(m_Layer.m_Renderables));
 				if (m_Layer.m_Renderables.size() != size_before)
 					reconfigure_icons();
 			}
@@ -69,19 +71,23 @@ namespace hiraeth {
 				return vints;
 			}
 
-			void add_icon(const std::string& name, float duration)
+			void add_icon(const std::string& name, unsigned int skill_index, float duration)
 			{
+				std::vector<TopRightIcon*>* rends = &m_Layer.m_Renderables;
+				rends->erase(std::remove_if(rends->begin(), rends->end(), // remove icon if already exists
+					[skill_index](const TopRightIcon* rend) {return rend->getSkillIndex() == skill_index; }), rends->end());
+
 				SRL::AnimationData ad{ {},false };
 				ad.frames_data.push_back({ {0,0,32,32},{16,0}, duration });
-				m_Layer.add(new graphics::SpritedRenderable{ {float(752 - m_Layer.m_Renderables.size() * 32), 418 }, ad,
-					graphics::TextureManager::Load(name), true });
+				m_Layer.add(new TopRightIcon{skill_index, {float(768 - m_Layer.m_Renderables.size() * 32), 418 }, 
+					graphics::TextureManager::Load(name), duration});
 			}
 
 			void reconfigure_icons()
 			{
 				for (int i = 0; i < m_Layer.m_Renderables.size(); ++i)
 				{
-					m_Layer.m_Renderables[i]->setPosition({ float(752 - i * 32), 418 });
+					m_Layer.m_Renderables[i]->setPosition({float(768 - i * 32), 418 });
 				}
 			}
 		};

@@ -1,4 +1,5 @@
 #include "sprited_renderable.h"
+#include "texture_manager.h"
 
 
 namespace hiraeth
@@ -19,6 +20,13 @@ namespace hiraeth
 			m_Texture = ptex;
 			update_frame();
 			m_AnimationTimer.reSet(m_AniData.frames_data[m_FrameIndex].delay);
+		}
+
+		SpritedRenderable::SpritedRenderable(maths::vec3 position, const std::string& tex_name,
+			SRL::FullAnimationData animation_data, bool is_one_time )
+			: SpritedRenderable(position, animation_data.animation_data, 
+				TextureManager::Load(tex_name, animation_data.animation_texture ), is_one_time)
+		{
 		}
 
 		SpritedRenderable::SpritedRenderable(maths::vec3 position, unsigned int frames_amount,

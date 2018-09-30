@@ -218,6 +218,11 @@ namespace maths {
 		return sqrt(x * x + y * y);
 	}
 
+	float vec2::MagnitudeU() const
+	{
+		return x * x + y * y;
+	}
+
 	vec2 vec2::Normalise() const
 	{
 		float length = Magnitude();

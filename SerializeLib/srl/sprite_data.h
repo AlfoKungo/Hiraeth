@@ -8,11 +8,11 @@
 
 namespace SRL
 {
-	enum MoveState {
-		Stand = 0,
-		Walk = 1,
-		Hit = 2,
-		Die = 3,
+	enum MoveState { // TODO: unite this with base_creature::stance_state
+		Stand = 1,
+		Walk = 2,
+		Hit = 3,
+		Die = 4,
 	};
 
 	struct SpritedFrameData

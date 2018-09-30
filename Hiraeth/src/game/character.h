@@ -6,7 +6,7 @@
 #include "character_stats.h"
 #include "character/character_body.h"
 #include "character/character_arm.h"
-#include "monster.h"
+#include "monsters/monster.h"
 #include "graphics/layers/layer.h"
 #include "item/item_manager.h"
 #include "skills/skill_manager.h"
@@ -71,7 +71,8 @@ namespace hiraeth {
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();
 			void activateSkill(unsigned int skill_index);
-			void activateAttackSkill( SRL::FullAnimationData hit_animation_data, std::string skill_name);
+			void activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
+				SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
 		};
 	}
 }

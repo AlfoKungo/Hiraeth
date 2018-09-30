@@ -150,7 +150,7 @@ int main()
 	}
 
 	// Serialize Monster Data
-	Checks::create_monster_data();
+	//Checks::create_monster_data();
 	{
 		std::ofstream monster_data_file("../Hiraeth/serialized/monster.data", std::ios::out | std::ios::binary);
 		if (monster_data_file.is_open())
@@ -177,13 +177,19 @@ int main()
 				SRL::MonsterTexturesData Mtd{};
 
 				std::string path = p.path().string();
-				std::ifstream in(path + "\\data.json", std::ios::in);
-				cereal::JSONInputArchive arin(in);
+				//std::ifstream in(path + "\\data.json", std::ios::in);
+				//cereal::JSONInputArchive arin(in);
+				//arin(Mtd.creature_sprites);
 
-				arin(Mtd.creature_sprites);
-				Mtd.textures_dict[SRL::MoveState::Walk].load_texture(path + "\\walk.png");
-				Mtd.textures_dict[SRL::MoveState::Stand].load_texture(path + "\\stand.png");
-				Mtd.textures_dict[SRL::MoveState::Hit].load_texture(path + "\\hit.png");
+				Mtd.creature_sprites.hit_box = { 45,50 };
+
+				Mtd.creature_sprites.sprited_data[SRL::MoveState::Stand].load_data(path, "stand");
+				Mtd.creature_sprites.sprited_data[SRL::MoveState::Walk].load_data(path, "walk");
+				Mtd.creature_sprites.sprited_data[SRL::MoveState::Hit].load_data(path, "hit");
+				Mtd.creature_sprites.sprited_data[SRL::MoveState::Die].load_data(path, "die");
+				//Mtd.textures_dict[SRL::MoveState::Walk].load_texture(path + "\\walk.png");
+				//Mtd.textures_dict[SRL::MoveState::Stand].load_texture(path + "\\stand.png");
+				//Mtd.textures_dict[SRL::MoveState::Hit].load_texture(path + "\\hit.png");
 				v_monsterTexturesData.push_back(Mtd);
 			}
 			monster_data_file.seekp(0, monster_data_file.end);
@@ -277,6 +283,12 @@ int main()
 						SRL::FullAnimationData fad;
 						fad.load_data(pp.path().parent_path().string(), "effect");
 						Td.animation_map[SRL::effectAnimation] = fad;
+					}
+					if (pp.path().filename().string() == "ball.png")
+					{
+						SRL::FullAnimationData fad;
+						fad.load_data(pp.path().parent_path().string(), "ball");
+						Td.animation_map[SRL::ballAnimation] = fad;
 					}
 					if (pp.path().filename().string() == "hit.png")
 					{

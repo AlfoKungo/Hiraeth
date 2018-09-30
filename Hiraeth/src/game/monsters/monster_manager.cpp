@@ -29,10 +29,10 @@ namespace hiraeth {
 			//destroying dead monsters
 			for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
 			{
-				if ((*monster)->died)
+				if ((*monster)->has_died)
 				{
 					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
-					SRL::Summon summon = (*monster)->get_summon();
+					SRL::Summon summon = (*monster)->getSummon();
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
 					m_SummonQueue.push(Summoner{summon, StaticTimer::timer.elapsed() + 1.0f});
@@ -66,7 +66,6 @@ namespace hiraeth {
 					if (monster->check_collision(m_Char->getHitBox()))
 					{
 						std::cout << "colliding" << std::endl;
-						//if (monster->getBounds().GetBottomMiddle().x < m_Char->getBounds().GetBottomMiddle().x)
 						if (monster->getBounds().GetBottomMiddle().x < m_Char->getBounds().GetBottomMiddle().x)
 							m_Char->getHit(game::Direction::Right, monster->getDamage());
 						else

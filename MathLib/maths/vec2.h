@@ -56,6 +56,7 @@ namespace maths {
 		bool operator>=(const vec2& other) const;
 
 		float Magnitude() const;
+		float MagnitudeU() const;
 		vec2 Normalise() const;
 		float Distance(const vec2& other) const;
 		float Dot(const vec2& other) const;

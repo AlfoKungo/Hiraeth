@@ -1,4 +1,5 @@
 #include "character.h"
+#include "projectile.h"
 
 namespace hiraeth {
 	namespace game {
@@ -70,7 +71,7 @@ namespace hiraeth {
 			if (m_Animation)
 			{
 				m_Animation->update();
-				if (m_Animation->is_sprite_finished())
+				if (m_Animation->hasSpriteFinished())
 					m_Animation.reset(nullptr);
 			}
 			//m_Animations.update();
@@ -197,7 +198,7 @@ namespace hiraeth {
 			//	m_SkillActivationTimer = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::actTime))) / 1000 };
 
 			if (item_properties->find(SRL::SkillDataType::duration) != item_properties->end())
-				m_SkillManager->add_icon(skill_info->name, float(std::get<int>(item_properties->at(SRL::SkillDataType::duration))));
+				m_SkillManager->add_icon(skill_info->name, skill_index, float(std::get<int>(item_properties->at(SRL::SkillDataType::duration))));
 
 			SRL::AnimationMap* skill_animation_data = m_SkillManager->getAnimationData(skill_index);
 			for (const auto& element : (*skill_animation_data))
@@ -205,13 +206,13 @@ namespace hiraeth {
 				switch (element.first)
 				{
 				case SRL::SkillAnimationTypes::effectAnimation:
-					//m_Animations.add(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, element.second.animation_data,
-					//	graphics::TextureManager::Load(skill_info->name + "_animation", element.second.animation_texture), true});
-					m_Animation.reset(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, element.second.animation_data,
-						graphics::TextureManager::Load(skill_info->name + "_animation", element.second.animation_texture), true});
+					m_Animation.reset(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, 
+						skill_info->name + "_animation", element.second, true});
 					break;
 				case SRL::hitAnimation:
-					activateAttackSkill(element.second, skill_info->name);
+					if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
+						activateAttackSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], skill_info->name);
+					//activateAttackSkill(element.second, skill_info->name);
 					break;
 				default: ;
 				}
@@ -219,7 +220,8 @@ namespace hiraeth {
 			m_CharacterStats->activateSkill(skill_index, item_properties);
 		}
 
-		void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, std::string skill_name)
+		void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
+			SRL::FullAnimationData projectile_animation_data, const std::string& skill_name)
 		{
 			std::vector<std::pair<float, Monster*>> monsters_in_range;
 			for (auto & monster : (*m_MonstersLayer))
@@ -231,19 +233,18 @@ namespace hiraeth {
 					dis_vec *= -1;
 				if ((dis_vec.x < 500 && dis_vec.x > 0) && (dis_vec.y > -200 && dis_vec.y < 200))
 				{
-					//monster->getHit(m_Direction, Damage{ 30,30 });
 					float pyth = pow(dis_vec.x, 2) + pow(dis_vec.y, 2);
 					monsters_in_range.emplace_back(std::make_pair(pyth, monster));
-					//return;
 				}
 			}
 			if (!monsters_in_range.empty())
 			{
 				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
 					[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
-				hit_monster->getHit(m_Direction,
-					Damage{ 250,90 }, std::make_unique<graphics::SpritedRenderable>(maths::vec3{ 0, 0, 0 }, hit_animation_data.animation_data, 
-						graphics::TextureManager::Load(skill_name + "_hit", hit_animation_data.animation_texture), true));
+				hit_monster->getHit(
+					// std::make_unique<graphics::SpritedRenderable>(maths::vec3{ 0, 0, 0 }, hit_animation_data.animation_data,
+					//	graphics::TextureManager::Load(skill_name + "_hit", hit_animation_data.animation_texture), true),
+					std::make_unique<skills::Projectile>(getPosition(), hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
 			}
 		}
 	}

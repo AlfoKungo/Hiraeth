@@ -35,7 +35,7 @@ namespace hiraeth {
 				else
 					setNewPosition(maths::vec2(0, m_Char->getPosition().y), maths::vec2(0, cpos.y), maths::vec2(0.0f, CAMERA_Y_LERP_VALUE));
 #else
-				setNewPosition(m_Char->get_position(), cpos, maths::vec2(CAMERA_X_LERP_VALUE, CAMERA_Y_LERP_VALUE));
+				setNewPosition(m_Char->getPosition(), cpos, maths::vec2(CAMERA_X_LERP_VALUE, CAMERA_Y_LERP_VALUE));
 #endif
 				m_PositionTimer = StaticTimer::timer.elapsed();
 			}
@@ -44,12 +44,12 @@ namespace hiraeth {
 		void Camera::setCharacter(graphics::Renderable* character)
 		{
 			m_Char = character;
-			setNewPosition(m_Char->get_position(), m_Ortho.GetPosition(), 1);
+			setNewPosition(m_Char->getPosition(), m_Ortho.GetPosition(), 1);
 		}
 
 		maths::vec2 Camera::getCharacterPos()
 		{
-			return m_Char->get_position();
+			return m_Char->getPosition();
 		}
 
 		maths::vec2 Camera::mouse_to_map_position(maths::vec2 mouse_pos)

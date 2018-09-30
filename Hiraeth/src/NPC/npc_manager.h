@@ -2,7 +2,7 @@
 #include "graphics/layers/layer.h"
 #include "npc.h"
 #include "item/item_manager.h"
-#include "game/monster_manager.h"
+#include "game/monsters/monster_manager.h"
 //#include "view/camera.h"
 
 namespace hiraeth

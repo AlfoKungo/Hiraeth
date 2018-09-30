@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stats.h"
+#include "game/stats.h"
 #include "srl/monster_data.h"
 
 namespace hiraeth {

@@ -46,18 +46,21 @@ namespace hiraeth
 
 		void BaseCreature::analyze_controls()
 		{
-			if (m_Controls.right)
+			if (m_StanceState != Die)
 			{
-				m_Direction = Right;
-				m_Force.x += calculate_force(m_Speed);
+				if (m_Controls.right)
+				{
+					m_Direction = Right;
+					m_Force.x += calculate_force(m_Speed);
+				}
+				else if (m_Controls.left)
+				{
+					m_Direction = Left;
+					m_Force.x -= calculate_force(m_Speed);
+				}
+				if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
+					m_Force.y = m_Jump;
 			}
-			else if (m_Controls.left)
-			{
-				m_Direction = Left;
-				m_Force.x -= calculate_force(m_Speed);
-			}
-			if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
-				m_Force.y = m_Jump;
 		}
 
 		void BaseCreature::analyze_stance()

@@ -26,6 +26,13 @@ namespace hiraeth
 
 		void Creature::update()
 		{
+			if (m_StanceState == Die)
+			{
+				if (m_StatesRenderables[Die][0]->hasSpriteFinished())
+					has_died = true;
+				BaseCreature::update();
+				return;
+			}
 			apply_hit_state();
 			//m_Controls.attack = true;
 			//m_Controls.left = true;
@@ -100,7 +107,7 @@ namespace hiraeth
 			if (!is_hit)
 			{
 				cause_damage(damage);
-				m_Force = calculate_force(maths::vec2(dir * 4, 8));
+				m_Force = calculate_force(maths::vec2(dir * 3, 7));
 				m_Foothold = NO_FOOTHOLD;
 				if (m_IsImmuneAfterHit)
 				{

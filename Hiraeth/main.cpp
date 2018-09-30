@@ -16,11 +16,12 @@
 #include "graphics/texture_manager.h"
 #include "graphics/label.h"
 #include "UI/ui_manager.h"
-#include "game/monster_manager.h"
+#include "game/monsters/monster_manager.h"
 #include "item/item_manager.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
 
 //#include <ga.h>
 //#include <gau.h>
