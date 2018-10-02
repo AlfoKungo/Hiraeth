@@ -42,8 +42,10 @@ namespace hiraeth {
 			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), quests));
 			kb->registerToKey(GLFW_KEY_Q, quests, this);
 
-			m_Layer.add_ref(new UiEquip(maths::vec2(500, 0), equip));
+			m_UiEquip = new UiEquip(maths::vec2(500, 0), equip);
+			m_Layer.add_ref(m_UiEquip);
 			kb->registerToKey(GLFW_KEY_E, equip, this);
+			//m_UiEquip->addEquip()
 		}
 
 		bool UiManager::leftButtonClicked(float mx, float my)

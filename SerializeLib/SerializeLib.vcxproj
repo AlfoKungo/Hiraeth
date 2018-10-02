@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="srl\animation_data.h" />
     <ClInclude Include="srl\deserial.h" />
+    <ClInclude Include="srl\equip_item_data.h" />
     <ClInclude Include="srl\ImageLoad.h" />
     <ClInclude Include="srl\item_data.h" />
     <ClInclude Include="srl\map_data.h" />

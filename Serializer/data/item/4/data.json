@@ -16,8 +16,10 @@
                 }
             }
         ],
-        "item_name": "Blue Potion",
-        "type": 1,
-        "item_description": "Increase mana by 50 mana points"
+        "basic_item_info": {
+            "item_name": "Blue Potion",
+            "type": 1,
+            "item_description": "Increase mana by 50 mana points"
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿#include "ui_inventory.h"
 #include "item/item.h"
+#include "item/use_item.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -165,8 +166,9 @@ namespace hiraeth {
 			return inv_item->getBounds().Contains(mousePos); });
 			if (result_item != std::end(*tab_rends))
 			{
-				m_OldItemPos = (*result_item)->getPosition();
-				SRL::ItemPropertiesMap * item_stats = (*result_item)->getItemProperties();
+				item::UseItem* use_item = dynamic_cast<item::UseItem*>((*result_item).get());
+				m_OldItemPos = use_item->getPosition();
+				SRL::ItemPropertiesMap * item_stats = use_item->getItemProperties();
 				if (m_CharacterStats->activateUseItem(item_stats))
 				{
 					tab_rends->erase(result_item);

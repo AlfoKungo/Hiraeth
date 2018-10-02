@@ -9,6 +9,7 @@
 #include "UI/ui_inventory.h"
 #include "use_item.h"
 #include "equip_item.h"
+#include "UI/ui_equip.h"
 
 namespace hiraeth {
 	namespace item {
@@ -21,7 +22,8 @@ namespace hiraeth {
 			std::vector<Item*> m_InventoryItems;
 			ui::UiInventory * m_Inventory;
 		public:
-			ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory);
+			ItemManager(const std::vector<physics::FootHold>& foot_holds, 
+				ui::UiInventory * inventory, ui::UiEquip * equip);
 			void draw() const;
 			void update() override;
 			void dropItem(maths::vec2 pos, unsigned int item_id);

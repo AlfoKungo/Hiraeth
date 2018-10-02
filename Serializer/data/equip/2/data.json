@@ -1,0 +1,19 @@
+{
+    "info": {
+        "equip_item_properties": [
+            {
+                "key": 6,
+                "value": {
+                    "index": 0,
+                    "data": 15
+                }
+            }
+        ],
+        "item_info": {
+            "item_name": "Chief Hat",
+            "type": 0,
+            "item_description": "Gives Swag"
+        },
+        "equip_item_type": 1
+    }
+}

@@ -1,18 +1,19 @@
 {
     "info": {
-        "item_properties": [
+        "equip_item_properties": [
             {
-                "key": 3,
+                "key": 8,
                 "value": {
                     "index": 0,
                     "data": 15
                 }
             }
         ],
-        "basic_item_info": {
+        "item_info": {
             "item_name": "Staff",
             "type": 0,
             "item_description": "Gives Magic Damage"
-        }
+        },
+        "equip_item_type": 0
     }
 }

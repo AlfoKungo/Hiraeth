@@ -12,8 +12,10 @@
                 }
             }
         ],
-        "item_name": "Wing",
-        "type": 1,
-        "item_description": "Increase Speed for 30 seconds"
+        "basic_item_info": {
+            "item_name": "Wing",
+            "type": 1,
+            "item_description": "Increase Speed for 30 seconds"
+        }
     }
 }

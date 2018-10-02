@@ -14,9 +14,11 @@ namespace hiraeth {
 		class ItemDataManager
 		{
 		private:
-			static std::map<unsigned int, SRL::ItemData> m_ItemData;
+			static std::map<unsigned int, SRL::UseItemData> m_ItemData;
+			static std::map<unsigned int, SRL::EquipItemData> m_EquipData;
 		public:
-			static const SRL::ItemData& Get(unsigned int index);
+			static const SRL::UseItemData& Get(unsigned int index);
+			static const SRL::EquipItemData& GetEquip(unsigned int index);
 
 		private:
 			ItemDataManager();

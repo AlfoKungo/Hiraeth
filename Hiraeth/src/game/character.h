@@ -36,7 +36,7 @@ namespace hiraeth {
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
 			CharacterStats * m_CharacterStats;
-			//graphics::TGroup<graphics::SpritedRenderable> m_Animations;
+			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
@@ -50,7 +50,7 @@ namespace hiraeth {
 			void draw(graphics::Renderer* renderer) const override
 			{
 				Creature::draw(renderer);
-				//m_Animations.draw(renderer);
+				m_Animations.draw(renderer);
 				if (m_Animation)
 				{
 					renderer->push(m_TransformationMatrix);

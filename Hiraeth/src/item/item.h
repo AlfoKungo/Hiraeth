@@ -17,14 +17,17 @@ namespace hiraeth {
 
 		class Item : public graphics::Sprite
 		{
+		public:
 			enum ItemState {
 				InAir,
 				OnFloor,
 				PickedUp,
 				InInventory,
 			} m_State;
-
-			SRL::ItemInfo m_ItemInfo;
+		private:
+			//SRL::ItemInfo m_ItemInfo;
+			SRL::BasicItemInfo m_BasicItemInfo;
+			//SRL::ItemType m_ItemType{SRL::ItemType::FaceAcc};
 			const maths::Rectangle * m_CharRec;
 			maths::vec2 m_Force;
 			const std::vector<physics::FootHold>& m_FootHolds;
@@ -37,12 +40,13 @@ namespace hiraeth {
 			graphics::Label m_DetailsBoxLabelHeader, m_DetailsBoxLabelContent;
 			bool m_IsDrawDetails;
 		public:
-			Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
+			//Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
+			Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, const std::vector<physics::FootHold>& foot_holds);
 
-			void setPosition(maths::vec2 newPos)
-			{
-				m_Bounds.position = newPos;
-			}
+			//void setPosition(maths::vec2 newPos)
+			//{
+			//	m_Bounds.position = newPos;
+			//}
 			void draw(graphics::Renderer * renderer) const override;
 			void update() override;
 			bool isReachedFloor(maths::vec2 org, maths::vec2 force);
@@ -61,8 +65,8 @@ namespace hiraeth {
 					m_DetailsBoxLabelContent.setPosition(m_Bounds.position + maths::vec2(40, -30));
 				}
 			}
-			SRL::ItemTab getTabType() const { return m_ItemInfo.type; }
-			SRL::ItemPropertiesMap * getItemProperties() { return &m_ItemInfo.item_properties; }
+			SRL::ItemTab getTabType() const { return m_BasicItemInfo.type; }
+			//SRL::ItemPropertiesMap * getItemProperties() { return &m_ItemInfo.item_properties; }
 		};
 	}
 }

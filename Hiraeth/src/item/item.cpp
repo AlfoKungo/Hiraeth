@@ -3,16 +3,16 @@
 namespace hiraeth {
 	namespace item {
 
-		Item::Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds)
-			: Sprite(pos, graphics::TextureManager::Load(item_data.item_info.item_name, item_data.texture_data)),
+		Item::Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, const std::vector<physics::FootHold>& foot_holds)
+			: Sprite(pos, graphics::TextureManager::Load(item_info.item_name, item_texture_data)),
 			m_Force(0, 7),
 			m_FootHolds(foot_holds),
-			m_ItemInfo(item_data.item_info),
+			m_BasicItemInfo(item_info),
 			m_State(InAir),
 			m_IsDrawDetails(false),
 			m_DetailsBoxSprite(maths::vec2(30, -75), 180, 80, 0x88331a00),
-			m_DetailsBoxLabelHeader("arial", 16, m_ItemInfo.item_name, { 40, -10 }, 0xffffffff, graphics::Label::Alignment::LEFT),
-			m_DetailsBoxLabelContent("arial", 13, m_ItemInfo.item_description, { 40, -30 }, 0xffffffff, graphics::Label::Alignment::LEFT)
+			m_DetailsBoxLabelHeader("arial", 16, m_BasicItemInfo.item_name, { 40, -10 }, 0xffffffff, graphics::Label::Alignment::LEFT),
+			m_DetailsBoxLabelContent("arial", 13, m_BasicItemInfo.item_description, { 40, -30 }, 0xffffffff, graphics::Label::Alignment::LEFT)
 
 
 		{

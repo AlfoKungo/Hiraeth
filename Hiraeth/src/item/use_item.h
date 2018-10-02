@@ -8,25 +8,20 @@ namespace hiraeth {
 		class UseItem : public Item
 		{
 		private:
+			SRL::ItemPropertiesMap m_PropertiesMap;
 		public:
-			UseItem(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds)
-				: Item(pos, item_data, foot_holds)
+			UseItem(maths::vec2 pos, SRL::UseItemData item_data, const std::vector<physics::FootHold>& foot_holds)
+				: Item(pos, item_data.item_info.basic_item_info, item_data.texture_data, foot_holds),
+				m_PropertiesMap(item_data.item_info.item_properties)
 			{
-				//std::string stat_type = item_data.item_info.stats.substr(0, 3);
-				//std::string stat_value = item_data.item_info.stats.substr(4);
-				//if (stat_type == "spd")
-				//	std::cout << "added speed" << "\n";
-				//else
-				//	std::cout << "added nothing" << "\n";
 			}
-
-
 			
 			void update() override
 			{
 				Item::update();
 			}
 
+			SRL::ItemPropertiesMap * getItemProperties() { return &m_PropertiesMap; }
 		};
 	}
 }

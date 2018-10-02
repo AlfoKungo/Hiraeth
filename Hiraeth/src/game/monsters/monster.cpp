@@ -100,8 +100,7 @@ namespace hiraeth {
 				{
 					m_Animations.add(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0,0 }, (*iter)->getSkillName() + "_hit", (*iter)->getAnimationData(), true));
 					Creature::getHit((*iter)->getDirection(), (*iter)->getDamage());
-					m_ProjectileAnimations.m_Renderables.erase(iter);
-					break;
+					iter = m_ProjectileAnimations.m_Renderables.erase(iter);
 				}
 				else
 					++iter;

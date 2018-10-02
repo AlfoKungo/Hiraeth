@@ -22,11 +22,12 @@ namespace hiraeth {
 		{
 		private:
 			graphics::Layer<UiWindow> m_Layer;
-			std::vector<UiWindow*>& m_Windows;
+			std::vector<UiWindow*>& m_Windows; // change to std::map
 			input::Keyboard* m_Kb;
 			MainUi m_MainUi;
 			UiInventory * m_UiInventory;
 			UiSkills * m_UiSkills;
+			UiEquip * m_UiEquip;
 			struct MouseAction { bool is_occupied; UiWindow * rel_win; }; // not yet implemented - supposed to be used for data transfer between windows.
 		public:
 			UiManager(input::Keyboard* kb);
@@ -43,6 +44,7 @@ namespace hiraeth {
 			MainUi * getMainUi() { return &m_MainUi; }
 			UiInventory * getUiInventory() { return m_UiInventory; }
 			UiSkills * getUiSkills() { return m_UiSkills; }
+			UiEquip * getUiEquip() { return m_UiEquip; }
 		private:
 			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
 		};

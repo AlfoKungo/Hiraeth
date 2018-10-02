@@ -17,22 +17,7 @@ namespace SRL {
 		Cash = 4,
 	};
 
-	enum EquipableType
-	{
-		Hat,
-		EyeAcc,
-		FaceAcc,
-		Top,
-		Bottom,
-		Cape,
-		Glove,
-		Shoes,
-		Earrings,
-		Shoulder,
-		Weapon,
-	};
-
-	enum ItemDataType
+	enum UseItemDataType
 	{
 		// Ints
 		Str,
@@ -47,25 +32,56 @@ namespace SRL {
 		Jump,
 	};
 
-	typedef std::map<ItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMap;
-	typedef std::pair<ItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMapPair;
+	typedef std::map<UseItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMap;
+	typedef std::pair<UseItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMapPair;
 
-	struct ItemInfo
+	struct BasicItemInfo
 	{
-		ItemPropertiesMap item_properties;
 		std::string item_name;
 		ItemTab type;
 		std::string item_description;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_properties), CEREAL_NVP(item_name), CEREAL_NVP(type), CEREAL_NVP(item_description));
+			ar(CEREAL_NVP(item_name), CEREAL_NVP(type), CEREAL_NVP(item_description));
 		}
 	};
-	struct ItemData
+
+	//struct ItemInfo
+	//{
+	//	ItemPropertiesMap item_properties;
+	//	BasicItemInfo basic_item_info;
+	//	//std::string item_name;
+	//	//ItemTab type;
+	//	//std::string item_description;
+	//	template<class A> void serialize(A& ar) {
+	//		//ar(CEREAL_NVP(item_properties), CEREAL_NVP(item_name), CEREAL_NVP(type), CEREAL_NVP(item_description));
+	//		ar(CEREAL_NVP(item_properties), CEREAL_NVP(basic_item_info));
+	//	}
+	//};
+
+	struct UseItemInfo
 	{
-		ItemInfo item_info;
+		ItemPropertiesMap item_properties;
+		BasicItemInfo basic_item_info;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(item_properties), CEREAL_NVP(basic_item_info));
+		}
+	};
+
+	struct UseItemData
+	{
+		UseItemInfo item_info;
 		TextureData texture_data;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(item_info), CEREAL_NVP(texture_data));
 		}
 	};
+
+	//struct ItemData
+	//{
+	//	ItemInfo item_info;
+	//	TextureData texture_data;
+	//	template<class A> void serialize(A& ar) {
+	//		ar(CEREAL_NVP(item_info), CEREAL_NVP(texture_data));
+	//	}
+	//};
 }

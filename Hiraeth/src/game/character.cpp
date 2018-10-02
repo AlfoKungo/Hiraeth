@@ -74,10 +74,10 @@ namespace hiraeth {
 				if (m_Animation->hasSpriteFinished())
 					m_Animation.reset(nullptr);
 			}
-			//m_Animations.update();
-			//m_Animations.m_Renderables.erase(
-			//	std::remove_if(begin(m_Animations.m_Renderables), end(m_Animations.m_Renderables),
-			//		[](const auto& sr) {return sr->is_sprite_finished(); }), end(m_Animations.m_Renderables));
+			m_Animations.update();
+			m_Animations.m_Renderables.erase(
+				std::remove_if(begin(m_Animations.m_Renderables), end(m_Animations.m_Renderables),
+					[](const auto& sr) {return sr->hasSpriteFinished(); }), end(m_Animations.m_Renderables));
 
 			m_Speed = m_CharacterStats->getSpeed();
 			m_Jump = m_CharacterStats->getJump();
@@ -242,9 +242,14 @@ namespace hiraeth {
 				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
 					[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
 				hit_monster->getHit(
-					// std::make_unique<graphics::SpritedRenderable>(maths::vec3{ 0, 0, 0 }, hit_animation_data.animation_data,
-					//	graphics::TextureManager::Load(skill_name + "_hit", hit_animation_data.animation_texture), true),
-					std::make_unique<skills::Projectile>(getPosition(), hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
+					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
+						hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
+			}
+			else
+			{
+				m_Animations.add(
+					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
+						m_Direction, skill_name, projectile_animation_data));
 			}
 		}
 	}

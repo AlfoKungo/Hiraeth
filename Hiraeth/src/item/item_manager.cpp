@@ -3,7 +3,8 @@
 namespace hiraeth {
 	namespace item {
 
-		ItemManager::ItemManager(const std::vector<physics::FootHold>& foot_holds, ui::UiInventory * inventory)
+		ItemManager::ItemManager(const std::vector<physics::FootHold>& foot_holds, 
+			ui::UiInventory * inventory, ui::UiEquip * equip)
 			:
 			m_DroppedItems(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
 			m_FootHolds(foot_holds),
@@ -17,6 +18,12 @@ namespace hiraeth {
 			dropItem(maths::vec2(0), 0);
 			dropItem(maths::vec2(-200, 0), 1);
 			dropItem(maths::vec2(200, 0), 2);
+
+			//SRL::ItemData item_data = ItemDataManager::Get(1);
+			//equip->addEquip(new Item({ 0,0 }, ItemDataManager::Get(0), m_FootHolds));
+			equip->addEquip(new EquipItem({ 0,0 }, ItemDataManager::GetEquip(0), m_FootHolds));
+			equip->addEquip(new EquipItem({ 0,0 }, ItemDataManager::GetEquip(2), m_FootHolds));
+			equip->addEquip(new EquipItem({ 0,0 }, ItemDataManager::GetEquip(3), m_FootHolds));
 		}
 
 		void ItemManager::draw() const
@@ -50,11 +57,14 @@ namespace hiraeth {
 
 		void ItemManager::dropItem(maths::vec2 pos, unsigned int item_id)
 		{
-			SRL::ItemData item_data = ItemDataManager::Get(item_id);
-			if (item_data.item_info.type == 0)
-				m_DroppedItems.add(new EquipItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
+			//SRL::ItemData item_data = ItemDataManager::Get(item_id);
+			//m_DroppedItems.add(new Item(pos, ItemDataManager::Get(item_id), m_FootHolds));
+			
+			if (item_id == 5)
+				m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id), m_FootHolds));
 			else
 				m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
+			
 		}
 
 		void ItemManager::mapChanged()

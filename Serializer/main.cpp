@@ -21,6 +21,7 @@
 #include "srl/animation_data.h"
 #include "code_for_checks/skill_data_check.h"
 #include "code_for_checks/item_data_check.h"
+#include "code_for_checks/equip_data_check.h"
 
 typedef int Address;
 
@@ -205,7 +206,7 @@ int main()
 		{
 			cereal::BinaryOutputArchive arout(item_data_file);
 
-			std::vector<SRL::ItemData> v_itemData;
+			std::vector<SRL::UseItemData> v_itemData;
 			v_itemData.reserve(100);
 			for (auto & p : fs::directory_iterator("data/item"))
 			{
@@ -214,7 +215,35 @@ int main()
 				std::string data_path = path + "\\data.json";
 				std::ifstream in(data_path, std::ios::in);
 				cereal::JSONInputArchive arin(in);
-				SRL::ItemData Td{};
+				SRL::UseItemData Td{};
+
+				arin(Td.item_info);
+				Td.texture_data.load_texture(tex_path);
+				v_itemData.push_back(Td);
+			}
+			item_data_file.seekp(ITEM_DATA_BEGIN);
+			serialize_data(v_itemData, ITEM_ADDRESS_BEGIN, item_data_file, arout);
+		}
+	}
+
+	// Serialize Equip Data
+	Checks::create_equip_data();
+	{
+		std::ofstream item_data_file("../Hiraeth/serialized/equip.data", std::ios::out | std::ios::binary);
+		if (item_data_file.is_open())
+		{
+			cereal::BinaryOutputArchive arout(item_data_file);
+
+			std::vector<SRL::EquipItemData> v_itemData;
+			v_itemData.reserve(100);
+			for (auto & p : fs::directory_iterator("data/equip"))
+			{
+				std::string path = p.path().string();
+				std::string tex_path = path + "\\tex.png";
+				std::string data_path = path + "\\data.json";
+				std::ifstream in(data_path, std::ios::in);
+				cereal::JSONInputArchive arin(in);
+				SRL::EquipItemData Td{};
 
 				arin(Td.item_info);
 				Td.texture_data.load_texture(tex_path);

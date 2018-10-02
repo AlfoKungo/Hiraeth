@@ -35,7 +35,6 @@ namespace hiraeth {
 			}
 		private:
 			maths::vec2 findEmptyPosition(unsigned int tab_type) const;
-			//item::Item * getItemByMousePos(maths::vec2 mousePos);
 			item::Item * getItemByMousePos(maths::vec2 mousePos);
 			void use_item(maths::vec2 mousePos);
 			void equip_item();

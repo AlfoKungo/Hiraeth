@@ -29,5 +29,8 @@
     <ClInclude Include="code_for_checks\item_data_check.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="code_for_checks\equip_data_check.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

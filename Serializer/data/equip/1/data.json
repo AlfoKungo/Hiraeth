@@ -1,18 +1,19 @@
 {
     "info": {
-        "item_properties": [
+        "equip_item_properties": [
             {
-                "key": 0,
+                "key": 5,
                 "value": {
                     "index": 0,
-                    "data": 10
+                    "data": 15
                 }
             }
         ],
-        "basic_item_info": {
+        "item_info": {
             "item_name": "Dagger",
             "type": 0,
             "item_description": "Gives Attack Damage"
-        }
+        },
+        "equip_item_type": 0
     }
 }

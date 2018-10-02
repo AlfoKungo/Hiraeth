@@ -99,7 +99,7 @@ int main()
 
 	ui::UiManager uiManager(&keyboard);
 
-	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory() };
+	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory(), uiManager.getUiEquip()};
 	skills::SkillManager skillManager{uiManager.getUiSkills()};
 
 

@@ -59,21 +59,21 @@ namespace hiraeth {
 			{
 				switch (element.first)
 				{
-				case SRL::ItemDataType::Str:
+				case SRL::UseItemDataType::Str:
 					break;
-				case SRL::ItemDataType::Dex:
+				case SRL::UseItemDataType::Dex:
 					break;
-				case SRL::ItemDataType::Luk:
+				case SRL::UseItemDataType::Luk:
 					break;
-				case SRL::ItemDataType::Int:
+				case SRL::UseItemDataType::Int:
 					break;
-				case SRL::ItemDataType::Speed:
+				case SRL::UseItemDataType::Speed:
 					setTimedStat(m_DetailsStruct.Speed, std::get<SRL::TimedValue>(element.second));
 					break;
-				case SRL::ItemDataType::hpInc:
+				case SRL::UseItemDataType::hpInc:
 					recoverHp(std::get<int>(element.second));
 					break;
-				case SRL::ItemDataType::mpInc:
+				case SRL::UseItemDataType::mpInc:
 					recoverMp(std::get<int>(element.second));
 					break;
 				default:
