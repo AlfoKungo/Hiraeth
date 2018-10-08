@@ -44,37 +44,40 @@ namespace hiraeth {
 
 		void UiWindow::mouse_left_clicked_full(maths::vec2 mousePos)
 		{
+			const maths::vec2 rel_mouse_pos{getRelativeLocation(mousePos.x, mousePos.y)};
 			for (auto & value : m_Buttons->m_Renderables) 
 			{
-				value->onClick(mousePos);
+				value->onClick(rel_mouse_pos);
 			}
-			mouse_left_clicked(mousePos);
+			mouse_left_clicked(rel_mouse_pos);
 		}
 
 		void UiWindow::mouse_left_released_full(maths::vec2 mousePos)
 		{
-			maths::vec2 relMousePos(getRelativeLocation(mousePos.x, mousePos.y));
+			const maths::vec2 rel_mouse_pos{getRelativeLocation(mousePos.x, mousePos.y)};
 			for (auto & value : m_Buttons->m_Renderables)
 			{
-				value->onRelease(relMousePos);
+				value->onRelease(rel_mouse_pos);
 			}
-			mouse_left_released(relMousePos);
+			mouse_left_released(rel_mouse_pos);
 		}
 
 		void UiWindow::mouse_right_clicked_full(maths::vec2 mousePos)
 		{
-			maths::vec2 relMousePos(getRelativeLocation(mousePos.x, mousePos.y));
-			mouse_right_clicked(relMousePos);
+			const maths::vec2 rel_mouse_pos{getRelativeLocation(mousePos.x, mousePos.y)};
+			mouse_right_clicked(rel_mouse_pos);
 		}
 
 		void UiWindow::mouse_moved_full(maths::vec2 mousePos, maths::vec2 pMousePos)
 		{
+			const maths::vec2 rel_mouse_pos{getRelativeLocation(mousePos.x, mousePos.y)};
+			const maths::vec2 rel_pmouse_pos{getRelativeLocation(pMousePos.x, pMousePos.y)};
 			for (auto & value : m_Buttons->m_Renderables)
 			{
-				value->onMove(mousePos);
+				value->onMove(rel_mouse_pos);
 			}
-			maths::vec2 mouseMove(pMousePos - mousePos);
-			mouse_moved(mouseMove.x, -mouseMove.y, mousePos);
+			maths::vec2 mouseMove{ rel_pmouse_pos - rel_mouse_pos };
+			mouse_moved(mouseMove.x, -mouseMove.y, rel_mouse_pos);
 		}
 
 		void UiWindow::add_button(UiButton * new_button)

@@ -32,8 +32,8 @@ namespace SRL {
 		Jump,
 	};
 
-	typedef std::map<UseItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMap;
-	typedef std::pair<UseItemDataType, std::variant<int, std::string, TimedValue>> ItemPropertiesMapPair;
+	using ItemPropertiesMap = std::map<UseItemDataType, std::variant<int, std::string, TimedValue>>;
+	using ItemPropertiesMapPair = std::pair<UseItemDataType, std::variant<int, std::string, TimedValue>>;
 
 	struct BasicItemInfo
 	{

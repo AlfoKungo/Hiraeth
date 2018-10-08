@@ -43,6 +43,16 @@ namespace hiraeth
 			updateBounds();
 		}
 
+		std::string Label::getText() const
+		{
+			return m_Text;
+		}
+
+		void Label::addLine(const std::string& new_line_text)
+		{
+			m_Text = m_Text + '\n' + new_line_text;
+		}
+
 		void Label::updateBounds()
 		{
 			using namespace maths;

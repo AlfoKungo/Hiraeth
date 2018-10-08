@@ -18,7 +18,6 @@ namespace hiraeth
 			};
 		private:
 			Font* m_Font;
-			//float x, y;
 			std::string m_Text;
 			Alignment m_Alignment;
 			maths::vec2 m_AlignmentOffset;
@@ -30,6 +29,8 @@ namespace hiraeth
 			void draw(Renderer* renderer) const override;
 			void setText(const std::string& new_text);
 			void setText(unsigned int new_text) { setText(std::to_string(new_text)); }
+			std::string getText() const;
+			void addLine(const std::string& new_line_text);
 		private:
 			void updateBounds();
 		};

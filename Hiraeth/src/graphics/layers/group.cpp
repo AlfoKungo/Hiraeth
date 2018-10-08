@@ -21,6 +21,11 @@ namespace hiraeth {
 
 		}
 
+		void Group::add_ref(Renderable* renderable)
+		{
+			m_RefRenderables.emplace_back(renderable);
+		}
+
 		void Group::add(Renderable* renderable)
 		{
 			m_Renderables.emplace_back(renderable);
@@ -40,16 +45,19 @@ namespace hiraeth {
 		//}
 		void Group::draw(Renderer* renderer) const
 		{
-			renderer->push(m_TransformationMatrix);
+			if (is_to_draw)
+			{
+				renderer->push(m_TransformationMatrix);
 
-			for (const auto & renderable : m_Renderables)
-				if (renderable != nullptr)
-					renderable->draw(renderer);
-			//for (const auto & renderable : m_RefRenderables)
-			//	if (auto spt = renderable.lock())
-			//		spt->draw(renderer);
+				for (const auto & renderable : m_Renderables)
+					if (renderable != nullptr)
+						renderable->draw(renderer);
+				for (const auto & renderable : m_RefRenderables)
+					if (renderable != nullptr)
+						renderable->draw(renderer);
 
-			renderer->pop();
+				renderer->pop();
+			}
 		}
 
 		void Group::translate(const maths::vec3& pos)
@@ -62,9 +70,15 @@ namespace hiraeth {
 			for (auto & renderable : m_Renderables)
 				if (renderable != nullptr)
 					renderable->update();
-			//for (const auto & renderable : m_RefRenderables)
-			//	if (auto spt = renderable.lock())
-			//		spt->update();
+			for (const auto & renderable : m_RefRenderables)
+				if (renderable != nullptr)
+					renderable->update();
+		}
+
+		void Group::clear()
+		{
+			m_Renderables.clear();
+			m_RefRenderables.clear();
 		}
 	}
 }

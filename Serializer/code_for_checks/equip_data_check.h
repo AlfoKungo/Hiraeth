@@ -11,7 +11,9 @@ namespace Checks
 		{
 			SRL::EquipItemInfo info{
 				{
-					{SRL::EquipItemDataType::IntInc, 15}
+					{SRL::EquipItemDataType::AttackPower, 25},
+					{SRL::EquipItemDataType::IntInc, 15},
+					{SRL::EquipItemDataType::LukInc, 15},
 				},
 				{"Staff", SRL::Equip, "Gives Magic Damage"}, 
 				SRL::EquipItemType::Weapon};
@@ -22,7 +24,9 @@ namespace Checks
 		{
 			SRL::EquipItemInfo info{
 				{
-					{SRL::EquipItemDataType::StrInc, 15}
+					{SRL::EquipItemDataType::AttackPower, 25},
+					{SRL::EquipItemDataType::StrInc, 15},
+					{SRL::EquipItemDataType::DexInc, 15},
 				},
 				{"Dagger", SRL::Equip, "Gives Attack Damage"}, 
 				SRL::EquipItemType::Weapon};
@@ -33,7 +37,7 @@ namespace Checks
 		{
 			SRL::EquipItemInfo info{
 				{
-					{SRL::EquipItemDataType::DexInc, 15}
+					{SRL::EquipItemDataType::DexInc, 15},
 				},
 				{"Chief Hat", SRL::Equip, "Gives Swag"},
 				SRL::EquipItemType::Hat};
@@ -44,7 +48,7 @@ namespace Checks
 		{
 			SRL::EquipItemInfo info{
 				{
-					{SRL::EquipItemDataType::LukInc, 15}
+					{SRL::EquipItemDataType::LukInc, 15},
 				},
 				{"Robe", SRL::Equip, "Gives Extra SWAGGG"}, 
 				SRL::EquipItemType::Top};

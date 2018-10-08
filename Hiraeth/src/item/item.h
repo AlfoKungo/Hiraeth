@@ -43,18 +43,14 @@ namespace hiraeth {
 			//Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
 			Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, const std::vector<physics::FootHold>& foot_holds);
 
-			//void setPosition(maths::vec2 newPos)
-			//{
-			//	m_Bounds.position = newPos;
-			//}
 			void draw(graphics::Renderer * renderer) const override;
 			void update() override;
 			bool isReachedFloor(maths::vec2 org, maths::vec2 force);
 			bool hasExpired();
 			bool hasBeenTaken();
 			void pickUp(const maths::Rectangle * char_rec);
-			bool isAbleToPickUp() { return m_State == OnFloor; }
-			bool isPickedUp() { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
+			bool isAbleToPickUp() const { return m_State == OnFloor; }
+			bool isPickedUp() const { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
 			void setDrawDetails(bool is_draw_details)
 			{
 				m_IsDrawDetails = is_draw_details;

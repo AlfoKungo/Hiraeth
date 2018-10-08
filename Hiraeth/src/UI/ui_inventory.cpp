@@ -78,17 +78,6 @@ namespace hiraeth {
 
 		void UiInventory::mouse_right_clicked(maths::vec2 mousePos)
 		{
-			switch (m_Tabs->getTabIndex())
-			{
-			case 0:
-				equip_item();
-				break;
-			case 1:
-				use_item(mousePos);
-				break;
-			default:
-				break;
-			}
 		}
 
 		void UiInventory::mouse_moved(float mx, float my, maths::vec2 mousePos)
@@ -109,7 +98,6 @@ namespace hiraeth {
 				{
 					(*result_item)->setDrawDetails(true);
 					std::rotate(result_item, result_item + 1, (*tab_rends).end());
-					return;
 				}
 			}
 		}
@@ -118,6 +106,13 @@ namespace hiraeth {
 		{
 			UiTab<item::Item> * containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
 			new_item->setPosition(findEmptyPosition(new_item->getTabType()));
+			containing_tab->add_data(new_item);
+		}
+
+		void UiInventory::addItem(item::Item * new_item, maths::vec2 new_item_pos)
+		{
+			UiTab<item::Item> * containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
+			new_item->setPosition(new_item_pos);
 			containing_tab->add_data(new_item);
 		}
 
@@ -158,7 +153,6 @@ namespace hiraeth {
 
 		void UiInventory::use_item(maths::vec2 mousePos)
 		{
-
 			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
 			auto result_item = std::find_if(std::begin(*tab_rends),
 				std::end(*tab_rends), [&](auto const& inv_item)
@@ -177,8 +171,41 @@ namespace hiraeth {
 			}
 		}
 
-		void UiInventory::equip_item()
+		item::EquipItem* UiInventory::getEquipItem(maths::vec2 mousePos)
 		{
+			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
+			auto result_item = std::find_if(std::begin(*tab_rends),
+				std::end(*tab_rends), [&](auto const& inv_item)
+			{ inv_item->setDrawDetails(false);
+			return inv_item->getBounds().Contains(mousePos); });
+			if (result_item != std::end(*tab_rends))
+			{
+				//auto* equip_item = dynamic_cast<item::EquipItem*>((*result_item).get());
+				auto * equip_item = dynamic_cast<item::EquipItem*>((*result_item).get());
+				if (equip_item != nullptr)
+				{
+					//auto new_data = new item::EquipItem(equip_item);
+					result_item->release();
+					tab_rends->erase(result_item);
+					return equip_item;
+				}
+			}
+			return nullptr;
+		}
+
+		item::EquipItem* UiInventory::itemClickedOn(maths::vec2 mousePos)
+		{
+			switch (m_Tabs->getTabIndex())
+			{
+			case 0:
+				return getEquipItem(mousePos);
+			case 1:
+				use_item(mousePos);
+				return nullptr;
+			default:
+				return nullptr;
+			}
+
 		}
 	}
 }

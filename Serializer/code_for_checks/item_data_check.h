@@ -10,14 +10,14 @@ namespace Checks
 	{
 		const std::string SRL_TYPE{ "item" };
 		{
-			SRL::UseItemInfo info{ {}, {"Staff", SRL::Equip, "Gives Magic Damage"}};
+			SRL::UseItemInfo info{ {}, {"Slimer", SRL::Use, "Gives Magic Damage"}};
 			info.item_properties[SRL::UseItemDataType::Int] = 15;
 			std::ofstream data_file("data/" + SRL_TYPE + "/0/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
 		}
 		{
-			SRL::UseItemInfo info{ {}, {"Dagger", SRL::Equip, "Gives Attack Damage"}};
+			SRL::UseItemInfo info{ {}, {"Mushroomer", SRL::Use, "Gives Attack Damage"}};
 			info.item_properties[SRL::UseItemDataType::Str] = 10;
 			std::ofstream data_file("data/" + SRL_TYPE + "/1/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);

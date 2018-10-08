@@ -25,16 +25,17 @@ namespace hiraeth {
 			UiButton& operator=(const UiButton&) = default;
 			UiButton(UiButton && o)  noexcept : m_Rend(o.m_Rend), m_FuncToCall(o.m_FuncToCall) {}
 
-			bool isContains(maths::vec2 mouse_pos)
+			bool isContains(maths::vec2 mouse_pos) const
 			{
 				return m_Rend->getBounds().Contains(mouse_pos);
 			}
 
-			virtual void update() override
+			void update() override
 			{
 				m_Rend->update();
 			}
-			virtual void draw(graphics::Renderer* renderer) const override { m_Rend->draw(renderer); }
+
+			void draw(graphics::Renderer* renderer) const override { m_Rend->draw(renderer); }
 
 
 			virtual void onClick(maths::vec2 mouse_pos)

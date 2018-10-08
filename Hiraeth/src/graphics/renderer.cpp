@@ -194,12 +194,13 @@ namespace hiraeth {
 			font.submitFont();
 
 			texture_font_t* ft_font = font.getFTFont();
-#ifndef SHOW_ATLAS
 			float x = position.x;
+			float line_height = 0;
 			for (int i = 0; i < text.length(); i++)
 			{
 				//char c = text.at(i);
 				const char *c = &text[i];
+				//const char *c = &text[0];
 				texture_glyph_t* glyph = texture_font_get_glyph(ft_font, c);
 
 				if (glyph != NULL)
@@ -209,8 +210,15 @@ namespace hiraeth {
 						float kerning = texture_glyph_get_kerning(glyph, c);
 						x += kerning;
 					}
+					if (c[0] == '\n')
+					{
+						//line_heght += glyph->height + glyph->offset_y;
+						line_height += floorf(glyph->offset_y * 1.5f);
+						x = position.x;
+						continue;
+					}
 					float x0 = x + glyph->offset_x;
-					float y0 = position.y + glyph->offset_y;
+					float y0 = position.y + glyph->offset_y - line_height;
 					float x1 = x0 + glyph->width;
 					float y1 = y0 - glyph->height;
 
@@ -249,7 +257,69 @@ namespace hiraeth {
 					x += glyph->advance_x;
 				}
 			}
-#else
+
+
+			//texture_font_t* ft_font = font.getFTFont();
+			//float x = position.x;
+			//float line_heght = 0;
+			//for (int i = 0; i < text.length(); i++)
+			//{
+			//	//char c = text.at(i);
+			//	const char *c = &text[i];
+			//	texture_glyph_t* glyph = texture_font_get_glyph(ft_font, c);
+
+			//	if (glyph != NULL)
+			//	{
+			//		if (i > 0)
+			//		{
+			//			float kerning = texture_glyph_get_kerning(glyph, c);
+			//			x += kerning;
+			//		}
+			//		if (c == "\n")
+			//		{
+			//			line_heght += glyph->height;
+			//		}
+			//		float x0 = x + glyph->offset_x;
+			//		float y0 = position.y + glyph->offset_y + line_heght;
+			//		float x1 = x0 + glyph->width;
+			//		float y1 = y0 - glyph->height;
+
+			//		float u0 = glyph->s0;
+			//		float v0 = glyph->t0;
+			//		float u1 = glyph->s1;
+			//		float v1 = glyph->t1;
+
+
+			//		m_Buffer->vertex = *m_TransformationBack * maths::vec3(x0, y0, 0);
+			//		m_Buffer->uv = maths::vec2(u0, v0);
+			//		m_Buffer->tid = ts;
+			//		m_Buffer->color = color;
+			//		m_Buffer++;
+
+			//		m_Buffer->vertex = *m_TransformationBack * maths::vec3(x0, y1, 0);
+			//		m_Buffer->uv = maths::vec2(u0, v1);
+			//		m_Buffer->tid = ts;
+			//		m_Buffer->color = color;
+			//		m_Buffer++;
+
+			//		m_Buffer->vertex = *m_TransformationBack * maths::vec3(x1, y1, 0);
+			//		m_Buffer->uv = maths::vec2(u1 - 0.0005, v1);
+			//		m_Buffer->tid = ts;
+			//		m_Buffer->color = color;
+			//		m_Buffer++;
+
+			//		m_Buffer->vertex = *m_TransformationBack * maths::vec3(x1, y0, 0);
+			//		m_Buffer->uv = maths::vec2(u1 - 0.0005, v0);
+			//		m_Buffer->tid = ts;
+			//		m_Buffer->color = color;
+			//		m_Buffer++;
+
+			//		m_IndexCount += 6;
+
+			//		x += glyph->advance_x;
+			//	}
+			//}
+#ifdef SHOW_ATLAS
 			m_Buffer->vertex = maths::vec3(-200, -200, 0);
 			m_Buffer->uv = maths::vec2(0, 1);
 			m_Buffer->tid = ts;

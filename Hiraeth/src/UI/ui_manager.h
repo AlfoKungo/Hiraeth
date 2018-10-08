@@ -10,6 +10,7 @@
 #include "ui_quests.h"
 #include "ui_equip.h"
 #include "main_ui.h"
+#include "ui_keyconfig.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "game/character_stats.h"

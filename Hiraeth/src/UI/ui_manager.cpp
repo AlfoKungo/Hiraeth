@@ -1,8 +1,8 @@
 #include "ui_manager.h"
-#include "ui_inventory.h"
 
 namespace hiraeth {
 	namespace ui {
+		class UiKeyConfig;
 
 		UiManager::UiManager(input::Keyboard* kb)
 			: m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag")),
@@ -42,10 +42,12 @@ namespace hiraeth {
 			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), quests));
 			kb->registerToKey(GLFW_KEY_Q, quests, this);
 
-			m_UiEquip = new UiEquip(maths::vec2(500, 0), equip);
+			m_UiEquip = new UiEquip(maths::vec2(500, 0), equip, character_stats);
 			m_Layer.add_ref(m_UiEquip);
 			kb->registerToKey(GLFW_KEY_E, equip, this);
-			//m_UiEquip->addEquip()
+
+			m_Layer.add_ref(new UiKeyConfig(maths::vec2(-700, 0), key_config));
+			kb->registerToKey(GLFW_KEY_TAB, key_config, this);
 		}
 
 		bool UiManager::leftButtonClicked(float mx, float my)
@@ -58,7 +60,7 @@ namespace hiraeth {
 				if ((*result_window)->isTitlebarContains(mx, my))
 					(*result_window)->attach();
 				else
-					(*result_window)->mouse_left_clicked_full((*result_window)->getRelativeLocation(mx, my));
+					(*result_window)->mouse_left_clicked_full({ mx, my });
 				std::rotate(m_Windows.begin(), result_window, result_window + 1);
 				return true;
 			}
@@ -77,9 +79,42 @@ namespace hiraeth {
 
 		bool UiManager::rightButtonClicked(float mx, float my)
 		{
-			for (const auto& window : m_Windows)
+			auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
+				[&](auto const& window) 
+			{ return window->is_to_draw && window->isWindowContains(maths::vec2{ mx, my }); });
+			if (result_window != m_Windows.end())
 			{
-				window->mouse_right_clicked_full(maths::vec2(mx, my));
+				switch ((*result_window)->m_ControlKey)
+				{
+				case (UiKey::equip):
+				{
+					auto equip_to_move_to_inventory = m_UiEquip->unEquip((*result_window)->getRelativeLocation(mx, my));
+					if (equip_to_move_to_inventory != nullptr)
+						m_UiInventory->addItem(equip_to_move_to_inventory);
+					std::rotate(m_Windows.begin(), result_window, result_window + 1);
+					break;
+				}
+				case (UiKey::inventory):
+				{
+					//auto equip_to_wear = m_UiInventory->getEquipItem((*result_window)->getRelativeLocation(mx, my));
+					auto equip_to_wear = m_UiInventory->itemClickedOn((*result_window)->getRelativeLocation(mx, my));
+					if (equip_to_wear != nullptr)
+					{
+						maths::vec2 old_item_pos = equip_to_wear->getPosition();
+						auto equip_to_return_to_inventory = m_UiEquip->addEquip(equip_to_wear);
+						if (equip_to_return_to_inventory != nullptr)
+							m_UiInventory->addItem(equip_to_return_to_inventory, old_item_pos);
+					}
+					std::rotate(m_Windows.begin(), result_window, result_window + 1);
+					break;
+				}
+				default:
+					if (!(*result_window)->isTitlebarContains(mx, my))
+						(*result_window)->mouse_right_clicked_full({ mx, my });
+					std::rotate(m_Windows.begin(), result_window, result_window + 1);
+					break;
+				}
+				return true;
 			}
 			return false;
 		}
@@ -91,8 +126,8 @@ namespace hiraeth {
 				if (window->is_attached())
 					window->move(pmx - mx, pmy - my);
 				else
-					window->mouse_moved_full(window->getRelativeLocation(mx, my),
-						window->getRelativeLocation(pmx, pmy));
+					window->mouse_moved_full({ mx, my },
+						{ pmx, pmy });
 			}
 			return false;
 		}

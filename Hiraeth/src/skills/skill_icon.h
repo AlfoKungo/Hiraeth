@@ -57,20 +57,21 @@ namespace hiraeth {
 				Sprite::draw(renderer);
 			}
 
-			void inc_level()
+			bool inc_level()
 			{
-				set_level(m_Level + 1);
+				return set_level(m_Level + 1);
 			}
 
-			void set_level(unsigned int new_level)
+			bool set_level(unsigned int new_level)
 			{
 				if (new_level <= m_Info.max_level)
-				if (!(new_level > m_Info.max_level))
 				{
 					m_Level = new_level;
 					updateIconState(true);
 					m_LevelLabel.setText(m_Level);
+					return true;
 				}
+				return false;
 			}
 
 			maths::Rectangle getSpUpButtonBounds() const

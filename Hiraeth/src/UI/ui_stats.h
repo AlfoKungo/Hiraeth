@@ -18,12 +18,13 @@
 namespace hiraeth {
 	namespace ui {
 
-
 		class UiStats : public UiWindow
 		{
 		private:
 			game::StatsStruct* m_StatsStruct;
 			game::DetailsStruct* m_DetailsStruct;
+			bool m_DrawDetails;
+			graphics::Group* m_DetailsGroup;
 		public:
 			UiStats(maths::vec2 pos, UiKey control_key, 
 				game::CharacterStats *character_stats);

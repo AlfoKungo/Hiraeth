@@ -10,8 +10,8 @@
             }
         ],
         "basic_item_info": {
-            "item_name": "Dagger",
-            "type": 0,
+            "item_name": "Mushroomer",
+            "type": 1,
             "item_description": "Gives Attack Damage"
         }
     }

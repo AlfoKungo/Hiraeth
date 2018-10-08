@@ -21,10 +21,11 @@ namespace hiraeth {
 			quests,
 			equip,
 			inventory,
+			key_config,
 		};
 		class UiWindow : public Drawable, public Updatable
 		{
-		private:
+		public:
 			UiKey m_ControlKey;
 		protected:
 			graphics::Group m_Group;

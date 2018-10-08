@@ -15,6 +15,21 @@
 namespace hiraeth {
 	namespace game {
 
+		//enum StatsTypes
+		//{
+		//	Level,
+		//	MaxExp, Exp, // HonorLvl, HonorExp,
+		//	Guild, // pointer to guild index maybe?
+		//	MaxHp, Hp, MaxMp, Mp,
+		//	Fame,
+		//	AbilityPoints,
+		//	Str, Int, Luk, Dex,
+		//	Attack, CritRate,
+		//	WeaponDef, MagicDef,
+		//	WeaponAcc, MagicAcc,
+		//	WeaponAvd, MagicAvd,
+		//  Speed, Jump,
+		//};
 		struct StatsStruct
 		{
 			std::string Name, Job;
@@ -114,11 +129,48 @@ namespace hiraeth {
 
 			void wearItem(item::EquipItem * item)
 			{
-				
+				applyItemStats(item, 1);
 			}
+
 			void unwearItem(item::EquipItem * item)
 			{
-				
+				applyItemStats(item, -1);
+			}
+
+			void applyItemStats(item::EquipItem * item, int multi)
+			{
+				for (auto& element : (item->getProperties()))
+				{
+					switch (element.first)
+					{
+					case SRL::ReqLvl: break;
+					case SRL::ReqStr: break;
+					case SRL::ReqDex: break;
+					case SRL::ReqLuk: break;
+					case SRL::ReqInt: break;
+					case SRL::AttackPower:
+						m_DetailsStruct.Attack += std::get<int>(element.second) * multi;
+						break;
+					case SRL::StrInc:
+						m_StatsStruct.Str += std::get<int>(element.second) * multi;
+						break;
+					case SRL::DexInc:
+						m_StatsStruct.Dex += std::get<int>(element.second) * multi;
+						break;
+					case SRL::LukInc:
+						m_StatsStruct.Luk += std::get<int>(element.second) * multi;
+						break;
+					case SRL::IntInc:
+						m_StatsStruct.Int += std::get<0>(element.second) * multi;
+						break;
+					case SRL::MaxHpInc: break;
+					case SRL::MaxMpInc: break;
+					default:
+						break;
+					}
+				}
+				EventManager *m_EventManager = EventManager::Instance();
+				m_EventManager->execute(StatsUpdate);
 			}
 		};
 

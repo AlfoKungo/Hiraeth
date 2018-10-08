@@ -34,8 +34,10 @@ namespace SRL
 		ballAnimation,
 	};
 
-	typedef std::map<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMap;
-	typedef std::pair<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMapPair;
+	//typedef std::map<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMap;
+	using SkillPropertiesMap = std::map<SkillDataType, std::variant<int, std::string, TimedValue>>;
+	using SkillPropertiesMapPair = std::pair<SkillDataType, std::variant<int, std::string, TimedValue>>;
+	//typedef std::pair<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMapPair;
 
 	struct SkillInfo
 	{

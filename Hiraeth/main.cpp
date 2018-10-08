@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include "NPC/npc_manager.h"
 #include "skills/skill_manager.h"
+#include "NPC/dialog_manager.h"
 
 #if 0
 static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
@@ -110,6 +111,7 @@ int main()
 
 	game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard);
+	//npc::DialogManager dialogManager{};
 
 	unsigned int frames = 0;
 	while (!window.closed())

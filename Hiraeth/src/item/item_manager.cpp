@@ -14,16 +14,10 @@ namespace hiraeth {
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
 			for (int i = 0; i < 12; ++i)
-				dropItem(maths::vec2((i - 6) * 80, 0), i % 5);
+				dropItem(maths::vec2((i - 6) * 80, 0), i % 9);
 			dropItem(maths::vec2(0), 0);
 			dropItem(maths::vec2(-200, 0), 1);
 			dropItem(maths::vec2(200, 0), 2);
-
-			//SRL::ItemData item_data = ItemDataManager::Get(1);
-			//equip->addEquip(new Item({ 0,0 }, ItemDataManager::Get(0), m_FootHolds));
-			equip->addEquip(new EquipItem({ 0,0 }, ItemDataManager::GetEquip(0), m_FootHolds));
-			equip->addEquip(new EquipItem({ 0,0 }, ItemDataManager::GetEquip(2), m_FootHolds));
-			equip->addEquip(new EquipItem({ 0,0 }, ItemDataManager::GetEquip(3), m_FootHolds));
 		}
 
 		void ItemManager::draw() const
@@ -60,10 +54,10 @@ namespace hiraeth {
 			//SRL::ItemData item_data = ItemDataManager::Get(item_id);
 			//m_DroppedItems.add(new Item(pos, ItemDataManager::Get(item_id), m_FootHolds));
 			
-			if (item_id == 5)
-				m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id), m_FootHolds));
-			else
+			if (item_id < 5)
 				m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
+			else
+				m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id - 5), m_FootHolds));
 			
 		}
 

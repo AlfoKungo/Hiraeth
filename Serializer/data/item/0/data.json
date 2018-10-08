@@ -10,8 +10,8 @@
             }
         ],
         "basic_item_info": {
-            "item_name": "Staff",
-            "type": 0,
+            "item_name": "Slimer",
+            "type": 1,
             "item_description": "Gives Magic Damage"
         }
     }

@@ -28,6 +28,7 @@ namespace SRL {
 		ReqLuk,
 		ReqInt,
 		// Increased stats
+		AttackPower,
 		StrInc,
 		DexInc,
 		LukInc,
@@ -36,8 +37,8 @@ namespace SRL {
 		MaxMpInc,
 	};
 
-	typedef std::map<EquipItemDataType, std::variant<int, std::string>> EquipPropertiesMap;
-	typedef std::pair<EquipItemDataType, std::variant<int, std::string>> EquipPropertiesMapPair;
+	using EquipPropertiesMap = std::map<EquipItemDataType, std::variant<int, std::string>>;
+	using EquipPropertiesMapPair = std::pair<EquipItemDataType, std::variant<int, std::string>>;
 
 	struct EquipItemInfo
 	{

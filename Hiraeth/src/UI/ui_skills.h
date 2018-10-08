@@ -16,12 +16,14 @@ namespace hiraeth {
 		{
 		private:
 			UiTabs<skills::SkillIcon> * m_Tabs;
+			unsigned int m_SkillPts{6};
+			graphics::Label m_SkillPtsLabel;
 
 		public:
 			UiSkills(maths::vec2 pos, UiKey control_key);
 			void mouse_left_clicked(maths::vec2 mousePos) override;
 			void mouse_left_released(maths::vec2 mousePos) override {}
-			void mouse_right_clicked(maths::vec2 mousePos) override {}
+			void mouse_right_clicked(maths::vec2 mousePos) override;
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override;
 			void fillGroup();
 			std::tuple<SRL::SkillInfo*, SRL::AnimationMap*> add_skill(SRL::SkillData skill_data, unsigned tab)

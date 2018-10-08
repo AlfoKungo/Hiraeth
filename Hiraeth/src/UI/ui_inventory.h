@@ -28,16 +28,19 @@ namespace hiraeth {
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override;
 			void mouse_right_clicked(maths::vec2 mousePos) override;
 			void addItem(item::Item * new_item);
+			void addItem(item::Item * new_item, maths::vec2 new_item_pos);
 
 			void draw(graphics::Renderer* renderer) const override 
 			{ 
 				UiWindow::draw(renderer);
 			}
+			item::EquipItem* itemClickedOn(maths::vec2 mousePos);
+			item::EquipItem* getEquipItem(maths::vec2 mousePos);
 		private:
 			maths::vec2 findEmptyPosition(unsigned int tab_type) const;
 			item::Item * getItemByMousePos(maths::vec2 mousePos);
 			void use_item(maths::vec2 mousePos);
-			void equip_item();
+			//void equip_item();
 		};
 
 	}

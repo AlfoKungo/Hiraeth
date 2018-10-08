@@ -19,11 +19,13 @@ namespace hiraeth
 		void NpcManager::draw() const
 		{
 			m_Npcs.render();
+			m_DialogManager.draw();
 		}
 
 		void NpcManager::update()
 		{
 			m_Npcs.update();
+			m_DialogManager.update();
 		}
 
 		void NpcManager::mapChanged()
@@ -41,7 +43,10 @@ namespace hiraeth
 			const maths::vec2 translated_pos = view::Camera::mouse_to_map_position(maths::vec2(mx, my));
 			for (const auto& npc : m_Npcs.m_Renderables)
 				if (npc->getBounds().Contains(translated_pos))
+				{
 					npc->onNpcClick();
+					m_DialogManager.nextDialog();
+				}
 			return false;
 		}
 		bool NpcManager::rightButtonClicked(float mx, float my) 

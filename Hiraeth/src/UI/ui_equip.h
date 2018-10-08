@@ -14,31 +14,50 @@ namespace hiraeth {
 		{
 		private:
 			//std::map<SRL::ItemType, item::Item*> m_Items;
-			std::map<SRL::EquipItemType, item::EquipItem*> m_Items;
+			std::map<SRL::EquipItemType, item::EquipItem*> m_Equips;
 			std::map<SRL::EquipItemType, maths::vec2 > m_ItemsPositions;
 			game::CharacterStats * m_CharacterStats{nullptr};
-			graphics::TGroup<item::Item> m_Equips;
+			//graphics::TGroup<item::Item> m_Equips;
 		public:
-			UiEquip(maths::vec2 pos, UiKey control_key);
+			UiEquip(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats);
 			void mouse_left_clicked(maths::vec2 mousePos) override;
 			void mouse_left_released(maths::vec2 mousePos) override {}
 			void mouse_right_clicked(maths::vec2 mousePos) override {}
-			void mouse_moved(float mx, float my, maths::vec2 mousePos) override {}
+			void mouse_moved(float mx, float my, maths::vec2 mousePos) override;
 			void fillGroup();
 			void StatsUpdated();
-			void addEquip(item::Item * item_to_equip)
+			item::EquipItem* addEquip(item::EquipItem * equip_item)
 			{
-				auto equip_item = dynamic_cast<item::EquipItem*>(item_to_equip);
-				item_to_equip->m_State = item::Item::InInventory;
-				SRL::EquipItemType item_type = equip_item->getItemType();
-				if (m_Items.find(item_type) != m_Items.end())
+				equip_item->m_State = item::Item::InInventory;
+				const SRL::EquipItemType item_type = equip_item->getItemType();
+				item::EquipItem * old_item = nullptr;
+				if (m_Equips.find(item_type) != m_Equips.end())
 				{
-					m_CharacterStats->unwearItem(m_Items[item_type]);
+					old_item = m_Equips[item_type];
+					m_CharacterStats->unwearItem(m_Equips[item_type]);
 				}
 				equip_item->setPosition(m_ItemsPositions[item_type]);
 				m_CharacterStats->wearItem(equip_item);
-				m_Items[item_type] = equip_item;
-				m_Equips.add(equip_item);
+				m_Equips[item_type] = equip_item;
+				//m_Equips.add(equip_item);
+				fillGroup();
+				return old_item;
+			}
+			item::EquipItem* unEquip(maths::vec2 mouse_pos)
+			{
+				auto result_item = std::find_if(std::begin(m_ItemsPositions),
+					std::end(m_ItemsPositions), [&](auto const& element)
+				{ return maths::Rectangle{ element.second, maths::vec2{32} }.Contains(mouse_pos); });
+				item::EquipItem* return_item{ nullptr };
+				if (result_item != std::end(m_ItemsPositions))
+				{
+					return_item = m_Equips[(result_item)->first];
+					return_item->setDrawDetails(false);
+					m_CharacterStats->unwearItem(return_item);
+					m_Equips.erase((*result_item).first);
+					fillGroup();
+				}
+				return return_item;
 			}
 		};
 
