@@ -26,6 +26,7 @@ namespace hiraeth {
 				jump,
 				attack,
 				pick_up,
+				controls_size,
 			};
 
 		private:

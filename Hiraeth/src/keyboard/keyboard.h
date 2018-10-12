@@ -9,12 +9,14 @@
 namespace hiraeth {
 	namespace input {
 
-			typedef unsigned int KeyCode;
+		using KeyCode = unsigned int;
+
 		class Keyboard
 		{
 		private:
 			std::map<KeyCode, KeyboardEvent*> m_KeysMap;
 			std::map<KeyCode, Key> m_KeyControls;
+			//std::map<KeyCode, std::pair<KeyboardEvent*, Key>> m_KeyControlMaps; // move to this implementation
 			bool m_Keys[GLFW_KEY_LAST];
 			bool m_KeysClicked[GLFW_KEY_LAST];
 			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
@@ -27,6 +29,16 @@ namespace hiraeth {
 			{
 				m_KeyControls[keycode] = key;
 				m_KeysMap[keycode] = key_event;
+			}
+
+			void swapKey(KeyCode k1, KeyCode k2)
+			{
+				KeyboardEvent* t_key_event = m_KeysMap[k1];
+				Key t_key = m_KeyControls[k1];
+				m_KeysMap[k1] = m_KeysMap[k2];
+				m_KeyControls[k1] = m_KeyControls[k2];
+				m_KeysMap[k2] = t_key_event;
+				m_KeyControls[k2] = t_key;
 			}
 
 			void registerToMouse(MouseEvent* mouse_event)
@@ -46,13 +58,15 @@ namespace hiraeth {
 			void clicked(KeyCode keycode, int action)
 			{
 				m_KeysClicked[keycode] = (action == GLFW_PRESS);
-				const Key key = m_KeyControls[keycode];
 				if (m_KeysMap.find(keycode) != m_KeysMap.end())
 				{
-					if (action == GLFW_PRESS || action == GLFW_REPEAT)
-						m_KeysMap[keycode]->ButtonClicked(key);
-					else
-						m_KeysMap[keycode]->ButtonReleased(key);
+					if (m_KeysMap[keycode] != nullptr)
+					{
+						if (action == GLFW_PRESS || action == GLFW_REPEAT)
+							m_KeysMap[keycode]->ButtonClicked(m_KeyControls[keycode]);
+						else
+							m_KeysMap[keycode]->ButtonReleased(m_KeyControls[keycode]);
+					}
 				}
 			}
 		};

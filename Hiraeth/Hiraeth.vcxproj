@@ -298,6 +298,7 @@
     <ClInclude Include="src\UI\ui_equip.h" />
     <ClInclude Include="src\UI\ui_inventory.h" />
     <ClInclude Include="src\UI\ui_keyconfig.h" />
+    <ClInclude Include="src\UI\ui_keyconfig_icon.h" />
     <ClInclude Include="src\UI\ui_manager.h" />
     <ClInclude Include="src\UI\ui_quests.h" />
     <ClInclude Include="src\UI\ui_skills.h" />

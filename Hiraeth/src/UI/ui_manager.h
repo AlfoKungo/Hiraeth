@@ -29,6 +29,7 @@ namespace hiraeth {
 			UiInventory * m_UiInventory;
 			UiSkills * m_UiSkills;
 			UiEquip * m_UiEquip;
+			UiKeyConfig * m_UiKeyConfig;
 			struct MouseAction { bool is_occupied; UiWindow * rel_win; }; // not yet implemented - supposed to be used for data transfer between windows.
 		public:
 			UiManager(input::Keyboard* kb);

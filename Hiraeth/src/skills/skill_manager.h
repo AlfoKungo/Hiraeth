@@ -10,10 +10,9 @@ namespace hiraeth {
 
 		class SkillManager : public Updatable
 		{
-			std::map<unsigned int, SRL::SkillInfo > m_SkillsInfo;
 			std::map<unsigned int, std::tuple<SRL::SkillInfo*, SRL::AnimationMap*>> m_SkillsData;
-			ui::UiSkills * m_UiSkills;
 		public:
+			ui::UiSkills * m_UiSkills;
 			graphics::Layer<TopRightIcon> m_Layer;
 			SkillManager(ui::UiSkills * ui_skills)
 				: m_UiSkills(ui_skills),
@@ -36,7 +35,7 @@ namespace hiraeth {
 					reconfigure_icons();
 			}
 
-			void draw() const 
+			void draw() const
 			{
 				m_Layer.render();
 			}
@@ -45,19 +44,18 @@ namespace hiraeth {
 			{
 				SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("serialized/skills.data", index);
 				m_SkillsData[index] = m_UiSkills->add_skill(skill_data, 0);
-				m_SkillsInfo[index] = skill_data.skill_info;
 			}
 
 			SRL::SkillInfo* get_skill(unsigned int skill_index)
 			{
-				if (m_SkillsInfo.find(skill_index) != m_SkillsInfo.end())
-					return &m_SkillsInfo[skill_index];
+				if (m_SkillsData.find(skill_index) != m_SkillsData.end())
+					return std::get<0>(m_SkillsData[skill_index]);
 				return nullptr;
 			}
 
 			SRL::AnimationMap* getAnimationData(unsigned int skill_index)
 			{
-				if (m_SkillsInfo.find(skill_index) != m_SkillsInfo.end())
+				if (m_SkillsData.find(skill_index) != m_SkillsData.end())
 					return std::get<SRL::AnimationMap*>(m_SkillsData[skill_index]);
 				return nullptr;
 			}
@@ -65,8 +63,8 @@ namespace hiraeth {
 			std::vector<unsigned int> get_available_skills()
 			{
 				std::vector<unsigned int> vints;
-				vints.reserve(m_SkillsInfo.size());
-				for (auto const& imap : m_SkillsInfo)
+				vints.reserve(m_SkillsData.size());
+				for (auto const& imap : m_SkillsData)
 					vints.push_back(imap.first);
 				return vints;
 			}
@@ -79,17 +77,18 @@ namespace hiraeth {
 
 				SRL::AnimationData ad{ {},false };
 				ad.frames_data.push_back({ {0,0,32,32},{16,0}, duration });
-				m_Layer.add(new TopRightIcon{skill_index, {float(768 - m_Layer.m_Renderables.size() * 32), 418 }, 
-					graphics::TextureManager::Load(name), duration});
+				m_Layer.add(new TopRightIcon{ skill_index, {float(768 - m_Layer.m_Renderables.size() * 32), 418 },
+					graphics::TextureManager::Load(name), duration });
 			}
 
 			void reconfigure_icons()
 			{
 				for (int i = 0; i < m_Layer.m_Renderables.size(); ++i)
 				{
-					m_Layer.m_Renderables[i]->setPosition({float(768 - i * 32), 418 });
+					m_Layer.m_Renderables[i]->setPosition({ float(768 - i * 32), 418 });
 				}
 			}
+
 		};
 	}
 }

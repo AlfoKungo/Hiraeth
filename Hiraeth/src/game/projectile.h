@@ -67,8 +67,7 @@ namespace hiraeth {
 			}
 			bool hasHitClashed() const
 			{
-				//return maths::vec2{ m_Enemy->getBounds().GetMiddle() - getPosition() }.MagnitudeU() < 200.0f;
-				return maths::vec2{ m_EndPosition - getPosition() }.MagnitudeU() < 200.0f;
+				return maths::vec2{ m_EndPosition - getPosition() }.BiggerThan(14);
 			}
 			SRL::FullAnimationData getAnimationData()
 			{
@@ -89,8 +88,7 @@ namespace hiraeth {
 			}
 			bool hasSpriteFinished() const override
 			{
-				//return m_Timer.hasExpired();
-				return maths::vec2{ m_EndPosition - getPosition() }.MagnitudeU() < 200.0f;
+				return maths::vec2{ m_EndPosition - getPosition() }.BiggerThan(14);
 			}
 		};
 	}

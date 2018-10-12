@@ -54,15 +54,16 @@ namespace hiraeth {
 			{
 				m_IsDraw = true;
 				m_InText->setText(text);
-				//else
-				//	nextDialog("this is next");
-				//m_TextBoxes.add(new graphics::Sprite{ maths::vec2(30, 75), 180, 80, 0x88331a00 });
 			}
 
 			void nextDialog()
 			{
 				m_IsDraw = true;
-				m_InText->setText(m_DialogTree.getNextText());
+				const std::string next_text{ m_DialogTree.getNextText() };
+				if (!next_text.empty())
+					m_InText->setText(next_text);
+				else
+					m_TextBoxes.clear();
 			}
 
 			void draw() const

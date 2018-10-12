@@ -5,6 +5,7 @@
 #include "graphics/sprited_renderable.h"
 #include "UI/ui_basic/ui_tabs.h"
 #include "skills/skill_icon.h"
+#include "ui_keyconfig.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -18,9 +19,9 @@ namespace hiraeth {
 			UiTabs<skills::SkillIcon> * m_Tabs;
 			unsigned int m_SkillPts{6};
 			graphics::Label m_SkillPtsLabel;
-
+			UiKeyConfig * m_UiKeyConfig;
 		public:
-			UiSkills(maths::vec2 pos, UiKey control_key);
+			UiSkills(maths::vec2 pos, UiKey control_key, UiKeyConfig * ui_key_config);
 			void mouse_left_clicked(maths::vec2 mousePos) override;
 			void mouse_left_released(maths::vec2 mousePos) override {}
 			void mouse_right_clicked(maths::vec2 mousePos) override;
@@ -33,6 +34,7 @@ namespace hiraeth {
 				rel_tab->add_data(skill);
 				return std::make_tuple(skill->get_skill_info(), skill->get_animation_data());
 			}
+			void transferSkillToKeyConfig(input::KeyCode key_code, unsigned int key, unsigned int skill_index, input::KeyboardEvent * keyboard_event);
 
 			//void add_skill(SRL::SkillData skill_data, unsigned tab)
 			//{

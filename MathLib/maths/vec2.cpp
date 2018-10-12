@@ -208,6 +208,12 @@ namespace maths {
 	{
 		return x * other.x + y * other.y;
 	}
+
+	bool vec2::BiggerThan(float size) const
+	{
+		return MagnitudeU() < pow(size,2);
+	}
+
 	//vec2 vec2::lerp(const vec2& other, float t) const
 	//{
 	//	return vec2(x - other.x, y - other.y) * t;
@@ -225,8 +231,8 @@ namespace maths {
 
 	vec2 vec2::Normalise() const
 	{
-		float length = Magnitude();
-		return vec2(x / length, y / length);
+		const auto length = Magnitude();
+		return {x / length, y / length};
 	}
 
 	std::string vec2::ToString() const

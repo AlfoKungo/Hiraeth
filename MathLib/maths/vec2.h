@@ -60,6 +60,7 @@ namespace maths {
 		vec2 Normalise() const;
 		float Distance(const vec2& other) const;
 		float Dot(const vec2& other) const;
+		bool BiggerThan(float size) const;
 		//vec2 lerp(const vec2& other, float t) const;
 
 		std::string ToString() const;

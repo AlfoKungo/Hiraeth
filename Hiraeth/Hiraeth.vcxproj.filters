@@ -533,5 +533,8 @@
     <ClInclude Include="src\NPC\dialog_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\UI\ui_keyconfig_icon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

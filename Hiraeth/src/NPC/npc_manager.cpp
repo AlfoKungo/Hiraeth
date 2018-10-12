@@ -32,7 +32,6 @@ namespace hiraeth
 		{
 			//clear summon queue
 			m_Npcs.clear();
-			//m_Npcs.add(new npc::Npc(0));
 			//reload new summons
 			for (auto npc_index : (m_MapLayer->getNpcs()))
 				m_Npcs.add(new npc::Npc{ npc_index, m_MapLayer, m_Kb });

@@ -30,14 +30,18 @@ namespace hiraeth {
 		{
 			m_UiInventory = new UiInventory(maths::vec2(-300, 0), inventory, character_stats);
 			m_Layer.add_ref(m_UiInventory);
-			kb->registerToKey(GLFW_KEY_A, inventory, this);
+			kb->registerToKey(GLFW_KEY_I, inventory, this);
 
 			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), stats, character_stats));
 			kb->registerToKey(GLFW_KEY_S, stats, this);
 
-			m_UiSkills = new UiSkills(maths::vec2(300, 0), skills);
+			m_UiKeyConfig = new UiKeyConfig(maths::vec2(-700, 0), key_config, kb);
+			m_Layer.add_ref(m_UiKeyConfig);
+			kb->registerToKey(GLFW_KEY_TAB, key_config, this);
+
+			m_UiSkills = new UiSkills(maths::vec2(300, 0), skills, m_UiKeyConfig);
 			m_Layer.add_ref(m_UiSkills);
-			kb->registerToKey(GLFW_KEY_D, skills, this);
+			kb->registerToKey(GLFW_KEY_K, skills, this);
 
 			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), quests));
 			kb->registerToKey(GLFW_KEY_Q, quests, this);
@@ -45,14 +49,11 @@ namespace hiraeth {
 			m_UiEquip = new UiEquip(maths::vec2(500, 0), equip, character_stats);
 			m_Layer.add_ref(m_UiEquip);
 			kb->registerToKey(GLFW_KEY_E, equip, this);
-
-			m_Layer.add_ref(new UiKeyConfig(maths::vec2(-700, 0), key_config));
-			kb->registerToKey(GLFW_KEY_TAB, key_config, this);
 		}
 
 		bool UiManager::leftButtonClicked(float mx, float my)
 		{
-			auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
+			const auto result_window = std::find_if(std::begin(m_Windows), std::end(m_Windows),
 				[&](auto const& window) 
 			{ return window->is_to_draw && window->isWindowContains(maths::vec2{ mx, my }); });
 			if (result_window != m_Windows.end())
@@ -126,8 +127,11 @@ namespace hiraeth {
 				if (window->is_attached())
 					window->move(pmx - mx, pmy - my);
 				else
-					window->mouse_moved_full({ mx, my },
-						{ pmx, pmy });
+					if (window->is_to_draw && window->isWindowContains({ mx, my }))
+					{
+						window->mouse_moved_full({ mx, my }, { pmx, pmy });
+						return true;
+					}
 			}
 			return false;
 		}

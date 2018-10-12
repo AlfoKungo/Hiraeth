@@ -4,8 +4,9 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager,
-			skills::SkillManager *skill_manager, CharacterStats * character_stats)
+		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer,
+			item::ItemManager *item_manager, skills::SkillManager *skill_manager, 
+			CharacterStats * character_stats)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
 			m_Kb(kb),
 			m_ItemManager(item_manager),
@@ -126,7 +127,7 @@ namespace hiraeth {
 			else
 				if (state)
 				{
-					unsigned int skill_index = m_SkillKeysMap[key];
+					unsigned int skill_index = m_SkillKeysMap[key - controls_size];
 					activateSkill(skill_index);
 				}
 		}
@@ -140,12 +141,13 @@ namespace hiraeth {
 			m_Kb->registerToKey(GLFW_KEY_SPACE, jump, this);
 			m_Kb->registerToKey(GLFW_KEY_LEFT_CONTROL, attack, this);
 			m_Kb->registerToKey(GLFW_KEY_Z, pick_up, this);
-			std::vector<unsigned int> skill_keys{ GLFW_KEY_X, GLFW_KEY_C, GLFW_KEY_V, GLFW_KEY_B, GLFW_KEY_N };
+			std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N };
 			std::vector<unsigned int> available_skills = m_SkillManager->get_available_skills();
 			for (int i = 0; i < available_skills.size(); ++i)
 			{
-				m_SkillKeysMap[(pick_up + 1) + i] = available_skills[i];
-				m_Kb->registerToKey(skill_keys[i], (pick_up + 1) + i, this);
+				m_SkillKeysMap[i] = available_skills[i];
+				m_SkillManager->m_UiSkills->transferSkillToKeyConfig(skill_keys[i], 
+					(controls_size)+i, available_skills[i], this);
 			}
 		}
 
