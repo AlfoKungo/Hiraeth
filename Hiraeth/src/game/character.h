@@ -42,6 +42,8 @@ namespace hiraeth {
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
 
+			bool m_IsStuck{false};
+
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, item::ItemManager *item_manager,
 				skills::SkillManager *skill_manager, CharacterStats * character_stats);
@@ -67,6 +69,7 @@ namespace hiraeth {
 			void registerKeys();
 			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
 			void carryOutAttack() override;
+			void setStuck(bool stuck_state);
 			//CharacterStats* getCharacterStats() const;
 		private:
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }

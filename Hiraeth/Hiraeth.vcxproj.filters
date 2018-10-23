@@ -536,5 +536,8 @@
     <ClInclude Include="src\UI\ui_keyconfig_icon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\network\client_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include "timer.h"
 #include <algorithm>
+#define _WINSOCKAPI_    // stops windows.h including winsock.h
 #include <Windows.h>
 
 namespace hiraeth {

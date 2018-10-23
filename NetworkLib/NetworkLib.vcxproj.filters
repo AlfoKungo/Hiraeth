@@ -15,12 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="handler.h">
+    <ClInclude Include="net\protocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

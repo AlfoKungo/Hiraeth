@@ -112,24 +112,27 @@ namespace hiraeth {
 
 		void Character::ButtonUpdate(input::Key key, bool state)
 		{
-			if (key == right)
-				m_Controls.right = state;
-			else if (key == left)
-				m_Controls.left = state;
-			else if (key == down)
-				m_Controls.down = state;
-			else if (key == jump)
-				m_Controls.jump = state;
-			else if (key == attack)
-				m_Controls.attack = state;
-			else if (key == pick_up)
-				m_Controls.pick_up = state;
-			else
-				if (state)
-				{
-					unsigned int skill_index = m_SkillKeysMap[key - controls_size];
-					activateSkill(skill_index);
-				}
+			if (!m_IsStuck)
+			{
+				if (key == right)
+					m_Controls.right = state;
+				else if (key == left)
+					m_Controls.left = state;
+				else if (key == down)
+					m_Controls.down = state;
+				else if (key == jump)
+					m_Controls.jump = state;
+				else if (key == attack)
+					m_Controls.attack = state;
+				else if (key == pick_up)
+					m_Controls.pick_up = state;
+				else
+					if (state)
+					{
+						unsigned int skill_index = m_SkillKeysMap[key - controls_size];
+						activateSkill(skill_index);
+					}
+			}
 		}
 
 		void Character::registerKeys()
@@ -168,6 +171,13 @@ namespace hiraeth {
 					monster->getHit(m_Direction, getDamage());
 				}
 			}
+		}
+
+		void Character::setStuck(bool stuck_state)
+		{
+			if (stuck_state)
+				m_Controls = { false };
+			m_IsStuck = stuck_state;
 		}
 
 		void Character::pickItemUp()

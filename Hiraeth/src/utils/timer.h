@@ -1,7 +1,7 @@
 #pragma once
 
 //#define WIN64_LEAN_AND_MEAN
-#include <Windows.h>
+//#include <Windows.h>
 
 
 //#include <WinDef.h>
@@ -20,7 +20,7 @@ namespace hiraeth {
 		// Creates and starts timer
 		Timer();
 		// Resets and restarts timer
-		virtual void Reset();
+		void Reset();
 		// Returns time in seconds
 		virtual float elapsed();
 		// Returns time in milliseconds

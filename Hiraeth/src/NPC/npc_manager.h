@@ -5,7 +5,6 @@
 #include "game/monsters/monster_manager.h"
 #include "dialog_manager.h"
 
-//#include "view/camera.h"
 
 namespace hiraeth
 {
@@ -20,9 +19,9 @@ namespace hiraeth
 			graphics::Shader m_Shader;
 			graphics::Layer<npc::Npc> m_Npcs;
 			input::Keyboard* m_Kb;
-			npc::DialogManager m_DialogManager{};
+			npc::DialogManager m_DialogManager;
 		public:
-			NpcManager(map::MapLayer* map_layer, input::Keyboard* kb);
+			NpcManager(map::MapLayer* map_layer, input::Keyboard* kb, game::Character * character);
 			void draw() const;
 			void update() override;
 			void mapChanged();

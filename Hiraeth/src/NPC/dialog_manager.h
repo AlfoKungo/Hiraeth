@@ -17,7 +17,7 @@ namespace hiraeth {
 			size_t m_StringIndex;
 		public:
 			DialogTree() 
-				: m_Strings{"This is the first text", "this is seconds", "and then i die"},
+				: m_Strings{"They tryna find tupac", "Don't let them find tupac", "La da da da"},
 				m_StringIndex(0)
 			{
 				
@@ -31,23 +31,24 @@ namespace hiraeth {
 			}
 		};
 
-		class DialogManager : Updatable
+		class DialogManager : public Updatable, public input::MouseEvent
 		{
 		private:
 			graphics::Layer<graphics::Renderable> m_TextBoxes;
 			graphics::Label* m_InText;
 			bool m_IsDraw{false};
 			DialogTree m_DialogTree;
-
+			game::Character * m_Character;
 		public:
-			DialogManager()
+			DialogManager(game::Character * character)
 				: m_TextBoxes(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false),
 			m_InText{nullptr},
-			m_DialogTree{}
+			m_DialogTree{},
+			m_Character(character)
 			{
-				m_InText = new graphics::Label{ "arial", 16, "", { 40, 90 }, 0xffffffff, graphics::Label::Alignment::LEFT };
+				m_InText = new graphics::Label{ "arial", 16, "", { -130, 130 }, 0xffffffff, graphics::Label::Alignment::LEFT };
 				m_TextBoxes.add(m_InText);
-				m_TextBoxes.add(new graphics::Sprite{ maths::vec2(30, 75), 180, 80, 0x88331a00 });
+				m_TextBoxes.add(new graphics::Sprite{ maths::vec2(-140, 80), 280, 80, 0x88331a00 });
 			}
 
 			void createDialog(const std::string& text)
@@ -61,9 +62,15 @@ namespace hiraeth {
 				m_IsDraw = true;
 				const std::string next_text{ m_DialogTree.getNextText() };
 				if (!next_text.empty())
+				{
 					m_InText->setText(next_text);
+					m_Character->setStuck(true);
+				}
 				else
+				{
 					m_TextBoxes.clear();
+					m_Character->setStuck(false);
+				}
 			}
 
 			void draw() const
@@ -74,6 +81,32 @@ namespace hiraeth {
 			void update() override
 			{
 				//m_TextBoxes.
+			}
+
+			bool leftButtonClicked(float mx, float my) override
+			{
+				nextDialog();
+				return true;
+			}
+
+			bool rightButtonClicked(float mx, float my) override
+			{
+				return false;
+			}
+
+			bool leftButtonReleased(float mx, float my) const override
+			{
+				return false;
+			}
+
+			bool mouseMove(float pmx, float pmy, float mx, float my) const override
+			{
+				return false;
+			}
+
+			bool is_window_contains(maths::vec2 mouse_pos) const override
+			{
+				return maths::Rectangle{ 650, 280, 290, 80 }.Contains(mouse_pos);
 			}
 		};
 	}

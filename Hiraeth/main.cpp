@@ -1,4 +1,5 @@
-#include <time.h>
+#include <ctime>
+#include "network/client_handler.h"
 #include <cereal/archives/binary.hpp>
 #include <fstream>
 #include <cereal/types/memory.hpp>
@@ -26,7 +27,7 @@
 //#include <ga.h>
 //#include <gau.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include "NPC/npc_manager.h"
 #include "skills/skill_manager.h"
 #include "NPC/dialog_manager.h"
@@ -110,8 +111,9 @@ int main()
 	view::Camera::init(&m_Char);
 
 	game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
-	game::NpcManager npcManager(map.getMapLayer(), &keyboard);
+	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char);
 	//npc::DialogManager dialogManager{};
+
 
 	unsigned int frames = 0;
 	while (!window.closed())

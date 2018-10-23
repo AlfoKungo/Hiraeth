@@ -4,16 +4,18 @@ namespace hiraeth
 {
 	namespace game
 	{
-		NpcManager::NpcManager(map::MapLayer* map_layer, input::Keyboard* kb)
+		NpcManager::NpcManager(map::MapLayer* map_layer, input::Keyboard* kb, game::Character * character)
 			: m_MapLayer(map_layer),
 			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_Npcs(&m_Shader, true),
-			m_Kb(kb)
+			m_Kb(kb),
+		m_DialogManager{character}
 		{
 			EventManager* m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &NpcManager::mapChanged);
 			mapChanged();
 			kb->registerToMouse(this);
+			kb->registerToMouse(&m_DialogManager);
 		}
 
 		void NpcManager::draw() const

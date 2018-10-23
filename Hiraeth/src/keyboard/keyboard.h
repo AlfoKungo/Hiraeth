@@ -14,31 +14,27 @@ namespace hiraeth {
 		class Keyboard
 		{
 		private:
-			std::map<KeyCode, KeyboardEvent*> m_KeysMap;
-			std::map<KeyCode, Key> m_KeyControls;
-			//std::map<KeyCode, std::pair<KeyboardEvent*, Key>> m_KeyControlMaps; // move to this implementation
-			bool m_Keys[GLFW_KEY_LAST];
-			bool m_KeysClicked[GLFW_KEY_LAST];
-			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST];
+			//std::map<KeyCode, KeyboardEvent*> m_KeysMap;
+			//std::map<KeyCode, Key> m_KeyControls;
+			std::map<KeyCode, std::pair<KeyboardEvent*, Key>> m_KeyControlMap; // move to this implementation
+			bool m_Keys[GLFW_KEY_LAST]{};
+			bool m_KeysClicked[GLFW_KEY_LAST]{};
+			bool m_MouseButtons[GLFW_MOUSE_BUTTON_LAST]{};
 		public:
 			std::vector<MouseEvent*> m_MouseEventMap;
-			double mx, my, pmx, pmy;
+			double mx{}, my{}, pmx{}, pmy{};
 			Keyboard();
 
 			void registerToKey(KeyCode keycode, Key key, KeyboardEvent* key_event)
 			{
-				m_KeyControls[keycode] = key;
-				m_KeysMap[keycode] = key_event;
+				m_KeyControlMap[keycode] = std::make_pair(key_event, key);
 			}
 
 			void swapKey(KeyCode k1, KeyCode k2)
 			{
-				KeyboardEvent* t_key_event = m_KeysMap[k1];
-				Key t_key = m_KeyControls[k1];
-				m_KeysMap[k1] = m_KeysMap[k2];
-				m_KeyControls[k1] = m_KeyControls[k2];
-				m_KeysMap[k2] = t_key_event;
-				m_KeyControls[k2] = t_key;
+				const auto temp = m_KeyControlMap[k1];
+				m_KeyControlMap[k1] = m_KeyControlMap[k2];
+				m_KeyControlMap[k2] = temp;
 			}
 
 			void registerToMouse(MouseEvent* mouse_event)
@@ -58,14 +54,15 @@ namespace hiraeth {
 			void clicked(KeyCode keycode, int action)
 			{
 				m_KeysClicked[keycode] = (action == GLFW_PRESS);
-				if (m_KeysMap.find(keycode) != m_KeysMap.end())
+				if (m_KeyControlMap.find(keycode) != m_KeyControlMap.end())
 				{
-					if (m_KeysMap[keycode] != nullptr)
+					auto [key_event_pointer, key_value] = m_KeyControlMap[keycode];
+					if (key_event_pointer != nullptr)
 					{
 						if (action == GLFW_PRESS || action == GLFW_REPEAT)
-							m_KeysMap[keycode]->ButtonClicked(m_KeyControls[keycode]);
+							key_event_pointer->ButtonClicked(key_value);
 						else
-							m_KeysMap[keycode]->ButtonReleased(m_KeyControls[keycode]);
+							key_event_pointer->ButtonReleased(key_value);
 					}
 				}
 			}

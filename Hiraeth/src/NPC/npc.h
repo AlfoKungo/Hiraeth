@@ -43,7 +43,7 @@ namespace hiraeth {
 			void onNpcClick() 
 			{
 				//m_IsTalking = true;
-				move(maths::vec2(10, 0));
+				//move(maths::vec2(10, 0));
 			}
 		};
 	}
