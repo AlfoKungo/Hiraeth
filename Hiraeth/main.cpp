@@ -114,6 +114,8 @@ int main()
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char);
 	//npc::DialogManager dialogManager{};
 
+	network::ClientHandler clientHandler{};
+
 
 	unsigned int frames = 0;
 	while (!window.closed())
@@ -133,6 +135,7 @@ int main()
 		m_CrLayer.update();
 		itemManager.update();
 		uiManager.update();
+		clientHandler.Update();
 
 
 		//draw
