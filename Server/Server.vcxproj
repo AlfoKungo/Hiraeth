@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="address.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="server.cpp" />
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
   <ItemGroup>

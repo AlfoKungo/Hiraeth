@@ -1,21 +1,15 @@
 #pragma once
-
-#include <memory>
 #include "game/creature.h"
-#include "keyboard/keyboard_event.h"
-#include "character_stats.h"
+#include "graphics/layers/t_group.h"
 #include "character/character_body.h"
 #include "character/character_arm.h"
-#include "monsters/monster.h"
-#include "graphics/layers/layer.h"
-#include "item/item_manager.h"
+#include "game/character_stats.h"
 #include "skills/skill_manager.h"
-#include "keyboard/key.h"
 
 namespace hiraeth {
 	namespace game {
 
-		class Character : public Creature, public input::KeyboardEvent
+		class NetChar : public Creature
 		{
 			enum Controls
 			{
@@ -30,13 +24,13 @@ namespace hiraeth {
 			};
 
 		private:
-			input::Keyboard* m_Kb;
-			std::vector<Monster*>* m_MonstersLayer;
-			item::ItemManager* m_ItemManager;
+			//input::Keyboard* m_Kb;
+			//std::vector<Monster*>* m_MonstersLayer;
+			//item::ItemManager* m_ItemManager;
 			skills::SkillManager* m_SkillManager;
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
-			CharacterStats * m_CharacterStats;
+			//CharacterStats * m_CharacterStats;
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
@@ -45,10 +39,8 @@ namespace hiraeth {
 			bool m_IsStuck{false};
 
 		public:
-			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer, 
-				item::ItemManager *item_manager, skills::SkillManager *skill_manager, 
-				CharacterStats * character_stats);
-			~Character();
+			NetChar(maths::vec2 pos, map::MapLayer *map_layer, skills::SkillManager *skill_manager);
+			~NetChar();
 
 			void update() override;
 			void draw(graphics::Renderer* renderer) const override
@@ -63,12 +55,14 @@ namespace hiraeth {
 				}
 			}
 
-			void ButtonClicked(input::Key control) override;
-			void ButtonReleased(input::Key control) override;
-			void ButtonUpdate(input::Key control, bool state);
-
-			void registerKeys();
-			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
+			//void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
+			inline void setPosition(const maths::vec2& position) override
+			{
+				const maths::vec2 old_pos = m_Bounds.position;
+				m_Bounds.position = position;
+				m_TransformationMatrix *= maths::mat4::Translate(position - old_pos);
+			}
+			void ButtonUpdate(input::Key key, bool state);
 			void carryOutAttack() override;
 			void setStuck(bool stuck_state);
 			//CharacterStats* getCharacterStats() const;
@@ -78,6 +72,7 @@ namespace hiraeth {
 			void activateSkill(unsigned int skill_index);
 			void activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
 				SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
+			
 		};
 	}
 }

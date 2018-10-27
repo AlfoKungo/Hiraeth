@@ -1,5 +1,7 @@
 #pragma once
 #include "cereal/archives/binary.hpp"
+#include <map>
+#include "maths/vec2.h"
 
 namespace hiraeth {
 	namespace network {
@@ -9,7 +11,10 @@ namespace hiraeth {
 #define MSG_CTS_LOCATION_UPDATE 0x03
 #define MSG_CTS_KA 0x05
 
-#define MSG_STC_PLAYERS_LOCATIONS 0x11
+#define MSG_STC_ADD_PLAYER 0x11
+#define MSG_STC_PLAYERS_LOCATIONS 0x12
+#define MSG_STC_PLAYERS_LIST 0x13
+
 		enum MessageType
 		{
 			open_connection = 0x01,
@@ -18,8 +23,23 @@ namespace hiraeth {
 			keep_alive = 0x05,
 		};
 
+		struct MonsterStateUpdate
+		{
+			maths::vec2 pos;
+			maths::vec2 force;
+			bool left;
+			bool right;
+		};
+		struct RegularMapUpdate
+		{
+			std::map<unsigned int, maths::vec2> m_PlayerLocation;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(m_PlayerLocation));
+			}
+		};
+
 		template<class T>
-		std::tuple<char *, int> serialize_packet_data(T& srl_data)
+		std::tuple<char *, int> srl_packet_data(const T& srl_data)
 		{
 			std::stringstream os{ std::ios::binary | std::ios::out };
 			{
@@ -31,6 +51,40 @@ namespace hiraeth {
 			data[0] = char(data_str.size());
 			memcpy(data + 1, data_str.c_str(), data_str.size());
 			return { data, data_str.size() + 1};
+		}
+
+		/*
+		 * a function for deserializing simple data structs
+		 */
+		template<class T>
+		T dsrl_packet_data(char * buffer)
+		{
+			T dsrl_data;
+			memcpy(&dsrl_data, buffer, sizeof(dsrl_data));
+			return std::move(dsrl_data);
+		}
+
+		template<class T>
+		void dsrl_nr_packet_data(T& dsrl_data, char * buffer)
+		{
+			memcpy(&dsrl_data, buffer, sizeof(dsrl_data));
+		}
+
+		/*
+		 * void dsrl_d(ynamic)t(ype)_packet_data(T& dsrl_data, char * buffer)
+		 * 
+		 * a function for deserializing dynamic data types. requires the buffer
+		 * to contain the size of the data in the first slot.
+		 */
+		template<class T>
+		void dsrl_dt_packet_data(T& dsrl_data, char * buffer)
+		{
+			const std::string tmp_str{ buffer + 1, static_cast<unsigned int>(buffer[0]) };
+			std::stringstream is(tmp_str, std::ios::binary | std::ios::in);
+			{
+				cereal::BinaryInputArchive ar(is);
+				ar(dsrl_data);
+			}
 		}
 
 		inline int construct_client_packet(char * buffer, unsigned char msgId,

@@ -37,8 +37,6 @@ namespace hiraeth {
 			}
 			void main_function()
 			{
-				m_ClientsPos[1] = maths::vec2{ 20,-34 };
-				m_ClientsPos[2] = maths::vec2{ 56,12 };
 				if (!m_Socket.Open(PORT))
 				{
 					printf("failed to create socket!\n");
@@ -60,6 +58,7 @@ namespace hiraeth {
 							break;
 						case MSG_CTS_LOCATION_UPDATE:
 							receiveLocation(m_Buffer);
+							sendUpdateLocationToAll(sender);
 							break;
 						case MSG_CTS_KA:
 							//sendKeepAliveAnswer(sender);
@@ -74,6 +73,7 @@ namespace hiraeth {
 			void sendConnectionResponse(Address sender)
 			{
 				const auto free_client_index = FindFreeClientIndex();
+				sendNewPlayerInMap(free_client_index);
 				m_numConnectedClients++;
 				m_ClientAddress[free_client_index] = sender;
 				m_ClientConnected[free_client_index] = true;
@@ -83,6 +83,20 @@ namespace hiraeth {
 				printf("registered new address : %s , and port is : %d , and id is %d\n",
 					sender.GetAddressString().c_str(), sender.GetPort(), id);
 				m_Socket.Send(sender, data, sizeof(data));
+			}
+
+			void sendNewPlayerInMap(unsigned int new_char_index)
+			{
+				for (const auto& client : m_ClientAddress)
+				{
+					if (client.GetAddress() != 0)
+					{
+						char * message = new char[4];
+						memcpy(message, &new_char_index, sizeof(new_char_index));
+						auto size = construct_server_packet(m_Buffer, MSG_STC_ADD_PLAYER, message, 4);
+						m_Socket.Send(client, m_Buffer, size);
+					}
+				}
 			}
 
 			void closeConnection(char* buffer)
@@ -96,10 +110,13 @@ namespace hiraeth {
 
 			void receiveLocation(char* buffer)
 			{
-				unsigned int id;
-				memcpy(&id, buffer + 1, sizeof(unsigned int));
-				maths::vec2 char_pos;
-				memcpy(&char_pos, buffer + 5, sizeof(maths::vec2));
+				//unsigned int id;
+				//dsrl_packet_data(id, buffer + 1);
+				//maths::vec2 char_pos;
+				//dsrl_packet_data(char_pos, buffer + 5);
+				const auto id = dsrl_packet_data<unsigned int>(buffer + 1);
+				const auto char_pos = dsrl_packet_data<maths::vec2>(buffer + 5);
+				m_ClientsPos[id] = char_pos;
 			}
 
 			//void sendKeepAliveAnswer(Address sender)
@@ -113,6 +130,12 @@ namespace hiraeth {
 
 			void sendUpdateLocationToAll(Address sender)
 			{
+				auto [data, size] = srl_packet_data(m_ClientsPos);
+				RegularMapUpdate map_update_data{ m_ClientsPos };
+				const auto buffer_size = construct_server_packet(m_Buffer,
+					MSG_STC_PLAYERS_LOCATIONS, data, size);
+				m_Socket.Send(sender, m_Buffer, buffer_size);
+				delete[] data;
 				//char * data = new char[sizeof(maths::vec2) * m_ClientsIds.size()];
 				//char data[sizeof(maths::vec2) * m_ClientsIds.size()];
 				//for (const auto& client_id : m_ClientsIds)
@@ -130,11 +153,6 @@ namespace hiraeth {
 				//data[0] = char(data_str.size());
 				//memcpy(data + 1, data_str.c_str(), data_str.size());
 				//m_Socket.Send(sender, data, data_str.size() + 1);
-				auto [data, size] = serialize_packet_data(m_ClientsPos);
-				const auto buffer_size = construct_server_packet(m_Buffer,
-					MSG_STC_PLAYERS_LOCATIONS, data, size);
-				m_Socket.Send(sender, m_Buffer, buffer_size);
-				delete[] data;
 			}
 
 			//unsigned int constructMsg(unsigned char msgId, const char * msg, size_t message_len)

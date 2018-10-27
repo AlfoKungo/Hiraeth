@@ -164,6 +164,7 @@
     <ClCompile Include="src\game\monsters\monster_data_manager.cpp" />
     <ClCompile Include="src\game\monsters\monster_manager.cpp" />
     <ClCompile Include="src\game\monsters\monster_stats.cpp" />
+    <ClCompile Include="src\game\net_chars\net_char.cpp" />
     <ClCompile Include="src\graphics\renderer.cpp" />
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\indexbuffer.cpp" />
@@ -243,6 +244,8 @@
     <ClInclude Include="src\game\monsters\monster_data_manager.h" />
     <ClInclude Include="src\game\monsters\monster_manager.h" />
     <ClInclude Include="src\game\monsters\monster_stats.h" />
+    <ClInclude Include="src\game\net_chars\net_char.h" />
+    <ClInclude Include="src\game\net_chars\net_char_manager.h" />
     <ClInclude Include="src\game\projectile.h" />
     <ClInclude Include="src\game\stats.h" />
     <ClInclude Include="src\game\stats\timed_stat.h" />

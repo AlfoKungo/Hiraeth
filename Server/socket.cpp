@@ -90,11 +90,8 @@ namespace hiraeth {
 			//FD_SET ReadSet;
 			//if ((Total = select(0, &ReadSet, &WriteSet, NULL, NULL)) == SOCKET_ERROR)
 			//{
-
 			//	printf("select() returned with error %d\n", WSAGetLastError());
-
 			//	return 1;
-
 			//}
 			//if (FD_ISSET(ListenSocket, &ReadSet))
 

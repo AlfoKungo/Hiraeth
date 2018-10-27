@@ -9,7 +9,7 @@ namespace hiraeth
 			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_Npcs(&m_Shader, true),
 			m_Kb(kb),
-		m_DialogManager{character}
+			m_DialogManager{ character }
 		{
 			EventManager* m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &NpcManager::mapChanged);
@@ -39,7 +39,7 @@ namespace hiraeth
 				m_Npcs.add(new npc::Npc{ npc_index, m_MapLayer, m_Kb });
 		}
 
-		bool NpcManager::leftButtonClicked(float mx, float my) 
+		bool NpcManager::leftButtonClicked(float mx, float my)
 		{
 			const maths::vec2 translated_pos = view::Camera::mouse_to_map_position(maths::vec2(mx, my));
 			for (const auto& npc : m_Npcs.m_Renderables)
@@ -50,9 +50,9 @@ namespace hiraeth
 				}
 			return false;
 		}
-		bool NpcManager::rightButtonClicked(float mx, float my) 
+		bool NpcManager::rightButtonClicked(float mx, float my)
 		{
-			return false; 
+			return false;
 		}
 		bool NpcManager::leftButtonReleased(float mx, float my) const
 		{
@@ -67,10 +67,9 @@ namespace hiraeth
 		{
 			maths::vec2 translated_pos = view::Camera::mouse_to_map_position(mouse_pos);
 			auto result_npc = std::find_if(std::begin(m_Npcs.m_Renderables), std::end(m_Npcs.m_Renderables),
-				[&](auto const& npc) 
+				[&](auto const& npc)
 			{ return npc->is_to_draw && npc->getBounds().Contains(translated_pos); });
 			return result_npc != m_Npcs.m_Renderables.end();
 		}
-
 	}
 }
