@@ -5,6 +5,7 @@
 #include "character/character_arm.h"
 #include "game/character_stats.h"
 #include "skills/skill_manager.h"
+#include "net/protocol.h"
 
 namespace hiraeth {
 	namespace game {
@@ -56,11 +57,21 @@ namespace hiraeth {
 			}
 
 			//void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
+			inline void setState(const network::PlayerStateUpdate& state)
+			{
+				setPosition(state.pos);
+				m_Force = state.force;
+				m_Direction = static_cast<Direction>(state.direction);
+			}
 			inline void setPosition(const maths::vec2& position) override
 			{
 				const maths::vec2 old_pos = m_Bounds.position;
 				m_Bounds.position = position;
 				m_TransformationMatrix *= maths::mat4::Translate(position - old_pos);
+			}
+			virtual float calculate_air_modifier() const override 
+			{
+				return 1.0f;
 			}
 			void ButtonUpdate(input::Key key, bool state);
 			void carryOutAttack() override;

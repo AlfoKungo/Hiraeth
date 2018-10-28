@@ -28,6 +28,7 @@ namespace hiraeth
 			std::queue<Summoner> m_SummonQueue;
 			map::MapLayer* m_MapLayer;
 			graphics::Shader m_Shader;
+			std::map<unsigned int, Monster*> m_Monsters;
 			graphics::Layer<Monster> m_Layer;
 			item::ItemManager* m_ItemManager;
 			Character* const m_Char;
@@ -35,6 +36,7 @@ namespace hiraeth
 			MonsterManager(map::MapLayer* map_layer, Character* character, item::ItemManager* item_manager);
 			void draw() const;
 			void update() override;
+			void addMonster(unsigned int monster_id, unsigned int summon_index);
 			void checkCollision();
 			void mapChanged();
 		};

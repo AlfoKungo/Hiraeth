@@ -73,6 +73,10 @@
     <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\Boost\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\Boost\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\FreeImage\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -102,6 +106,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)Dependencies\Boost\include;$(SolutionDir)NetworkLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -127,12 +133,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="socket.cpp" />
+    <ClCompile Include="utills\static_timer.cpp" />
+    <ClCompile Include="utills\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="address.h" />
     <ClInclude Include="handler.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="socket.h" />
+    <ClInclude Include="utills\a_timer.h" />
+    <ClInclude Include="utills\static_timer.h" />
+    <ClInclude Include="utills\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathLib\MathLib.vcxproj">

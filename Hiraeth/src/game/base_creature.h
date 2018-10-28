@@ -7,6 +7,7 @@
 #include "physics/collisionable.h"
 #include "stats.h"
 #include "basic/a_timer.h"
+#include "net/protocol.h"
 
 namespace hiraeth {
 	namespace game {
@@ -88,7 +89,7 @@ namespace hiraeth {
 					return force;
 				return {force.x * AIR_SPEED_MODIFIER, force.y};
 			}
-			float calculate_air_modifier() const
+			virtual float calculate_air_modifier() const
 			{
 				return ((m_Speed) / (1 - FRICTION.x) * FRICTION.x) / (m_Speed) * (1 - FRICTION_AIR.x);
 			}

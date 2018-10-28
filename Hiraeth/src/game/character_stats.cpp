@@ -10,7 +10,7 @@ namespace hiraeth {
 			m_DetailsStruct{ 40, 40, 10, 10, 20, 20, 30, 30, 25, 13 }
 		{
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->createEvent(StatsUpdate);
+			m_EventManager->createEvent<>(StatsUpdate);
 		}
 
 		void CharacterStats::updateStats()

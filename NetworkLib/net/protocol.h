@@ -23,6 +23,23 @@ namespace hiraeth {
 			keep_alive = 0x05,
 		};
 
+		enum Direction {
+			Right = 1,
+			Left = -1,
+		};
+
+		struct PlayerStateUpdate
+		{
+			maths::vec2 pos;
+			maths::vec2 force;
+			Direction direction{Right};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(pos), CEREAL_NVP(force), CEREAL_NVP(direction));
+			}
+			//bool left;
+			//bool right;
+		};
+
 		struct MonsterStateUpdate
 		{
 			maths::vec2 pos;
@@ -32,9 +49,9 @@ namespace hiraeth {
 		};
 		struct RegularMapUpdate
 		{
-			std::map<unsigned int, maths::vec2> m_PlayerLocation;
+			std::map<unsigned int, PlayerStateUpdate> m_PlayersLocation;
 			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(m_PlayerLocation));
+				ar(CEREAL_NVP(m_PlayersLocation));
 			}
 		};
 

@@ -13,8 +13,6 @@ namespace hiraeth {
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(StatsUpdate, this, &MainUi::StatsUpdated);
-			//m_EventManager->subscribe(StatsUpdate, std::function<void(int)>(std::bind(&MainUi::StatsUpdatedT, this, _1)));
-			//m_EventManager->subscribe(StatsUpdate, std::function<void(void)>(std::bind(&MainUi::StatsUpdated, this)));
 			fill_stats_group();
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, { -730, -429 }, 0xff70cdd0));
 			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff));

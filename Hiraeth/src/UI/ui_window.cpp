@@ -16,6 +16,8 @@ namespace hiraeth {
 			m_Group.add(m_BackgroundGroup);
 			m_Group.add(m_ForegroundGroup);
 			m_Group.add(m_Buttons);
+			is_to_draw = false;
+			is_to_update = false;
 		}
 
 		void UiWindow::controlKeyClicked()

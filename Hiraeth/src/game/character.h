@@ -71,6 +71,8 @@ namespace hiraeth {
 			void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
 			void carryOutAttack() override;
 			void setStuck(bool stuck_state);
+			maths::vec2 getForce() const { return m_Force; }
+			network::Direction getDirection() const { return static_cast<network::Direction>(m_Direction); }
 			//CharacterStats* getCharacterStats() const;
 		private:
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }

@@ -7,12 +7,13 @@
 //  Copyright (c) 2012 Hashstash Studios. All rights reserved.
 //
 
-#include <functional>
+//#include <functional>
 #include <vector>
 #include <map>
 #include <string>
 #include <algorithm>
 #include <iterator>
+#include <future>
 
 namespace hiraeth {
 
@@ -33,16 +34,17 @@ namespace hiraeth {
 	template <typename... Args>
 	class Event : public BaseEvent {
 
-		// To store all listeners of the event
-		std::vector<std::function<void(Args...)>> handlers;
+		std::map<unsigned int, std::function<void(Args...)>> handlers;
 	public:
 
-		void addListener(std::function<void(Args...)> func) {
-			handlers.push_back(func);
+		unsigned int addListener(std::function<void(Args...)> func) {
+			static unsigned int id = 0;
+			handlers[id] = (func);
+			return ++id;
 		}
 
 		void execute(Args... args) {
-			for (auto & handler : handlers) {
+			for (auto & [key, handler] : handlers) {
 				handler(args...);
 			}
 		}
@@ -64,23 +66,31 @@ namespace hiraeth {
 			return _Instance;
 		}
 
+		template <typename... Args>
 		void createEvent(EventList name) {
+			if (m_Events.find(name) == m_Events.end())
+				m_Events[name] = new Event<Args...>();
 		}
 
+		//template <typename... Args>
+		//void subscribe(EventList name, std::function<void(Args...)> tmp) 
 		template <typename Class, typename... Args>
-		//bool subscribe(EventList name, std::function<void(Ts...)>& func) {
-		void subscribe(EventList name, Class * object, void (Class::*func)(Args...)) {
+		void subscribe(EventList name, Class * object, void (Class::*func)(Args...)) 
+		{
 			if (m_Events.find(name) == m_Events.end())
 				m_Events[name] = new Event<Args...>();
 			Event<Args...> * sEvent = dynamic_cast<Event<Args...> *>(m_Events[name]);
 			if (sEvent == nullptr)
 				throw std::invalid_argument("argument 3 is unfit");
 
+			//sEvent->addListener(tmp);
+			//sEvent->addListener(std::function<void(Args...)>(std::bind(func, object)));
 			sEvent->addListener(std::function<void(Args...)>([object, func](Args... args) {return (object->*func)(args...); }));
 		}
 
 		template <typename... Args>
-		void execute(EventList name, Args... args) {
+		void execute(EventList name, Args... args)
+		{
 			if (m_Events.find(name) != m_Events.end())
 				static_cast<Event<Args...> *>(m_Events[name])->execute(args...);
 		}

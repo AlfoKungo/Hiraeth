@@ -133,9 +133,11 @@ namespace hiraeth {
 
 			if ((recv_len = recvfrom(handle, ucharptr, size, 0, reinterpret_cast<struct sockaddr *>(&client), &client_len)) == SOCKET_ERROR)
 			{
-				printf("recvfrom() failed with error code : %d", WSAGetLastError());
-				return 0;
-				//exit(EXIT_FAILURE);
+				if (WSAGetLastError() != 10035)
+				{
+					printf("recvfrom() failed with error code : %d", WSAGetLastError());
+					return 0;
+				}
 			}
 			sender = Address{ client };
 			return recv_len;

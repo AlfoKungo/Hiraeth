@@ -138,7 +138,7 @@ int main()
 		m_CrLayer.update();
 		itemManager.update();
 		uiManager.update();
-		clientHandler.Update(m_Char.getPosition());
+		clientHandler.Update(network::PlayerStateUpdate{ m_Char.getPosition(), m_Char.getForce() , m_Char.getDirection()});
 		netCharManager.update();
 
 

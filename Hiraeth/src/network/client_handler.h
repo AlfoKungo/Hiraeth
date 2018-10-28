@@ -35,7 +35,8 @@ namespace hiraeth {
 			ATimer m_KATimer{ KA_TIMEOUT }, m_KALossTimer{ KA_LOSS_TIMEOUT };
 
 			game::NetCharManager * m_NetCharManager;
-			std::map<unsigned int, maths::vec2> m_PlayerLocation;
+			//std::map<unsigned int, maths::vec2> m_PlayerLocation;
+			RegularMapUpdate m_PlayersLocationStruct;
 		public:
 			ClientHandler(game::NetCharManager * net_char_manager)
 				: m_RcvBuffer{0}, m_SendBuffer{0},
@@ -102,17 +103,19 @@ namespace hiraeth {
 				printf("Sent keep_alive\n");
 			}
 
-			void Update(maths::vec2 char_pos)
+			//void Update(maths::vec2 char_pos)
+			void Update(PlayerStateUpdate psu)
 			{
 				handleKeepAlive();
-				sendLocationUpdate(char_pos);
+				//sendLocationUpdate(char_pos);
+				sendStateUpdate(psu);
 				receiveData();
 			}
 
-			void sendLocationUpdate(maths::vec2 char_pos)
+			void sendStateUpdate(PlayerStateUpdate char_state)
 			{
-				char message[sizeof(maths::vec2)];
-				memcpy(message, &char_pos, sizeof(maths::vec2));
+				char message[sizeof(char_state)];
+				memcpy(message, &char_state, sizeof(char_state));
 				m_SendSize = construct_client_packet(m_SendBuffer, MSG_CTS_LOCATION_UPDATE, m_Id, message, sizeof(message));
 				if (sendto(m_Handle, m_SendBuffer, m_SendSize, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
 				{
@@ -183,10 +186,10 @@ namespace hiraeth {
 
 			void updatePlayersLocation()
 			{
-				dsrl_dt_packet_data(m_PlayerLocation, m_RcvBuffer + 1);
-				m_PlayerLocation.erase(m_Id);
-				for (const auto& player : m_PlayerLocation)
-					m_NetCharManager->updateCharPos(player.first, player.second);
+				dsrl_dt_packet_data(m_PlayersLocationStruct, m_RcvBuffer + 1);
+				//m_PlayersLocationStruct.m_PlayersLocation.erase(m_Id);
+				for (const auto& player : m_PlayersLocationStruct.m_PlayersLocation)
+					m_NetCharManager->updateCharsState(player.first, player.second);
 				m_KALossTimer.reSet(KA_LOSS_TIMEOUT);
 			}
 

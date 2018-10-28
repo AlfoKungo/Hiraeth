@@ -58,6 +58,11 @@ namespace hiraeth {
 			checkCollision();
 		}
 
+		void MonsterManager::addMonster(unsigned monster_id, unsigned summon_index)
+		{
+			m_Layer.add(new Monster(m_SummonQueue.front().summon, m_MapLayer));
+		}
+
 		void MonsterManager::checkCollision()
 		{
 			if (!m_Char->is_hit)
@@ -77,6 +82,10 @@ namespace hiraeth {
 
 		void MonsterManager::mapChanged()
 		{
+			/*
+			 * add rereading of data from server.
+			 */
+
 			//clear summon queue
 			while (!m_SummonQueue.empty())
 				m_SummonQueue.pop();

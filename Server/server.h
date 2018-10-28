@@ -7,6 +7,12 @@
 #include <map>
 #include "cereal/archives/binary.hpp"
 #include "cereal/types/map.hpp"
+#include "utills/a_timer.h"
+#include "srl/map_data.h"
+#include <queue>
+#include <chrono>
+#include <thread>
+#include <future>
 
 
 const int MaxClients = 64;
@@ -15,6 +21,12 @@ const int MaxClients = 64;
 
 namespace hiraeth {
 	namespace network {
+
+		struct Summoner
+		{
+			SRL::Summon summon;
+			float summonTime;
+		};
 
 		class Server
 		{
@@ -26,7 +38,10 @@ namespace hiraeth {
 			Socket m_Socket;
 			char m_Buffer[256];
 			std::vector<unsigned int> m_ClientsIds;
-			std::map<unsigned int, maths::vec2> m_ClientsPos;
+			std::map<unsigned int, PlayerStateUpdate> m_ClientsState;
+			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
+			std::queue<Summoner> m_SummonQueue;
+			ATimer m_Timer;
 		public:
 			Server()
 				: m_maxClients(MaxClients),
@@ -35,89 +50,14 @@ namespace hiraeth {
 			{
 
 			}
-			void main_function()
-			{
-				if (!m_Socket.Open(PORT))
-				{
-					printf("failed to create socket!\n");
-					return;
-				}
-				while (true)
-				{
-					Address sender;
-					const int bytes_read =
-						m_Socket.Receive(sender, m_Buffer, sizeof(m_Buffer));
-					if (bytes_read > 0)
-						switch (m_Buffer[0])
-						{
-						case MSG_CTS_OPEN_CONNECTION:
-							sendConnectionResponse(sender);
-							break;
-						case MSG_CTS_CLOSE_CONNECTION:
-							closeConnection(m_Buffer);
-							break;
-						case MSG_CTS_LOCATION_UPDATE:
-							receiveLocation(m_Buffer);
-							sendUpdateLocationToAll(sender);
-							break;
-						case MSG_CTS_KA:
-							//sendKeepAliveAnswer(sender);
-							sendUpdateLocationToAll(sender);
-							break;
-						default:
-							break;
-						}
-				}
-			}
 
-			void sendConnectionResponse(Address sender)
-			{
-				const auto free_client_index = FindFreeClientIndex();
-				sendNewPlayerInMap(free_client_index);
-				m_numConnectedClients++;
-				m_ClientAddress[free_client_index] = sender;
-				m_ClientConnected[free_client_index] = true;
-				char data[4];
-				unsigned int id = free_client_index;
-				memcpy(data, &id, sizeof(unsigned int));
-				printf("registered new address : %s , and port is : %d , and id is %d\n",
-					sender.GetAddressString().c_str(), sender.GetPort(), id);
-				m_Socket.Send(sender, data, sizeof(data));
-			}
+			void main_function();
 
-			void sendNewPlayerInMap(unsigned int new_char_index)
-			{
-				for (const auto& client : m_ClientAddress)
-				{
-					if (client.GetAddress() != 0)
-					{
-						char * message = new char[4];
-						memcpy(message, &new_char_index, sizeof(new_char_index));
-						auto size = construct_server_packet(m_Buffer, MSG_STC_ADD_PLAYER, message, 4);
-						m_Socket.Send(client, m_Buffer, size);
-					}
-				}
-			}
-
-			void closeConnection(char* buffer)
-			{
-				unsigned int id;
-				memcpy(&id, buffer + 1, sizeof(unsigned int));
-				m_numConnectedClients--;
-				m_ClientAddress[id] = Address{};
-				m_ClientConnected[id] = false;
-			}
-
-			void receiveLocation(char* buffer)
-			{
-				//unsigned int id;
-				//dsrl_packet_data(id, buffer + 1);
-				//maths::vec2 char_pos;
-				//dsrl_packet_data(char_pos, buffer + 5);
-				const auto id = dsrl_packet_data<unsigned int>(buffer + 1);
-				const auto char_pos = dsrl_packet_data<maths::vec2>(buffer + 5);
-				m_ClientsPos[id] = char_pos;
-			}
+			void sendConnectionResponse(Address sender);
+			void sendNewPlayerInMap(unsigned int new_char_index);
+			void closeConnection(char* buffer);
+			void receiveLocation(char* buffer);
+			void sendUpdateLocationToAll(Address sender);
 
 			//void sendKeepAliveAnswer(Address sender)
 			//{
@@ -127,33 +67,6 @@ namespace hiraeth {
 			//	const char data[] = "ack";
 			//	m_Socket.Send(sender, data, sizeof(data));
 			//}
-
-			void sendUpdateLocationToAll(Address sender)
-			{
-				auto [data, size] = srl_packet_data(m_ClientsPos);
-				RegularMapUpdate map_update_data{ m_ClientsPos };
-				const auto buffer_size = construct_server_packet(m_Buffer,
-					MSG_STC_PLAYERS_LOCATIONS, data, size);
-				m_Socket.Send(sender, m_Buffer, buffer_size);
-				delete[] data;
-				//char * data = new char[sizeof(maths::vec2) * m_ClientsIds.size()];
-				//char data[sizeof(maths::vec2) * m_ClientsIds.size()];
-				//for (const auto& client_id : m_ClientsIds)
-				//{
-				//	
-				//}
-
-				//std::stringstream os{ std::ios::binary | std::ios::out };
-				//{
-				//	cereal::BinaryOutputArchive ar(os);
-				//	ar(m_ClientsPos);
-				//} // the binary archives will flush their output 
-				//std::string data_str = os.str();
-				//auto data = new char[data_str.size() + 1];
-				//data[0] = char(data_str.size());
-				//memcpy(data + 1, data_str.c_str(), data_str.size());
-				//m_Socket.Send(sender, data, data_str.size() + 1);
-			}
 
 			//unsigned int constructMsg(unsigned char msgId, const char * msg, size_t message_len)
 			//{

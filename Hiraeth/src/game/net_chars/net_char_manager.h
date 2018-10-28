@@ -40,16 +40,11 @@ namespace hiraeth {
 				m_CharsMap.insert(std::make_pair(char_id, temp));
 			}
 
-			void updateCharPos(unsigned int char_id, maths::vec2 char_pos)
+			void updateCharsState(unsigned int char_id, network::PlayerStateUpdate char_state)
 			{
-				if (m_CharsMap.find(char_id) != m_CharsMap.end())
-					m_CharsMap[char_id]->setPosition(char_pos);
-				else
-				{
-					addChar(char_id, char_pos);
-					m_CharsMap[char_id]->setPosition(char_pos);
-				}
-					//m_CharsMap[char_id]->move(char_pos);
+				if (m_CharsMap.find(char_id) == m_CharsMap.end())
+					addChar(char_id, char_state.pos);
+				m_CharsMap[char_id]->setState(char_state);
 			}
 		};
 	}
