@@ -15,6 +15,8 @@ namespace hiraeth {
 #define MSG_STC_PLAYERS_LOCATIONS 0x12
 #define MSG_STC_PLAYERS_LIST 0x13
 
+#define MSG_INR_SUMMON_MONSTER 0x21
+
 		enum MessageType
 		{
 			open_connection = 0x01,

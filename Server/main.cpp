@@ -11,7 +11,9 @@ int main()
 
 
 	Server server;
-	server.main_function();
+	//server.main_function();
+	//server.altMain ();
+	server.altMain2();
 
 
 	return 0;

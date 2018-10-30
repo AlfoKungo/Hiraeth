@@ -36,12 +36,22 @@ namespace hiraeth {
 			bool m_ClientConnected[MaxClients];
 			Address m_ClientAddress[MaxClients];
 			Socket m_Socket;
-			char m_Buffer[256];
 			std::vector<unsigned int> m_ClientsIds;
 			std::map<unsigned int, PlayerStateUpdate> m_ClientsState;
-			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 			std::queue<Summoner> m_SummonQueue;
+
+			char m_Buffer[256];
 			ATimer m_Timer;
+
+			struct QueueData
+			{
+				char * buffer{nullptr};
+				int size{0};
+				Address sender{};
+			};
+			std::queue<QueueData> m_DataQueue;
+			std::mutex m_Mutex;
+			std::condition_variable m_Cv;
 		public:
 			Server()
 				: m_maxClients(MaxClients),
@@ -52,6 +62,10 @@ namespace hiraeth {
 			}
 
 			void main_function();
+			void altMain();
+			void altMain2();
+			void dataReader();
+			void addMessageIn(int time, char * buffer, int size);
 
 			void sendConnectionResponse(Address sender);
 			void sendNewPlayerInMap(unsigned int new_char_index);

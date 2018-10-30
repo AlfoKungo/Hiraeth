@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="address.h" />
     <ClInclude Include="handler.h" />
+    <ClInclude Include="mob_manager.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="utills\a_timer.h" />

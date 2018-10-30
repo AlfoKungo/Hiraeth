@@ -62,7 +62,8 @@ namespace hiraeth {
 
 				const char message[] = "hello";
 				m_SendSize = construct_client_packet(m_SendBuffer, MSG_CTS_OPEN_CONNECTION, m_Id, message, sizeof(message));
-				if (sendto(m_Handle, m_SendBuffer, strlen(m_SendBuffer), 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
+				//if (sendto(m_Handle, m_SendBuffer, strlen(m_SendBuffer), 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
+				if (sendto(m_Handle, m_SendBuffer, 7, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
 				{
 					printf("sendto() failed with error code : %d", WSAGetLastError());
 					exit(EXIT_FAILURE);
@@ -148,33 +149,38 @@ namespace hiraeth {
 
 			void receiveData()
 			{
-				int recv_len;
-				if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), &slen)) == SOCKET_ERROR)
+				while (true)
 				{
-					if (WSAGetLastError() != 10035)
-						printf("recvfrom() failed with error code : %d\n", WSAGetLastError());
-				}
-				if (recv_len > 0)
-				{
-					switch (m_RcvBuffer[0])
+					int recv_len;
+					if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), &slen)) == SOCKET_ERROR)
 					{
-					case MSG_STC_ADD_PLAYER:
-						addNewPlayerToMap(m_RcvBuffer);
-						break;
-					case MSG_STC_PLAYERS_LOCATIONS:
-						updatePlayersLocation();
-						break;
-					case MSG_STC_PLAYERS_LIST:
-						loadCurrentMapPlayers(m_RcvBuffer);
-						break;
-					default:
-						break;
+						if (WSAGetLastError() != 10035)
+							printf("recvfrom() failed with error code : %d\n", WSAGetLastError());
 					}
-					//if (strcmp(m_RcvBuffer, "ack") == 0)
-					//{
-					//	printf("Received keep_alive \n");
-					//	m_KALossTimer.reSet(KA_LOSS_TIMEOUT);
-					//}
+					if (recv_len > 0)
+					{
+						switch (m_RcvBuffer[0])
+						{
+						case MSG_STC_ADD_PLAYER:
+							addNewPlayerToMap(m_RcvBuffer);
+							break;
+						case MSG_STC_PLAYERS_LOCATIONS:
+							updatePlayersLocation();
+							break;
+						case MSG_STC_PLAYERS_LIST:
+							loadCurrentMapPlayers(m_RcvBuffer);
+							break;
+						default:
+							break;
+						}
+						//if (strcmp(m_RcvBuffer, "ack") == 0)
+						//{
+						//	printf("Received keep_alive \n");
+						//	m_KALossTimer.reSet(KA_LOSS_TIMEOUT);
+						//}
+					}
+					else
+						return;
 				}
 			}
 
@@ -201,15 +207,6 @@ namespace hiraeth {
 				//	m_NetCharManager->updateCharPos(player.first, player.second);
 				//m_KALossTimer.reSet(KA_LOSS_TIMEOUT);
 			}
-
-			//unsigned int constructMsg(unsigned char msgId, const char * msg, size_t message_len)
-			//{
-			//	memset(m_SendBuffer,'\0', BUFLEN);
-			//	memcpy(m_SendBuffer, &msgId, sizeof(char));
-			//	memcpy(m_SendBuffer + 1, &m_Id, sizeof(unsigned int));
-			//	memcpy(m_SendBuffer + 5, msg, message_len);
-			//	return 5 + message_len;
-			//}
 
 		};
 	}

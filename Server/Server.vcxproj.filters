@@ -56,5 +56,8 @@
     <ClInclude Include="utills\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mob_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

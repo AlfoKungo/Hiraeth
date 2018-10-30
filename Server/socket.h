@@ -15,9 +15,9 @@ namespace hiraeth {
 		class Socket
 		{
 		private:
-			unsigned int handle;
 
 		public:
+			unsigned int handle;
 			Socket();
 
 			~Socket();
