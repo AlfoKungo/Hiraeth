@@ -61,11 +61,16 @@ namespace hiraeth {
 
 			}
 
-			void main_function();
-			void altMain();
-			void altMain2();
+			void main_60fps_loop();
+			void main_block_receive_and_async_send();
+			void main_block_threaded_queue();
+			void dataReaderCv();
+			void main_60fps_threaded_queue();
 			void dataReader();
-			void addMessageIn(int time, char * buffer, int size);
+
+			void addMessageAfterT(int time, char * buffer, int size);
+			void createMessageThread(int time, char * buffer, int size);
+
 
 			void sendConnectionResponse(Address sender);
 			void sendNewPlayerInMap(unsigned int new_char_index);

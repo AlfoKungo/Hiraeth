@@ -193,7 +193,6 @@ namespace hiraeth {
 			void updatePlayersLocation()
 			{
 				dsrl_dt_packet_data(m_PlayersLocationStruct, m_RcvBuffer + 1);
-				//m_PlayersLocationStruct.m_PlayersLocation.erase(m_Id);
 				for (const auto& player : m_PlayersLocationStruct.m_PlayersLocation)
 					m_NetCharManager->updateCharsState(player.first, player.second);
 				m_KALossTimer.reSet(KA_LOSS_TIMEOUT);

@@ -7,7 +7,11 @@
 
 namespace hiraeth {
 	namespace network {
-		void Server::main_function()
+		/*
+		 * This implementation uses a 60 fps receive and process loop with run-time (non_sleep) 
+		 * prints.
+		 */
+		void Server::main_60fps_loop()
 		{
 			if (!m_Socket.Open(PORT))
 			{
@@ -22,9 +26,7 @@ namespace hiraeth {
 			std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
 			while (true)
 			{
-				std::future<void> timer =
-					std::async(std::launch::async,
-						[] {std::this_thread::sleep_for(std::chrono::milliseconds(16)); });
+				std::thread timer{ [] {std::this_thread::sleep_for(std::chrono::milliseconds(16)); } };
 				while (true)
 				{
 					Address sender;
@@ -63,12 +65,16 @@ namespace hiraeth {
 					fps_count = 0;
 				}
 				dt += std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start).count();
-				timer.wait();
+				timer.join();
 				start = std::chrono::high_resolution_clock::now();
 			}
 		}
 
-		void Server::altMain()
+		/*
+		 * This implementation uses one loop to receive and immidietly process data received,
+		 * and enables a send_after functionality sending messages using async sending.
+		 */
+		void Server::main_block_receive_and_async_send()
 		{
 			if (!m_Socket.Open(PORT))
 			{
@@ -78,22 +84,15 @@ namespace hiraeth {
 
 			while (true)
 			{
-				//std::future<void> timed_message =
-				//	std::async(std::launch::async,
-				//		[this] {std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-				//			char data[1];
-				//			data[0] = 0x22;
-				//			Address address{127,0,0,1, 8888};
-				//			m_Socket.Send(address, data, 1);
-				//			//int fd = _open_osfhandle((intptr_t)m_Socket.handle, 0);
-				//			//FILE *f_recv = _fdopen(fd, "a+");
-				//			//fwrite(data, 1, 2, f_recv);
-				//			//_write(m_Socket.handle, data, 1);
-				//			//send(m_Socket.handle, data, 1, 0);
-				//			//DWORD bytes_written;
-				//			//WriteFile(&m_Socket.handle, data, 1, &bytes_written, 0);
-				//			//delete[] data;
-				//		});
+				std::future<void> timed_message =
+					std::async(std::launch::async,
+						[this] {std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+							char data[1];
+							data[0] = MSG_INR_SUMMON_MONSTER;
+							Address address{127,0,0,1, 8888};
+							m_Socket.Send(address, data, 1);
+							//delete[] data;
+						});
 				while (true)
 				{
 					Address sender;
@@ -116,7 +115,7 @@ namespace hiraeth {
 							//sendKeepAliveAnswer(sender);
 							sendUpdateLocationToAll(sender);
 							break;
-						case 0x22:
+						case MSG_INR_SUMMON_MONSTER:
 							//sendKeepAliveAnswer(sender);
 							sendUpdateLocationToAll(sender);
 							break;
@@ -128,14 +127,19 @@ namespace hiraeth {
 				}
 			}
 		}
-		void Server::altMain2()
+
+		/*
+		 * This function uses 1 thread for receiving data, 1 thread for processing data, and 
+		 * more threads for every send_after type messages
+		 */
+		void Server::main_block_threaded_queue()
 		{
 			if (!m_Socket.Open(PORT))
 			{
 				printf("failed to create socket!\n");
 				return;
 			}
-			std::thread readThread{ [this] {this->dataReader(); } };
+			std::thread readThread{ [this] {this->dataReaderCv(); } };
 			//std::thread sendThread{ [this]
 			//	{
 			//	char * buffer = new char[256];
@@ -145,9 +149,75 @@ namespace hiraeth {
 			//	this->addMessageIn(10000, buffer, buffer_size);
 			//} };
 
-			//std::unique_lock<std::mutex> lock{ m_Mutex };
-			//m_Cv.wait(lock, [this] {return m_DataQueue.empty(); });
-			//m_Cv.wait(lock);
+			while (true)
+			{
+				std::unique_lock<std::mutex> lock{ m_Mutex };
+				if (m_DataQueue.empty())
+					m_Cv.wait(lock, [this] {return !m_DataQueue.empty(); });
+				else
+					lock.lock();
+
+				auto[data, bytes_read, sender] = m_DataQueue.front();
+				m_DataQueue.pop();
+				lock.unlock();
+
+				memcpy(m_Buffer, data, bytes_read);
+				delete[] data;
+				switch (m_Buffer[0])
+				{
+				case MSG_CTS_OPEN_CONNECTION:
+					sendConnectionResponse(sender);
+					break;
+				case MSG_CTS_CLOSE_CONNECTION:
+					closeConnection(m_Buffer);
+					break;
+				case MSG_CTS_LOCATION_UPDATE:
+					receiveLocation(m_Buffer);
+					sendUpdateLocationToAll(sender);
+					break;
+				case MSG_CTS_KA:
+					sendUpdateLocationToAll(sender);
+					break;
+				case MSG_INR_SUMMON_MONSTER:
+					sendUpdateLocationToAll(sender);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		void Server::dataReaderCv()
+		{
+			while (true)
+			{
+				Address sender;
+				char * buffer = new char[256];
+				const int bytes_read =
+					m_Socket.Receive(sender, buffer, 256);
+				{
+					std::lock_guard<std::mutex> lock{ m_Mutex };
+					m_DataQueue.push(QueueData{ buffer, bytes_read, sender });
+				}
+				m_Cv.notify_one();
+			}
+		}
+
+
+		/*
+		 * This function uses 1 thread for receiving data, 1 thread for processing data, and 
+		 * more threads for every send_after type messages
+		 */
+		void Server::main_60fps_threaded_queue()
+		{
+			if (!m_Socket.Open(PORT))
+			{
+				printf("failed to create socket!\n");
+				return;
+			}
+
+			std::thread readThread{ [this] {this->dataReader(); } };
+			createMessageThread(MSG_INR_SUMMON_MONSTER, 5000);
+
 			while (true)
 			{
 				std::future<void> timer =
@@ -158,7 +228,6 @@ namespace hiraeth {
 					QueueData queue_data;
 					{
 						std::lock_guard<std::mutex> lock{ m_Mutex };
-						//m_Mutex.lock();
 						queue_data = m_DataQueue.front();
 						m_DataQueue.pop();
 					}
@@ -169,7 +238,6 @@ namespace hiraeth {
 					if (bytes_read > 0)
 					{
 						switch (m_Buffer[0])
-							//switch (data[0])
 						{
 						case MSG_CTS_OPEN_CONNECTION:
 							sendConnectionResponse(sender);
@@ -182,11 +250,9 @@ namespace hiraeth {
 							sendUpdateLocationToAll(sender);
 							break;
 						case MSG_CTS_KA:
-							//sendKeepAliveAnswer(sender);
 							sendUpdateLocationToAll(sender);
 							break;
 						case MSG_INR_SUMMON_MONSTER:
-							//sendKeepAliveAnswer(sender);
 							sendUpdateLocationToAll(sender);
 							break;
 						default:
@@ -196,13 +262,10 @@ namespace hiraeth {
 					else
 						break;
 
-					//m_Mutex.unlock();
 					timer.wait();
-
 				}
 			}
 		}
-
 		void Server::dataReader()
 		{
 			while (true)
@@ -211,26 +274,28 @@ namespace hiraeth {
 				char * buffer = new char[256];
 				const int bytes_read =
 					m_Socket.Receive(sender, buffer, 256);
-				//m_Mutex.lock();
 				{
 					std::lock_guard<std::mutex> lock{ m_Mutex };
 					m_DataQueue.push(QueueData{ buffer, bytes_read, sender });
 				}
-				//m_Mutex.unlock();
-				//m_Cv.notify_one();
 			}
 		}
 
-		void Server::addMessageIn(int time, char * buffer, int size)
+		void Server::addMessageAfterT(int time, char * buffer, int size)
 		{
 
 			{std::this_thread::sleep_for(std::chrono::milliseconds(time)); };
-			//m_Mutex.lock();
 			{
 				std::lock_guard<std::mutex> lock{ m_Mutex };
 				m_DataQueue.push(QueueData{ buffer, size, {} });
 			}
-			//m_Mutex.unlock();
+		}
+		void Server::createMessageThread(char MessageType, int milliseconds)
+		{
+			char * buffer = new char[256];
+			buffer[0] = MessageType;
+			std::thread message_thread{ addMessageAfterT, milliseconds, buffer, 1 };
+			message_thread.detach();
 		}
 
 		void Server::sendConnectionResponse(Address sender)
