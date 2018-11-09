@@ -72,8 +72,14 @@ namespace hiraeth {
 				m_Bounds.position += step;
 				m_TransformationMatrix *= maths::mat4::Translate(step);
 			}
+			void setPosition(const maths::vec2& position) override
+			{
+				move(position - m_Bounds.position);
+			}
 		protected:
 			virtual void analyze_controls();
+			virtual void setForceByMove(float x_force) { m_Force.x += calculate_force(x_force); }
+
 			void analyze_stance();
 			void change_stance(StanceState next_state);
 			static void add_gravity(maths::vec2& force) { force.y -= FORCE_OF_GRAVITY; }
@@ -93,12 +99,13 @@ namespace hiraeth {
 			{
 				return ((m_Speed) / (1 - FRICTION.x) * FRICTION.x) / (m_Speed) * (1 - FRICTION_AIR.x);
 			}
-			void multiply_by_friction(maths::vec2& force) const
+			virtual void multiply_by_friction(maths::vec2& force) const
 			{
 				if (m_Foothold != NO_FOOTHOLD)
 					force *= FRICTION;
 				else
 					force *= FRICTION_AIR;
+				//force *= 1;
 			}
 		};
 	}

@@ -51,13 +51,17 @@ namespace hiraeth
 				if (m_Controls.right)
 				{
 					m_Direction = Right;
-					m_Force.x += calculate_force(m_Speed);
+					setForceByMove(m_Speed);
+					//m_Force.x += calculate_force(m_Speed);
+					//m_Force.x = calculate_force(m_Speed);
 				}
 				else if (m_Controls.left)
 				{
 					m_Direction = Left;
-					m_Force.x -= calculate_force(m_Speed);
+					setForceByMove(-m_Speed);
 				}
+				else
+					setForceByMove(0);
 				if (m_Controls.jump && m_Foothold != NO_FOOTHOLD)
 					m_Force.y = m_Jump;
 			}

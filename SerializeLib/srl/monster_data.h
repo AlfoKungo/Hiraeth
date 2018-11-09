@@ -8,7 +8,8 @@
 #include <map>
 #include "maths/rectangle.h"
 #include "sprite_data.h"
-#include "srl/animation_data.h"
+#include "animation_data.h"
+#include <cereal/cereal.hpp>
 
 namespace SRL {
 	

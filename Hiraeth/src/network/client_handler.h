@@ -5,13 +5,15 @@
 #include <tchar.h>
 #include "basic/a_timer.h"
 #include "net/protocol.h"
+#include "net/client_funcs.h"
 #include "maths/vec2.h"
 #include <map>
 #include <cereal/archives/binary.hpp>
 #include <iostream>
 #include <fstream>
 #include "game/net_chars/net_char_manager.h"
-//#include "net/protocol.h"
+#include "game/monsters/monster_manager.h"
+#include "net/srl_funcs.h"
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
  
@@ -31,16 +33,20 @@ namespace hiraeth {
 			unsigned int m_Id{0};
 			struct sockaddr_in m_SiOther {};
 			int slen = sizeof(m_SiOther), m_SendSize;
+			//BufferType m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			char m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			ATimer m_KATimer{ KA_TIMEOUT }, m_KALossTimer{ KA_LOSS_TIMEOUT };
 
 			game::NetCharManager * m_NetCharManager;
+			game::MonsterManager * m_MonsterManager;
 			//std::map<unsigned int, maths::vec2> m_PlayerLocation;
 			RegularMapUpdate m_PlayersLocationStruct;
+			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 		public:
-			ClientHandler(game::NetCharManager * net_char_manager)
-				: m_RcvBuffer{0}, m_SendBuffer{0},
-			m_NetCharManager(net_char_manager)
+			ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager)
+				: m_RcvBuffer{ 0 }, m_SendBuffer{ 0 },
+				m_NetCharManager(net_char_manager),
+				m_MonsterManager{ monster_manager }
 			{
 				WSADATA wsa;
 				if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -155,7 +161,10 @@ namespace hiraeth {
 					if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), &slen)) == SOCKET_ERROR)
 					{
 						if (WSAGetLastError() != 10035)
+						{
+							std::exit(EXIT_SUCCESS);
 							printf("recvfrom() failed with error code : %d\n", WSAGetLastError());
+						}
 					}
 					if (recv_len > 0)
 					{
@@ -169,6 +178,12 @@ namespace hiraeth {
 							break;
 						case MSG_STC_PLAYERS_LIST:
 							loadCurrentMapPlayers(m_RcvBuffer);
+							break;
+						case MSG_STC_MOB_DATA:
+							loadMobsData();
+							break;
+						case MSG_STC_MOB_UPDATE:
+							updateMobData();
 							break;
 						default:
 							break;
@@ -184,7 +199,7 @@ namespace hiraeth {
 				}
 			}
 
-			void addNewPlayerToMap(char * buffer)
+			void addNewPlayerToMap(BufferType * buffer)
 			{
 				const auto new_char_id = dsrl_packet_data<unsigned int>(buffer + 1);
 				m_NetCharManager->addChar(new_char_id, maths::vec2{ 0,0 });
@@ -192,10 +207,24 @@ namespace hiraeth {
 
 			void updatePlayersLocation()
 			{
-				dsrl_dt_packet_data(m_PlayersLocationStruct, m_RcvBuffer + 1);
-				for (const auto& player : m_PlayersLocationStruct.m_PlayersLocation)
-					m_NetCharManager->updateCharsState(player.first, player.second);
+				dsrl_packet_data_dynamic_type(m_PlayersLocationStruct, m_RcvBuffer + 1);
+				for (const auto& [index, player_state] : m_PlayersLocationStruct.m_PlayersLocation)
+					m_NetCharManager->updateCharsState(index, player_state);
 				m_KALossTimer.reSet(KA_LOSS_TIMEOUT);
+			}
+
+			void loadMobsData()
+			{
+				dsrl_packet_data_dynamic_type(m_Monsters, m_RcvBuffer + 1);
+				for (const auto& [index, monster] : m_Monsters)
+					m_MonsterManager->addMonster(index, monster);
+			}
+
+			void updateMobData()
+			{
+				auto [monster_index, monster_state] = 
+					dsrl_packet_data<MonsterStateDataUpdate>(m_RcvBuffer + 1);
+				m_MonsterManager->updateMonster(monster_index, monster_state);
 			}
 
 			void loadCurrentMapPlayers(char * buffer)

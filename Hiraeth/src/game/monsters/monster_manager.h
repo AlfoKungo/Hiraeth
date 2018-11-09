@@ -25,7 +25,7 @@ namespace hiraeth
 		class MonsterManager : public Updatable
 		{
 		private:
-			std::queue<Summoner> m_SummonQueue;
+			//std::queue<Summoner> m_SummonQueue;
 			map::MapLayer* m_MapLayer;
 			graphics::Shader m_Shader;
 			std::map<unsigned int, Monster*> m_Monsters;
@@ -36,7 +36,9 @@ namespace hiraeth
 			MonsterManager(map::MapLayer* map_layer, Character* character, item::ItemManager* item_manager);
 			void draw() const;
 			void update() override;
-			void addMonster(unsigned int monster_id, unsigned int summon_index);
+			//void addMonster(unsigned int monster_id, unsigned int summon_index);
+			void addMonster(unsigned int monster_id, network::MonsterStateUpdate monster_state);
+			void updateMonster(unsigned int monster_id, network::MonsterStateUpdate monster_state);
 			void checkCollision();
 			void mapChanged();
 		};

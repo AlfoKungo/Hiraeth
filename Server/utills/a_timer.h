@@ -34,4 +34,30 @@ namespace hiraeth {
 		}
 
 	};
+	class ACounter
+	{
+	private:
+		float m_Counter;
+	public:
+		ACounter()
+			: m_Counter(StaticTimer::timer.elapsed())
+		{
+		}
+		
+		bool hasExpired(float time_passed) const
+		{
+			return (StaticTimer::timer.elapsed() - m_Counter > time_passed);
+		}
+
+		void reSet()
+		{
+			m_Counter = StaticTimer::timer.elapsed();
+		}
+
+		float timePassed() const
+		{
+			return StaticTimer::timer.elapsed() - m_Counter;
+		}
+
+	};
 }

@@ -20,10 +20,6 @@ namespace hiraeth
 		class Monster : public Creature
 		{
 		private:
-			std::random_device rd;
-			std::mt19937 gen;
-			std::uniform_int_distribution<> dis;
-			ATimer m_AiTimer;
 			graphics::Sprite m_Hp;
 			float m_XStart, m_XEnd;
 			maths::vec2 m_HitBox;
@@ -34,13 +30,19 @@ namespace hiraeth
 			bool m_HasFinished{ false };
 
 		public:
-			SRL::Summon m_Summon;
-			Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer);
+			//SRL::Summon m_Summon;
+			Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer);
 
-			Monster(SRL::Summon summon, map::MapLayer* map_layer) :
-				Monster(MonsterDataManager::Get(summon.monster_type), summon, map_layer)
+			Monster(unsigned int monster_type, maths::vec2 position, map::MapLayer* map_layer) :
+				Monster(MonsterDataManager::Get(monster_type), position, map_layer)
 			{
 			}
+
+			//Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer);
+			//Monster(SRL::Summon summon, map::MapLayer* map_layer) :
+			//	Monster(MonsterDataManager::Get(summon.monster_type), summon, map_layer)
+			//{
+			//}
 
 			virtual ~Monster() { }
 
@@ -56,12 +58,32 @@ namespace hiraeth
 				return m_HasFinished;
 			}
 
+			void setControls(unsigned int control_id, bool control_state)
+			{
+				if (control_id == 0)
+					m_Controls.left = control_state;
+				else
+				{
+					m_Controls.right = control_state;
+					printf("the location is %f : %f\n", m_Bounds.x, m_Bounds.y);
+				}
+			}
 			void getHit(Direction dir, Damage damage) override;
-			void getHit(std::unique_ptr<skills::Projectile> projectile_animation);
-			SRL::Summon getSummon() const { return m_Summon; }
+			void setProjectileAnimation(std::unique_ptr<skills::Projectile> projectile_animation);
+			void setForceByMove(float x_force) override { m_Force.x = x_force; } 
 			//void change_stance(StanceState new_state) override;
 			//maths::Rectangle getHitBox() { return }
 
+			//SRL::Summon getSummon() const { return m_Summon; }
+		protected:
+			void multiply_by_friction(maths::vec2& force) const override
+			{
+				//if (m_Foothold != NO_FOOTHOLD)
+				//	force *= FRICTION;
+				//else
+				//	force *= FRICTION_AIR;
+				force *= 1;
+			}
 		private:
 			void cause_damage(Damage damage) override;
 			void triggerDeathAnimation();

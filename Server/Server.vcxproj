@@ -85,6 +85,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)Dependencies\Boost\include;$(SolutionDir)NetworkLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>

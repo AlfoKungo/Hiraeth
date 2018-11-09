@@ -18,5 +18,14 @@
     <ClInclude Include="net\protocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="net\client_funcs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="net\server_funcs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="net\srl_funcs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

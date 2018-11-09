@@ -3,7 +3,6 @@
 #include "maths/vec2.h"
 #include "maths/rectangle.h"
 #include <map>
-#include <cereal/archives/json.hpp>
 #include <vector>
 
 namespace SRL

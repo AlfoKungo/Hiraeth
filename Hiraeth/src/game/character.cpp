@@ -254,7 +254,7 @@ namespace hiraeth {
 			{
 				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
 					[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
-				hit_monster->getHit(
+				hit_monster->setProjectileAnimation(
 					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
 						hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
 			}

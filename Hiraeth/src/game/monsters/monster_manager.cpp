@@ -26,41 +26,61 @@ namespace hiraeth {
 		{
 			m_Layer.update();
 
-			//destroying dead monsters
-			for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
-			{
-				if ((*monster)->has_died)
-				{
-					m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
-					SRL::Summon summon = (*monster)->getSummon();
-					delete (*monster);
-					monster = m_Layer.m_Renderables.erase(monster);
-					m_SummonQueue.push(Summoner{summon, StaticTimer::timer.elapsed() + 1.0f});
-				}
-				else
-				{
-					++monster;
-				}
-			}
+			////destroying dead monsters
+			//for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
+			//{
+			//	if ((*monster)->has_died)
+			//	{
+			//		m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
+			//		SRL::Summon summon = (*monster)->getSummon();
+			//		delete (*monster);
+			//		monster = m_Layer.m_Renderables.erase(monster);
+			//		m_SummonQueue.push(Summoner{summon, StaticTimer::timer.elapsed() + 1.0f});
+			//	}
+			//	else
+			//	{
+			//		++monster;
+			//	}
+			//}
 
-			//resummoning dead monsters
-			while (!m_SummonQueue.empty())
-			{
-				if (StaticTimer::timer.elapsed() - m_SummonQueue.front().summonTime > 0.0f)
-				{
-					m_Layer.add(new Monster(m_SummonQueue.front().summon, m_MapLayer));
-					m_SummonQueue.pop();
-				}
-				else
-					break;
-			}
+			////resummoning dead monsters
+			//while (!m_SummonQueue.empty())
+			//{
+			//	if (StaticTimer::timer.elapsed() - m_SummonQueue.front().summonTime > 0.0f)
+			//	{
+			//		m_Layer.add(new Monster(m_SummonQueue.front().summon, m_MapLayer));
+			//		m_SummonQueue.pop();
+			//	}
+			//	else
+			//		break;
+			//}
 
 			checkCollision();
 		}
 
-		void MonsterManager::addMonster(unsigned monster_id, unsigned summon_index)
+		//void MonsterManager::addMonster(unsigned monster_id, unsigned summon_index)
+		//{
+		//	m_Layer.add(new Monster(m_SummonQueue.front().summon, m_MapLayer));
+		//}
+
+		void MonsterManager::addMonster(unsigned monster_id, network::MonsterStateUpdate monster_state)
 		{
-			m_Layer.add(new Monster(m_SummonQueue.front().summon, m_MapLayer));
+			if (m_Monsters.find(monster_id) == m_Monsters.end())
+			{
+				const auto new_monster = new Monster{ monster_state.monster_type, monster_state.pos, m_MapLayer };
+				m_Monsters[monster_id] = new_monster;
+				m_Layer.add(new_monster);
+			}
+			updateMonster(monster_id, monster_state);
+		}
+
+		void MonsterManager::updateMonster(unsigned monster_id, network::MonsterStateUpdate monster_state)
+		{
+			//printf("received some data (%f, %f), (%d, %d)", monster_state.pos.x, monster_state.pos.y, monster_state.left, monster_state.right);
+			printf("received some data (%f, %f), (%d)\n", monster_state.pos.x, monster_state.pos.y, monster_state.dir);
+			m_Monsters[monster_id]->setPosition(monster_state.pos);
+			m_Monsters[monster_id]->setControls(0, monster_state.dir == network::Left);
+			m_Monsters[monster_id]->setControls(1, monster_state.dir == network::Right);
 		}
 
 		void MonsterManager::checkCollision()
@@ -87,13 +107,13 @@ namespace hiraeth {
 			 */
 
 			//clear summon queue
-			while (!m_SummonQueue.empty())
-				m_SummonQueue.pop();
-			m_Layer.clear();
-			MonsterDataManager::ReloadData(m_MapLayer->getSummons());
-			//reload new summons
-			for (auto summon : (m_MapLayer->getSummons()))
-				m_SummonQueue.push(Summoner{ summon, StaticTimer::timer.elapsed() + 2.0f});
+			//while (!m_SummonQueue.empty())
+			//	m_SummonQueue.pop();
+			//m_Layer.clear();
+			//MonsterDataManager::ReloadData(m_MapLayer->getSummons());
+			////reload new summons
+			//for (auto summon : (m_MapLayer->getSummons()))
+			//	m_SummonQueue.push(Summoner{ summon, StaticTimer::timer.elapsed() + 2.0f});
 		}
 	}
 }

@@ -117,7 +117,7 @@ int main()
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char);
 	//npc::DialogManager dialogManager{};
 
-	network::ClientHandler clientHandler{&netCharManager};
+	network::ClientHandler clientHandler{&netCharManager, &monsterManager};
 
 
 	unsigned int frames = 0;

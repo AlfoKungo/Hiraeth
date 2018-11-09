@@ -6,6 +6,8 @@ namespace hiraeth {
 
 			const SRL::MonsterData& MonsterDataManager::Get(unsigned int index) 
 			{
+				if (m_MonsterData.find(index) == m_MonsterData.end())
+					m_MonsterData[index] = deserialize_monster_data(index);
 				return m_MonsterData[index]; 
 			}
 

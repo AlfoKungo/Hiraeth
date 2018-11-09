@@ -117,7 +117,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="net\client_funcs.h" />
     <ClInclude Include="net\protocol.h" />
+    <ClInclude Include="net\server_funcs.h" />
+    <ClInclude Include="net\srl_funcs.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathLib\MathLib.vcxproj">

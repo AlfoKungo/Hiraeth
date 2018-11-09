@@ -3,6 +3,7 @@
 #include "socket.h"
 #include <bitset>
 #include "net/protocol.h"
+#include "net/server_funcs.h"
 #include "maths/vec2.h"
 #include <map>
 #include "cereal/archives/binary.hpp"
@@ -13,6 +14,7 @@
 #include <chrono>
 #include <thread>
 #include <future>
+#include "mob_manager.h"
 
 
 const int MaxClients = 64;
@@ -39,8 +41,9 @@ namespace hiraeth {
 			std::vector<unsigned int> m_ClientsIds;
 			std::map<unsigned int, PlayerStateUpdate> m_ClientsState;
 			std::queue<Summoner> m_SummonQueue;
+			MobManager m_MobManager;
 
-			char m_Buffer[256];
+			BufferType m_Buffer[256];
 			ATimer m_Timer;
 
 			struct QueueData
@@ -56,27 +59,37 @@ namespace hiraeth {
 			Server()
 				: m_maxClients(MaxClients),
 				m_numConnectedClients(0),
-				m_ClientConnected{ false }
+				m_ClientConnected{ false },
+				m_MobManager{ 0 }
 			{
+				if (!m_Socket.Open(PORT))
+				{
+					printf("failed to create socket!\n");
+					return;
+				}
 
 			}
 
 			void main_60fps_loop();
 			void main_block_receive_and_async_send();
 			void main_block_threaded_queue();
-			void dataReaderCv();
+			//void dataReaderCv();
 			void main_60fps_threaded_queue();
 			void dataReader();
 
 			void addMessageAfterT(int time, char * buffer, int size);
-			void createMessageThread(int time, char * buffer, int size);
+			void createMessageThread(char MessageType, int milliseconds);
 
+			void switchData(Address sender);
 
 			void sendConnectionResponse(Address sender);
 			void sendNewPlayerInMap(unsigned int new_char_index);
-			void closeConnection(char* buffer);
-			void receiveLocation(char* buffer);
+			void closeConnection(BufferType* buffer);
+			void receiveLocation(BufferType* buffer);
 			void sendUpdateLocationToAll(Address sender);
+			void sendMobsData(Address sender);
+			void sendMobsUpdate(unsigned int mob_index, MobMoveCommand mmc);
+			void yazonot();
 
 			//void sendKeepAliveAnswer(Address sender)
 			//{
@@ -85,16 +98,6 @@ namespace hiraeth {
 			//		sender.GetAddressString().c_str(), sender.GetPort());
 			//	const char data[] = "ack";
 			//	m_Socket.Send(sender, data, sizeof(data));
-			//}
-
-			//unsigned int constructMsg(unsigned char msgId, const char * msg, size_t message_len)
-			//{
-			//	memset(m_SendBuffer,'\0', BUFLEN);
-			//	memcpy(m_SendBuffer, &msgId, sizeof(char));
-			//	memcpy(m_SendBuffer + 1, &m_Id, sizeof(unsigned int));
-			//	memcpy(m_SendBuffer + 5, msg, message_len);
-			//	//m_SendSize = 5 + message_len;
-			//	return 5 + message_len;
 			//}
 
 			int FindFreeClientIndex() const

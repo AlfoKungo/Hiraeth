@@ -3,20 +3,19 @@
 namespace hiraeth {
 	namespace game {
 
-		Monster::Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer)
-			: Creature(maths::Rectangle(summon.position, maths::vec2(50, 50)), mapLayer,
+		//Monster::Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer)
+			Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer)
+			: Creature(maths::Rectangle(position, maths::vec2(50, 50)), mapLayer,
 				//new MonsterStats(monster_data.StatsStruct), false),
 				//&m_MonsterStats, false),
-				monster_data.StatsStruct.Speed, monster_data.StatsStruct.Jump,
+				monster_data.StatsStruct.Speed / 4, monster_data.StatsStruct.Jump,
 				&m_MonsterStats, false),
-			gen(rd()),
-			dis(0, 8),
 			m_Hp(maths::vec2(10, 40), 30, 6, 0xff0000ff),
-			m_MonsterStats{monster_data.StatsStruct},
 			m_XStart(NULL),
 			m_XEnd(NULL),
-			m_StatsStruct{&m_MonsterStats.m_Stats},
-			m_Summon(summon)
+			m_MonsterStats{monster_data.StatsStruct},
+			m_StatsStruct{&m_MonsterStats.m_Stats}
+			//m_Summon(summon)
 		{
 
 			SRL::MonsterTexturesData mtd = SRL::deserial<SRL::MonsterTexturesData>("serialized/monster.data",
@@ -43,47 +42,27 @@ namespace hiraeth {
 		{
 			if (m_Foothold != NO_FOOTHOLD)
 			{
-				const physics::FootHold& foothold = m_MapLayer->getFootHolds().at(m_Foothold);
+				//const physics::FootHold& foothold = m_MapLayer->getFootHolds().at(m_Foothold);
+				physics::FootHold foothold{ m_MapLayer->getFootHolds().at(m_Foothold) };
+				foothold.p1 += 22.5f;
+				foothold.p2 -= 22.5f;
 				if (m_XStart == NULL && m_XEnd == NULL)
 				{
 					m_XStart = foothold.getXStart();
 					m_XEnd = foothold.getXEnd();
 				}
-				const float&& length = foothold.p2.x - foothold.p1.x;
-				if (m_Bounds.x < (foothold.p1.x + length * 0.2))
+				const float&& edge_length = (foothold.p2.x - foothold.p1.x) * 0.2;
+				if (m_Bounds.x < (foothold.p1.x + edge_length))
 				{
+					move({ ((foothold.p1.x + edge_length) - m_Bounds.x) * 2, 0 });
 					m_Controls.left = false;
 					m_Controls.right = true;
 				}
-				if (m_Bounds.x > (foothold.p2.x - length * 0.2))
+				if (m_Bounds.x > (foothold.p2.x - edge_length))
 				{
+					move({ -(m_Bounds.x - (foothold.p2.x - edge_length) ) * 2 , 0 });
 					m_Controls.left = true;
 					m_Controls.right = false;
-				}
-				if (m_AiTimer.hasExpired())
-				{
-					if (dis(gen) < 4)
-					{
-						m_Controls.left = false;
-						m_Controls.right = false;
-					}
-					else
-					{
-						if (Stand == m_StanceState)
-						{
-							if (dis(gen) < 6)
-							{
-								m_Controls.left = true;
-								m_Controls.right = false;
-							}
-							else
-							{
-								m_Controls.left = false;
-								m_Controls.right = true;
-							}
-						}
-					}
-					m_AiTimer.reSet((float)(rand() % 30) / 10 + 1);
 				}
 			}
 
@@ -125,9 +104,8 @@ namespace hiraeth {
 				&& (rec.y < hit_box.y + hit_box.height) && (hit_box.y < rec.y + rec.height));
 		}
 
-		void Monster::getHit(std::unique_ptr<skills::Projectile> projectile_animation)
+		void Monster::setProjectileAnimation(std::unique_ptr<skills::Projectile> projectile_animation)
 		{
-			//Creature::getHit(dir, damage);
 			m_ProjectileAnimations.add(std::move(projectile_animation));
 
 		}
