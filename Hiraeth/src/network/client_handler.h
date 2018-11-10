@@ -80,9 +80,9 @@ namespace hiraeth {
 					if (WSAGetLastError() != 10035)
 						printf("recvfrom() failed with error code : %d", WSAGetLastError());
 				}
-				if (recv_len == 4)
+				if (recv_len == 5)
 				{
-					memcpy(&m_Id, m_RcvBuffer, sizeof(unsigned int));
+					memcpy(&m_Id, m_RcvBuffer + 1, sizeof(unsigned int));
 					printf("received Id number of : %d\n", m_Id);
 				}
 

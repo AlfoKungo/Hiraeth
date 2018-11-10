@@ -11,17 +11,21 @@ namespace hiraeth {
 #define MSG_CTS_CLOSE_CONNECTION 0x02
 #define MSG_CTS_LOCATION_UPDATE 0x03
 #define MSG_CTS_KA 0x05
+#define MSG_CTS_KILL_MOB 0x06
 
 #define MSG_STC_ACK 0x10
 #define MSG_STC_ADD_PLAYER 0x11
 #define MSG_STC_PLAYERS_LOCATIONS 0x12
 #define MSG_STC_PLAYERS_LIST 0x13
+#define MSG_STC_MOB_HIT 0x14
+#define MSG_STC_MOB_DIED 0x15
 
 #define MSG_STC_MOB_DATA 0x21
 #define MSG_STC_MOB_UPDATE 0x22
 
 #define MSG_INR_UPDATE_MOB_CMD 0xA1
-#define MSG_INR_FIND_MOB_POS 0xA2
+//#define MSG_INR_FIND_MOB_POS 0xA2
+#define MSG_INR_MOB_HIT 0xA2
 #define MSG_INR_MOB_UPDATE 0xA3
 
 		using BufferType = char;

@@ -89,7 +89,8 @@ namespace hiraeth {
 			void sendUpdateLocationToAll(Address sender);
 			void sendMobsData(Address sender);
 			void sendMobsUpdate(unsigned int mob_index, MobMoveCommand mmc);
-			void yazonot();
+			void updateMobManager();
+			void sendMobGotHit(unsigned int mob_index, Direction dir);
 
 			//void sendKeepAliveAnswer(Address sender)
 			//{
@@ -117,6 +118,12 @@ namespace hiraeth {
 						return i;
 				}
 				return -1;
+			}
+			void sendDataToAllClients(unsigned int size)
+			{
+				for (const auto& client : m_ClientAddress)
+					if (client.GetAddress() != 0)
+						m_Socket.Send(client, m_Buffer, size);
 			}
 			bool IsClientConnected(int clientIndex) const
 			{

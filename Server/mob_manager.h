@@ -50,7 +50,8 @@ namespace hiraeth {
 						m_MonsterTypeToData[summon.monster_type] = SRL::deserial<SRL::MonsterData>("serialized/monster.data", summon.monster_type - 1);
 					m_Monsters[index++] = MonsterStateUpdate{ summon.monster_type, summon.position - maths::vec2{0, 6}, {0, 0}, Stand };
 				}
-
+				setNewMoveCommand(0, MobMoveCommand{ Left, ATimer{5.0f}, 5 });
+				setNewMoveCommand(1, MobMoveCommand{ Right, ATimer{5.0f}, 5 });
 			}
 		private:
 			int modulu(int a, int b)
@@ -114,6 +115,7 @@ namespace hiraeth {
 				if (m_MoveCmds.find(mob_index) != m_MoveCmds.end())
 					calculateLocationNow(mob_index);
 				m_MoveCmds[mob_index] = mmc;
+				m_Monsters[mob_index].dir = mmc.dir;
 			}
 			void recalculateAllMobs()
 			{
@@ -125,16 +127,16 @@ namespace hiraeth {
 			}
 			std::vector<unsigned int> update()
 			{
-				std::vector<unsigned int> mob_ids;
+				std::vector<unsigned int> cmdd_mob_ids;
 				for (auto&[id, move_cmd] : m_MoveCmds)
 				{
 					if (move_cmd.timer.hasExpired())
 					{
 						decideNewAction(id);
-						mob_ids.push_back(id);
+						cmdd_mob_ids.push_back(id);
 					}
 				}
-				return mob_ids;
+				return cmdd_mob_ids;
 			}
 			void decideNewAction(MobIdType mob_id)
 			{
