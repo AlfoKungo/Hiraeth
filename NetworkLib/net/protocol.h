@@ -11,17 +11,21 @@ namespace hiraeth {
 #define MSG_CTS_CLOSE_CONNECTION 0x02
 #define MSG_CTS_LOCATION_UPDATE 0x03
 #define MSG_CTS_KA 0x05
-#define MSG_CTS_KILL_MOB 0x06
+#define MSG_CTS_HIT_MOB 0x06
+#define MSG_CTS_KILL_MOB 0x07
+#define MSG_CTS_NPC_CLICK 0x08
 
-#define MSG_STC_ACK 0x10
-#define MSG_STC_ADD_PLAYER 0x11
-#define MSG_STC_PLAYERS_LOCATIONS 0x12
-#define MSG_STC_PLAYERS_LIST 0x13
-#define MSG_STC_MOB_HIT 0x14
-#define MSG_STC_MOB_DIED 0x15
+#define MSG_STC_ACK 0x60
+#define MSG_STC_ADD_PLAYER 0x61
+#define MSG_STC_PLAYERS_LOCATIONS 0x62
+#define MSG_STC_PLAYERS_LIST 0x63
+#define MSG_STC_MOB_HIT 0x64
+#define MSG_STC_MOB_DIED 0x65
+#define MSG_STC_NPC_CLICK_ANSWER 0x67
+#define MSG_STC_NPC_QUEST_ACCEPT 0x68
 
-#define MSG_STC_MOB_DATA 0x21
-#define MSG_STC_MOB_UPDATE 0x22
+#define MSG_STC_MOB_DATA 0x71
+#define MSG_STC_MOB_UPDATE 0x72
 
 #define MSG_INR_UPDATE_MOB_CMD 0xA1
 //#define MSG_INR_FIND_MOB_POS 0xA2
@@ -62,11 +66,12 @@ namespace hiraeth {
 			maths::vec2 pos;
 			maths::vec2 force;
 			Direction dir{};
+			unsigned int hp;
 			//bool left{};
 			//bool right{};
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(monster_type), CEREAL_NVP(pos),
-					CEREAL_NVP(force), CEREAL_NVP(dir));
+					CEREAL_NVP(force), CEREAL_NVP(dir), CEREAL_NVP(hp));
 			}
 		};
 		struct MonsterStateDataUpdate // MSG_STC_MOB_UPDATE

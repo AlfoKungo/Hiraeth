@@ -18,9 +18,20 @@ namespace hiraeth {
 				: m_UiSkills(ui_skills),
 				m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false)
 			{
-				add_skill(0);
-				add_skill(1);
-				add_skill(2);
+				SRL::AllJobsData JobInfo{ {
+				{ SRL::Berserker, {{1,2,3}, {1,2,3}}},
+				{ SRL::CrusaderKnight, {{1,2,3}, {1,2,3}}},
+				{ SRL::Wizard, {{1,2,3}, {1,2,3}}},
+				{ SRL::Rogue, {{1,2,3}, {1,2,3}}},
+				{ SRL::Archer, {{1,2,3}, {1,2,3}}},
+				{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
+					} };
+
+				//std::vector<unsigned int> SkillIndices{ 1,2,3 };
+				//std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
+				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(SRL::Berserker).first_job_skills;
+				for (const auto& index : FirstJobSkillsIndices)
+					add_skill(index - 1);
 
 			}
 

@@ -111,14 +111,12 @@ int main()
 	view::Camera::init(&m_Char);
 
 	//graphics::Layer<game::NetCharacter> m_NtCrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
-	game::NetCharManager netCharManager{map.getMapLayer(), &skillManager};
 
 	game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
+	game::NetCharManager netCharManager{map.getMapLayer(), &skillManager};
+	network::ClientHandler clientHandler{&netCharManager, &monsterManager}; // itemManager, 
+
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char);
-	//npc::DialogManager dialogManager{};
-
-	network::ClientHandler clientHandler{&netCharManager, &monsterManager};
-
 
 	unsigned int frames = 0;
 	while (!window.closed())

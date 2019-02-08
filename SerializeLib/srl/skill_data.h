@@ -34,10 +34,8 @@ namespace SRL
 		ballAnimation,
 	};
 
-	//typedef std::map<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMap;
 	using SkillPropertiesMap = std::map<SkillDataType, std::variant<int, std::string, TimedValue>>;
 	using SkillPropertiesMapPair = std::pair<SkillDataType, std::variant<int, std::string, TimedValue>>;
-	//typedef std::pair<SkillDataType, std::variant<int, std::string, TimedValue>> SkillPropertiesMapPair;
 
 	struct SkillInfo
 	{
@@ -75,6 +73,33 @@ namespace SRL
 		AnimationMap animation_map;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(skill_info), CEREAL_NVP(icon_data), CEREAL_NVP(animation_map));
+		}
+	};
+
+	struct JobData
+	{
+		std::vector<unsigned int> first_job_skills;
+		std::vector<unsigned int> second_job_skills;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(first_job_skills), CEREAL_NVP(first_job_skills));
+		}
+	};
+
+	enum JobsTypes
+	{
+		Berserker,
+		CrusaderKnight,
+		Wizard,
+		Rogue,
+		Archer,
+		ForestFighter,
+	};
+
+	struct AllJobsData
+	{
+		std::map<JobsTypes, JobData> jobs_type_to_data_map;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(jobs_type_to_data_map));
 		}
 	};
 }

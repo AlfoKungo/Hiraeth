@@ -2,6 +2,7 @@
 #include <string>
 #include "texture_data.h"
 #include "maths/maths.h"
+#include <variant>
 
 namespace SRL {
 
@@ -11,7 +12,7 @@ namespace SRL {
 		unsigned int npc_foothold;
 		float npc_x_value;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(npc_name));
+			ar(CEREAL_NVP(npc_name), CEREAL_NVP(npc_foothold), CEREAL_NVP(npc_x_value));
 		}
 	};
 
@@ -24,6 +25,12 @@ namespace SRL {
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(npc_info), CEREAL_NVP(texture_data), CEREAL_NVP(npc_frames_amount));
 		}
+	};
+
+	struct DialogTreeE
+	{
+		std::vector<std::variant<std::string, unsigned int>> m_Strings;
+
 	};
 
 }

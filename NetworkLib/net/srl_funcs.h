@@ -17,7 +17,7 @@ namespace hiraeth {
 			auto data = new char[data_str.size() + 1];
 			data[0] = char(data_str.size());
 			memcpy(data + 1, data_str.c_str(), data_str.size());
-			return { std::move(std::make_unique<char*>(data)), data_str.size() + 1 };
+			return { std::make_unique<char*>(data), data_str.size() + 1 };
 			//return { data, data_str.size() + 1};
 		}
 

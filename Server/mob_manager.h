@@ -46,9 +46,11 @@ namespace hiraeth {
 				for (const auto& summon : map_data.Summons)
 				{
 					m_MonsterIdToType[index] = summon.monster_type;
+					auto monster_data = SRL::deserial<SRL::MonsterData>("serialized/monster.data", summon.monster_type - 1);
 					if (m_MonsterTypeToData.find(summon.monster_type) == m_MonsterTypeToData.end())
 						m_MonsterTypeToData[summon.monster_type] = SRL::deserial<SRL::MonsterData>("serialized/monster.data", summon.monster_type - 1);
-					m_Monsters[index++] = MonsterStateUpdate{ summon.monster_type, summon.position - maths::vec2{0, 6}, {0, 0}, Stand };
+					m_Monsters[index++] = MonsterStateUpdate{ summon.monster_type, summon.position - maths::vec2{0, 6}, {0, 0}, Stand,
+						monster_data.StatsStruct.Hp };
 				}
 				setNewMoveCommand(0, MobMoveCommand{ Left, ATimer{5.0f}, 5 });
 				setNewMoveCommand(1, MobMoveCommand{ Right, ATimer{5.0f}, 5 });

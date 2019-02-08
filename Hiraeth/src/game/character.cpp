@@ -98,7 +98,27 @@ namespace hiraeth {
 				else
 					++iter;
 			}
+
+			checkMobsCollision();
+
 			Creature::update();
+		}
+
+		void Character::checkMobsCollision()
+		{
+			if (!is_hit)
+				for (auto monster : *m_MonstersLayer)
+				{
+					if (monster->check_collision(getHitBox()))
+					{
+						std::cout << "colliding" << std::endl;
+						if (monster->getBounds().GetBottomMiddle().x < getBounds().GetBottomMiddle().x)
+							getHit(Right, monster->getDamage());
+						else
+							getHit(Left, monster->getDamage());
+						return;
+					}
+				}
 		}
 
 		void Character::ButtonReleased(input::Key control)
@@ -170,6 +190,7 @@ namespace hiraeth {
 				{
 					std::cout << "attacking" << std::endl;
 					monster->getHit(m_Direction, getDamage());
+					// send the information to the server
 				}
 			}
 		}

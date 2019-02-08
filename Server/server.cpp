@@ -242,15 +242,16 @@ namespace hiraeth {
 
 		void Server::sendConnectionResponse(Address sender)
 		{
-			const auto free_client_index = FindFreeClientIndex();
+			const auto free_client_index = findFreeClientIndex();
 			sendNewPlayerInMap(free_client_index);
 			m_numConnectedClients++;
 			m_ClientAddress[free_client_index] = sender;
-			m_ClientConnected[free_client_index] = true;
-			unsigned int id = free_client_index;
-			const auto size = construct_server_packet(m_Buffer, MSG_STC_ACK, id);
+			//m_ClientConnected[free_client_index] = true;
+			m_ClientsIds.push_back(free_client_index);
+			unsigned int new_client_id = free_client_index;
+			const auto size = construct_server_packet(m_Buffer, MSG_STC_ACK, new_client_id);
 			printf("registered new address : %s , and port is : %d , and id is %d\n",
-				sender.GetAddressString().c_str(), sender.GetPort(), id);
+				sender.GetAddressString().c_str(), sender.GetPort(), new_client_id);
 			m_Socket.Send(sender, m_Buffer, size);
 		}
 
@@ -267,7 +268,8 @@ namespace hiraeth {
 			printf("unregistered id is %d\n", id);
 			m_numConnectedClients--;
 			m_ClientAddress[id] = Address{};
-			m_ClientConnected[id] = false;
+			//m_ClientConnected[id] = false;
+			m_ClientsIds.erase(std::remove(m_ClientsIds.begin(), m_ClientsIds.end(), id), m_ClientsIds.end());
 		}
 
 		void Server::receiveLocation(BufferType* buffer)
@@ -280,33 +282,11 @@ namespace hiraeth {
 		void Server::sendUpdateLocationToAll(Address sender)
 		{
 			RegularMapUpdate map_update_data{ m_ClientsState };
-			//const auto id = dsrl_packet_data<unsigned int>(m_Buffer + 1);
 			//map_update_data.m_PlayersLocation.erase(id); // erase this line to research delay
 			auto[data, size] = srl_packet_data(map_update_data);
 			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
 				MSG_STC_PLAYERS_LOCATIONS, *data.get(), size);
 			m_Socket.Send(sender, m_Buffer, buffer_size);
-			//delete[] data;
-
-
-
-			//char * data = new char[sizeof(maths::vec2) * m_ClientsIds.size()];
-			//char data[sizeof(maths::vec2) * m_ClientsIds.size()];
-			//for (const auto& client_id : m_ClientsIds)
-			//{
-			//	
-			//}
-
-			//std::stringstream os{ std::ios::binary | std::ios::out };
-			//{
-			//	cereal::BinaryOutputArchive ar(os);
-			//	ar(m_ClientsPos);
-			//} // the binary archives will flush their output 
-			//std::string data_str = os.str();
-			//auto data = new char[data_str.size() + 1];
-			//data[0] = char(data_str.size());
-			//memcpy(data + 1, data_str.c_str(), data_str.size());
-			//m_Socket.Send(sender, data, data_str.size() + 1);
 		}
 
 		void Server::sendMobsData(Address sender)
@@ -315,7 +295,6 @@ namespace hiraeth {
 			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
 				MSG_STC_MOB_DATA, *data.get(), size);
 			m_Socket.Send(sender, m_Buffer, buffer_size);
-			//delete[] data;
 		}
 
 		void Server::sendMobsUpdate(unsigned int mob_id, MobMoveCommand mmc)
@@ -334,7 +313,7 @@ namespace hiraeth {
 				sendMobsUpdate(id, m_MobManager.m_MoveCmds[id]);
 		}
 
-		void Server::sendMobGotHit(unsigned mob_id, Direction dir)
+		void Server::sendMobGotHit(unsigned int mob_id, Direction dir)
 		{
 			const auto size = construct_server_packet(m_Buffer, MSG_STC_MOB_HIT, mob_id, dir);
 			sendDataToAllClients(size);

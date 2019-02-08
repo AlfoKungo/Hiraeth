@@ -51,6 +51,7 @@ namespace hiraeth {
 			~Character();
 
 			void update() override;
+			void checkMobsCollision();
 			void draw(graphics::Renderer* renderer) const override
 			{
 				Creature::draw(renderer);

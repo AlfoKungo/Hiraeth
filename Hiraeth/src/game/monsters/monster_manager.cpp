@@ -43,19 +43,7 @@ namespace hiraeth {
 			//	}
 			//}
 
-			////resummoning dead monsters
-			//while (!m_SummonQueue.empty())
-			//{
-			//	if (StaticTimer::timer.elapsed() - m_SummonQueue.front().summonTime > 0.0f)
-			//	{
-			//		m_Layer.add(new Monster(m_SummonQueue.front().summon, m_MapLayer));
-			//		m_SummonQueue.pop();
-			//	}
-			//	else
-			//		break;
-			//}
-
-			checkCollision();
+			//checkCollision();
 		}
 
 		//void MonsterManager::addMonster(unsigned monster_id, unsigned summon_index)

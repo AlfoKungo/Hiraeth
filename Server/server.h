@@ -35,10 +35,11 @@ namespace hiraeth {
 		private:
 			int m_maxClients;
 			int m_numConnectedClients;
-			bool m_ClientConnected[MaxClients];
+			//bool m_ClientConnected[MaxClients];
 			Address m_ClientAddress[MaxClients];
 			Socket m_Socket;
 			std::vector<unsigned int> m_ClientsIds;
+			// map_state
 			std::map<unsigned int, PlayerStateUpdate> m_ClientsState;
 			std::queue<Summoner> m_SummonQueue;
 			MobManager m_MobManager;
@@ -59,7 +60,7 @@ namespace hiraeth {
 			Server()
 				: m_maxClients(MaxClients),
 				m_numConnectedClients(0),
-				m_ClientConnected{ false },
+				//m_ClientConnected{ false },
 				m_MobManager{ 0 }
 			{
 				if (!m_Socket.Open(PORT))
@@ -88,9 +89,9 @@ namespace hiraeth {
 			void receiveLocation(BufferType* buffer);
 			void sendUpdateLocationToAll(Address sender);
 			void sendMobsData(Address sender);
-			void sendMobsUpdate(unsigned int mob_index, MobMoveCommand mmc);
+			void sendMobsUpdate(unsigned int mob_id, MobMoveCommand mmc);
 			void updateMobManager();
-			void sendMobGotHit(unsigned int mob_index, Direction dir);
+			void sendMobGotHit(unsigned int mob_id, Direction dir);
 
 			//void sendKeepAliveAnswer(Address sender)
 			//{
@@ -101,16 +102,17 @@ namespace hiraeth {
 			//	m_Socket.Send(sender, data, sizeof(data));
 			//}
 
-			int FindFreeClientIndex() const
+			int findFreeClientIndex() const
 			{
 				for (int i = 0; i < m_maxClients; ++i)
 				{
-					if (!m_ClientConnected[i])
+					//if (!m_ClientConnected[i])
+					if (!isClientConnected(i))
 						return i;
 				}
 				return -1;
 			}
-			int FindExistingClientIndex(const Address & address) const
+			int findExistingClientIndex(const Address & address) const
 			{
 				for (int i = 0; i < m_maxClients; ++i)
 				{
@@ -121,13 +123,16 @@ namespace hiraeth {
 			}
 			void sendDataToAllClients(unsigned int size)
 			{
-				for (const auto& client : m_ClientAddress)
-					if (client.GetAddress() != 0)
-						m_Socket.Send(client, m_Buffer, size);
+				//for (const auto& client : m_ClientAddress)
+				//	if (client.GetAddress() != 0)
+				//		m_Socket.Send(client, m_Buffer, size);
+				for (const auto& client_id : m_ClientsIds)
+						m_Socket.Send(m_ClientAddress[client_id], m_Buffer, size);
 			}
-			bool IsClientConnected(int clientIndex) const
+			bool isClientConnected(int client_id) const
 			{
-				return m_ClientConnected[clientIndex];
+				//return m_ClientConnected[clientIndex];
+				return std::find(m_ClientsIds.begin(), m_ClientsIds.end(), client_id) != m_ClientsIds.end();
 			}
 			const Address & GetClientAddress(int clientIndex) const
 			{

@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="code_for_checks\equip_data_check.h" />
     <ClInclude Include="code_for_checks\item_data_check.h" />
+    <ClInclude Include="code_for_checks\job_data_check.h" />
     <ClInclude Include="code_for_checks\monster_data_check.h" />
     <ClInclude Include="code_for_checks\skill_data_check.h" />
   </ItemGroup>
