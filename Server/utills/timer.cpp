@@ -1,7 +1,5 @@
 #include "timer.h"
 #include <algorithm>
-#define _WINSOCKAPI_    // stops windows.h including winsock.h
-#include <Windows.h>
 
 namespace hiraeth {
 
@@ -13,7 +11,6 @@ namespace hiraeth {
 
 	Timer::Timer()
 		: m_Members(new (m_Reserved) Members())
-		//: m_Members(new Members(m_Reserved))
 	{
 		LARGE_INTEGER frequency;
 		QueryPerformanceFrequency(&frequency);

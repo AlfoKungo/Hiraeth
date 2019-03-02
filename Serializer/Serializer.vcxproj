@@ -143,6 +143,7 @@
     <ClInclude Include="code_for_checks\item_data_check.h" />
     <ClInclude Include="code_for_checks\job_data_check.h" />
     <ClInclude Include="code_for_checks\monster_data_check.h" />
+    <ClInclude Include="code_for_checks\quest_data_check.h" />
     <ClInclude Include="code_for_checks\skill_data_check.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

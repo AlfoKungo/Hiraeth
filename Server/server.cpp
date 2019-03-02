@@ -1,7 +1,6 @@
 #include "server.h"
 
-#include <windows.h>
-#include "net/srl_funcs.h"
+//#include <windows.h>
 
 
 namespace hiraeth {
@@ -130,6 +129,7 @@ namespace hiraeth {
 		 */
 		void Server::main_60fps_threaded_queue()
 		{
+
 			std::thread readThread{ [this] {this->dataReader(); } };
 			//createMessageThread(MSG_INR_UPDATE_MOB_CMD, 5000);
 			createMessageThread(MSG_INR_MOB_UPDATE, 5000);
@@ -152,6 +152,7 @@ namespace hiraeth {
 					lock.unlock();
 
 					memcpy(m_Buffer, data, bytes_read);
+					m_Size = bytes_read;
 					delete[] data;
 					if (bytes_read > 0)
 					{
@@ -200,59 +201,71 @@ namespace hiraeth {
 
 		void Server::switchData(Address sender)
 		{
-			switch (m_Buffer[0])
+			if (m_DistTable.find(m_Buffer[0]) != m_DistTable.end())
 			{
-			case MSG_CTS_OPEN_CONNECTION:
-				sendConnectionResponse(sender);
-				m_MobManager.recalculateAllMobs();
-				sendMobsData(sender);
-				break;
-			case MSG_CTS_CLOSE_CONNECTION:
-				closeConnection(m_Buffer);
-				break;
-			case MSG_CTS_LOCATION_UPDATE:
-				receiveLocation(m_Buffer);
-				sendUpdateLocationToAll(sender);
-				break;
-			case MSG_CTS_KA:
-				sendUpdateLocationToAll(sender);
-				break;
-			case char(MSG_INR_UPDATE_MOB_CMD) :
-				//m_MobManager.setNewMoveCommand(0, MobMoveCommand{ Left, ATimer{15.0f}, 15 });
-				//sendMobsUpdate(0, MobMoveCommand{ Left, ATimer{5.0f}, 5 });
-				//sendMobsUpdate(1, MobMoveCommand{ Right, ATimer{5.0f}, 5 });
-				//createMessageThread(MSG_INR_MOB_UPDATE, 1000);
-				break;
-			case char(MSG_INR_MOB_HIT) :
-				sendMobGotHit(0, Left);
-				//m_MobManager.calculateLocationNow(0);
-				break;
-				//case char(MSG_INR_FIND_MOB_POS):
-				//	sendMobsUpdate(0, MobMoveCommand{Stand, ATimer{15.0f}, 15});
-				//	//m_MobManager.calculateLocationNow(0);
-				//	break;
-			case char(MSG_INR_MOB_UPDATE) :
-				updateMobManager();
-				createMessageThread(MSG_INR_MOB_UPDATE, 1000);
-				break;
-			default:
-				break;
+				m_DistTable[m_Buffer[0]](sender);
+				//(this->*m_DistTable2[m_Buffer[0]])(sender);
 			}
+			//switch (m_Buffer[0])
+			//{
+			//case MSG_CTS_OPEN_CONNECTION:
+			//	sendConnectionResponse(sender);
+			//	m_MobManager.recalculateAllMobs();
+			//	sendMobsData(sender);
+			//	break;
+			//case MSG_CTS_CLOSE_CONNECTION:
+			//	closeConnection(m_Buffer);
+			//	break;
+			//case MSG_CTS_LOCATION_UPDATE:
+			//	receiveLocation(m_Buffer);
+			//	sendUpdateLocationToAll(sender);
+			//	break;
+			//case MSG_CTS_KA:
+			//	sendUpdateLocationToAll(sender);
+			//	break;
+			//case MSG_CTS_HIT_MOB:
+			//	//sendUpdateLocationToAll(sender);
+			//	break;
+			//case char(MSG_INR_UPDATE_MOB_CMD) :
+			//	//m_MobManager.setNewMoveCommand(0, MobMoveCommand{ Left, ATimer{15.0f}, 15 });
+			//	//sendMobsUpdate(0, MobMoveCommand{ Left, ATimer{5.0f}, 5 });
+			//	//sendMobsUpdate(1, MobMoveCommand{ Right, ATimer{5.0f}, 5 });
+			//	//createMessageThread(MSG_INR_MOB_UPDATE, 1000);
+			//	break;
+			//case char(MSG_INR_MOB_HIT) :
+			//	sendMobGotHit(0, Left);
+			//	//m_MobManager.calculateLocationNow(0);
+			//	break;
+			//	//case char(MSG_INR_FIND_MOB_POS):
+			//	//	sendMobsUpdate(0, MobMoveCommand{Stand, ATimer{15.0f}, 15});
+			//	//	//m_MobManager.calculateLocationNow(0);
+			//	//	break;
+			//case char(MSG_INR_MOB_UPDATE) :
+			//	updateMobManager();
+			//	createMessageThread(MSG_INR_MOB_UPDATE, 1000);
+			//	break;
+			//default:
+			//	break;
+			//}
 		}
 
 		void Server::sendConnectionResponse(Address sender)
 		{
-			const auto free_client_index = findFreeClientIndex();
-			sendNewPlayerInMap(free_client_index);
+			const auto new_char_id = findFreeClientIndex();
+			sendNewPlayerInMap(new_char_id);
 			m_numConnectedClients++;
-			m_ClientAddress[free_client_index] = sender;
+			m_ClientAddress[new_char_id] = sender;
+			m_ClientsIds.push_back(new_char_id);
 			//m_ClientConnected[free_client_index] = true;
-			m_ClientsIds.push_back(free_client_index);
-			unsigned int new_client_id = free_client_index;
-			const auto size = construct_server_packet(m_Buffer, MSG_STC_ACK, new_client_id);
+
+			ConnectionEstablishMsg msg{new_char_id, 
+				{69, "Kanye", 1, {0,0,0,0}, {0,0,0,1,1,1}}};
+			auto[data, size] = srl_dynamic_type(msg);
+			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
+				MSG_STC_ESTABLISH_CONNECTION, *data, size);
 			printf("registered new address : %s , and port is : %d , and id is %d\n",
-				sender.GetAddressString().c_str(), sender.GetPort(), new_client_id);
-			m_Socket.Send(sender, m_Buffer, size);
+				sender.GetAddressString().c_str(), sender.GetPort(), new_char_id);
+			m_Socket.Send(sender, m_Buffer, buffer_size);
 		}
 
 		void Server::sendNewPlayerInMap(unsigned int new_char_index)
@@ -263,8 +276,7 @@ namespace hiraeth {
 
 		void Server::closeConnection(BufferType* buffer)
 		{
-			unsigned int id;
-			memcpy(&id, buffer + 1, sizeof(unsigned int));
+			const auto id = dsrl_type<unsigned int>(buffer + 1);
 			printf("unregistered id is %d\n", id);
 			m_numConnectedClients--;
 			m_ClientAddress[id] = Address{};
@@ -274,26 +286,27 @@ namespace hiraeth {
 
 		void Server::receiveLocation(BufferType* buffer)
 		{
-			const auto id = dsrl_packet_data<unsigned int>(buffer + 1);
-			const auto char_state = dsrl_packet_data<PlayerStateUpdate>(buffer + 5);
+			const auto id = dsrl_type<unsigned int>(buffer + 1);
+			const auto char_state = dsrl_type<PlayerStateUpdateMsg>(buffer + 5);
 			m_ClientsState[id] = char_state;
 		}
 
 		void Server::sendUpdateLocationToAll(Address sender)
 		{
 			RegularMapUpdate map_update_data{ m_ClientsState };
-			//map_update_data.m_PlayersLocation.erase(id); // erase this line to research delay
-			auto[data, size] = srl_packet_data(map_update_data);
+			const auto client_id = dsrl_type<unsigned int>(m_Buffer + 1);
+			map_update_data.m_PlayersLocation.erase(client_id); // erase this line to research delay
+			auto[data, size] = srl_dynamic_type(map_update_data);
 			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
-				MSG_STC_PLAYERS_LOCATIONS, *data.get(), size);
+				MSG_STC_PLAYERS_LOCATIONS, *data, size);
 			m_Socket.Send(sender, m_Buffer, buffer_size);
 		}
 
 		void Server::sendMobsData(Address sender)
 		{
-			auto[data, size] = srl_packet_data(m_MobManager.m_Monsters);
+			auto[data, size] = srl_dynamic_type(m_MobManager.m_Monsters);
 			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
-				MSG_STC_MOB_DATA, *data.get(), size);
+				MSG_STC_MOB_DATA, *data, size);
 			m_Socket.Send(sender, m_Buffer, buffer_size);
 		}
 
@@ -311,12 +324,6 @@ namespace hiraeth {
 			auto mob_ids = m_MobManager.update();
 			for (const auto& id : mob_ids)
 				sendMobsUpdate(id, m_MobManager.m_MoveCmds[id]);
-		}
-
-		void Server::sendMobGotHit(unsigned int mob_id, Direction dir)
-		{
-			const auto size = construct_server_packet(m_Buffer, MSG_STC_MOB_HIT, mob_id, dir);
-			sendDataToAllClients(size);
 		}
 	}
 }

@@ -1,12 +1,9 @@
 #pragma once
 
 #include <string>
-#include <memory>
-#include "texture_data.h"
 #include <cereal/types/map.hpp>
 #include "maths/vec2.h"
 #include <map>
-#include "maths/rectangle.h"
 #include "sprite_data.h"
 #include "animation_data.h"
 #include <cereal/cereal.hpp>

@@ -40,7 +40,7 @@ namespace hiraeth {
 				m_CharsMap.insert(std::make_pair(char_id, temp));
 			}
 
-			void updateCharsState(unsigned int char_id, network::PlayerStateUpdate char_state)
+			void updateCharsState(unsigned int char_id, network::PlayerStateUpdateMsg char_state)
 			{
 				if (m_CharsMap.find(char_id) == m_CharsMap.end())
 					addChar(char_id, char_state.pos);

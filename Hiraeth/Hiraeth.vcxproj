@@ -84,9 +84,11 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;$(SolutionDir)submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype271.lib;glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;OpenAL32.lib;gorillaD.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -109,7 +111,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;$(SolutionDir)submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -150,6 +152,7 @@
     <ClCompile Include="ext\freetype-gl\texture-font.c" />
     <ClCompile Include="ext\freetype-gl\utf8-utils.c" />
     <ClCompile Include="ext\freetype-gl\vector.c" />
+    <ClCompile Include="src\basic\log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\audio\sound.cpp" />
     <ClCompile Include="src\audio\sound_manager.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="src\map\maprenderer.cpp" />
     <ClCompile Include="src\map\portal.cpp" />
     <ClCompile Include="src\map\tile.cpp" />
+    <ClCompile Include="src\network\client_handler.cpp" />
     <ClCompile Include="src\NPC\npc_manager.cpp" />
     <ClCompile Include="src\physics\collisionable.cpp" />
     <ClCompile Include="src\physics\foothold.cpp" />
@@ -228,6 +232,7 @@
     <ClInclude Include="ext\freetype-gl\utf8-utils.h" />
     <ClInclude Include="ext\freetype-gl\vec234.h" />
     <ClInclude Include="ext\freetype-gl\vector.h" />
+    <ClInclude Include="src\basic\log.h" />
     <ClInclude Include="src\audio\sound.h" />
     <ClInclude Include="src\audio\sound_manager.h" />
     <ClInclude Include="src\basic\a_timer.h" />

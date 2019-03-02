@@ -57,7 +57,7 @@ namespace hiraeth {
 			}
 
 			//void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
-			inline void setState(const network::PlayerStateUpdate& state)
+			inline void setState(const network::PlayerStateUpdateMsg& state)
 			{
 				setPosition(state.pos);
 				m_Force = state.force;

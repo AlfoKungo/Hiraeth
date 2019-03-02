@@ -1,4 +1,7 @@
 #pragma once
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+
 #include "graphics/layers/layer.h"
 #include "npc.h"
 #include "item/item_manager.h"
@@ -10,7 +13,6 @@ namespace hiraeth
 {
 	namespace game
 	{
-		class Character;
 
 		class NpcManager : public Updatable, public input::MouseEvent
 		{

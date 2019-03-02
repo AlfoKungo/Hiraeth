@@ -52,10 +52,10 @@ namespace SRL {
 
 	struct EquipItemData
 	{
-		EquipItemInfo item_info;
+		EquipItemInfo info;
 		TextureData texture_data;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_info), CEREAL_NVP(texture_data));
+			ar(CEREAL_NVP(info), CEREAL_NVP(texture_data));
 		}
 	};
 }

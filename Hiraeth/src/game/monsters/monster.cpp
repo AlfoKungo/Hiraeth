@@ -3,8 +3,7 @@
 namespace hiraeth {
 	namespace game {
 
-		//Monster::Monster(const SRL::MonsterData& monster_data, SRL::Summon summon, map::MapLayer* mapLayer)
-			Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer)
+			Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id)
 			: Creature(maths::Rectangle(position, maths::vec2(50, 50)), mapLayer,
 				//new MonsterStats(monster_data.StatsStruct), false),
 				//&m_MonsterStats, false),
@@ -14,7 +13,8 @@ namespace hiraeth {
 			m_XStart(NULL),
 			m_XEnd(NULL),
 			m_MonsterStats{monster_data.StatsStruct},
-			m_StatsStruct{&m_MonsterStats.m_Stats}
+			m_StatsStruct{&m_MonsterStats.m_Stats},
+			m_Id{mob_id}
 			//m_Summon(summon)
 		{
 

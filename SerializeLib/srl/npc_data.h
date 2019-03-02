@@ -19,11 +19,11 @@ namespace SRL {
 
 	struct NpcData
 	{
-		NpcInfo npc_info;
+		NpcInfo info;
 		TextureData texture_data;
 		unsigned int npc_frames_amount = 1;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(npc_info), CEREAL_NVP(texture_data), CEREAL_NVP(npc_frames_amount));
+			ar(CEREAL_NVP(info), CEREAL_NVP(texture_data), CEREAL_NVP(npc_frames_amount));
 		}
 	};
 

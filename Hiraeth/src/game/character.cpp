@@ -6,12 +6,15 @@ namespace hiraeth {
 
 		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer,
 			item::ItemManager *item_manager, skills::SkillManager *skill_manager, 
-			CharacterStats * character_stats)
+			CharacterStats * character_stats, std::map<unsigned int, Monster*>* monsters,
+			network::ClientHandler * client_handler)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
 			m_Kb(kb),
 			m_ItemManager(item_manager),
+			m_Monsters(monsters),
 			m_SkillManager(skill_manager),
-			m_CharacterStats(character_stats)
+			m_CharacterStats(character_stats),
+		m_ClientHandler(client_handler)
 		//m_Animations(m_TransformationMatrix)
 	{
 			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(
@@ -107,7 +110,7 @@ namespace hiraeth {
 		void Character::checkMobsCollision()
 		{
 			if (!is_hit)
-				for (auto monster : *m_MonstersLayer)
+				for (auto [key, monster] : *m_Monsters)
 				{
 					if (monster->check_collision(getHitBox()))
 					{
@@ -178,18 +181,24 @@ namespace hiraeth {
 		void Character::carryOutAttack()
 		{
 			maths::Rectangle attack_rec = getBounds();
+			network::Direction new_dir{ network::Direction::Right };
 			if (Left == m_Direction)
 			{
+				 new_dir = network::Direction::Left;
 				attack_rec.x = attack_rec.x - (85 - attack_rec.width);
 			}
 			attack_rec.width = 85;
 			attack_rec.position += m_Direction * maths::vec2(15);
-			for (auto& monster : (*m_MonstersLayer))
+			for (auto& [key, monster] : (*m_Monsters))
 			{
 				if (monster->check_collision(attack_rec))
 				{
 					std::cout << "attacking" << std::endl;
-					monster->getHit(m_Direction, getDamage());
+					const auto damage = getDamage();
+					monster->getHit(m_Direction, damage);
+					m_ClientHandler->sendAttackPacket(network::MonsterDamage{float(damage.RawDamage), 
+						monster->getId(), 0, new_dir });
+						//monster->getId(), 0, static_cast<network::Direction>(m_Direction) });
 					// send the information to the server
 				}
 			}
@@ -258,7 +267,7 @@ namespace hiraeth {
 			SRL::FullAnimationData projectile_animation_data, const std::string& skill_name)
 		{
 			std::vector<std::pair<float, Monster*>> monsters_in_range;
-			for (auto & monster : (*m_MonstersLayer))
+			for (auto & [key, monster] : (*m_Monsters))
 			{
 				const maths::vec2 mon_pos = monster->getBounds().GetMiddle();
 				const maths::vec2 char_pos = getBounds().GetMiddle();

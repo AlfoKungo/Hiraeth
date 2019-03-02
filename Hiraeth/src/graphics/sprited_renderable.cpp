@@ -35,7 +35,6 @@ namespace hiraeth
 		{
 		}
 
-
 		void SpritedRenderable::update()
 		{
 			if (m_AnimationTimer.hasExpired())

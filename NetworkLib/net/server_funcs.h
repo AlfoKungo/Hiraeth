@@ -19,7 +19,7 @@ namespace hiraeth {
 		inline int construct_server_packet(BufferType * buffer, unsigned char msgId, Ts&&... dts)
 		{
 			memcpy(buffer, &msgId, sizeof(char));
-			auto message_len = srl_packet_data(buffer + 1, dts...);
+			auto message_len = srl_types(buffer + 1, dts...);
 			return 1 + message_len;
 		}
 	}

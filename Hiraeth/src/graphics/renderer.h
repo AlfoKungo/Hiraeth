@@ -8,12 +8,6 @@
 #include "buffers/indexbuffer.h"
 #include "maths/maths.h"
 
-#if 0
-//#include "../../ext/freetype-gl/freetype-gl.h"
-#else
-//#include "../../ext/freetype-gl_v2/freetype-gl.h"
-#endif
-
 namespace hiraeth {
 	namespace graphics {
 

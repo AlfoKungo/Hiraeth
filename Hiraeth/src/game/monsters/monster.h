@@ -28,13 +28,14 @@ namespace hiraeth
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 			graphics::TGroup<skills::Projectile> m_ProjectileAnimations;
 			bool m_HasFinished{ false };
+			unsigned int m_Id{};
 
 		public:
 			//SRL::Summon m_Summon;
-			Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer);
+			Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id);
 
-			Monster(unsigned int monster_type, maths::vec2 position, map::MapLayer* map_layer) :
-				Monster(MonsterDataManager::Get(monster_type), position, map_layer)
+			Monster(unsigned int monster_type, maths::vec2 position, map::MapLayer* map_layer, unsigned int mob_id) :
+				Monster(MonsterDataManager::Get(monster_type), position, map_layer, mob_id)
 			{
 			}
 
@@ -71,6 +72,7 @@ namespace hiraeth
 			void getHit(Direction dir, Damage damage) override;
 			void setProjectileAnimation(std::unique_ptr<skills::Projectile> projectile_animation);
 			void setForceByMove(float x_force) override { m_Force.x = x_force; } 
+			unsigned int getId() const { return m_Id; }
 			//void change_stance(StanceState new_state) override;
 			//maths::Rectangle getHitBox() { return }
 

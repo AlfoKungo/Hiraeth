@@ -1,7 +1,8 @@
 #pragma once
 
-//#define WIN64_LEAN_AND_MEAN
-//#include <Windows.h>
+#define _WINSOCKAPI_    // stops windows.h including winsock.h
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 
 //#include <WinDef.h>

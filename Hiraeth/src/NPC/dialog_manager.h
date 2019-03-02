@@ -1,6 +1,10 @@
 #pragma once
 #include "graphics/label.h"
 #include "graphics/layers/layer.h"
+#include "game/character.h"
+
+//#include <winsock2.h>
+//#include <Ws2tcpip.h>
 
 namespace hiraeth {
 	namespace npc {
@@ -9,10 +13,17 @@ namespace hiraeth {
 		{
 			unsigned int dialogReturnValue();
 		};
+		
+		//struct DialogBit
+		//{
+		//	std::string Text;
+		//	unsigned int NextDialog{0};
+		//};
 
 		class DialogTree
 		{
 		private:
+			//std::map<unsigned int, DialogBit> m_Dialogs;
 			std::vector<std::string> m_Strings;
 			size_t m_StringIndex;
 		public:
@@ -43,7 +54,6 @@ namespace hiraeth {
 			DialogManager(game::Character * character)
 				: m_TextBoxes(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false),
 			m_InText{nullptr},
-			m_DialogTree{},
 			m_Character(character)
 			{
 				m_InText = new graphics::Label{ "arial", 16, "", { -130, 130 }, 0xffffffff, graphics::Label::Alignment::LEFT };

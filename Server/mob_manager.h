@@ -24,17 +24,18 @@ namespace hiraeth {
 		class MobManager
 		{
 			using MonsterType = unsigned int;
-			using MobIdType = unsigned int;
+			using MobIndex = unsigned int;
 		private:
 			std::random_device rd;
 			std::mt19937 gen;
 			std::uniform_int_distribution<> dis;
 		public:
-			std::map<MobIdType, MonsterStateUpdate> m_Monsters;
-			std::map<MobIdType, MonsterType> m_MonsterIdToType;
+			std::map<MobIndex, MonsterStateUpdate> m_Monsters;
+			std::map<MobIndex, MonsterType> m_MonsterIdToType;
 			std::map<MonsterType, SRL::MonsterData> m_MonsterTypeToData;
 			std::vector<SRL::FootHoldData> m_Footholds;
-			std::map<MobIdType, MobMoveCommand> m_MoveCmds;
+			std::map<MobIndex, MobMoveCommand> m_MoveCmds;
+			std::vector<SRL::Summon> m_Summons;
 
 			MobManager(unsigned int map_index):
 			gen(rd()),
@@ -43,6 +44,7 @@ namespace hiraeth {
 				auto map_data = SRL::deserial<SRL::MapData>("serialized/map.data", map_index);
 				m_Footholds = map_data.FootHolds;
 				unsigned int index = 0;
+				m_Summons = map_data.Summons;
 				for (const auto& summon : map_data.Summons)
 				{
 					m_MonsterIdToType[index] = summon.monster_type;
@@ -60,7 +62,7 @@ namespace hiraeth {
 			{
 				return ((a % b) + b) % b;
 			}
-			void calculateLocationNow(MobIdType mob_index)
+			void calculateLocationNow(MobIndex mob_index)
 			{
 				MobMoveCommand& mmc = m_MoveCmds[mob_index];
 				auto& mob = m_Monsters[mob_index];
@@ -112,12 +114,12 @@ namespace hiraeth {
 				//	distance_walked, rel_loc1, rel_loc2);
 			}
 		public:
-			void setNewMoveCommand(MobIdType mob_index, MobMoveCommand mmc)
+			void setNewMoveCommand(MobIndex mob_id, MobMoveCommand mmc)
 			{
-				if (m_MoveCmds.find(mob_index) != m_MoveCmds.end())
-					calculateLocationNow(mob_index);
-				m_MoveCmds[mob_index] = mmc;
-				m_Monsters[mob_index].dir = mmc.dir;
+				if (m_MoveCmds.find(mob_id) != m_MoveCmds.end())
+					calculateLocationNow(mob_id);
+				m_MoveCmds[mob_id] = mmc;
+				m_Monsters[mob_id].dir = mmc.dir;
 			}
 			void recalculateAllMobs()
 			{
@@ -140,7 +142,7 @@ namespace hiraeth {
 				}
 				return cmdd_mob_ids;
 			}
-			void decideNewAction(MobIdType mob_id)
+			void decideNewAction(MobIndex mob_id)
 			{
 				Direction dir;
 				if (dis(gen) < 4)
@@ -151,6 +153,25 @@ namespace hiraeth {
 					else
 						dir = Right;
 				setNewMoveCommand(mob_id, MobMoveCommand{ dir, ATimer{10.0f}, 10 });
+			}
+
+			bool damageMob(MonsterDamage monster_damage)
+			{
+				auto& monster = m_Monsters[monster_damage.monster_id];
+				if (monster.hp > monster_damage.damage)
+				{
+					m_Monsters[monster_damage.monster_id].hp -= monster_damage.damage;
+					return false;
+				}
+				return true;
+			}
+			void monsterDied(MobIndex mob_id)
+			{
+				//m_Monsters.erase(mob_id);
+				auto& monster = m_Monsters[mob_id];
+				setNewMoveCommand(mob_id, MobMoveCommand{ Stand, ATimer{10.0f}, 10 });
+				monster.hp = m_MonsterTypeToData[m_MonsterIdToType[mob_id]].StatsStruct.Hp;
+				monster.pos = m_Summons.at(mob_id).position;
 			}
 		};
 	}

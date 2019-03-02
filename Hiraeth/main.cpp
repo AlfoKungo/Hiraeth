@@ -1,24 +1,15 @@
-#include <ctime>
 #include "network/client_handler.h"
-#include <cereal/archives/binary.hpp>
-#include <fstream>
-#include <cereal/types/memory.hpp>
-#include <cereal/types/vector.hpp>
-
+#include "game/character.h"
 #include "utils/static_timer.h"
-#include "maths/maths.h"
-
 #include "src/graphics/window.h"
 #include "keyboard/keyboard.h"
 #include "view/camera.h"
-
 #include "src/graphics/shader.h"
 #include "src/map/map.h"
-#include "graphics/texture_manager.h"
-#include "graphics/label.h"
 #include "UI/ui_manager.h"
 #include "game/monsters/monster_manager.h"
 #include "item/item_manager.h"
+#include "NPC/npc_manager.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -28,9 +19,8 @@
 //#include <gau.h>
 
 #include <cstdio>
-#include "NPC/npc_manager.h"
 #include "skills/skill_manager.h"
-#include "NPC/dialog_manager.h"
+#include "game/net_chars/net_char_manager.h"
 
 #if 0
 static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
@@ -105,16 +95,16 @@ int main()
 	skills::SkillManager skillManager{uiManager.getUiSkills()};
 
 
-	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
-	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager, &skillManager, uiManager.getMainUi()->getCharacterStats());
-	m_CrLayer.add_ref(&m_Char);
-	view::Camera::init(&m_Char);
-
-	//graphics::Layer<game::NetCharacter> m_NtCrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
-
-	game::MonsterManager monsterManager(map.getMapLayer(), &m_Char, &itemManager);
+	game::MonsterManager monsterManager(map.getMapLayer(), &itemManager);
 	game::NetCharManager netCharManager{map.getMapLayer(), &skillManager};
 	network::ClientHandler clientHandler{&netCharManager, &monsterManager}; // itemManager, 
+
+	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
+	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager,
+		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),
+		&clientHandler);
+	m_CrLayer.add_ref(&m_Char);
+	view::Camera::init(&m_Char);
 
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char);
 
@@ -125,7 +115,6 @@ int main()
 		window.clear();
 		double x, y;
 		window.getKeyboard()->getMousePosition(x, y);
-		//std::string s = "my name is : " + std::to_string(x) + ", " + std::to_string(y);
 		std::string s = "my name is : " + std::to_string(m_Char.getBounds().x) + ", "+ std::to_string(m_Char.getBounds().y) + ", " + std::to_string(m_Char.getBounds().width) + ", "  + std::to_string(m_Char.getBounds().height);
 		window.setTitle(s.c_str());
 		Camera::update();
@@ -136,7 +125,7 @@ int main()
 		m_CrLayer.update();
 		itemManager.update();
 		uiManager.update();
-		clientHandler.Update(network::PlayerStateUpdate{ m_Char.getPosition(), m_Char.getForce() , m_Char.getDirection()});
+		clientHandler.Update(network::PlayerStateUpdateMsg{ m_Char.getPosition(), m_Char.getForce() , m_Char.getDirection()});
 		netCharManager.update();
 
 

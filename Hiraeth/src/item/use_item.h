@@ -11,8 +11,8 @@ namespace hiraeth {
 			SRL::ItemPropertiesMap m_PropertiesMap;
 		public:
 			UseItem(maths::vec2 pos, SRL::UseItemData item_data, const std::vector<physics::FootHold>& foot_holds)
-				: Item(pos, item_data.item_info.basic_item_info, item_data.texture_data, foot_holds),
-				m_PropertiesMap(item_data.item_info.item_properties)
+				: Item(pos, item_data.info.basic_item_info, item_data.texture_data, foot_holds),
+				m_PropertiesMap(item_data.info.item_properties)
 			{
 			}
 			
