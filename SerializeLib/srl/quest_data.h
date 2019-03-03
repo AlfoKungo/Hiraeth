@@ -38,10 +38,11 @@ namespace SRL {
 
 	struct QuestData
 	{
+		std::string name;
 		QuestPropertiesMap quest_properties;
 
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(quest_properties));
+			ar(CEREAL_NVP(name), CEREAL_NVP(quest_properties));
 		}
 	};
 

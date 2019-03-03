@@ -1,0 +1,24 @@
+{
+    "quest": {
+        "name": "first",
+        "quest_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 2,
+                    "data": {
+                        "type": 0,
+                        "amount": 20
+                    }
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "index": 0,
+                    "data": 5000
+                }
+            }
+        ]
+    }
+}

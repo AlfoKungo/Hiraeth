@@ -38,6 +38,8 @@ const int TEXTURES_ADDRESSES_BEGIN = (MAP_AMOUNT * sizeof(Address));
 const int TILES_ADDRESSES_BEGIN = ((MAP_AMOUNT + TEXTURES_AMOUNT) * sizeof(Address));
 const int MAP_DATA_DATA_BEGIN = (MAP_ADDRESSES_AMOUNT * sizeof(Address));
 
+const int ADDRESS_BEGIN = 0;
+const int DATA_BEGIN = MAX_ADDRESSES * sizeof(Address);
 
 const int MONSTER_AMOUNT = MAX_ADDRESSES;
 const int MONSTER_TEXTURES_AMOUNT = MAX_ADDRESSES;
@@ -47,23 +49,18 @@ const int MONSTER_ADDRESSES_AMOUNT(MONSTER_AMOUNT + MONSTER_TEXTURES_AMOUNT);
 #define MONSTER_TEXTURES_ADDRESS_BEGIN (MONSTER_AMOUNT * sizeof(Address))
 #define MONSTER_DATA_DATA_BEGIN (MONSTER_ADDRESSES_AMOUNT * sizeof(Address))
 
-
 #define ITEM_AMOUNT MAX_ADDRESSES
 #define ITEM_ADDRESSES_AMOUNT (ITEM_AMOUNT)
-
 #define ITEM_ADDRESS_BEGIN 0
 #define ITEM_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
 
-
 #define NPC_AMOUNT MAX_ADDRESSES
 #define NPC_ADDRESSES_AMOUNT (ITEM_AMOUNT)
-
 #define NPC_ADDRESS_BEGIN 0
 #define NPC_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
 
 #define SKILL_AMOUNT MAX_ADDRESSES
 #define SKILL_ADDRESSES_AMOUNT (ITEM_AMOUNT)
-
 #define SKILL_ADDRESS_BEGIN 0
 #define SKILL_DATA_BEGIN (ITEM_ADDRESSES_AMOUNT * sizeof(Address))
 
@@ -92,12 +89,18 @@ void serialize_data(std::vector<DATA> data, int addresses_begin, std::ofstream& 
 	for (const Address& address : addresses)
 		arout(address);
 }
-
+//template <class TData, std::enable_if_t<TData::texture_data::type, SRL::TextureData>>
+//template <class TData, typename = typename std::enable_if<true>::type>
 template <class TData>
+//void tex_n_data(std::string path, std::vector<TData>& data_vec)
+//std::enable_if_t<std::is_same<TData, SRL::UseItemData>::value || std::is_same<TData, SRL::EquipItemData>::value>
+//std::enable_if_t<std::is_same<typename TData::texture_data*, SRL::TextureData>::value>
+//std::enable_if_t<std::is_same<TData::TextureData, SRL::TextureData>::value>::value, void>
 void tex_n_data(std::string path, std::vector<TData>& data_vec)
+ //tex_n_data(std::string path, typename std::enable_if<std::is_same<typename TData::texture_data, SRL::TextureData>, std::vector<TData>>::type & data_vec)
 {
-	std::string tex_path = path + "\\tex.png";
-	std::string data_path = path + "\\data.json";
+	const std::string tex_path = path + "\\tex.png";
+	const std::string data_path = path + "\\data.json";
 	std::ifstream in(data_path, std::ios::in);
 	cereal::JSONInputArchive arin(in);
 	TData Td{};
@@ -108,7 +111,61 @@ void tex_n_data(std::string path, std::vector<TData>& data_vec)
 }
 
 template <class TData>
-void serialize_generic(const std::string SRL_TYPE)
+//typename std::enable_if<
+//	std::conditional<std::is_same<TData, SRL::UseItemData>::value || std::is_same<TData, SRL::EquipItemData>::value, 
+//std::false_type, std::true_type>::value>::type
+void  skill_data(std::string path, std::vector<TData>& data_vec)
+{
+	const std::string data_path = path + "\\data.json";
+	std::ifstream in(data_path, std::ios::in);
+	cereal::JSONInputArchive arin(in);
+	TData Td{};
+
+	arin(Td.skill_info);
+	Td.icon_data.load_data(path);
+	for (auto & pp : fs::directory_iterator(path))
+	{
+		if (pp.path().filename().string() == "effect.png")
+		{
+			SRL::FullAnimationData fad;
+			fad.load_data(pp.path().parent_path().string(), "effect");
+			Td.animation_map[SRL::effectAnimation] = fad;
+		}
+		if (pp.path().filename().string() == "ball.png")
+		{
+			SRL::FullAnimationData fad;
+			fad.load_data(pp.path().parent_path().string(), "ball");
+			Td.animation_map[SRL::ballAnimation] = fad;
+		}
+		if (pp.path().filename().string() == "hit.png")
+		{
+			SRL::FullAnimationData fad;
+			fad.load_data(pp.path().parent_path().string(), "hit");
+			Td.animation_map[SRL::hitAnimation] = fad;
+		}
+	}
+	data_vec.push_back(Td);
+}
+
+template <class TData>
+ void just_data(std::string path, std::vector<TData>& data_vec)
+{
+	const std::string data_path = path;
+	std::ifstream in(data_path, std::ios::in);
+	cereal::JSONInputArchive arin(in);
+	TData Td{};
+
+	arin(Td);
+	data_vec.push_back(Td);
+}
+
+//template <class TData, std::enable_if_t<std::conditional<std::is_same<SRL::TextureData, TData::texture_data>::value, std::true_type, std::false_type>>>
+//template <class TData, std::enable_if_t<std::is_same<SRL::UseItemData, TData>::value> = 0>
+//template <class TData, typename std::enable_if<std::is_same<SRL::UseItemData, TData>::value>::type = 0>
+//template <class TData, typename std::enable_if<std::true_type> = 0>
+//typename std::enable_if<std::is_same<TData, SRL::UseItemData>::value || std::is_same<TData, SRL::EquipItemData>::value, void>::type
+template <class TData, class F>
+void serialize_generic(const std::string SRL_TYPE, F fun)
 {
 		std::ofstream data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
 			std::ios::out | std::ios::binary);
@@ -120,11 +177,12 @@ void serialize_generic(const std::string SRL_TYPE)
 
 			for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
 			{
-				tex_n_data(p.path().string(), data_vec);
+				fun(p.path().string(), data_vec);
+				//tex_n_data(p.path().string(), data_vec);
 			}
 
-			data_file.seekp(ITEM_DATA_BEGIN);
-			serialize_data(data_vec, ITEM_ADDRESS_BEGIN, data_file, arout);
+			data_file.seekp(DATA_BEGIN);
+			serialize_data(data_vec, ADDRESS_BEGIN, data_file, arout);
 		}
 }
 
@@ -228,7 +286,7 @@ int main()
 				//Mtd.textures_dict[SRL::MoveState::Hit].load_texture(path + "\\hit.png");
 				v_monsterTexturesData.push_back(Mtd);
 			}
-			monster_data_file.seekp(0, monster_data_file.end);
+			monster_data_file.seekp(0, std::ofstream::end);
 			serialize_data(v_monsterTexturesData, MONSTER_TEXTURES_ADDRESS_BEGIN, monster_data_file, arout);
 		}
 	}
@@ -236,7 +294,7 @@ int main()
 	// Serialize Item Data
 	Checks::create_item_data();
 	{
-		serialize_generic<SRL::UseItemData>("item");
+		serialize_generic<SRL::UseItemData>("item", tex_n_data<SRL::UseItemData>);
 /*
 		std::ofstream item_data_file("../Hiraeth/serialized/item.data", std::ios::out | std::ios::binary);
 		if (item_data_file.is_open())
@@ -267,7 +325,7 @@ int main()
 	// Serialize Equip Data
 	Checks::create_equip_data();
 	{
-		serialize_generic<SRL::EquipItemData>("equip");
+		serialize_generic<SRL::EquipItemData>("equip", tex_n_data<SRL::EquipItemData>);
 /*
 		std::ofstream item_data_file("../Hiraeth/serialized/equip.data", std::ios::out | std::ios::binary);
 		if (item_data_file.is_open())
@@ -297,7 +355,7 @@ int main()
 
 	// Serialize NPC Data
 	{
-		serialize_generic<SRL::NpcData>("npc");
+		serialize_generic<SRL::NpcData>("npc",tex_n_data<SRL::NpcData>);
 		//const std::string SRL_TYPE = "npc";
 		//std::ofstream npc_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
 		//	std::ios::out | std::ios::binary);
@@ -317,7 +375,7 @@ int main()
 		//		cereal::JSONInputArchive arin(in);
 		//		SRL::NpcData Td{};
 
-		//		arin(Td.npc_info);
+		//		arin(Td.info);
 		//		Td.texture_data.load_texture(tex_path);
 		//		v_npcData.push_back(Td);
 		//	}
@@ -329,55 +387,57 @@ int main()
 	// Serialize Skills Data
 	Checks::create_skill_data();
 	{
-		const std::string SRL_TYPE = "skills";
-		std::ofstream skill_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
-			std::ios::out | std::ios::binary);
-		if (skill_data_file.is_open())
-		{
-			cereal::BinaryOutputArchive arout(skill_data_file);
+		serialize_generic<SRL::SkillData>("skills",skill_data<SRL::SkillData>);
+		//const std::string SRL_TYPE = "skills";
+		//std::ofstream skill_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
+		//	std::ios::out | std::ios::binary);
+		//if (skill_data_file.is_open())
+		//{
+		//	cereal::BinaryOutputArchive arout(skill_data_file);
 
-			std::vector<SRL::SkillData> skill_data;
-			skill_data.reserve(100);
-			for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
-			{
-				std::string path = p.path().string();
-				std::string data_path = path + "\\data.json";
-				std::ifstream in(data_path, std::ios::in);
-				cereal::JSONInputArchive arin(in);
-				SRL::SkillData Td{};
+		//	std::vector<SRL::SkillData> skill_data;
+		//	skill_data.reserve(100);
+		//	for (auto & p : fs::directory_iterator("data/" + SRL_TYPE))
+		//	{
+		//		std::string path = p.path().string();
+		//		std::string data_path = path + "\\data.json";
+		//		std::ifstream in(data_path, std::ios::in);
+		//		cereal::JSONInputArchive arin(in);
+		//		SRL::SkillData Td{};
 
-				arin(Td.skill_info);
-				Td.icon_data.load_data(path);
-				for (auto & pp : fs::directory_iterator(p))
-				{
-					if (pp.path().filename().string() == "effect.png")
-					{
-						SRL::FullAnimationData fad;
-						fad.load_data(pp.path().parent_path().string(), "effect");
-						Td.animation_map[SRL::effectAnimation] = fad;
-					}
-					if (pp.path().filename().string() == "ball.png")
-					{
-						SRL::FullAnimationData fad;
-						fad.load_data(pp.path().parent_path().string(), "ball");
-						Td.animation_map[SRL::ballAnimation] = fad;
-					}
-					if (pp.path().filename().string() == "hit.png")
-					{
-						SRL::FullAnimationData fad;
-						fad.load_data(pp.path().parent_path().string(), "hit");
-						Td.animation_map[SRL::hitAnimation] = fad;
-					}
-				}
-				skill_data.push_back(Td);
-			}
-			skill_data_file.seekp(SKILL_DATA_BEGIN);
-			serialize_data(skill_data, SKILL_ADDRESS_BEGIN, skill_data_file, arout);
-		}
+		//		arin(Td.skill_info);
+		//		Td.icon_data.load_data(path);
+		//		for (auto & pp : fs::directory_iterator(p))
+		//		{
+		//			if (pp.path().filename().string() == "effect.png")
+		//			{
+		//				SRL::FullAnimationData fad;
+		//				fad.load_data(pp.path().parent_path().string(), "effect");
+		//				Td.animation_map[SRL::effectAnimation] = fad;
+		//			}
+		//			if (pp.path().filename().string() == "ball.png")
+		//			{
+		//				SRL::FullAnimationData fad;
+		//				fad.load_data(pp.path().parent_path().string(), "ball");
+		//				Td.animation_map[SRL::ballAnimation] = fad;
+		//			}
+		//			if (pp.path().filename().string() == "hit.png")
+		//			{
+		//				SRL::FullAnimationData fad;
+		//				fad.load_data(pp.path().parent_path().string(), "hit");
+		//				Td.animation_map[SRL::hitAnimation] = fad;
+		//			}
+		//		}
+		//		skill_data.push_back(Td);
+		//	}
+		//	skill_data_file.seekp(SKILL_DATA_BEGIN);
+		//	serialize_data(skill_data, SKILL_ADDRESS_BEGIN, skill_data_file, arout);
+		//}
 	}
 
-	//// Serialize Skills Data
-	//Checks::create_quest_data();
+	// Serialize Skills Data
+	Checks::create_quest_data();
+	serialize_generic<SRL::QuestData>("quest",just_data<SRL::QuestData>);
 	//{
 	//	const std::string SRL_TYPE = "quest"; //
 	//	std::ofstream skill_data_file("../Hiraeth/serialized/" + SRL_TYPE + ".data", 
