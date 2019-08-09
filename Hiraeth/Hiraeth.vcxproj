@@ -294,6 +294,7 @@
     <ClInclude Include="src\NPC\npc_manager.h" />
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
+    <ClInclude Include="src\quest\quest_label.h" />
     <ClInclude Include="src\save\serializer.h" />
     <ClInclude Include="src\skills\skill_icon.h" />
     <ClInclude Include="src\skills\skill_manager.h" />

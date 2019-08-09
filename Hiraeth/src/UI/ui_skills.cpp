@@ -1,5 +1,5 @@
 #include "ui_skills.h"
-#include "basic\EventManager.h"
+#include "basic/EventManager.h"
 #include "srl/monster_data.h"
 
 namespace hiraeth {

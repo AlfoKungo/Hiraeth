@@ -7,6 +7,7 @@
 #include "item/item_manager.h"
 #include "game/monsters/monster_manager.h"
 #include "dialog_manager.h"
+#include "UI/ui_quests.h"
 
 
 namespace hiraeth
@@ -22,8 +23,10 @@ namespace hiraeth
 			graphics::Layer<npc::Npc> m_Npcs;
 			input::Keyboard* m_Kb;
 			npc::DialogManager m_DialogManager;
+			ui::UiQuests * m_UiQuests;
 		public:
-			NpcManager(map::MapLayer* map_layer, input::Keyboard* kb, game::Character * character);
+			NpcManager(map::MapLayer* map_layer, input::Keyboard* kb, 
+				game::Character * character, ui::UiQuests * ui_quests);
 			void draw() const;
 			void update() override;
 			void mapChanged();

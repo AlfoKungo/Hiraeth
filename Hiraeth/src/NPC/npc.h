@@ -12,12 +12,14 @@ namespace hiraeth {
 			SRL::NpcData m_Data;
 			//graphics::Label m_TalkLabel;
 			//bool m_IsTalking;
+			unsigned int m_NpcIndex;
 		public:
-			Npc(SRL::NpcData npc_data, map::MapLayer* map_layer, input::Keyboard* kb)
+			Npc(SRL::NpcData npc_data, map::MapLayer* map_layer, input::Keyboard* kb, unsigned int npc_index)
 				: BaseCreature(maths::Rectangle{ maths::vec2{npc_data.info.npc_x_value, 0}, maths::vec2(50, 50) }, map_layer,
 					25, 13,
 					npc_data.info.npc_foothold),
-				m_Data(npc_data)
+				m_Data(npc_data),
+				m_NpcIndex(npc_index)
 				//m_TalkLabel{"arial", 16, "hey im your npc", { 40, -10 }, 0xff000000, graphics::Label::Alignment::LEFT},
 				//m_IsTalking{false}
 			{
@@ -27,7 +29,7 @@ namespace hiraeth {
 			}
 
 			Npc(unsigned int npc_index, map::MapLayer* map_layer, input::Keyboard* kb) :
-				Npc(SRL::deserial<SRL::NpcData>("serialized/npc.data", npc_index), map_layer, kb)
+				Npc(SRL::deserial<SRL::NpcData>("npc", npc_index), map_layer, kb, npc_index)
 			{
 			}
 
@@ -40,11 +42,12 @@ namespace hiraeth {
 				//}
 			}
 
-			void onNpcClick() 
+			void onNpcClick()
 			{
 				//m_IsTalking = true;
 				//move(maths::vec2(10, 0));
 			}
+			unsigned int getNpcId() const { return m_NpcIndex; }
 		};
 	}
 }

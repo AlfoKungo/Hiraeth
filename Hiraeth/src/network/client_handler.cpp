@@ -169,10 +169,13 @@ namespace hiraeth {
 						updateMobData();
 						break;
 					case MSG_STC_MOB_HIT:
-						MobHit();
+						recvMobHit();
 						break;
 					case MSG_STC_MOB_DIED:
-						MobDied();
+						recvMobDied();
+						break;
+					case MSG_STC_START_DIALOG:
+						recvStartDialog();
 						break;
 					default:
 						break;
@@ -220,7 +223,7 @@ namespace hiraeth {
 			//m_KALossTimer.reSet(KA_LOSS_TIMEOUT);
 		}
 
-		void ClientHandler::MobHit()
+		void ClientHandler::recvMobHit()
 		{
 			auto monster_damage = dsrl_type<MonsterDamage>(m_RcvBuffer + 1);
 			auto monster = m_MonsterManager->getMonsters()->at(monster_damage.monster_id);
@@ -228,11 +231,18 @@ namespace hiraeth {
 				game::Damage{ unsigned int(monster_damage.damage), 0 });
 		}
 
-		void ClientHandler::MobDied()
+		void ClientHandler::recvMobDied()
 		{
 			//auto dead_monster_id = dsrl_types<unsigned int>(m_RcvBuffer + 1);
 			auto monster_died_msg = dsrl_dynamic_type<MonsterDiedMsg>(m_RcvBuffer + 1);
 			m_MonsterManager->killMonster(monster_died_msg.monster_id, monster_died_msg.dropped_items);
+		}
+
+		void ClientHandler::recvStartDialog()
+		{
+			const auto dialog_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+				EventManager *m_EventManager = EventManager::Instance();
+				m_EventManager->execute<unsigned int>(DialogStart, dialog_id);
 		}
 
 		void ClientHandler::sendAttackPacket(MonsterDamage monster_damage)
@@ -245,6 +255,18 @@ namespace hiraeth {
 			//Log::Init();
 			//HH_LOG("myfirst_log");
 			//HH_LOG("mysncnd_log");
+		}
+
+		void ClientHandler::sendNpcClick(unsigned int npc_id)
+		{
+			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_NPC_CLICK, m_Id, npc_id);
+			Send();
+		}
+
+		void ClientHandler::sendQuestProgress(unsigned int npc_id, unsigned int chat_id)
+		{
+			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_DIALOG_NEXT, m_Id, npc_id, chat_id);
+			Send();
 		}
 	}
 }

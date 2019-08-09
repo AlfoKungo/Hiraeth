@@ -64,10 +64,13 @@ namespace hiraeth {
 			void loadMobsData();
 			void updateMobData();
 			void loadCurrentMapPlayers(BufferType * buffer);
-			void MobHit();
-			void MobDied();
+			void recvMobHit();
+			void recvMobDied();
+			void recvStartDialog();
 		public:
 			void sendAttackPacket(MonsterDamage monster_damage);
+			void sendNpcClick(unsigned int npc_id);
+			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id);
 
 		};
 	}

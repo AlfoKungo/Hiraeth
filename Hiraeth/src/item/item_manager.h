@@ -2,8 +2,8 @@
 #include <vector>
 #include <fstream>
 #include "item.h"
-#include "graphics\layers\layer.h"
-#include "graphics\texture_manager.h"
+#include "graphics/layers/layer.h"
+#include "graphics/texture_manager.h"
 #include "basic/EventManager.h"
 #include "item_data_manager.h"
 #include "UI/ui_inventory.h"

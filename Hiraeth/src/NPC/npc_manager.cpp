@@ -4,12 +4,14 @@ namespace hiraeth
 {
 	namespace game
 	{
-		NpcManager::NpcManager(map::MapLayer* map_layer, input::Keyboard* kb, game::Character * character)
+		NpcManager::NpcManager(map::MapLayer* map_layer, input::Keyboard* kb,
+			game::Character * character, ui::UiQuests * ui_quests)
 			: m_MapLayer(map_layer),
 			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_Npcs(&m_Shader, true),
 			m_Kb(kb),
-			m_DialogManager{ character }
+			m_DialogManager{ character, ui_quests },
+			m_UiQuests(ui_quests)
 		{
 			EventManager* m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &NpcManager::mapChanged);
@@ -46,7 +48,8 @@ namespace hiraeth
 				if (npc->getBounds().Contains(translated_pos))
 				{
 					npc->onNpcClick();
-					m_DialogManager.nextDialog();
+					m_DialogManager.sendStartDialog(npc->getNpcId());
+					return true;
 				}
 			return false;
 		}

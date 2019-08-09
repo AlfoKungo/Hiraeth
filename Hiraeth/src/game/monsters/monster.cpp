@@ -17,8 +17,7 @@ namespace hiraeth {
 			m_Id{mob_id}
 			//m_Summon(summon)
 		{
-
-			SRL::MonsterTexturesData mtd = SRL::deserial<SRL::MonsterTexturesData>("serialized/monster.data",
+			auto mtd = SRL::deserial<SRL::MonsterTexturesData>("monster",
 				(100 + monster_data.TextureIndex));
 
 			m_HitBox = mtd.creature_sprites.hit_box;

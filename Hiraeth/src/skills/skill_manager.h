@@ -53,7 +53,7 @@ namespace hiraeth {
 
 			void add_skill(unsigned int index)
 			{
-				SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("serialized/skills.data", index);
+				SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("skills", index);
 				m_SkillsData[index] = m_UiSkills->add_skill(skill_data, 0);
 			}
 

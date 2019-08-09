@@ -14,8 +14,8 @@ namespace SRL {
 	struct TileData
 	{
 		vec2 position;
-		float scale;
-		unsigned int type;
+		float scale{};
+		unsigned int type{};
 		template<class Archive>
 		void serialize(Archive & ar)
 		{

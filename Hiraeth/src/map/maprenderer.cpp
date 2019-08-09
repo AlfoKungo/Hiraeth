@@ -78,7 +78,7 @@ namespace hiraeth {
 		{
 			const maths::vec3& position = renderable->getPosition();
 			const unsigned int type = renderable->getType();
-			const SRL::TileUv tile_uv = m_TTD.TilesUV[type];
+			const SRL::TileUv tile_uv = m_TTD.info[type];
 			const maths::vec2& size = tile_uv.UvSize;
 			const unsigned int color = renderable->getColor();
 			const std::vector<maths::vec2>& uv = create_uv_by_pos_size(tile_uv.UvPos, tile_uv.UvSize, maths::vec2(621,328));
@@ -138,7 +138,7 @@ namespace hiraeth {
 
 		void MapRenderer::reloadTTD(int tile_index)
 		{
-			m_TTD = SRL::deserial<SRL::TileTextureData>("serialized/map.data", (200 + tile_index));
+			m_TTD = SRL::deserial<SRL::TileTextureData>("map", (200 + tile_index));
 		}
 
 		void MapRenderer::update_texture()

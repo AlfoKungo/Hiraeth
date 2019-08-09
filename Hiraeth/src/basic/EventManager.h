@@ -19,9 +19,11 @@ namespace hiraeth {
 
 	enum EventList
 	{
-		StatsUpdate,
-		MapChanged,
-		InventoryUpdated,
+		StatsUpdate, // 0
+		MapChanged, // 0
+		InventoryUpdated, // 0
+		MonsterDied, // 1
+		DialogStart, // unsigned int
 	};
 
 	class BaseEvent {

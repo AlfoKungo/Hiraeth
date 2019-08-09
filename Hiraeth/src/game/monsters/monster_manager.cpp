@@ -12,6 +12,7 @@ namespace hiraeth {
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &MonsterManager::mapChanged);
+			m_EventManager->createEvent<unsigned int>(MonsterDied);
 			mapChanged();
 			//m_Char->setMonsters(&m_Layer.m_Renderables);
 			std::srand(std::time(nullptr));
@@ -87,6 +88,8 @@ namespace hiraeth {
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
 					m_Monsters.erase(monster_id);
+					EventManager *m_EventManager = EventManager::Instance();
+					m_EventManager->execute<unsigned int>(MonsterDied, monster_id);
 				}
 				else
 				{

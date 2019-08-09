@@ -13,18 +13,18 @@ namespace SRL {
 		template<class Archive>
 		void serialize(Archive & ar)
 		{
-			ar(UvPos, UvSize);
+			ar(CEREAL_NVP(UvPos), CEREAL_NVP(UvSize));
 		}
 	};
 
 	struct TileTextureData
 	{
-		std::vector<TileUv> TilesUV;
+		std::vector<TileUv> info;
 		TextureData texture_data;
 		template<class Archive>
 		void serialize(Archive & ar)
 		{
-			ar(TilesUV, texture_data);
+			ar(info, texture_data);
 		}
 	};
 

@@ -28,7 +28,7 @@ namespace hiraeth {
 
 		void MapLayer::reloadData(unsigned int map_index)
 		{
-			m_MapData = SRL::deserial<SRL::MapData>("serialized/map.data", map_index);
+			m_MapData = SRL::deserial<SRL::MapData>("map", map_index);
 
 			m_Tiles.clear();
 			for (auto& tile_data : m_MapData.Tiles)

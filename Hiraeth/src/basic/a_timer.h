@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils\static_timer.h"
+#include "utils/static_timer.h"
 
 namespace hiraeth {
 

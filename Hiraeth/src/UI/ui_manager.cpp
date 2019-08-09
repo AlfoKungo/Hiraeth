@@ -43,7 +43,8 @@ namespace hiraeth {
 			m_Layer.add_ref(m_UiSkills);
 			kb->registerToKey(GLFW_KEY_K, skills, this);
 
-			m_Layer.add_ref(new UiQuests(maths::vec2(-600, 0), quests));
+			m_UiQuests = new UiQuests(maths::vec2(-600, 0), quests);
+			m_Layer.add_ref(m_UiQuests);
 			kb->registerToKey(GLFW_KEY_Q, quests, this);
 
 			m_UiEquip = new UiEquip(maths::vec2(500, 0), equip, character_stats);

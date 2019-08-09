@@ -1,32 +1,22 @@
 {
     "quest": {
-        "name": "first",
+        "name": "kanyethethird",
         "quest_properties": [
             {
                 "key": 0,
                 "value": {
                     "index": 2,
                     "data": {
-                        "type": 0,
-                        "amount": 20
-                    }
-                }
-            },
-            {
-                "key": 0,
-                "value": {
-                    "index": 2,
-                    "data": {
                         "type": 1,
-                        "amount": 10
+                        "amount": 15
                     }
                 }
             },
             {
-                "key": 3,
+                "key": 4,
                 "value": {
                     "index": 0,
-                    "data": 5000
+                    "data": 3000
                 }
             }
         ]

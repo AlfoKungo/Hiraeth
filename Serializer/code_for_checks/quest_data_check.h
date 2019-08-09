@@ -1,6 +1,7 @@
 #pragma once
 #include "srl/quest_data.h"
 #include <cereal/archives/json.hpp>
+#include "cereal/types/tuple.hpp"
 #include <fstream>
 
 namespace Checks
@@ -12,6 +13,7 @@ namespace Checks
 			SRL::QuestData quest{"first",
 				{
 					{SRL::QuestProps::KillAmount, SRL::QuestDouble{0, 20}},
+					{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 10}},
 					{SRL::QuestProps::ExpReward, 5000},
 				}
 			};

@@ -65,7 +65,7 @@ namespace hiraeth {
 		GLuint Texture::deserialize(int id)
 		{
 			GLuint result = 0;
-			SRL::TextureData tData = SRL::deserial<SRL::TextureData>("serialized/map.data", (100 + id));
+			SRL::TextureData tData = SRL::deserial<SRL::TextureData>("map", (100 + id));
 
 			m_Width = tData.width;
 			m_Height = tData.height;

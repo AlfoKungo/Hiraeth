@@ -9,14 +9,14 @@ namespace hiraeth {
 			const SRL::UseItemData& ItemDataManager::Get(unsigned int index) 
 			{
 				if (m_ItemData.find(index) == m_ItemData.end())
-					m_ItemData[index] = SRL::deserial<SRL::UseItemData>("serialized/item.data", (index));
+					m_ItemData[index] = SRL::deserial<SRL::UseItemData>("item", (index));
 				return m_ItemData[index]; 
 			}
 
 			const SRL::EquipItemData& ItemDataManager::GetEquip(unsigned int index)
 			{
 				if (m_EquipData.find(index) == m_EquipData.end())
-					m_EquipData[index] = SRL::deserial<SRL::EquipItemData>("serialized/equip.data", (index));
+					m_EquipData[index] = SRL::deserial<SRL::EquipItemData>("equip", (index));
 				return m_EquipData[index]; 
 			}
 	}

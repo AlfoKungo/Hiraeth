@@ -557,5 +557,8 @@
     <ClInclude Include="src\basic\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\quest\quest_label.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

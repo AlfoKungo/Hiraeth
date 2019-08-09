@@ -2,6 +2,7 @@
 #include "graphics/label.h"
 #include "graphics/layers/layer.h"
 #include "game/character.h"
+#include "UI/ui_quests.h"
 
 //#include <winsock2.h>
 //#include <Ws2tcpip.h>
@@ -50,15 +51,24 @@ namespace hiraeth {
 			bool m_IsDraw{false};
 			DialogTree m_DialogTree;
 			game::Character * m_Character;
+			ui::UiQuests * m_UiQuests;
+			network::ClientHandler * m_ClientHandler;
+			unsigned int m_CurrentNpc{0}, m_CurrentDialog{0};
 		public:
-			DialogManager(game::Character * character)
+			DialogManager(game::Character * character, ui::UiQuests * ui_quests)
 				: m_TextBoxes(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false),
 			m_InText{nullptr},
-			m_Character(character)
+			m_Character(character),
+			m_UiQuests(ui_quests),
+			m_ClientHandler(character->m_ClientHandler)
 			{
 				m_InText = new graphics::Label{ "arial", 16, "", { -130, 130 }, 0xffffffff, graphics::Label::Alignment::LEFT };
 				m_TextBoxes.add(m_InText);
 				m_TextBoxes.add(new graphics::Sprite{ maths::vec2(-140, 80), 280, 80, 0x88331a00 });
+
+				EventManager *m_EventManager = EventManager::Instance();
+				m_EventManager->createEvent<unsigned int>(DialogStart);
+				m_EventManager->subscribe(DialogStart,this, &DialogManager::startDialog);
 			}
 
 			void createDialog(const std::string& text)
@@ -67,7 +77,7 @@ namespace hiraeth {
 				m_InText->setText(text);
 			}
 
-			void nextDialog()
+			bool nextDialog()
 			{
 				m_IsDraw = true;
 				const std::string next_text{ m_DialogTree.getNextText() };
@@ -75,12 +85,24 @@ namespace hiraeth {
 				{
 					m_InText->setText(next_text);
 					m_Character->setStuck(true);
-				}
-				else
-				{
-					m_TextBoxes.clear();
-					m_Character->setStuck(false);
-				}
+					return true;
+				}  
+				m_TextBoxes.clear();
+				m_Character->setStuck(false);
+				m_ClientHandler->sendQuestProgress(m_CurrentNpc, 0);
+				return false;
+			}
+
+			void startDialog(unsigned int dialog_index)
+			{
+				m_CurrentDialog = dialog_index;
+				nextDialog();
+			}
+
+			void sendStartDialog(unsigned int npc_index)
+			{
+				m_CurrentNpc = npc_index;
+				m_ClientHandler->sendNpcClick(npc_index);
 			}
 
 			void draw() const
@@ -95,7 +117,8 @@ namespace hiraeth {
 
 			bool leftButtonClicked(float mx, float my) override
 			{
-				nextDialog();
+				if (!nextDialog())
+					m_UiQuests->setQuestAsActive(0);
 				return true;
 			}
 

@@ -39,13 +39,14 @@ namespace hiraeth {
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
 			CharacterStats * m_CharacterStats;
-			network::ClientHandler * m_ClientHandler;
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
 
 			bool m_IsStuck{ false };
+		public:
+			network::ClientHandler * m_ClientHandler;
 
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer,

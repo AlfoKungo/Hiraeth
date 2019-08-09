@@ -86,6 +86,8 @@ int main()
 
 	StaticTimer::init();
 
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
 	float timer = 0;
 	Map map(0, &window);
 
@@ -106,7 +108,7 @@ int main()
 	m_CrLayer.add_ref(&m_Char);
 	view::Camera::init(&m_Char);
 
-	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char);
+	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char, uiManager.getUiQuests());
 
 	unsigned int frames = 0;
 	while (!window.closed())

@@ -31,7 +31,10 @@ namespace hiraeth {
 			SRL::Summon summon;
 			float summonTime;
 		};
-
+		//struct PlayerQuestData
+		//{
+		//	unsigned int quest_id, quest_stage;
+		//};
 		class Server
 		{
 		private:
@@ -47,6 +50,9 @@ namespace hiraeth {
 			std::map<unsigned int, PlayerStateUpdateMsg> m_ClientsState;
 			std::queue<Summoner> m_SummonQueue;
 			MobManager m_MobManager;
+			//players_states
+			//std::map<unsigned int, std::vector<PlayerQuestData>> m_PlayerQuestData;
+			std::map<unsigned int, std::map<unsigned int, unsigned int>> m_PlayerQuestData;
 
 			BufferType m_Buffer[256];
 			size_t m_Size{0};
@@ -78,7 +84,9 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_LOCATION_UPDATE, &Server::LocationUpdate);
 				bindFunctionToChar(MSG_CTS_KA, &Server::KeepAlive);
 				bindFunctionToChar(MSG_CTS_HIT_MOB, &Server::HitMob);
+				bindFunctionToChar(MSG_CTS_NPC_CLICK, &Server::NpcClick);
 				bindFunctionToChar(MSG_CTS_DIALOG_NEXT, &Server::DialogNext);
+				bindFunctionToChar(MSG_CTS_ACCEPT_QUEST, &Server::AcceptQuest);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
 			}
@@ -152,13 +160,38 @@ namespace hiraeth {
 				}
 				//updateMonstersHp()
 			}
+			void NpcClick(Address sender)
+			{
+				auto [client_id, npc_index] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
+				unsigned int dialog_id = 0 ;
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_START_DIALOG, dialog_id);
+				m_Socket.Send(sender, m_Buffer, buffer_size);
+			}
 			void DialogNext(Address sender)
 			{
 				auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
+					m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
+				if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
+					m_PlayerQuestData[client_id][npc_index] = 0;
+				m_PlayerQuestData[client_id][npc_index] += 1;
 				//unsigned int client_id, npc_index, dialog_index;
 				//dsrl_types(m_Buffer, client_id, npc_index, dialog_index);
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_DIALOG_NEXT_ANSWER, dialog_index + 1);
 				m_Socket.Send(sender, m_Buffer, buffer_size);
+			}
+			void AcceptQuest(Address sender)
+			{
+				//auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				//if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
+				//	m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
+				//if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
+				//	m_PlayerQuestData[client_id][npc_index] = 0;
+				//m_PlayerQuestData[client_id][npc_index] += 1;
+				////unsigned int client_id, npc_index, dialog_index;
+				////dsrl_types(m_Buffer, client_id, npc_index, dialog_index);
+				//const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_ACCEPT_QUEST_ACK);
+				//m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 			void InrMobGotHit(Address sender)
 			{
