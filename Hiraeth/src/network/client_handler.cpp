@@ -268,5 +268,11 @@ namespace hiraeth {
 			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_DIALOG_NEXT, m_Id, npc_id, chat_id);
 			Send();
 		}
+
+		void ClientHandler::sendQuestAccepted(unsigned int npc_id, unsigned int quest_id)
+		{
+			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_ACCEPT_QUEST, m_Id, npc_id, quest_id);
+			Send();
+		}
 	}
 }

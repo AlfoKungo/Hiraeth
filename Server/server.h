@@ -170,11 +170,6 @@ namespace hiraeth {
 			void DialogNext(Address sender)
 			{
 				auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
-				if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
-					m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
-				if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
-					m_PlayerQuestData[client_id][npc_index] = 0;
-				m_PlayerQuestData[client_id][npc_index] += 1;
 				//unsigned int client_id, npc_index, dialog_index;
 				//dsrl_types(m_Buffer, client_id, npc_index, dialog_index);
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_DIALOG_NEXT_ANSWER, dialog_index + 1);
@@ -182,16 +177,12 @@ namespace hiraeth {
 			}
 			void AcceptQuest(Address sender)
 			{
-				//auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
-				//if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
-				//	m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
-				//if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
-				//	m_PlayerQuestData[client_id][npc_index] = 0;
-				//m_PlayerQuestData[client_id][npc_index] += 1;
-				////unsigned int client_id, npc_index, dialog_index;
-				////dsrl_types(m_Buffer, client_id, npc_index, dialog_index);
-				//const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_ACCEPT_QUEST_ACK);
-				//m_Socket.Send(sender, m_Buffer, buffer_size);
+				auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
+					m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
+				if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
+					m_PlayerQuestData[client_id][npc_index] = 0;
+				m_PlayerQuestData[client_id][npc_index] += 1;
 			}
 			void InrMobGotHit(Address sender)
 			{
@@ -201,7 +192,6 @@ namespace hiraeth {
 				updateMobManager();
 				createMessageThread(MSG_INR_MOB_UPDATE, 1000);
 			}
-
 
 			//void sendKeepAliveAnswer(Address sender)
 			//{

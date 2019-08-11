@@ -75,7 +75,6 @@ void serialize_vector(std::vector<DATA> data, int addresses_begin, std::ofstream
 }
 
 template <class TData>
-//TData dsrl_json(TData& Td, const std::string path)
 void dsrl_json(TData& Td, const std::string path)
 {
 	std::ifstream in(path, std::ios::in);
@@ -251,7 +250,6 @@ int main()
 	Checks::create_quest_data();
 	serialize_generic<SRL::QuestData>("quest", just_data<SRL::QuestData>);
 
-	std::cout << "finished serializing " << "map" << std::endl;
 	std::cout << "finished";
 	//std::cin.get();
 	return 0;

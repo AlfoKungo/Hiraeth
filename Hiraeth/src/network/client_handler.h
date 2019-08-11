@@ -71,6 +71,7 @@ namespace hiraeth {
 			void sendAttackPacket(MonsterDamage monster_damage);
 			void sendNpcClick(unsigned int npc_id);
 			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id);
+			void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id);
 
 		};
 	}

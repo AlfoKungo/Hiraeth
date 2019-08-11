@@ -41,7 +41,7 @@ namespace hiraeth {
 		void UiQuests::addAvailableQuest(unsigned int quest_index, const SRL::QuestData& quest_data)
 		{
 			m_Quests.push_back(quest_data.name);
-			m_Tabs->getTabByIndex(0)->add_data(new quest::QuestLabel{quest_index, m_Quests.size() - 1});
+			m_Tabs->getTabByIndex(0)->add_data(new quest::QuestLabel{ quest_index, static_cast<unsigned int>(m_Quests.size() - 1) });
 			//m_ForegroundGroup->add(new graphics::Label{ "arial", 19, quest_name, maths::vec2{ 14 , 332 - (float(m_Quests.size()) - 1)*17}, 0xff000000, graphics::Label::Alignment::LEFT });
 		}
 

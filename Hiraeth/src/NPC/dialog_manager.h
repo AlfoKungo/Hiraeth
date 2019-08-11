@@ -89,7 +89,7 @@ namespace hiraeth {
 				}  
 				m_TextBoxes.clear();
 				m_Character->setStuck(false);
-				m_ClientHandler->sendQuestProgress(m_CurrentNpc, 0);
+				m_ClientHandler->sendQuestAccepted(m_CurrentNpc, 0);
 				return false;
 			}
 
