@@ -251,15 +251,24 @@ namespace hiraeth {
 
 		void Server::sendConnectionResponse(Address sender)
 		{
-			const auto new_char_id = findFreeClientIndex();
+			auto name = dsrl_dynamic_type<std::string>(m_Buffer + 1);
+			auto char_id = m_DbClient->getIdByAccountName(name);
+			//const auto new_char_id = findFreeClientIndex();
+			const auto new_char_id = char_id;
 			sendNewPlayerInMap(new_char_id);
 			m_numConnectedClients++;
 			m_ClientAddress[new_char_id] = sender;
 			m_ClientsIds.push_back(new_char_id);
 			//m_ClientConnected[free_client_index] = true;
+			const auto player_data = m_DbClient->getPlayerDataById(char_id);
 
+			//auto player_data = PlayerData{"shd", 10, 1, 0, 300, 300, {}, {}};
+			//player_data.stats_alloc = { 1,1,1,2 };
+			//player_data.skills_alloc = {0,0,0,1,1,1};
+			//m_DbClient->setStatsAlloc(new_char_id, player_data.stats_alloc);
+			//player_data.stat_allocation = m_DbClient->getStatsAlloc(new_char_id);
 			ConnectionEstablishMsg msg{new_char_id, 
-				{69, "Kanye", 1, {0,0,0,0}, {0,0,0,1,1,1}}};
+				player_data};
 			auto[data, size] = srl_dynamic_type(msg);
 			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
 				MSG_STC_ESTABLISH_CONNECTION, *data, size);

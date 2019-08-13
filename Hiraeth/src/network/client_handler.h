@@ -36,6 +36,7 @@ namespace hiraeth {
 			//BufferType m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			char m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			ATimer m_KATimer{ KA_TIMEOUT }, m_KALossTimer{ KA_LOSS_TIMEOUT };
+			PlayerData m_PlayerData;
 
 			game::NetCharManager * m_NetCharManager;
 			game::MonsterManager * m_MonsterManager;
@@ -72,7 +73,9 @@ namespace hiraeth {
 			void sendNpcClick(unsigned int npc_id);
 			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id);
 			void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id);
-
+			void sendCharGotHit(unsigned int new_hp);
+			void sendCharUseSkill(unsigned int new_mp);
+			PlayerData getPlayerData() { return m_PlayerData; }
 		};
 	}
 }

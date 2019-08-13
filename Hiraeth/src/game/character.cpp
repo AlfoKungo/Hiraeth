@@ -119,6 +119,7 @@ namespace hiraeth {
 							getHit(Right, monster->getDamage());
 						else
 							getHit(Left, monster->getDamage());
+						m_ClientHandler->sendCharGotHit(m_CharacterStats->getStatsStruct_()->Hp);
 						return;
 					}
 				}
@@ -232,8 +233,12 @@ namespace hiraeth {
 			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_index);
 			SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
 			if (item_properties->find(SRL::SkillDataType::mpCon) != item_properties->end())
+			{
 				if (!m_CharacterStats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
 					return;
+				m_ClientHandler->sendCharUseSkill(m_CharacterStats->getStatsStruct_()->Mp);
+			}
+
 
 			if (item_properties->find(SRL::SkillDataType::timeOut) != item_properties->end())
 				m_SkillsTimeouts[skill_index] = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::timeOut)))};

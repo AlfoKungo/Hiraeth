@@ -9,14 +9,16 @@ namespace hiraeth {
 		PROTOCOL_CODE
 			MSG_CTS_ACK = 0x00,
 			MSG_CTS_OPEN_CONNECTION = 0x01,
-			MSG_CTS_CLOSE_CONNECTION = 0x0,
+			MSG_CTS_CLOSE_CONNECTION = 0x02,
 			MSG_CTS_LOCATION_UPDATE = 0x03,
 			MSG_CTS_KA = 0x05,
 			MSG_CTS_HIT_MOB = 0x06,
 			MSG_CTS_KILL_MOB = 0x07,
 			MSG_CTS_NPC_CLICK = 0x08,
 			MSG_CTS_DIALOG_NEXT = 0x09,
-			MSG_CTS_ACCEPT_QUEST = 0x10;
+			MSG_CTS_ACCEPT_QUEST = 0x10,
+			MSG_CTS_CHAR_GOT_HIT = 0x11,
+			MSG_CTS_CHAR_USE_SKILL = 0x12;
 
 		PROTOCOL_CODE
 			MSG_STC_ACK = 0x60,
@@ -99,14 +101,18 @@ namespace hiraeth {
 		};
 		struct PlayerData
 		{
-			unsigned int char_lvl{};
 			std::string name;
+			unsigned int char_lvl{};
 			unsigned int job{};
-			std::vector<unsigned int> stat_allocation;
-			std::vector<unsigned int> skill_allocation;
+			unsigned int exp{};
+			unsigned int hp{};
+			unsigned int mp{};
+			std::vector<unsigned int> stats_alloc;
+			std::vector<unsigned int> skills_alloc;
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(char_lvl), CEREAL_NVP(name), CEREAL_NVP(job),
-					CEREAL_NVP(stat_allocation), CEREAL_NVP(skill_allocation));
+					CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp),
+					CEREAL_NVP(stats_alloc), CEREAL_NVP(skills_alloc));
 			}
 		};
 		struct ConnectionEstablishMsg

@@ -14,8 +14,12 @@ namespace hiraeth {
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(StatsUpdate, this, &MainUi::StatsUpdated);
 			fill_stats_group();
-			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, { -730, -429 }, 0xff70cdd0));
-			m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff));
+			m_Job = new graphics::Label("arial", 11, m_StatsStruct->Job, { -730, -429 }, 0xff70cdd0);
+			m_Layer.add(m_Job);
+			m_Name = new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff);
+			m_Layer.add(m_Name);
+			//m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, { -730, -429 }, 0xff70cdd0));
+			//m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff));
 			m_Layer.add(m_LabelGroup);
 			m_Layer.add(new graphics::Sprite(maths::vec2(-551, -447), graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.gaugeCover.png")));
 			m_Layer.add(m_GraphicGroup);

@@ -22,3 +22,35 @@ namespace SRL {
 		return rType;
 	}
 }
+				//const char *paramValues[1];
+				//paramValues[0] = "2";
+				//PGresult   *res;
+
+				//res = PQexecParams(conn,
+				//	"SELECT * FROM players WHERE id = $1",
+				//	1,       /* one param */
+				//	NULL,    /* let the backend deduce param type */
+				//	paramValues,
+				//	NULL,    /* don't need param lengths since text */
+				//	NULL,    /* default to all text params */
+				//	1);      /* ask for binary results */
+
+				//if (PQresultStatus(res) != PGRES_TUPLES_OK)
+				//{
+				//	fprintf(stderr, "SELECT failed: %s", PQerrorMessage(conn));
+				//	PQclear(res);
+				//}
+
+				//char *name;
+				////int *level, *exp, *job;
+				//int loc = PQfnumber(res, "name");
+				///* Get the field values (we ignore possibility they are null!) */
+				//name = PQgetvalue(res, 0, loc);
+				//int         blen;
+				//blen = PQgetlength(res, 0, loc);
+				//printf(" b = (%d bytes) ", blen);
+				//std::cout <<  name;
+				//for (int j = 0; j < blen; j++)
+				//	printf("\\%03o", name[j]);
+
+				//PQclear(res);

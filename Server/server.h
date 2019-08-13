@@ -17,6 +17,7 @@
 #include "utills/a_timer.h"
 #include "srl/map_data.h"
 #include "mob_manager.h"
+#include "db_client.h"
 
 
 const int MaxClients = 64;
@@ -53,26 +54,28 @@ namespace hiraeth {
 			//players_states
 			//std::map<unsigned int, std::vector<PlayerQuestData>> m_PlayerQuestData;
 			std::map<unsigned int, std::map<unsigned int, unsigned int>> m_PlayerQuestData;
+			DbClient * m_DbClient;
 
 			BufferType m_Buffer[256];
-			size_t m_Size{0};
+			size_t m_Size{ 0 };
 			ATimer m_Timer;
 
 			struct QueueData
 			{
-				char * buffer{nullptr};
-				int size{0};
+				char * buffer{ nullptr };
+				int size{ 0 };
 				Address sender{};
 			};
 			std::queue<QueueData> m_DataQueue;
 			std::mutex m_Mutex;
 			std::condition_variable m_Cv;
 		public:
-			Server()
+			Server(DbClient * db_client)
 				: m_maxClients(MaxClients),
 				m_numConnectedClients(0),
 				//m_ClientConnected{ false },
-				m_MobManager{ 0 }
+				m_MobManager{ 0 },
+				m_DbClient(db_client)
 			{
 				if (!m_Socket.Open(PORT))
 				{
@@ -87,6 +90,8 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_NPC_CLICK, &Server::NpcClick);
 				bindFunctionToChar(MSG_CTS_DIALOG_NEXT, &Server::DialogNext);
 				bindFunctionToChar(MSG_CTS_ACCEPT_QUEST, &Server::AcceptQuest);
+				bindFunctionToChar(MSG_CTS_CHAR_GOT_HIT, &Server::CharGotHit);
+				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL, &Server::CharUseSkill);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
 			}
@@ -111,7 +116,7 @@ namespace hiraeth {
 			void sendMobsUpdate(unsigned int mob_id, MobMoveCommand mmc);
 			void updateMobManager();
 
-			void bindFunctionToChar(char bytecode, void(Server::*fptr)(Address) )
+			void bindFunctionToChar(char bytecode, void(Server::*fptr)(Address))
 			{
 				std::function<void(Address)> val = std::bind(fptr, this, std::placeholders::_1);
 				std::function<void(Address)> val2 = [&](Address sender) {(this->*fptr)(sender); };
@@ -142,7 +147,7 @@ namespace hiraeth {
 			}
 			void HitMob(Address sender)
 			{
-				auto [client_id, monster_damage] = dsrl_types<unsigned int, MonsterDamage>(m_Buffer + 1);
+				auto[client_id, monster_damage] = dsrl_types<unsigned int, MonsterDamage>(m_Buffer + 1);
 				//const auto monster_damage = dsrl_types<MonsterDamage>(m_Buffer + 5);
 				{ // send hit update to all players (except for the one attacked)
 					//const auto client_id = dsrl_types<unsigned int>(m_Buffer + 1);
@@ -162,14 +167,14 @@ namespace hiraeth {
 			}
 			void NpcClick(Address sender)
 			{
-				auto [client_id, npc_index] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
-				unsigned int dialog_id = 0 ;
+				auto[client_id, npc_index] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
+				unsigned int dialog_id = 0;
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_START_DIALOG, dialog_id);
 				m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 			void DialogNext(Address sender)
 			{
-				auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				auto[client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
 				//unsigned int client_id, npc_index, dialog_index;
 				//dsrl_types(m_Buffer, client_id, npc_index, dialog_index);
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_DIALOG_NEXT_ANSWER, dialog_index + 1);
@@ -177,12 +182,22 @@ namespace hiraeth {
 			}
 			void AcceptQuest(Address sender)
 			{
-				auto [client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				auto[client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
 				if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
 					m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
 				if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
 					m_PlayerQuestData[client_id][npc_index] = 0;
 				m_PlayerQuestData[client_id][npc_index] += 1;
+			}
+			void CharGotHit(Address sender)
+			{
+				auto[client_id, new_hp, g1, g2] = dsrl_types<unsigned int, unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				m_DbClient->updateValue(client_id, "hp", new_hp);
+			}
+			void CharUseSkill(Address sender)
+			{
+				auto[client_id, new_mp] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
+				m_DbClient->updateValue(client_id, "mp", new_mp);
 			}
 			void InrMobGotHit(Address sender)
 			{
@@ -204,13 +219,14 @@ namespace hiraeth {
 
 			int findFreeClientIndex() const
 			{
-				for (int i = 0; i < m_maxClients; ++i)
-				{
-					//if (!m_ClientConnected[i])
-					if (!isClientConnected(i))
-						return i;
-				}
-				return -1;
+				return 2;
+				//for (int i = 0; i < m_maxClients; ++i)
+				//{
+				//	//if (!m_ClientConnected[i])
+				//	if (!isClientConnected(i))
+				//		return i;
+				//}
+				//return -1;
 			}
 			unsigned int findExistingClientIndex(const Address & address) const
 			{
@@ -229,7 +245,7 @@ namespace hiraeth {
 				//	if (client.GetAddress() != 0)
 				//		m_Socket.Send(client, m_Buffer, size);
 				for (const auto& client_id : m_ClientsIds)
-						m_Socket.Send(m_ClientAddress[client_id], m_Buffer, size);
+					m_Socket.Send(m_ClientAddress[client_id], m_Buffer, size);
 			}
 			void sendDataToAllClientsExcept(unsigned int size, unsigned int exclude_id)
 			{

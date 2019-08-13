@@ -25,7 +25,7 @@ namespace SRL {
 			pic = load_image(img_path.c_str(), &width, &height);
 			//texture_data_size = (sizeof(pic) / sizeof(pic[0])) * width * height ; // 32-bit
 			//texture_data_size = (sizeof(pic) / sizeof(pic[0])) * width * height / 2; // 64-bit
-			texture_data_size = 4 * width * height / 2; 
+			texture_data_size = 8 * width * height / 2; 
 		}
 	};
 

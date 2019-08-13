@@ -10,12 +10,27 @@ namespace hiraeth {
 			memcpy(buffer, &var, sizeof(var));
 			return sizeof(var);
 		}
+		//template<typename T>
+		//typename std::enable_if<std::is_pod<T>::value>::type
+		// srl_types(BufferType * buffer, T&& var)
+		//{
+		//	memcpy(buffer, &var, sizeof(var));
+		//	return sizeof(var);
+		//}
 		template<typename T, typename ... Ts>
 		int srl_types(BufferType * buffer, T&& var,  Ts&&... vars)
 		{
 			memcpy(buffer, &var, sizeof(var));
-			return sizeof(var) + srl_types(buffer + sizeof(var), std::forward<Ts...>(vars...));
+			//return sizeof(var) + srl_types(buffer + sizeof(var), std::forward<Ts...>(vars...));
+			return sizeof(var) + srl_types(buffer + sizeof(var), std::forward<Ts>(vars)...);
 		}
+		//template<typename T, typename ... Ts>
+		//int srl_types(BufferType * buffer, T&& var,  Ts&&... vars)
+		//{
+		//	memcpy(buffer, &var, sizeof(var));
+		//	//return sizeof(var) + srl_types(buffer + sizeof(var), std::forward<Ts...>(vars...));
+		//	return sizeof(var) + srl_types(buffer + sizeof(var), std::forward<Ts>(vars)...);
+		//}
 
 		template<typename T>
 		void dsrl_type(BufferType * buffer, T& var)
@@ -79,9 +94,9 @@ namespace hiraeth {
 		 * to contain the size of the data in the first slot.
 		 */
 		template<class T>
-		void dsrl_dynamic_type(T& dsrl_data, BufferType * buffer)
+		void dsrl_dynamic_type(T& dsrl_data, const BufferType * buffer)
 		{
-			const std::string tmp_str{ reinterpret_cast<BufferType * >(buffer) + 1, static_cast<unsigned int>(buffer[0]) };
+			const std::string tmp_str{ reinterpret_cast<const BufferType * >(buffer) + 1, static_cast<unsigned int>(buffer[0]) };
 			std::stringstream is(tmp_str, std::ios::binary | std::ios::in);
 			{
 				cereal::BinaryInputArchive ar(is);
@@ -89,7 +104,7 @@ namespace hiraeth {
 			}
 		}
 		template<class T>
-		T dsrl_dynamic_type(BufferType * buffer)
+		T dsrl_dynamic_type(const BufferType * buffer)
 		{
 			T dsrl_data;
 			dsrl_dynamic_type(dsrl_data, buffer);

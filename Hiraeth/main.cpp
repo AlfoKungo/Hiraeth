@@ -106,6 +106,7 @@ int main()
 	game::NetCharManager netCharManager{map.getMapLayer(), &skillManager};
 	network::ClientHandler clientHandler{&netCharManager, &monsterManager}; // itemManager, 
 
+	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData());
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
 	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager,
 		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),

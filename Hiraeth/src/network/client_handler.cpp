@@ -27,14 +27,14 @@ namespace hiraeth {
 			m_SiOther.sin_port = htons(PORT);
 			InetPton(AF_INET, _T(SERVER), &m_SiOther.sin_addr.S_un.S_addr);
 
-			const char message[] = "hello";
-			m_SendSize = create_client_packet_with_buffer(m_SendBuffer, MSG_CTS_OPEN_CONNECTION, m_Id, message, sizeof(message));
-			//if (sendto(m_Handle, m_SendBuffer, strlen(m_SendBuffer), 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
-			if (sendto(m_Handle, m_SendBuffer, 7, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
-			{
-				printf("sendto() failed with error code : %d", WSAGetLastError());
-				exit(EXIT_FAILURE);
-			}
+			//const char message[] = "hello";
+			//m_SendSize = create_client_packet_with_buffer(m_SendBuffer, MSG_CTS_OPEN_CONNECTION, m_Id, message, sizeof(message));
+			//m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_OPEN_CONNECTION);
+			auto[data, size] = srl_dynamic_type(std::string{"ChrisS"});
+			//auto[data, size] = srl_dynamic_type(std::string{"GusB"});
+			m_SendSize = create_client_packet_with_buffer(m_SendBuffer, MSG_CTS_OPEN_CONNECTION, *data, size);
+			Send();
+
 			int recv_len;
 			if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), &slen)) == SOCKET_ERROR)
 			{
@@ -44,6 +44,7 @@ namespace hiraeth {
 			if (m_RcvBuffer[0] == MSG_STC_ESTABLISH_CONNECTION)
 			{
 				const auto msg = dsrl_dynamic_type<ConnectionEstablishMsg>(m_RcvBuffer + 1);
+				m_PlayerData = msg.player_data;
 				m_Id = msg.client_id;
 				printf("received Id number of : %d\n", m_Id);
 			}
@@ -247,10 +248,7 @@ namespace hiraeth {
 
 		void ClientHandler::sendAttackPacket(MonsterDamage monster_damage)
 		{
-			//char message[sizeof(monster_damage)];
-			//memcpy(message, &monster_damage, sizeof(monster_damage));
-			//Send(MSG_CTS_HIT_MOB, message, sizeof(monster_damage));
-			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_HIT_MOB, m_Id, monster_damage);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_HIT_MOB, m_Id, monster_damage);
 			Send();
 			//Log::Init();
 			//HH_LOG("myfirst_log");
@@ -259,19 +257,31 @@ namespace hiraeth {
 
 		void ClientHandler::sendNpcClick(unsigned int npc_id)
 		{
-			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_NPC_CLICK, m_Id, npc_id);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_NPC_CLICK, m_Id, npc_id);
 			Send();
 		}
 
 		void ClientHandler::sendQuestProgress(unsigned int npc_id, unsigned int chat_id)
 		{
-			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_DIALOG_NEXT, m_Id, npc_id, chat_id);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_DIALOG_NEXT, m_Id, npc_id, chat_id);
 			Send();
 		}
 
 		void ClientHandler::sendQuestAccepted(unsigned int npc_id, unsigned int quest_id)
 		{
-			construct_client_packet_with_data(m_SendBuffer, MSG_CTS_ACCEPT_QUEST, m_Id, npc_id, quest_id);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_ACCEPT_QUEST, m_Id, npc_id, quest_id);
+			Send();
+		}
+
+		void ClientHandler::sendCharGotHit(unsigned int new_hp)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_CHAR_GOT_HIT, m_Id, new_hp, 25, 27);
+			Send();
+		}
+
+		void ClientHandler::sendCharUseSkill(unsigned int new_mp)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_CHAR_USE_SKILL, m_Id, new_mp);
 			Send();
 		}
 	}

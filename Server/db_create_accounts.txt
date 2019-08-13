@@ -1,0 +1,11 @@
+DROP TABLE accounts;
+
+CREATE TABLE accounts(
+account VARCHAR(50) NOT NULL PRIMARY KEY,
+password VARCHAR(50) NOT NULL,
+id INT NOT NULL REFERENCES players(id));
+
+INSERT INTO accounts (account, password, id)
+VALUES ('ChrisS', '12341234', 1);
+INSERT INTO accounts (account, password, id)
+VALUES ('GusB', '123456', 2);

@@ -59,5 +59,8 @@
     <ClInclude Include="mob_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="db_client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
