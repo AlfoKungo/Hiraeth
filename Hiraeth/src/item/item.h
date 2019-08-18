@@ -12,7 +12,7 @@ namespace hiraeth {
 	namespace item {
 
 #define PICK_UP_TIME 5.5f
-#define EXPIRING_TIME 40.0f
+#define EXPIRING_TIME 10.0f
 #define EXPIRE_FADE_TIME 1.5f
 
 		class Item : public graphics::Sprite

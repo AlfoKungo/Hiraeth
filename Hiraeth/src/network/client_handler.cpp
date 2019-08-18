@@ -57,63 +57,20 @@ namespace hiraeth {
 				printf("failed to set non-blocking\n");
 			}
 
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_PLAYERS_LOCATIONS, &ClientHandler::updatePlayersLocation);
-			//bindFunctionToChar(MSG_STC_PLAYERS_LIST, &ClientHandler::loadCurrentMapPlayers);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
-			//		switch (m_RcvBuffer[0])
-			//		{
-			//		//case :
-			//		//	addNewPlayerToMap(m_RcvBuffer);
-			//		//	break;
-			//		//case MSG_STC_PLAYERS_LOCATIONS:
-			//		//	updatePlayersLocation();
-			//		//	break;
-			//		case MSG_STC_PLAYERS_LIST:
-			//			loadCurrentMapPlayers(m_RcvBuffer);
-			//			break;
-			//		case MSG_STC_MOB_DATA:
-			//			loadMobsData();
-			//			break;
-			//		case MSG_STC_MOB_UPDATE:
-			//			updateMobData();
-			//			break;
-			//		case MSG_STC_MOB_HIT:
-			//			recvMobHit();
-			//			break;
-			//		case MSG_STC_MOB_DIED:
-			//			recvMobDied();
-			//			break;
-			//		case MSG_STC_START_DIALOG:
-			//			recvStartDialog();
-			//			break;
-			//		case MSG_STC_CHAR_USE_SKILL_E:
-			//			recvPlayerUseSkillE();
-			//			break;
-			//		case MSG_STC_CHAR_USE_SKILL_A:
-			//			recvPlayerUseSkillA();
-			//			break;
-			//		case MSG_STC_PICK_ITEM:
-			//			recvPickItem();
-			//			break;
-			//		case MSG_STC_DROP_ITEM:
-			//			recvDropItem();
-			//			break;
-			//		case MSG_STC_DROPPED_ITEM:
-			//			recvDroppedItem();
-			//			break;
-			//		case MSG_STC_EXPIRE_ITEM:
-			//			recvExpireItem();
-			//			break;
-			//		default:
-			//			break;
-			//		}
+			bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			bindFunctionToChar(MSG_STC_PLAYERS_LOCATIONS, &ClientHandler::updatePlayersLocation);
+			bindFunctionToChar(MSG_STC_PLAYERS_LIST, &ClientHandler::loadCurrentMapPlayers);
+			bindFunctionToChar(MSG_STC_MOB_DATA, &ClientHandler::loadMobsData);
+			bindFunctionToChar(MSG_STC_MOB_UPDATE, &ClientHandler::updateMobData);
+			bindFunctionToChar(MSG_STC_MOB_HIT, &ClientHandler::recvMobHit);
+			bindFunctionToChar(MSG_STC_MOB_DIED, &ClientHandler::recvMobDied);
+			bindFunctionToChar(MSG_STC_START_DIALOG, &ClientHandler::recvStartDialog);
+			bindFunctionToChar(MSG_STC_CHAR_USE_SKILL_E, &ClientHandler::recvPlayerUseSkillE);
+			bindFunctionToChar(MSG_STC_CHAR_USE_SKILL_A, &ClientHandler::recvPlayerUseSkillA);
+			bindFunctionToChar(MSG_STC_PICK_ITEM, &ClientHandler::recvPickItem);
+			bindFunctionToChar(MSG_STC_DROP_ITEM, &ClientHandler::recvDropItem);
+			bindFunctionToChar(MSG_STC_DROPPED_ITEM, &ClientHandler::recvDroppedItem);
+			bindFunctionToChar(MSG_STC_EXPIRE_ITEM, &ClientHandler::recvExpireItem);
 		}
 
 		ClientHandler::~ClientHandler()
@@ -212,58 +169,57 @@ namespace hiraeth {
 				}
 				if (recv_len > 0)
 				{
-			//if (m_DistTable.find(m_RcvBuffer[0]) != m_DistTable.end())
-			//{
-			//	m_DistTable[m_RcvBuffer[0]]();
-			//	//(this->*m_DistTable2[m_Buffer[0]])(sender);
-			//}
-					switch (m_RcvBuffer[0])
+					if (m_DistTable.find(m_RcvBuffer[0]) != m_DistTable.end())
 					{
-					case MSG_STC_ADD_PLAYER:
-						addNewPlayerToMap();
-						break;
-					case MSG_STC_PLAYERS_LOCATIONS:
-						updatePlayersLocation();
-						break;
-					case MSG_STC_PLAYERS_LIST:
-						loadCurrentMapPlayers(m_RcvBuffer);
-						break;
-					case MSG_STC_MOB_DATA:
-						loadMobsData();
-						break;
-					case MSG_STC_MOB_UPDATE:
-						updateMobData();
-						break;
-					case MSG_STC_MOB_HIT:
-						recvMobHit();
-						break;
-					case MSG_STC_MOB_DIED:
-						recvMobDied();
-						break;
-					case MSG_STC_START_DIALOG:
-						recvStartDialog();
-						break;
-					case MSG_STC_CHAR_USE_SKILL_E:
-						recvPlayerUseSkillE();
-						break;
-					case MSG_STC_CHAR_USE_SKILL_A:
-						recvPlayerUseSkillA();
-						break;
-					case MSG_STC_PICK_ITEM:
-						recvPickItem();
-						break;
-					case MSG_STC_DROP_ITEM:
-						recvDropItem();
-						break;
-					case MSG_STC_DROPPED_ITEM:
-						recvDroppedItem();
-						break;
-					case MSG_STC_EXPIRE_ITEM:
-						recvExpireItem();
-						break;
-					default:
-						break;
+						(this->*m_DistTable[m_RcvBuffer[0]])();
 					}
+					//switch (m_RcvBuffer[0])
+					//{
+					//case MSG_STC_ADD_PLAYER:
+					//	addNewPlayerToMap();
+					//	break;
+					//case MSG_STC_PLAYERS_LOCATIONS:
+					//	updatePlayersLocation();
+					//	break;
+					//case MSG_STC_PLAYERS_LIST:
+					//	loadCurrentMapPlayers(m_RcvBuffer);
+					//	break;
+					//case MSG_STC_MOB_DATA:
+					//	loadMobsData();
+					//	break;
+					//case MSG_STC_MOB_UPDATE:
+					//	updateMobData();
+					//	break;
+					//case MSG_STC_MOB_HIT:
+					//	recvMobHit();
+					//	break;
+					//case MSG_STC_MOB_DIED:
+					//	recvMobDied();
+					//	break;
+					//case MSG_STC_START_DIALOG:
+					//	recvStartDialog();
+					//	break;
+					//case MSG_STC_CHAR_USE_SKILL_E:
+					//	recvPlayerUseSkillE();
+					//	break;
+					//case MSG_STC_CHAR_USE_SKILL_A:
+					//	recvPlayerUseSkillA();
+					//	break;
+					//case MSG_STC_PICK_ITEM:
+					//	recvPickItem();
+					//	break;
+					//case MSG_STC_DROP_ITEM:
+					//	recvDropItem();
+					//	break;
+					//case MSG_STC_DROPPED_ITEM:
+					//	recvDroppedItem();
+					//	break;
+					//case MSG_STC_EXPIRE_ITEM:
+					//	recvExpireItem();
+					//	break;
+					//default:
+					//	break;
+					//}
 				}
 				else
 					return;
@@ -300,7 +256,8 @@ namespace hiraeth {
 			m_MonsterManager->updateMonster(monster_index, monster_state);
 		}
 
-		void ClientHandler::loadCurrentMapPlayers(BufferType * buffer)
+		//void ClientHandler::loadCurrentMapPlayers(BufferType * buffer)
+		void ClientHandler::loadCurrentMapPlayers()
 		{
 			//dsrl_dt_packet_data(m_PlayerLocation, m_RcvBuffer + 1);
 			//m_PlayerLocation.erase(m_Id);
@@ -370,7 +327,6 @@ namespace hiraeth {
 
 		void ClientHandler::recvExpireItem()
 		{
-			//const auto item_drop_msg = dsrl_type<ItemDropMsg>(m_RcvBuffer + 1);
 			const auto expired_item_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
 			m_ItemManager->expireItem(expired_item_id);
 			//for (const auto& item : dropped_items)

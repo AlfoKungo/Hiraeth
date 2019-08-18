@@ -133,6 +133,7 @@ namespace hiraeth {
 			std::thread readThread{ [this] {this->dataReader(); } };
 			//createMessageThread(MSG_INR_UPDATE_MOB_CMD, 5000);
 			createMessageThread(MSG_INR_MOB_UPDATE, 5000);
+			createMessageThread(MSG_INR_ROUTINE_UPDATE, 1000);
 			//createMessageThread(MSG_INR_FIND_MOB_POS, 5000);
 			//createMessageThread(MSG_INR_MOB_UPDATE, 1000);
 

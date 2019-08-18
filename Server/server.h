@@ -18,6 +18,7 @@
 #include "srl/map_data.h"
 #include "mob_manager.h"
 #include "db_client.h"
+#include "net/client_funcs.h"
 
 
 const int MaxClients = 64;
@@ -27,10 +28,16 @@ const int MaxClients = 64;
 namespace hiraeth {
 	namespace network {
 
-		struct Summoner
+		//struct Summoner
+		//{
+		//	SRL::Summon summon;
+		//	float summonTime;
+		//};
+		struct ItemExpirer
 		{
-			SRL::Summon summon;
-			float summonTime;
+			unsigned int item_id;
+			//float expire_time;
+			ATimer expire_timer;
 		};
 		//struct PlayerQuestData
 		//{
@@ -49,9 +56,10 @@ namespace hiraeth {
 			std::vector<unsigned int> m_ClientsIds;
 			// map_state
 			std::map<unsigned int, PlayerStateUpdateMsg> m_ClientsState;
-			std::queue<Summoner> m_SummonQueue;
+			//std::queue<Summoner> m_SummonQueue;
 			MobManager m_MobManager;
 			std::map<unsigned int, ItemDropMsg> m_ItemsDropped;
+			std::queue<ItemExpirer> m_ExpiringQueue;
 			unsigned int m_ItemsIdCounter{};
 			//players_states
 			//std::map<unsigned int, std::vector<PlayerQuestData>> m_PlayerQuestData;
@@ -98,10 +106,14 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_PICK_ITEM, &Server::PickItem);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
+				bindFunctionToChar(MSG_INR_ROUTINE_UPDATE, &Server::RoutineUpdate);
+
 				//for (unsigned int i = 0; i < 15; ++i)
-				for ( m_ItemsIdCounter = 0; m_ItemsIdCounter < 15; ++m_ItemsIdCounter)
-					sendDropItem(ItemDropMsg{ m_ItemsIdCounter, (m_ItemsIdCounter % 9) % 5,
-					(m_ItemsIdCounter / 5) % 2, maths::vec2(int(m_ItemsIdCounter - 6) * 80, 0) });
+				for (unsigned int i = 0; i < 15; ++i)
+					sendDropItem(addItem((i %9) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
+				//for ( m_ItemsIdCounter = 0; m_ItemsIdCounter < 15; ++m_ItemsIdCounter)
+				//	sendDropItem(ItemDropMsg{ m_ItemsIdCounter, (m_ItemsIdCounter % 9) % 5,
+				//	(m_ItemsIdCounter / 5) % 2, maths::vec2(int(m_ItemsIdCounter - 6) * 80, 0) });
 			}
 			void main_60fps_loop();
 			void main_block_receive_and_async_send();
@@ -127,9 +139,9 @@ namespace hiraeth {
 			void bindFunctionToChar(char bytecode, void(Server::*fptr)(Address))
 			{
 				std::function<void(Address)> val = std::bind(fptr, this, std::placeholders::_1);
-				std::function<void(Address)> val2 = [&](Address sender) {(this->*fptr)(sender); };
+				//std::function<void(Address)> val2 = [&](Address sender) {(this->*fptr)(sender); };
 				m_DistTable.insert(std::pair<char, std::function<void(Address)>>(bytecode, val));
-				m_DistTable.insert(std::pair<char, std::function<void(Address)>>(bytecode, val2));
+				//m_DistTable.insert(std::pair<char, std::function<void(Address)>>(bytecode, val2));
 				m_DistTable2.insert(std::pair<char, void(Server::*)(Address)>(bytecode, fptr));
 			}
 
@@ -169,13 +181,36 @@ namespace hiraeth {
 					auto dead_pos = m_MobManager.monsterDied(monster_hit.monster_id);
 					//std::vector<unsigned int> dropped_items {0};
 					//auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_damage.monster_id, {0} });
-					m_ItemsDropped[m_ItemsIdCounter] = ItemDropMsg{ m_ItemsIdCounter ,0, 0, dead_pos };
-					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {m_ItemsDropped[m_ItemsIdCounter] } });
-					m_ItemsIdCounter++;
+					//m_ItemsDropped[m_ItemsIdCounter] = ItemDropMsg{ m_ItemsIdCounter ,0, 0, dead_pos };
+					//auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {m_ItemsDropped[m_ItemsIdCounter] } });
+					//m_ItemsIdCounter++;
+					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {addItem(0, 0, dead_pos)} });
 					const auto buffer_size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_MOB_DIED, *data, size);
 					sendDataToAllClients(buffer_size);
 				}
 				//updateMonstersHp()
+			}
+			ItemDropMsg addItem(unsigned int item_type_id, unsigned int item_kind, maths::vec2 pos)
+			{
+				auto new_item = ItemDropMsg{ m_ItemsIdCounter ,item_type_id, item_kind, pos };
+				m_ItemsDropped[m_ItemsIdCounter] = new_item;
+				m_ExpiringQueue.push(ItemExpirer{ m_ItemsIdCounter, ATimer{10.0f } });
+				m_ItemsIdCounter++;
+				return new_item;
+			}
+			void findExpiredItems()
+			{
+				while (!m_ExpiringQueue.empty())
+				{
+					if (m_ExpiringQueue.front().expire_timer.hasExpired())
+					{
+						if (m_ItemsDropped.find(m_ExpiringQueue.front().item_id) != m_ItemsDropped.end())
+							sendItemExpired(m_ExpiringQueue.front().item_id);
+						m_ExpiringQueue.pop();
+					}
+					else
+						return;
+				}
 			}
 			void NpcClick(Address sender)
 			{
@@ -226,10 +261,7 @@ namespace hiraeth {
 				if (m_MobManager.damageMob(monster_hit))
 				{
 					auto dead_pos = m_MobManager.monsterDied(monster_hit.monster_id);
-					//std::vector<unsigned int> dropped_items {0};
-					m_ItemsDropped[m_ItemsIdCounter] = ItemDropMsg{ m_ItemsIdCounter ,0, 0, dead_pos };
-					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {m_ItemsDropped[m_ItemsIdCounter] } });
-					m_ItemsIdCounter++;
+					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {addItem(0, 0, dead_pos)} });
 					const auto buffer_size2 = construct_server_packet_with_buffer(m_Buffer, MSG_STC_MOB_DIED, *data, size);
 					sendDataToAllClients(buffer_size2);
 				}
@@ -240,7 +272,9 @@ namespace hiraeth {
 				auto[client_id, item_id] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
 				//const auto buffer_size = construct_server_packet(m_Buffer, MSC_STC_CHAR_USE_SKILL_A, client_id, item_id);
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_PICK_ITEM, PickItemMsg{ client_id, item_id });
+				m_ItemsDropped.erase(item_id);
 				sendDataToAllClientsExcept(buffer_size, client_id);
+				findExpiredItems();
 				//sendDataToAllClients(buffer_size);
 			}
 			void InrMobGotHit(Address sender)
@@ -253,7 +287,7 @@ namespace hiraeth {
 			}
 			void sendDropItem(ItemDropMsg item_drop)
 			{
-				m_ItemsDropped[item_drop.item_id] = item_drop;
+				//m_ItemsDropped[item_drop.item_id] = item_drop;
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_DROP_ITEM, item_drop);
 
 				sendDataToAllClients(buffer_size);
@@ -267,6 +301,16 @@ namespace hiraeth {
 				const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
 					MSG_STC_DROPPED_ITEM, *data, size);
 				m_Socket.Send(sender, m_Buffer, buffer_size);
+			}
+			void sendItemExpired(unsigned int item_id)
+			{
+				const auto buffer_size = create_client_packet_with_data(m_Buffer, MSG_STC_EXPIRE_ITEM, item_id);
+				sendDataToAllClients(buffer_size);
+			}
+			void RoutineUpdate(Address sender)
+			{
+				findExpiredItems();
+				createMessageThread(MSG_INR_ROUTINE_UPDATE, 1000);
 			}
 
 			//void sendKeepAliveAnswer(Address sender)

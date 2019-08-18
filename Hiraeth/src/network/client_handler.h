@@ -32,7 +32,8 @@ namespace hiraeth {
 			SOCKET m_Handle;
 			unsigned int m_Id{0};
 			struct sockaddr_in m_SiOther {};
-			std::map<char, std::function<void()>> m_DistTable{};
+			//std::map<char, std::function<void()>> m_DistTable{};
+			std::map<char, void(ClientHandler::*)()> m_DistTable{};
 			int slen = sizeof(m_SiOther), m_SendSize;
 			//BufferType m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			char m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
@@ -57,8 +58,10 @@ namespace hiraeth {
 		private:
 			void bindFunctionToChar(char bytecode, void(ClientHandler::*fptr)())
 			{
-				std::function<void()> val2 = [&]() {(this->*fptr)(); };
-				m_DistTable.insert(std::pair<char, std::function<void()>>(bytecode, val2));
+				//std::function<void()> val = std::bind(fptr, this);
+				//std::function<void()> val = [&]() {(this->*fptr)(); };
+				//m_DistTable.insert(std::pair<char, std::function<void()>>(bytecode, val));
+				m_DistTable.insert(std::pair<char, void(ClientHandler::*)()>(bytecode, fptr));
 			}
 			void Send();
 			void Send(BufferType messgae_type, BufferType * data, int size);
@@ -73,7 +76,8 @@ namespace hiraeth {
 			void updatePlayersLocation();
 			void loadMobsData();
 			void updateMobData();
-			void loadCurrentMapPlayers(BufferType * buffer);
+			//void loadCurrentMapPlayers(BufferType * buffer);
+			void loadCurrentMapPlayers();
 			void recvMobHit();
 			void recvMobDied();
 			void recvStartDialog();
