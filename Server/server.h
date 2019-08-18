@@ -40,7 +40,7 @@ namespace hiraeth {
 		{
 		private:
 			int m_maxClients;
-			int m_numConnectedClients;
+			int m_NumConnectedClients;
 			std::map<char, std::function<void(Address)>> m_DistTable{};
 			std::map<char, void(Server::*)(Address)> m_DistTable2{};
 			//bool m_ClientConnected[MaxClients];
@@ -51,12 +51,14 @@ namespace hiraeth {
 			std::map<unsigned int, PlayerStateUpdateMsg> m_ClientsState;
 			std::queue<Summoner> m_SummonQueue;
 			MobManager m_MobManager;
+			std::map<unsigned int, ItemDropMsg> m_ItemsDropped;
+			unsigned int m_ItemsIdCounter{};
 			//players_states
 			//std::map<unsigned int, std::vector<PlayerQuestData>> m_PlayerQuestData;
 			std::map<unsigned int, std::map<unsigned int, unsigned int>> m_PlayerQuestData;
 			DbClient * m_DbClient;
 
-			BufferType m_Buffer[256];
+			BufferType m_Buffer[512];
 			size_t m_Size{ 0 };
 			ATimer m_Timer;
 
@@ -72,7 +74,7 @@ namespace hiraeth {
 		public:
 			Server(DbClient * db_client)
 				: m_maxClients(MaxClients),
-				m_numConnectedClients(0),
+				m_NumConnectedClients(0),
 				//m_ClientConnected{ false },
 				m_MobManager{ 0 },
 				m_DbClient(db_client)
@@ -91,9 +93,15 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_DIALOG_NEXT, &Server::DialogNext);
 				bindFunctionToChar(MSG_CTS_ACCEPT_QUEST, &Server::AcceptQuest);
 				bindFunctionToChar(MSG_CTS_CHAR_GOT_HIT, &Server::CharGotHit);
-				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL, &Server::CharUseSkill);
+				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL_E, &Server::CharUseSkillE);
+				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL_A, &Server::CharUseSkillA);
+				bindFunctionToChar(MSG_CTS_PICK_ITEM, &Server::PickItem);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
+				//for (unsigned int i = 0; i < 15; ++i)
+				for ( m_ItemsIdCounter = 0; m_ItemsIdCounter < 15; ++m_ItemsIdCounter)
+					sendDropItem(ItemDropMsg{ m_ItemsIdCounter, (m_ItemsIdCounter % 9) % 5,
+					(m_ItemsIdCounter / 5) % 2, maths::vec2(int(m_ItemsIdCounter - 6) * 80, 0) });
 			}
 			void main_60fps_loop();
 			void main_block_receive_and_async_send();
@@ -147,19 +155,23 @@ namespace hiraeth {
 			}
 			void HitMob(Address sender)
 			{
-				auto[client_id, monster_damage] = dsrl_types<unsigned int, MonsterDamage>(m_Buffer + 1);
+				//auto[client_id, monster_damage] = dsrl_types<unsigned int, MonsterDamage>(m_Buffer + 1);
+				auto[client_id, monster_hit] = dsrl_types<unsigned int, MonsterHit>(m_Buffer + 1);
 				//const auto monster_damage = dsrl_types<MonsterDamage>(m_Buffer + 5);
 				{ // send hit update to all players (except for the one attacked)
 					//const auto client_id = dsrl_types<unsigned int>(m_Buffer + 1);
-					const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_MOB_HIT, monster_damage);
+					const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_MOB_HIT, monster_hit);
 					sendDataToAllClientsExcept(buffer_size, client_id);
 				}
 				// update mob hp
-				if (m_MobManager.damageMob(monster_damage))
+				if (m_MobManager.damageMob(monster_hit))
 				{
-					m_MobManager.monsterDied(monster_damage.monster_id);
+					auto dead_pos = m_MobManager.monsterDied(monster_hit.monster_id);
 					//std::vector<unsigned int> dropped_items {0};
-					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_damage.monster_id, {0} });
+					//auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_damage.monster_id, {0} });
+					m_ItemsDropped[m_ItemsIdCounter] = ItemDropMsg{ m_ItemsIdCounter ,0, 0, dead_pos };
+					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {m_ItemsDropped[m_ItemsIdCounter] } });
+					m_ItemsIdCounter++;
 					const auto buffer_size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_MOB_DIED, *data, size);
 					sendDataToAllClients(buffer_size);
 				}
@@ -191,13 +203,45 @@ namespace hiraeth {
 			}
 			void CharGotHit(Address sender)
 			{
-				auto[client_id, new_hp, g1, g2] = dsrl_types<unsigned int, unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				auto[client_id, new_hp] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
 				m_DbClient->updateValue(client_id, "hp", new_hp);
 			}
-			void CharUseSkill(Address sender)
+			void CharUseSkillE(Address sender)
 			{
-				auto[client_id, new_mp] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
+				auto[client_id, skill_id, new_mp] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
 				m_DbClient->updateValue(client_id, "mp", new_mp);
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_CHAR_USE_SKILL_E, client_id ,skill_id);
+				sendDataToAllClientsExcept(buffer_size, client_id);
+			}
+			void CharUseSkillA(Address sender)
+			{
+				auto[client_id] = dsrl_types<unsigned int>(m_Buffer + 1);
+				const auto attack_skill_msg = dsrl_dynamic_type<AttackSkillMsg>(m_Buffer + 5);
+				CharAttackSkillMsg char_attack_msg{ client_id, attack_skill_msg };
+				auto[data, size] = srl_dynamic_type(char_attack_msg);
+				const auto buffer_size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_CHAR_USE_SKILL_A, *data, size);
+				sendDataToAllClientsExcept(buffer_size, client_id);
+
+				for (const auto& monster_hit : attack_skill_msg.monsters_hit)
+				if (m_MobManager.damageMob(monster_hit))
+				{
+					auto dead_pos = m_MobManager.monsterDied(monster_hit.monster_id);
+					//std::vector<unsigned int> dropped_items {0};
+					m_ItemsDropped[m_ItemsIdCounter] = ItemDropMsg{ m_ItemsIdCounter ,0, 0, dead_pos };
+					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {m_ItemsDropped[m_ItemsIdCounter] } });
+					m_ItemsIdCounter++;
+					const auto buffer_size2 = construct_server_packet_with_buffer(m_Buffer, MSG_STC_MOB_DIED, *data, size);
+					sendDataToAllClients(buffer_size2);
+				}
+				//sendDataToAllClients(buffer_size);
+			}
+			void PickItem(Address sender)
+			{
+				auto[client_id, item_id] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
+				//const auto buffer_size = construct_server_packet(m_Buffer, MSC_STC_CHAR_USE_SKILL_A, client_id, item_id);
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_PICK_ITEM, PickItemMsg{ client_id, item_id });
+				sendDataToAllClientsExcept(buffer_size, client_id);
+				//sendDataToAllClients(buffer_size);
 			}
 			void InrMobGotHit(Address sender)
 			{
@@ -206,6 +250,23 @@ namespace hiraeth {
 			{
 				updateMobManager();
 				createMessageThread(MSG_INR_MOB_UPDATE, 1000);
+			}
+			void sendDropItem(ItemDropMsg item_drop)
+			{
+				m_ItemsDropped[item_drop.item_id] = item_drop;
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_DROP_ITEM, item_drop);
+
+				sendDataToAllClients(buffer_size);
+			}
+			void sendDroppedItems(Address sender)
+			{
+				std::vector<ItemDropMsg> dropped_items;
+				for (auto di : m_ItemsDropped)
+					dropped_items.push_back(di.second);
+				auto[data, size] = srl_dynamic_type(dropped_items);
+				const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
+					MSG_STC_DROPPED_ITEM, *data, size);
+				m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 
 			//void sendKeepAliveAnswer(Address sender)

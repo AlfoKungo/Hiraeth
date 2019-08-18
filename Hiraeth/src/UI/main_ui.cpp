@@ -68,6 +68,27 @@ namespace hiraeth {
 			m_LabelGroup->add(new graphics::Label("arial", 11, create_stats_string(m_StatsStruct->Exp, m_StatsStruct->MaxExp), { 311, 5 }, 0xffffffff, graphics::Label::Alignment::RIGHT));
 		}
 
+		std::string MainUi::getJobName(unsigned int job_id)
+		{
+			switch (job_id)
+			{
+			case 0:
+				return "Berserker";
+			case 1:
+				return "Crusader Knight";
+			case 2:
+				return "Wizard";
+			case 3:
+				return "Rogue";
+			case 4:
+				return "Archer";
+			case 5:
+				return "Forest Fighter";
+			default:
+				return "";
+			}
+		}
+
 		std::string MainUi::create_stats_string(unsigned int value, unsigned int maxValue) const
 		{
 				return "[" + std::to_string(value) + " / " + std::to_string(maxValue) + "]";

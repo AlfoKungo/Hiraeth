@@ -1,4 +1,5 @@
 #include "item_manager.h"
+#include "net/protocol.h"
 
 namespace hiraeth {
 	namespace item {
@@ -13,11 +14,12 @@ namespace hiraeth {
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
-			for (int i = 0; i < 12; ++i)
-				dropItem(maths::vec2((i - 6) * 80, 0), i % 9);
-			dropItem(maths::vec2(0), 0);
-			dropItem(maths::vec2(-200, 0), 1);
-			dropItem(maths::vec2(200, 0), 2);
+			//for (int i = 0; i < 12; ++i)
+			//	dropItem(i, (i % 9) % 5, i / 5, maths::vec2((i - 6) * 80, 0));
+				//dropItem(maths::vec2((i - 6) * 80, 0), i % 9);
+			//dropItem(maths::vec2(0), 0);
+			//dropItem(maths::vec2(-200, 0), 1);
+			//dropItem(maths::vec2(200, 0), 2);
 		}
 
 		void ItemManager::draw() const
@@ -34,6 +36,7 @@ namespace hiraeth {
 				{
 					delete (*item);
 					item = m_DroppedItems.m_Renderables.erase(item);
+					//expireItem((*item)->getId());
 				}
 				else if ((*item)->hasBeenTaken())
 				{
@@ -49,16 +52,44 @@ namespace hiraeth {
 			}
 		}
 
-		void ItemManager::dropItem(maths::vec2 pos, unsigned int item_id)
+		void ItemManager::dropItem(unsigned int item_id, unsigned int item_type_id,
+			unsigned int item_kind, maths::vec2 pos)
 		{
 			//SRL::ItemData item_data = ItemDataManager::Get(item_id);
 			//m_DroppedItems.add(new Item(pos, ItemDataManager::Get(item_id), m_FootHolds));
-			
-			if (item_id < 5)
-				m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds));
+
+			if (item_kind == network::USE_ITEM)
+			{
+				Item* temp = new UseItem(pos, ItemDataManager::Get(item_type_id), m_FootHolds, item_id);
+				m_DroppedItems.add(temp);
+				m_DroppedItemsMap.insert(std::make_pair(item_id, temp));
+			}
 			else
-				m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id - 5), m_FootHolds));
-			
+			{
+				//Item* temp = new EquipItem(pos, ItemDataManager::GetEquip(item_type_id - 5), m_FootHolds, item_id);
+				Item* temp = new EquipItem(pos, ItemDataManager::GetEquip(item_type_id), m_FootHolds, item_id);
+				m_DroppedItems.add(temp);
+				m_DroppedItemsMap.insert(std::make_pair(item_id, temp));
+			}
+			//m_Counter++;
+			//if (item_id < 5)
+			//	m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds, m_Counter++));
+			//else
+			//	m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id - 5), m_FootHolds, m_Counter++));
+		}
+
+		void ItemManager::expireItem(unsigned int item_id)
+		{
+			m_DroppedItemsMap.erase(item_id);
+			for (auto item = m_DroppedItems.m_Renderables.begin(); item != m_DroppedItems.m_Renderables.end();)
+			{
+				if ((*item)->getId() == item_id)
+				{
+					delete (*item);
+					item = m_DroppedItems.m_Renderables.erase(item);
+
+				}
+			}
 		}
 
 		void ItemManager::mapChanged()

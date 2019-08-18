@@ -253,17 +253,20 @@ namespace hiraeth {
 		{
 			auto name = dsrl_dynamic_type<std::string>(m_Buffer + 1);
 			auto char_id = m_DbClient->getIdByAccountName(name);
+			if (m_NumConnectedClients > 0)
+				char_id = 2;
 			//const auto new_char_id = findFreeClientIndex();
 			const auto new_char_id = char_id;
 			sendNewPlayerInMap(new_char_id);
-			m_numConnectedClients++;
+			m_NumConnectedClients++;
 			m_ClientAddress[new_char_id] = sender;
 			m_ClientsIds.push_back(new_char_id);
 			//m_ClientConnected[free_client_index] = true;
 			const auto player_data = m_DbClient->getPlayerDataById(char_id);
+			//auto player_data = m_DbClient->getPlayerDataById(char_id);
 
 			//auto player_data = PlayerData{"shd", 10, 1, 0, 300, 300, {}, {}};
-			//player_data.stats_alloc = { 1,1,1,2 };
+			//player_data.stats_alloc = std::vector<unsigned int>{ 1,1,1 };
 			//player_data.skills_alloc = {0,0,0,1,1,1};
 			//m_DbClient->setStatsAlloc(new_char_id, player_data.stats_alloc);
 			//player_data.stat_allocation = m_DbClient->getStatsAlloc(new_char_id);
@@ -275,6 +278,8 @@ namespace hiraeth {
 			printf("registered new address : %s , and port is : %d , and id is %d\n",
 				sender.GetAddressString().c_str(), sender.GetPort(), new_char_id);
 			m_Socket.Send(sender, m_Buffer, buffer_size);
+			//sendDropItem(ItemDropMsg{ 20, 1, USE_ITEM, maths::vec2{ 55, 15 } });
+			sendDroppedItems(sender);
 		}
 
 		void Server::sendNewPlayerInMap(unsigned int new_char_index)
@@ -287,7 +292,7 @@ namespace hiraeth {
 		{
 			const auto id = dsrl_type<unsigned int>(buffer + 1);
 			printf("unregistered id is %d\n", id);
-			m_numConnectedClients--;
+			m_NumConnectedClients--;
 			m_ClientAddress[id] = Address{};
 			//m_ClientConnected[id] = false;
 			m_ClientsIds.erase(std::remove(m_ClientsIds.begin(), m_ClientsIds.end(), id), m_ClientsIds.end());

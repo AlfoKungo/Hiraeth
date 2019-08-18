@@ -103,8 +103,8 @@ int main()
 
 
 	game::MonsterManager monsterManager(map.getMapLayer(), &itemManager);
-	game::NetCharManager netCharManager{map.getMapLayer(), &skillManager};
-	network::ClientHandler clientHandler{&netCharManager, &monsterManager}; // itemManager, 
+	game::NetCharManager netCharManager{map.getMapLayer(), &itemManager, &skillManager, monsterManager.getMonsters()};
+	network::ClientHandler clientHandler{&netCharManager, &monsterManager, &itemManager}; // itemManager, 
 
 	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData());
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);

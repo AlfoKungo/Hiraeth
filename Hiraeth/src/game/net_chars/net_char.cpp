@@ -3,10 +3,11 @@
 namespace hiraeth {
 	namespace game {
 
-		NetChar::NetChar(maths::vec2 pos, map::MapLayer *map_layer,
-			skills::SkillManager *skill_manager)
+		NetChar::NetChar(maths::vec2 pos, map::MapLayer *map_layer, item::ItemManager *item_manager,
+			skills::SkillManager *skill_manager, std::map<unsigned int, Monster*>* monsters)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, new CharacterStats{}, true),
-			m_SkillManager(skill_manager)
+		m_ItemManager(item_manager),
+			m_SkillManager(skill_manager), m_Monsters(monsters)
 		//m_Animations(m_TransformationMatrix)
 	{
 			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(
@@ -166,11 +167,12 @@ namespace hiraeth {
 			m_IsStuck = stuck_state;
 		}
 
-		void NetChar::pickItemUp()
+		void NetChar::pickItemUp(unsigned int item_id)
 		{
 			//item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
-			//if (item != nullptr)
-			//	item->pickUp(&getBounds());
+			item::Item * item = m_ItemManager->getItem(item_id);
+			if (item != nullptr)
+				item->pickUp(&getBounds());
 		}
 
 
@@ -182,16 +184,16 @@ namespace hiraeth {
 				return; // Skill's criterions not met
 
 			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_index);
-			SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
+			//SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
 			//if (item_properties->find(SRL::SkillDataType::mpCon) != item_properties->end())
 			//	if (!m_CharacterStats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
 			//		return;
 
-			if (item_properties->find(SRL::SkillDataType::timeOut) != item_properties->end())
-				m_SkillsTimeouts[skill_index] = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::timeOut)))};
+			//if (item_properties->find(SRL::SkillDataType::timeOut) != item_properties->end())
+			//	m_SkillsTimeouts[skill_index] = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::timeOut)))};
 
-			if (item_properties->find(SRL::SkillDataType::duration) != item_properties->end())
-				m_SkillManager->add_icon(skill_info->name, skill_index, float(std::get<int>(item_properties->at(SRL::SkillDataType::duration))));
+			//if (item_properties->find(SRL::SkillDataType::duration) != item_properties->end())
+			//	m_SkillManager->add_icon(skill_info->name, skill_index, float(std::get<int>(item_properties->at(SRL::SkillDataType::duration))));
 
 			SRL::AnimationMap* skill_animation_data = m_SkillManager->getAnimationData(skill_index);
 			for (const auto& element : (*skill_animation_data))
@@ -202,47 +204,40 @@ namespace hiraeth {
 					m_Animation.reset(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, 
 						skill_info->name + "_animation", element.second, true});
 					break;
-				case SRL::hitAnimation:
-					if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
-						activateAttackSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], skill_info->name);
-					break;
+				//case SRL::hitAnimation:
+				//	if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
+				//		activateAttackSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], skill_info->name);
+				//	break;
 				default: ;
 				}
 			}
 			//m_CharacterStats->activateSkill(skill_index, item_properties);
 		}
 
-		void NetChar::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
-			SRL::FullAnimationData projectile_animation_data, const std::string& skill_name)
+		void NetChar::activateAttackSkill( network::AttackSkillMsg attack_msg)
 		{
-			//std::vector<std::pair<float, Monster*>> monsters_in_range;
-			//for (auto & monster : (*m_MonstersLayer))
-			//{
-			//	const maths::vec2 mon_pos = monster->getBounds().GetMiddle();
-			//	const maths::vec2 char_pos = getBounds().GetMiddle();
-			//	maths::vec2 dis_vec = char_pos - mon_pos;
-			//	if (Right == m_Direction)
-			//		dis_vec *= -1;
-			//	if ((dis_vec.x < 500 && dis_vec.x > 0) && (dis_vec.y > -200 && dis_vec.y < 200))
-			//	{
-			//		float pyth = pow(dis_vec.x, 2) + pow(dis_vec.y, 2);
-			//		monsters_in_range.emplace_back(std::make_pair(pyth, monster));
-			//	}
-			//}
-			//if (!monsters_in_range.empty())
-			//{
-			//	Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
-			//		[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
-			//	hit_monster->getHit(
-			//		std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
-			//			hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
-			//}
-			//else
-			//{
-			//	m_Animations.add(
-			//		std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
-			//			m_Direction, skill_name, projectile_animation_data));
-			//}
+			auto animation_data = m_SkillManager->getAnimationData(attack_msg.skill_id);
+			auto hit_animation_data = (*animation_data) [SRL::hitAnimation];
+			auto projectile_animation_data = (*animation_data) [SRL::ballAnimation];
+			auto skill_name = m_SkillManager->get_skill(attack_msg.skill_id)->name;
+			if (attack_msg.monsters_hit.size() == 0)
+			{
+				m_Animations.add(
+					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
+						m_Direction, skill_name, projectile_animation_data));
+			}
+			else
+			{
+				for (const auto& monster_hit : attack_msg.monsters_hit)
+				{
+					Monster* hit_monster = (*m_Monsters)[monster_hit.monster_id];
+					hit_monster->setProjectileAnimation(
+						std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
+							hit_monster, Damage{unsigned int( monster_hit.damage), 90 }, static_cast<Direction>(monster_hit.dir), 
+							skill_name, projectile_animation_data, hit_animation_data));
+				}
+				
+			}
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace hiraeth {
 	namespace item {
 
 #define PICK_UP_TIME 5.5f
-#define EXPIRING_TIME 20.0f
+#define EXPIRING_TIME 40.0f
 #define EXPIRE_FADE_TIME 1.5f
 
 		class Item : public graphics::Sprite
@@ -34,6 +34,8 @@ namespace hiraeth {
 			float m_OsciliateYPos;
 			ATimer m_Timer;
 			bool m_IsExpiring = false;
+			unsigned int m_Id{};
+
 		protected:
 			//graphics::Group m_DetailsBox;
 			graphics::Sprite m_DetailsBoxSprite;
@@ -41,7 +43,8 @@ namespace hiraeth {
 			bool m_IsDrawDetails;
 		public:
 			//Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
-			Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, const std::vector<physics::FootHold>& foot_holds);
+			Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, 
+				const std::vector<physics::FootHold>& foot_holds, unsigned int item_id);
 
 			void draw(graphics::Renderer * renderer) const override;
 			void update() override;
@@ -51,6 +54,7 @@ namespace hiraeth {
 			void pickUp(const maths::Rectangle * char_rec);
 			bool isAbleToPickUp() const { return m_State == OnFloor; }
 			bool isPickedUp() const { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
+			unsigned int getId() const { return m_Id; }
 			void setDrawDetails(bool is_draw_details)
 			{
 				m_IsDrawDetails = is_draw_details;

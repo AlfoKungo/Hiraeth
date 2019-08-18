@@ -4,10 +4,12 @@
 namespace hiraeth {
 	namespace network {
 
-		ClientHandler::ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager)
+		ClientHandler::ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
+			item::ItemManager * item_manager)
 			: m_RcvBuffer{ 0 }, m_SendBuffer{ 0 },
 			m_NetCharManager(net_char_manager),
-			m_MonsterManager{ monster_manager }
+			m_MonsterManager{ monster_manager },
+			m_ItemManager(item_manager)
 		{
 			WSADATA wsa;
 			if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -54,6 +56,64 @@ namespace hiraeth {
 			{
 				printf("failed to set non-blocking\n");
 			}
+
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_PLAYERS_LOCATIONS, &ClientHandler::updatePlayersLocation);
+			//bindFunctionToChar(MSG_STC_PLAYERS_LIST, &ClientHandler::loadCurrentMapPlayers);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//bindFunctionToChar(MSG_STC_ADD_PLAYER, &ClientHandler::addNewPlayerToMap);
+			//		switch (m_RcvBuffer[0])
+			//		{
+			//		//case :
+			//		//	addNewPlayerToMap(m_RcvBuffer);
+			//		//	break;
+			//		//case MSG_STC_PLAYERS_LOCATIONS:
+			//		//	updatePlayersLocation();
+			//		//	break;
+			//		case MSG_STC_PLAYERS_LIST:
+			//			loadCurrentMapPlayers(m_RcvBuffer);
+			//			break;
+			//		case MSG_STC_MOB_DATA:
+			//			loadMobsData();
+			//			break;
+			//		case MSG_STC_MOB_UPDATE:
+			//			updateMobData();
+			//			break;
+			//		case MSG_STC_MOB_HIT:
+			//			recvMobHit();
+			//			break;
+			//		case MSG_STC_MOB_DIED:
+			//			recvMobDied();
+			//			break;
+			//		case MSG_STC_START_DIALOG:
+			//			recvStartDialog();
+			//			break;
+			//		case MSG_STC_CHAR_USE_SKILL_E:
+			//			recvPlayerUseSkillE();
+			//			break;
+			//		case MSG_STC_CHAR_USE_SKILL_A:
+			//			recvPlayerUseSkillA();
+			//			break;
+			//		case MSG_STC_PICK_ITEM:
+			//			recvPickItem();
+			//			break;
+			//		case MSG_STC_DROP_ITEM:
+			//			recvDropItem();
+			//			break;
+			//		case MSG_STC_DROPPED_ITEM:
+			//			recvDroppedItem();
+			//			break;
+			//		case MSG_STC_EXPIRE_ITEM:
+			//			recvExpireItem();
+			//			break;
+			//		default:
+			//			break;
+			//		}
 		}
 
 		ClientHandler::~ClientHandler()
@@ -152,10 +212,15 @@ namespace hiraeth {
 				}
 				if (recv_len > 0)
 				{
+			//if (m_DistTable.find(m_RcvBuffer[0]) != m_DistTable.end())
+			//{
+			//	m_DistTable[m_RcvBuffer[0]]();
+			//	//(this->*m_DistTable2[m_Buffer[0]])(sender);
+			//}
 					switch (m_RcvBuffer[0])
 					{
 					case MSG_STC_ADD_PLAYER:
-						addNewPlayerToMap(m_RcvBuffer);
+						addNewPlayerToMap();
 						break;
 					case MSG_STC_PLAYERS_LOCATIONS:
 						updatePlayersLocation();
@@ -178,6 +243,24 @@ namespace hiraeth {
 					case MSG_STC_START_DIALOG:
 						recvStartDialog();
 						break;
+					case MSG_STC_CHAR_USE_SKILL_E:
+						recvPlayerUseSkillE();
+						break;
+					case MSG_STC_CHAR_USE_SKILL_A:
+						recvPlayerUseSkillA();
+						break;
+					case MSG_STC_PICK_ITEM:
+						recvPickItem();
+						break;
+					case MSG_STC_DROP_ITEM:
+						recvDropItem();
+						break;
+					case MSG_STC_DROPPED_ITEM:
+						recvDroppedItem();
+						break;
+					case MSG_STC_EXPIRE_ITEM:
+						recvExpireItem();
+						break;
 					default:
 						break;
 					}
@@ -187,9 +270,11 @@ namespace hiraeth {
 			}
 		}
 
-		void ClientHandler::addNewPlayerToMap(BufferType * buffer)
+		//void ClientHandler::addNewPlayerToMap(BufferType * buffer)
+		void ClientHandler::addNewPlayerToMap()
 		{
-			const auto new_char_id = dsrl_type<unsigned int>(buffer + 1);
+			//const auto new_char_id = dsrl_type<unsigned int>(buffer + 1);
+			const auto new_char_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
 			m_NetCharManager->addChar(new_char_id, maths::vec2{ 0,0 });
 		}
 
@@ -226,7 +311,8 @@ namespace hiraeth {
 
 		void ClientHandler::recvMobHit()
 		{
-			auto monster_damage = dsrl_type<MonsterDamage>(m_RcvBuffer + 1);
+			//auto monster_damage = dsrl_type<MonsterDamage>(m_RcvBuffer + 1);
+			auto monster_damage = dsrl_type<MonsterHit>(m_RcvBuffer + 1);
 			auto monster = m_MonsterManager->getMonsters()->at(monster_damage.monster_id);
 			monster->getHit(static_cast<game::Direction>(monster_damage.dir),
 				game::Damage{ unsigned int(monster_damage.damage), 0 });
@@ -236,17 +322,63 @@ namespace hiraeth {
 		{
 			//auto dead_monster_id = dsrl_types<unsigned int>(m_RcvBuffer + 1);
 			auto monster_died_msg = dsrl_dynamic_type<MonsterDiedMsg>(m_RcvBuffer + 1);
-			m_MonsterManager->killMonster(monster_died_msg.monster_id, monster_died_msg.dropped_items);
+			//m_MonsterManager->killMonster(monster_died_msg.monster_id, monster_died_msg.dropped_items);
+			m_MonsterManager->killMonster(monster_died_msg.monster_id);
+			for (const auto& item : monster_died_msg.dropped_items)
+				m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
 		}
 
 		void ClientHandler::recvStartDialog()
 		{
 			const auto dialog_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
-				EventManager *m_EventManager = EventManager::Instance();
-				m_EventManager->execute<unsigned int>(DialogStart, dialog_id);
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->execute<unsigned int>(DialogStart, dialog_id);
 		}
 
-		void ClientHandler::sendAttackPacket(MonsterDamage monster_damage)
+		void ClientHandler::recvPlayerUseSkillE()
+		{
+			const auto[client_id, skill_id] = dsrl_types<unsigned int, unsigned int>(m_RcvBuffer + 1);
+			m_NetCharManager->charUseSkillE(client_id, skill_id);
+		}
+
+		void ClientHandler::recvPlayerUseSkillA()
+		{
+			const auto CharAttackMsg = dsrl_dynamic_type<CharAttackSkillMsg>(m_RcvBuffer + 1);
+			m_NetCharManager->charUseSkillA(CharAttackMsg.char_id, CharAttackMsg.attack_msg);
+		}
+
+		void ClientHandler::recvPickItem()
+		{
+			const auto pick_item_msg = dsrl_type<PickItemMsg>(m_RcvBuffer + 1);
+			//m_NetCharManager->charUseSkillA(CharAttackMsg.char_id, CharAttackMsg.attack_msg);
+			m_NetCharManager->charPickItem(pick_item_msg.char_id, pick_item_msg.item_id);
+		}
+
+		void ClientHandler::recvDropItem()
+		{
+			const auto item_drop_msg = dsrl_type<ItemDropMsg>(m_RcvBuffer + 1);
+			m_ItemManager->dropItem(item_drop_msg.item_id, item_drop_msg.item_type_id, item_drop_msg.item_kind, item_drop_msg.location);
+		}
+
+		void ClientHandler::recvDroppedItem()
+		{
+			//const auto item_drop_msg = dsrl_type<ItemDropMsg>(m_RcvBuffer + 1);
+			const auto dropped_items = dsrl_dynamic_type<std::vector<ItemDropMsg>>(m_RcvBuffer + 1);
+			for (const auto& item : dropped_items)
+				m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
+		}
+
+		void ClientHandler::recvExpireItem()
+		{
+			//const auto item_drop_msg = dsrl_type<ItemDropMsg>(m_RcvBuffer + 1);
+			const auto expired_item_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+			m_ItemManager->expireItem(expired_item_id);
+			//for (const auto& item : dropped_items)
+			//	m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
+		}
+
+		void ClientHandler::sendAttackPacket(MonsterHit monster_damage)
+		//void ClientHandler::sendAttackPacket(MonsterDamage monster_damage)
 		{
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_HIT_MOB, m_Id, monster_damage);
 			Send();
@@ -275,13 +407,29 @@ namespace hiraeth {
 
 		void ClientHandler::sendCharGotHit(unsigned int new_hp)
 		{
-			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_CHAR_GOT_HIT, m_Id, new_hp, 25, 27);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_CHAR_GOT_HIT, m_Id, new_hp);
 			Send();
 		}
 
-		void ClientHandler::sendCharUseSkill(unsigned int new_mp)
+		void ClientHandler::sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp)
 		{
-			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_CHAR_USE_SKILL, m_Id, new_mp);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_CHAR_USE_SKILL_E, m_Id, skill_id, new_mp);
+			Send();
+		}
+
+		void ClientHandler::sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit)
+		{
+			AttackSkillMsg msg{ skill_id, monsters_hit };
+			auto[data, size] = srl_dynamic_type(msg);
+			m_SendSize = create_client_packet_with_buffer(m_SendBuffer, MSG_CTS_CHAR_USE_SKILL_A, m_Id, *data, size);
+			Send();
+		}
+
+		void ClientHandler::sendPickItem(unsigned int item_id)
+		{
+			//AttackSkillMsg msg{ skill_id, monsters_hit };
+			//auto[data, size] = srl_dynamic_type(msg);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PICK_ITEM, m_Id, item_id);
 			Send();
 		}
 	}

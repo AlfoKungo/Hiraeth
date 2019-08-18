@@ -197,8 +197,9 @@ namespace hiraeth {
 					std::cout << "attacking" << std::endl;
 					const auto damage = getDamage();
 					monster->getHit(m_Direction, damage);
-					m_ClientHandler->sendAttackPacket(network::MonsterDamage{float(damage.RawDamage), 
-						monster->getId(), 0, new_dir });
+					//m_ClientHandler->sendAttackPacket(network::MonsterDamage{float(damage.RawDamage), 
+					m_ClientHandler->sendAttackPacket(network::MonsterHit{float(damage.RawDamage), 
+						monster->getId(), new_dir });
 						//monster->getId(), 0, static_cast<network::Direction>(m_Direction) });
 					// send the information to the server
 				}
@@ -216,59 +217,80 @@ namespace hiraeth {
 		{
 			item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
 			if (item != nullptr)
+			{
+				m_ClientHandler->sendPickItem(item->getId());
 				item->pickUp(&getBounds());
+			}
 		}
 
 
-		void Character::activateSkill(unsigned int skill_index)
+		void Character::activateSkill(unsigned int skill_id)
 		{
 			//if (!m_SkillActivationTimer.hasExpired() || // check for skill's activation time
 			//if (!m_Animations.m_Renderables.empty())
 			//	return;
+			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_id);
+			SRL::SkillPropertiesMap * skill_properties = &skill_info->skill_properties;
+
 			if (m_Animation)
 				return;
-			if (m_SkillsTimeouts.find(skill_index) != m_SkillsTimeouts.end() ) // check for skill's timeout
+			if (m_SkillsTimeouts.find(skill_id) != m_SkillsTimeouts.end()) // check for skill's timeout
 				return; // Skill's criterions not met
-
-			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_index);
-			SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
-			if (item_properties->find(SRL::SkillDataType::mpCon) != item_properties->end())
-			{
-				if (!m_CharacterStats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
+			if (skill_properties->find(SRL::SkillDataType::mpCon) != skill_properties->end())
+				if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
 					return;
-				m_ClientHandler->sendCharUseSkill(m_CharacterStats->getStatsStruct_()->Mp);
-			}
 
+			m_ClientHandler->sendCharUseSkillE(skill_id, m_CharacterStats->getStatsStruct_()->Mp);
 
-			if (item_properties->find(SRL::SkillDataType::timeOut) != item_properties->end())
-				m_SkillsTimeouts[skill_index] = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::timeOut)))};
+			if (skill_properties->find(SRL::SkillDataType::timeOut) != skill_properties->end())
+				m_SkillsTimeouts[skill_id] = ATimer{ float(std::get<int>(skill_properties->at(SRL::SkillDataType::timeOut))) };
 			//if (item_properties->find(SRL::SkillDataType::actTime) != item_properties->end())
 			//	m_SkillActivationTimer = ATimer{ float(std::get<int>(item_properties->at(SRL::SkillDataType::actTime))) / 1000 };
 
-			if (item_properties->find(SRL::SkillDataType::duration) != item_properties->end())
-				m_SkillManager->add_icon(skill_info->name, skill_index, float(std::get<int>(item_properties->at(SRL::SkillDataType::duration))));
+			if (skill_properties->find(SRL::SkillDataType::duration) != skill_properties->end())
+				m_SkillManager->add_icon(skill_info->name, skill_id, float(std::get<int>(skill_properties->at(SRL::SkillDataType::duration))));
 
-			SRL::AnimationMap* skill_animation_data = m_SkillManager->getAnimationData(skill_index);
+			//for (const auto& element : (*skill_properties))
+			//{
+			//	switch (element.first)
+			//	{
+			//	case SRL::SkillDataType::timeOut:
+			//		m_SkillsTimeouts[skill_index] = ATimer{ float(std::get<int>(skill_properties->at(SRL::SkillDataType::timeOut))) };
+			//		break;
+			//	case SRL::SkillDataType::duration:
+			//		m_SkillManager->add_icon(skill_info->name, skill_index, float(std::get<int>(skill_properties->at(SRL::SkillDataType::duration))));
+			//		break;
+			//	default:
+			//		break;
+			//	}
+			//}
+
+			SRL::AnimationMap* skill_animation_data = m_SkillManager->getAnimationData(skill_id);
 			for (const auto& element : (*skill_animation_data))
 			{
 				switch (element.first)
 				{
 				case SRL::SkillAnimationTypes::effectAnimation:
-					m_Animation.reset(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 }, 
-						skill_info->name + "_animation", element.second, true});
+					m_Animation.reset(new graphics::SpritedRenderable{ {-m_Bounds.width, 0 },
+						skill_info->name + "_animation", element.second, true });
 					break;
 				case SRL::hitAnimation:
 					if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
-						activateAttackSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], skill_info->name);
+					{
+						auto monsters_hit = activateAttackSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], 
+							skill_info->name);
+						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
+					}
 					//activateAttackSkill(element.second, skill_info->name);
 					break;
-				default: ;
+				default:;
 				}
 			}
-			m_CharacterStats->activateSkill(skill_index, item_properties);
+			m_CharacterStats->activateSkill(skill_id, skill_properties);
 		}
 
-		void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
+		//void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
+		std::vector<network::MonsterHit> Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
 			SRL::FullAnimationData projectile_animation_data, const std::string& skill_name)
 		{
 			std::vector<std::pair<float, Monster*>> monsters_in_range;
@@ -292,12 +314,14 @@ namespace hiraeth {
 				hit_monster->setProjectileAnimation(
 					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
 						hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
+				return std::vector<network::MonsterHit>{network::MonsterHit{ 250.0f, hit_monster->getId(), static_cast<network::Direction>(m_Direction) }};
 			}
 			else
 			{
 				m_Animations.add(
 					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
 						m_Direction, skill_name, projectile_animation_data));
+				return {};
 			}
 		}
 	}

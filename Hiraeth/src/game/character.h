@@ -84,8 +84,10 @@ namespace hiraeth {
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();
 			void activateSkill(unsigned int skill_index);
-			void activateAttackSkill(SRL::FullAnimationData hit_animation_data,
+			std::vector<network::MonsterHit> activateAttackSkill(SRL::FullAnimationData hit_animation_data,
 				SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
+			//void activateAttackSkill(SRL::FullAnimationData hit_animation_data,
+			//	SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
 		};
 	}
 }

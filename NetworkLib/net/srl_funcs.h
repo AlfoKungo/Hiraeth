@@ -83,9 +83,11 @@ namespace hiraeth {
 			std::string data_str = os.str();
 			auto data = new BufferType[data_str.size() + 1];
 			data[0] = char(data_str.size());
-			memcpy(data + 1, data_str.c_str(), data_str.size());
-			return { std::make_unique<BufferType*>(data), data_str.size() + 1 };
-			//return { data, data_str.size() + 1};
+			data[1] = char(data_str.size() >> 8) & 0xff;
+			//memcpy(data + 1, data_str.c_str(), data_str.size());
+			//return { std::make_unique<BufferType*>(data), data_str.size() + 1 };
+			memcpy(data + 2, data_str.c_str(), data_str.size());
+			return { std::make_unique<BufferType*>(data), data_str.size() + 2 };
 		}
 		/*
 		 * void dsrl_d(ynamic)t(ype)_packet_data(T& dsrl_data, char * buffer)
@@ -96,7 +98,10 @@ namespace hiraeth {
 		template<class T>
 		void dsrl_dynamic_type(T& dsrl_data, const BufferType * buffer)
 		{
-			const std::string tmp_str{ reinterpret_cast<const BufferType * >(buffer) + 1, static_cast<unsigned int>(buffer[0]) };
+			//const std::string tmp_str{ reinterpret_cast<const BufferType * >(buffer) + 1, static_cast<unsigned int>(buffer[0]) };
+			const unsigned int size = static_cast<unsigned char>(buffer[0]) + int(static_cast<unsigned char>(buffer[1])) * 256;
+			//const std::string tmp_str{ (buffer) + 1, size };
+			const std::string tmp_str{ (buffer) + 2, size };
 			std::stringstream is(tmp_str, std::ios::binary | std::ios::in);
 			{
 				cereal::BinaryInputArchive ar(is);
@@ -108,12 +113,6 @@ namespace hiraeth {
 		{
 			T dsrl_data;
 			dsrl_dynamic_type(dsrl_data, buffer);
-			//const std::string tmp_str{ reinterpret_cast<BufferType * >(buffer) + 1, static_cast<unsigned int>(buffer[0]) };
-			//std::stringstream is(tmp_str, std::ios::binary | std::ios::in);
-			//{
-			//	cereal::BinaryInputArchive ar(is);
-			//	ar(dsrl_data);
-			//}
 			return dsrl_data;
 		}
 	}

@@ -36,15 +36,22 @@ namespace hiraeth {
 				m_StatsStruct->Name = player_data.name;
 				m_Name->setText(player_data.name);
 				m_StatsStruct->Level = player_data.char_lvl;
-				m_Job->setText(player_data.job);
+				m_Job->setText(getJobName(player_data.job));
 				m_StatsStruct->Job = player_data.job;
 				m_StatsStruct->Hp = player_data.hp;
 				m_StatsStruct->Mp = player_data.mp;
 				m_StatsStruct->Exp = player_data.exp;
+				m_StatsStruct->Str = 4 + player_data.stats_alloc[0];
+				m_StatsStruct->Dex = 4 + player_data.stats_alloc[1];
+				m_StatsStruct->Int = 4 + player_data.stats_alloc[2];
+				m_StatsStruct->Luk = 4 + player_data.stats_alloc[3];
 				StatsUpdated();
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->execute(StatsUpdate);
 			}
 		private:
 			void fill_stats_group();
+			std::string getJobName(unsigned int job_id);
 			std::string create_stats_string(unsigned int value, unsigned int maxValue) const ;
 		};
 	}

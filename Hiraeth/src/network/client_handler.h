@@ -32,6 +32,7 @@ namespace hiraeth {
 			SOCKET m_Handle;
 			unsigned int m_Id{0};
 			struct sockaddr_in m_SiOther {};
+			std::map<char, std::function<void()>> m_DistTable{};
 			int slen = sizeof(m_SiOther), m_SendSize;
 			//BufferType m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			char m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
@@ -40,11 +41,13 @@ namespace hiraeth {
 
 			game::NetCharManager * m_NetCharManager;
 			game::MonsterManager * m_MonsterManager;
+			item::ItemManager * m_ItemManager;
 			//std::map<unsigned int, maths::vec2> m_PlayerLocation;
 			RegularMapUpdate m_PlayersLocationStruct;
 			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 		public:
-			ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager);
+			ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
+				item::ItemManager * item_manager);
 
 			~ClientHandler();
 			void closeConnection();
@@ -52,6 +55,11 @@ namespace hiraeth {
 			void Update(PlayerStateUpdateMsg psu);
 
 		private:
+			void bindFunctionToChar(char bytecode, void(ClientHandler::*fptr)())
+			{
+				std::function<void()> val2 = [&]() {(this->*fptr)(); };
+				m_DistTable.insert(std::pair<char, std::function<void()>>(bytecode, val2));
+			}
 			void Send();
 			void Send(BufferType messgae_type, BufferType * data, int size);
 			void sendStateUpdate(PlayerStateUpdateMsg char_state);
@@ -60,7 +68,8 @@ namespace hiraeth {
 
 			void receiveData();
 
-			void addNewPlayerToMap(BufferType * buffer);
+			//void addNewPlayerToMap(BufferType * buffer);
+			void addNewPlayerToMap();
 			void updatePlayersLocation();
 			void loadMobsData();
 			void updateMobData();
@@ -68,14 +77,23 @@ namespace hiraeth {
 			void recvMobHit();
 			void recvMobDied();
 			void recvStartDialog();
+			void recvPlayerUseSkillE(); //Effect
+			void recvPlayerUseSkillA(); //Attack
+			void recvPickItem();
+			void recvDropItem();
+			void recvDroppedItem();
+			void recvExpireItem();
 		public:
-			void sendAttackPacket(MonsterDamage monster_damage);
+			//void sendAttackPacket(MonsterDamage monster_damage);
+			void sendAttackPacket(MonsterHit monster_damage);
 			void sendNpcClick(unsigned int npc_id);
 			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id);
 			void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id);
 			void sendCharGotHit(unsigned int new_hp);
-			void sendCharUseSkill(unsigned int new_mp);
-			PlayerData getPlayerData() { return m_PlayerData; }
+			void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp);
+			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit);
+			void sendPickItem(unsigned int item_id);
+			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}
 }

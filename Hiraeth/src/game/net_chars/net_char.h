@@ -6,6 +6,8 @@
 #include "game/character_stats.h"
 #include "skills/skill_manager.h"
 #include "net/protocol.h"
+#include "game/monsters/monster.h"
+#include "item/item_manager.h"
 
 namespace hiraeth {
 	namespace game {
@@ -27,7 +29,7 @@ namespace hiraeth {
 		private:
 			//input::Keyboard* m_Kb;
 			//std::vector<Monster*>* m_MonstersLayer;
-			//item::ItemManager* m_ItemManager;
+			item::ItemManager *m_ItemManager;
 			skills::SkillManager* m_SkillManager;
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
@@ -36,11 +38,14 @@ namespace hiraeth {
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
+			std::map<unsigned int, Monster*>* m_Monsters;
 
 			bool m_IsStuck{false};
 
 		public:
-			NetChar(maths::vec2 pos, map::MapLayer *map_layer, skills::SkillManager *skill_manager);
+			NetChar(maths::vec2 pos, map::MapLayer *map_layer, item::ItemManager *item_manager, 
+				skills::SkillManager *skill_manager,
+				std::map<unsigned int, Monster*>* monsters);
 			~NetChar();
 
 			void update() override;
@@ -77,12 +82,13 @@ namespace hiraeth {
 			void carryOutAttack() override;
 			void setStuck(bool stuck_state);
 			//CharacterStats* getCharacterStats() const;
-		private:
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
-			void pickItemUp();
+			void pickItemUp(unsigned int item_id);
 			void activateSkill(unsigned int skill_index);
-			void activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
-				SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
+			void activateAttackSkill( network::AttackSkillMsg attack_msg);
+			//void activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
+			//	SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
+		private:
 			
 		};
 	}

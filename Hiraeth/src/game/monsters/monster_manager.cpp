@@ -76,14 +76,15 @@ namespace hiraeth {
 			m_Monsters[monster_id]->setControls(1, monster_state.dir == network::Right);
 		}
 
-		void MonsterManager::killMonster(unsigned int monster_id, std::vector<unsigned int> & dropped_items)
+		void MonsterManager::killMonster(unsigned int monster_id)
 		{
 			for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
 			{
 				if ((*monster)->getId() == monster_id)
 				{
-					for (const auto& item_id : dropped_items)
-						m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), item_id);
+					//for (const auto& item_id : dropped_items)
+					//	m_ItemManager->dropItem(100, item_id, 0, (*monster)->getBounds().GetBottomMiddle()); // remove line
+						//m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), item_id);
 					//m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);

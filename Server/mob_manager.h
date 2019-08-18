@@ -155,7 +155,8 @@ namespace hiraeth {
 				setNewMoveCommand(mob_id, MobMoveCommand{ dir, ATimer{10.0f}, 10 });
 			}
 
-			bool damageMob(MonsterDamage monster_damage)
+			bool damageMob(MonsterHit monster_damage)
+			//bool damageMob(MonsterDamage monster_damage)
 			{
 				auto& monster = m_Monsters[monster_damage.monster_id];
 				if (monster.hp > monster_damage.damage)
@@ -165,13 +166,15 @@ namespace hiraeth {
 				}
 				return true;
 			}
-			void monsterDied(MobIndex mob_id)
+			maths::vec2 monsterDied(MobIndex mob_id)
 			{
 				//m_Monsters.erase(mob_id);
 				auto& monster = m_Monsters[mob_id];
 				setNewMoveCommand(mob_id, MobMoveCommand{ Stand, ATimer{10.0f}, 10 });
 				monster.hp = m_MonsterTypeToData[m_MonsterIdToType[mob_id]].StatsStruct.Hp;
+				const auto dead_pos = monster.pos;
 				monster.pos = m_Summons.at(mob_id).position;
+				return dead_pos;
 			}
 		};
 	}

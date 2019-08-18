@@ -38,7 +38,8 @@ namespace hiraeth
 			//void addMonster(unsigned int monster_id, unsigned int summon_index);
 			void addMonster(unsigned int monster_id, network::MonsterStateUpdate monster_state);
 			void updateMonster(unsigned int monster_id, network::MonsterStateUpdate monster_state);
-			void killMonster(unsigned int monster_id, std::vector<unsigned int> & dropped_items);
+			void killMonster(unsigned int monster_id);
+			//void killMonster(unsigned int monster_id, std::vector<unsigned int> & dropped_items);
 			//std::vector<Monster*>* getMonsterLayer() { return &m_Layer.m_Renderables; }
 			//std::vector<Monster*>* hitMonster(unsigned int monster_id) { return &m_Layer.m_Renderables; }
 			std::map<unsigned int, Monster*>* getMonsters() { return &m_Monsters; }

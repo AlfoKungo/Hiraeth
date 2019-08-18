@@ -18,23 +18,65 @@ namespace hiraeth {
 			MSG_CTS_DIALOG_NEXT = 0x09,
 			MSG_CTS_ACCEPT_QUEST = 0x10,
 			MSG_CTS_CHAR_GOT_HIT = 0x11,
-			MSG_CTS_CHAR_USE_SKILL = 0x12;
+			MSG_CTS_CHAR_USE_SKILL_E = 0x12,
+			MSG_CTS_CHAR_USE_SKILL_A = 0x13,
+			MSG_CTS_PICK_ITEM = 0x14,
+			MSG_CTS_DROP_ITEM = 0x15;
+		//enum MSG_CTS {
+		//	MSG_CTS_ACK = 0x00,
+		//	MSG_CTS_OPEN_CONNECTION,
+		//	MSG_CTS_CLOSE_CONNECTION,
+		//	MSG_CTS_LOCATION_UPDATE,
+		//	MSG_CTS_KA,
+		//	MSG_CTS_HIT_MOB,
+		//	MSG_CTS_KILL_MOB,
+		//	MSG_CTS_NPC_CLICK,
+		//	MSG_CTS_DIALOG_NEXT,
+		//	MSG_CTS_ACCEPT_QUEST,
+		//	MSG_CTS_CHAR_GOT_HIT,
+		//	MSG_CTS_CHAR_USE_SKILL_E,
+		//	MSG_CTS_CHAR_USE_SKILL_A,
+		//};
 
 		PROTOCOL_CODE
-			MSG_STC_ACK = 0x60,
-			MSG_STC_ESTABLISH_CONNECTION = 0x61,
-			MSG_STC_ADD_PLAYER = 0x62,
-			MSG_STC_PLAYERS_LOCATIONS = 0x63,
-			MSG_STC_PLAYERS_LIST = 0x64,
-			MSG_STC_MOB_HIT = 0x65,
-			MSG_STC_MOB_DIED = 0x66,
-			MSG_STC_NPC_CLICK_ANSWER = 0x67,
-			MSG_STC_NPC_QUEST_ACCEPT = 0x68,
-			MSG_STC_MOB_DATA = 0x71,
-			MSG_STC_MOB_UPDATE = 0x72,
-			MSG_STC_START_DIALOG = 0x73,
-			MSG_STC_DIALOG_NEXT_ANSWER = 0x74,
-			MSG_STC_ACCEPT_QUEST_ACK = 0x75;
+			MSG_STC_ACK = 0x40,
+			MSG_STC_ESTABLISH_CONNECTION = 0x41,
+			MSG_STC_ADD_PLAYER = 0x42,
+			MSG_STC_PLAYERS_LOCATIONS = 0x43,
+			MSG_STC_PLAYERS_LIST = 0x44,
+			MSG_STC_MOB_HIT = 0x45,
+			MSG_STC_MOB_DIED = 0x46,
+			MSG_STC_NPC_CLICK_ANSWER = 0x47,
+			MSG_STC_NPC_QUEST_ACCEPT = 0x48,
+			MSG_STC_MOB_DATA = 0x49,
+			MSG_STC_MOB_UPDATE = 0x4A,
+			MSG_STC_START_DIALOG = 0x4B,
+			MSG_STC_DIALOG_NEXT_ANSWER = 0x4C,
+			MSG_STC_ACCEPT_QUEST_ACK = 0x4D,
+			MSG_STC_CHAR_USE_SKILL_E = 0x4E,
+			MSG_STC_CHAR_USE_SKILL_A = 0x4F,
+			MSG_STC_PICK_ITEM = 0x50,
+			MSG_STC_DROP_ITEM = 0x51,
+			MSG_STC_DROPPED_ITEM = 0x52,
+			MSG_STC_EXPIRE_ITEM = 0x53;
+		//enum MSG_STC {
+		//	MSG_STC_ACK = 0x60,
+		//	MSG_STC_ESTABLISH_CONNECTION,
+		//	MSG_STC_ADD_PLAYER,
+		//	MSG_STC_PLAYERS_LOCATIONS,
+		//	MSG_STC_PLAYERS_LIST,
+		//	MSG_STC_MOB_HIT,
+		//	MSG_STC_MOB_DIED,
+		//	MSG_STC_NPC_CLICK_ANSWER,
+		//	MSG_STC_NPC_QUEST_ACCEPT,
+		//	MSG_STC_MOB_DATA,
+		//	MSG_STC_MOB_UPDATE,
+		//	MSG_STC_START_DIALOG,
+		//	MSG_STC_DIALOG_NEXT_ANSWER,
+		//	MSG_STC_ACCEPT_QUEST_ACK,
+		//	MSC_STC_CHAR_USE_SKILL_E,
+		//	MSC_STC_CHAR_USE_SKILL_A,
+		//};
 
 		PROTOCOL_CODE
 			MSG_INR_UPDATE_MOB_CMD = 0xA1,
@@ -42,6 +84,9 @@ namespace hiraeth {
 			MSG_INR_MOB_UPDATE = 0xA3;
  			//#define MSG_INR_FIND_MOB_POS 0xA2
 
+		PROTOCOL_CODE
+			USE_ITEM = 0,
+			EQUIP_ITEM = 1;
 		using BufferType = char;
 
 		enum Direction {
@@ -91,10 +136,20 @@ namespace hiraeth {
 				ar(CEREAL_NVP(m_PlayersLocation));
 			}
 		};
+		struct ItemDropMsg
+		{
+			unsigned int item_id{}, item_type_id{}, item_kind{};
+			maths::vec2 location;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(item_id), CEREAL_NVP(item_type_id),
+					CEREAL_NVP(item_kind), CEREAL_NVP(location));
+			}
+		};
 		struct MonsterDiedMsg
 		{
 			unsigned int monster_id;
-			std::vector<unsigned int> dropped_items;
+			//std::vector<unsigned int> dropped_items;
+			std::vector<ItemDropMsg> dropped_items;
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(monster_id), CEREAL_NVP(dropped_items));
 			}
@@ -123,14 +178,50 @@ namespace hiraeth {
 				ar(CEREAL_NVP(client_id), CEREAL_NVP(player_data));
 			}
 		};
-		struct MonsterDamage
+		//struct MonsterDamage
+		//{
+		//	float damage{};
+		//	unsigned int monster_id{};
+		//	unsigned int attack_id{};
+		//	Direction dir{};
+		//	template<class A> void serialize(A& ar) {
+		//		ar(CEREAL_NVP(damage), CEREAL_NVP(monster_id), CEREAL_NVP(attack_id), CEREAL_NVP(dir));
+		//	}
+		//};
+		struct MonsterHit
 		{
 			float damage{};
 			unsigned int monster_id{};
-			unsigned int attack_id{};
 			Direction dir{};
 			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(damage), CEREAL_NVP(monster_id), CEREAL_NVP(attack_id), CEREAL_NVP(dir));
+				ar(CEREAL_NVP(damage), CEREAL_NVP(monster_id), CEREAL_NVP(dir));
+			}
+		};
+
+		struct AttackSkillMsg
+		{
+			unsigned int skill_id{};
+			std::vector<MonsterHit> monsters_hit;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(skill_id), CEREAL_NVP(monsters_hit));
+			}
+		};
+
+		struct CharAttackSkillMsg
+		{
+			unsigned int char_id{};
+			AttackSkillMsg attack_msg;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(char_id), CEREAL_NVP(attack_msg));
+			}
+		};
+
+		struct PickItemMsg
+		{
+			unsigned int char_id{};
+			unsigned int item_id{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(char_id), CEREAL_NVP(item_id));
 			}
 		};
 
