@@ -1,9 +1,9 @@
 #pragma once
 #include "basic/updatable.h"
 #include "skill_icon.h"
-#include "UI/ui_skills.h"
-#include "graphics/percented_sprite.h"
 #include "top_right_icon.h"
+#include "graphics/percented_sprite.h"
+#include "UI/ui_skills.h"
 
 namespace hiraeth {
 	namespace skills {
@@ -11,6 +11,7 @@ namespace hiraeth {
 		class SkillManager : public Updatable
 		{
 			std::map<unsigned int, std::tuple<SRL::SkillInfo*, SRL::AnimationMap*>> m_SkillsData;
+			std::map<unsigned int, unsigned int> m_SkillsAlloc;
 		public:
 			ui::UiSkills * m_UiSkills;
 			graphics::Layer<TopRightIcon> m_Layer;
@@ -18,20 +19,19 @@ namespace hiraeth {
 				: m_UiSkills(ui_skills),
 				m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false)
 			{
-				SRL::AllJobsData JobInfo{ {
-				{ SRL::Berserker, {{1,2,3}, {1,2,3}}},
-				{ SRL::CrusaderKnight, {{1,2,3}, {1,2,3}}},
-				{ SRL::Wizard, {{1,2,3}, {1,2,3}}},
-				{ SRL::Rogue, {{1,2,3}, {1,2,3}}},
-				{ SRL::Archer, {{1,2,3}, {1,2,3}}},
-				{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
-					} };
+				//SRL::AllJobsData JobInfo{ {
+				//{ SRL::Berserker, {{1,2,3}, {1,2,3}}},
+				//{ SRL::CrusaderKnight, {{1,2,3}, {1,2,3}}},
+				//{ SRL::Wizard, {{1,2,3}, {1,2,3}}},
+				//{ SRL::Rogue, {{1,2,3}, {1,2,3}}},
+				//{ SRL::Archer, {{1,2,3}, {1,2,3}}},
+				//{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
+				//	} };
 
-				//std::vector<unsigned int> SkillIndices{ 1,2,3 };
-				//std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
-				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(SRL::Berserker).first_job_skills;
-				for (const auto& index : FirstJobSkillsIndices)
-					add_skill(index - 1);
+				////std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
+				//std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(SRL::Berserker).first_job_skills;
+				//for (const auto& index : FirstJobSkillsIndices)
+				//	add_skill(index - 1);
 
 			}
 
@@ -53,8 +53,9 @@ namespace hiraeth {
 
 			void add_skill(unsigned int index)
 			{
-				SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("skills", index);
-				m_SkillsData[index] = m_UiSkills->add_skill(skill_data, 0);
+				//const SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("skills", index);
+				//m_SkillsData[index] = m_UiSkills->add_skill(index, skill_data, 0);
+				m_SkillsData[index] = m_UiSkills->add_skill(index, 0);
 			}
 
 			SRL::SkillInfo* get_skill(unsigned int skill_index)
@@ -79,7 +80,36 @@ namespace hiraeth {
 					vints.push_back(imap.first);
 				return vints;
 			}
+			unsigned int getSkillAlloc(unsigned int skill_id)
+			{
+				//return m_UiSkills->getSkillAlloc(skill_id);
+				return m_SkillsAlloc[skill_id];
+			}
 
+			void setJob(unsigned int job_id, std::vector<network::SkillAlloc> stats_alloc)
+			//void setJob(unsigned int job_id, std::map<unsigned int, unsigned int> stats_alloc)
+			{
+				SRL::AllJobsData JobInfo{ {
+				{ SRL::Berserker, {{1,2,3}, {1,2,3}}},
+				{ SRL::CrusaderKnight, {{1,2,3}, {1,2,3}}},
+				{ SRL::Wizard, {{1,2,3}, {1,2,3}}},
+				{ SRL::Rogue, {{1,2,3}, {1,2,3}}},
+				{ SRL::Archer, {{1,2,3}, {1,2,3}}},
+				{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
+					} };
+
+				//std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
+				const SRL::JobsTypes job_type{ static_cast<SRL::JobsTypes>(job_id) };
+				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).first_job_skills;
+				for (const auto& index : FirstJobSkillsIndices)
+					add_skill(index - 1);
+
+				for (const auto& alloc : stats_alloc)
+				{
+					m_SkillsAlloc[alloc.skill_id] = alloc.pts_alloc;
+					m_UiSkills->setSkillPoints(alloc.skill_id, alloc.pts_alloc);
+				}
+			}
 			void add_icon(const std::string& name, unsigned int skill_index, float duration)
 			{
 				std::vector<TopRightIcon*>* rends = &m_Layer.m_Renderables;

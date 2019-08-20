@@ -71,6 +71,10 @@ namespace hiraeth {
 			bindFunctionToChar(MSG_STC_DROP_ITEM, &ClientHandler::recvDropItem);
 			bindFunctionToChar(MSG_STC_DROPPED_ITEM, &ClientHandler::recvDroppedItem);
 			bindFunctionToChar(MSG_STC_EXPIRE_ITEM, &ClientHandler::recvExpireItem);
+
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
+			m_EventManager->subscribe(SendIncreaseSkill, this, &ClientHandler::sendIncreaseSkill);
 		}
 
 		ClientHandler::~ClientHandler()
@@ -328,7 +332,7 @@ namespace hiraeth {
 		void ClientHandler::recvExpireItem()
 		{
 			const auto expired_item_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
-			m_ItemManager->expireItem(expired_item_id);
+			m_ItemManager->startExpiring(expired_item_id);
 			//for (const auto& item : dropped_items)
 			//	m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
 		}
@@ -386,6 +390,12 @@ namespace hiraeth {
 			//AttackSkillMsg msg{ skill_id, monsters_hit };
 			//auto[data, size] = srl_dynamic_type(msg);
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PICK_ITEM, m_Id, item_id);
+			Send();
+		}
+
+		void ClientHandler::sendIncreaseSkill(unsigned skill_id)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_INCREASE_SKILL, m_Id, skill_id);
 			Send();
 		}
 	}

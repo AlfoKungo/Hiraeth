@@ -30,7 +30,7 @@ namespace hiraeth {
 			void update() override;
 			//void dropItem(maths::vec2 pos, unsigned int item_id);
 			void dropItem(unsigned int item_id, unsigned int item_type_id, unsigned int item_kind, maths::vec2 pos);
-			void expireItem(unsigned int item_id);
+			void startExpiring(unsigned int item_id);
 			void mapChanged();
 			Item * getItem(maths::vec2 pos);
 			Item * getItem(unsigned int item_id) { return m_DroppedItemsMap[item_id]; }

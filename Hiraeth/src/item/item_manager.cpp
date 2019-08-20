@@ -32,13 +32,18 @@ namespace hiraeth {
 			m_DroppedItems.update();
 			for (auto item = m_DroppedItems.m_Renderables.begin(); item != m_DroppedItems.m_Renderables.end();)
 			{
-				//if ((*item)->hasExpired())
-				//{
-				//	//delete (*item);
-				//	//item = m_DroppedItems.m_Renderables.erase(item);
-				//	expireItem((*item)->getId());
-				//}
-				//else
+				if ((*item)->hasExpired())
+				{
+					//delete (*item);
+					//item = m_DroppedItems.m_Renderables.erase(item);
+
+					//expireItem((*item)->getId());
+					m_DroppedItemsMap.erase((*item)->getId());
+					delete (*item);
+					item = m_DroppedItems.m_Renderables.erase(item);
+					//return;
+				}
+				else
 					if ((*item)->hasBeenTaken())
 				{
 					m_InventoryItems.push_back(*item);
@@ -79,18 +84,21 @@ namespace hiraeth {
 			//	m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id - 5), m_FootHolds, m_Counter++));
 		}
 
-		void ItemManager::expireItem(unsigned int item_id)
+		void ItemManager::startExpiring(unsigned int item_id)
 		{
-			for (auto item = m_DroppedItems.m_Renderables.begin(); item != m_DroppedItems.m_Renderables.end();)
-			{
-				if ((*item)->getId() == item_id)
-				{
-					delete (*item);
-					item = m_DroppedItems.m_Renderables.erase(item);
-					m_DroppedItemsMap.erase(item_id);
-					return;
-				}
-			}
+			m_DroppedItemsMap[item_id]->startExpire();
+			//for (auto item = m_DroppedItems.m_Renderables.begin(); item != m_DroppedItems.m_Renderables.end(); ++item)
+			//{
+
+			//	if ((*item)->getId() == item_id)
+			//	{
+			//		(*item)->startExpire();
+			//		//m_DroppedItemsMap.erase(item_id);
+			//		//delete (*item);
+			//		//item = m_DroppedItems.m_Renderables.erase(item);
+			//		return;
+			//	}
+			//}
 		}
 
 		void ItemManager::mapChanged()

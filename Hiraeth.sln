@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hiraeth", "Hiraeth\Hiraeth.vcxproj", "{055CEB59-757B-4F3F-B1A0-1D208452E355}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DCE91167-8080-4243-A5A0-2D9B524C2F85} = {DCE91167-8080-4243-A5A0-2D9B524C2F85}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerializeLib", "SerializeLib\SerializeLib.vcxproj", "{D7D76BDE-7DCA-40D5-92AF-F83EDE064043}"
 EndProject

@@ -1,11 +1,14 @@
 #pragma once
 #include <string>
 #include <cereal/cereal.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/tuple.hpp>
 #include "texture_data.h"
 #include "cereal/types/variant.hpp"
 #include "types.h"
 #include <map>
 #include "animation_data.h"
+#include "sprite_data.h"
 
 namespace SRL
 {
@@ -64,7 +67,7 @@ namespace SRL
 		}
 	};
 
-	typedef std::map<SkillAnimationTypes, FullAnimationData> AnimationMap;
+	using AnimationMap = std::map<SkillAnimationTypes, FullAnimationData>;
 
 	struct SkillData
 	{

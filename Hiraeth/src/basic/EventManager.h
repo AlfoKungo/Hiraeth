@@ -24,6 +24,7 @@ namespace hiraeth {
 		InventoryUpdated, // 0
 		MonsterDied, // 1
 		DialogStart, // unsigned int
+		SendIncreaseSkill, // unsigned int
 	};
 
 	class BaseEvent {

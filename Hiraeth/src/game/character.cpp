@@ -223,6 +223,13 @@ namespace hiraeth {
 			}
 		}
 
+		int Character::getValueFromString(std::string str, unsigned int val)
+		{
+			auto pos = str.find('x');
+			str.replace(pos, 1, std::to_string( val ));
+			return calculator::eval(str);
+		}
+
 
 		void Character::activateSkill(unsigned int skill_id)
 		{
@@ -231,14 +238,32 @@ namespace hiraeth {
 			//	return;
 			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_id);
 			SRL::SkillPropertiesMap * skill_properties = &skill_info->skill_properties;
+			const auto skill_lvl = m_SkillManager->getSkillAlloc(skill_id);
 
+			if (skill_lvl == 0)
+				return;
 			if (m_Animation)
 				return;
 			if (m_SkillsTimeouts.find(skill_id) != m_SkillsTimeouts.end()) // check for skill's timeout
 				return; // Skill's criterions not met
 			if (skill_properties->find(SRL::SkillDataType::mpCon) != skill_properties->end())
-				if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
-					return;
+			{
+				//if (skill_properties->at(SRL::SkillDataType::mpCon).index() == 0)
+				if (std::holds_alternative<int>(skill_properties->at(SRL::SkillDataType::mpCon)))
+				{
+					if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
+						return;
+				}
+				else
+				{
+					std::string con_string = std::get<std::string>(skill_properties->at(SRL::SkillDataType::mpCon));
+					auto result = getValueFromString(con_string, skill_lvl);
+					if (!m_CharacterStats->consumeMana(result))
+						return;
+				}
+			}
+				//if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
+				//	return;
 
 			m_ClientHandler->sendCharUseSkillE(skill_id, m_CharacterStats->getStatsStruct_()->Mp);
 
@@ -281,6 +306,7 @@ namespace hiraeth {
 							skill_info->name);
 						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
 					}
+
 					//activateAttackSkill(element.second, skill_info->name);
 					break;
 				default:;

@@ -21,7 +21,6 @@ namespace hiraeth {
 			m_Wnd->getKeyboard()->registerToKey(GLFW_KEY_UP, up, this);
 
 			EventManager *m_EventManager = EventManager::Instance();
-			//m_EventManager->createEvent<>(MapChanged);
 			m_EventManager->createEvent<>(MapChanged);
 
 			deserialize_map_data(map_index);

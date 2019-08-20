@@ -50,9 +50,14 @@ namespace hiraeth {
 			void update() override;
 			bool isReachedFloor(maths::vec2 org, maths::vec2 force);
 			bool hasExpired();
+			void startExpire()
+			{
+				m_IsExpiring = true;
+				m_Timer.reSet(EXPIRE_FADE_TIME);
+			}
 			bool hasBeenTaken();
 			void pickUp(const maths::Rectangle * char_rec);
-			bool isAbleToPickUp() const { return m_State == OnFloor; }
+			bool isAbleToPickUp() const { return m_State == OnFloor && !m_IsExpiring; }
 			bool isPickedUp() const { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
 			unsigned int getId() const { return m_Id; }
 			void setDrawDetails(bool is_draw_details)

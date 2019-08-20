@@ -1,6 +1,7 @@
 #include "ui_skills.h"
 #include "basic/EventManager.h"
 #include "srl/monster_data.h"
+//#include "network/client_handler.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -65,6 +66,10 @@ namespace hiraeth {
 					return skill->getSpUpButtonBounds().Contains(mousePos); });
 				if (result_skill != std::end(*tab_rends))
 				{
+					auto changed_skill = (*result_skill)->getSkillId();
+					EventManager *m_EventManager = EventManager::Instance();
+					m_EventManager->execute<unsigned int>(SendIncreaseSkill, changed_skill);
+					//m_ClientHandler->sendIncreaseSkill(changedSkill);
 					if ((*result_skill)->inc_level())
 					{
 						m_SkillPts--;

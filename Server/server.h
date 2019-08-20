@@ -104,6 +104,7 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL_E, &Server::CharUseSkillE);
 				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL_A, &Server::CharUseSkillA);
 				bindFunctionToChar(MSG_CTS_PICK_ITEM, &Server::PickItem);
+				bindFunctionToChar(MSG_CTS_INCREASE_SKILL, &Server::IncreaseSkill);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
 				bindFunctionToChar(MSG_INR_ROUTINE_UPDATE, &Server::RoutineUpdate);
@@ -239,12 +240,12 @@ namespace hiraeth {
 			void CharGotHit(Address sender)
 			{
 				auto[client_id, new_hp] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
-				m_DbClient->updateValue(client_id, "hp", new_hp);
+				m_DbClient->setValue(client_id, "hp", new_hp);
 			}
 			void CharUseSkillE(Address sender)
 			{
 				auto[client_id, skill_id, new_mp] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
-				m_DbClient->updateValue(client_id, "mp", new_mp);
+				m_DbClient->setValue(client_id, "mp", new_mp);
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_CHAR_USE_SKILL_E, client_id ,skill_id);
 				sendDataToAllClientsExcept(buffer_size, client_id);
 			}
@@ -274,8 +275,14 @@ namespace hiraeth {
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_PICK_ITEM, PickItemMsg{ client_id, item_id });
 				m_ItemsDropped.erase(item_id);
 				sendDataToAllClientsExcept(buffer_size, client_id);
-				findExpiredItems();
 				//sendDataToAllClients(buffer_size);
+			}
+			void IncreaseSkill(Address sender)
+			{
+				auto[client_id, skill_id] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
+				m_DbClient->increaseSkillPoints(client_id, skill_id);
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_INCREASE_SKILL,  skill_id);
+				m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 			void InrMobGotHit(Address sender)
 			{
@@ -304,6 +311,7 @@ namespace hiraeth {
 			}
 			void sendItemExpired(unsigned int item_id)
 			{
+				m_ItemsDropped.erase(item_id);
 				const auto buffer_size = create_client_packet_with_data(m_Buffer, MSG_STC_EXPIRE_ITEM, item_id);
 				sendDataToAllClients(buffer_size);
 			}

@@ -2,8 +2,8 @@
 #include "graphics/sprite.h"
 //#include <graphics/sprite.h>
 #include "graphics/texture_manager.h"
-#include "srl/skill_data.h"
 #include "graphics/label.h"
+#include "srl/skill_data.h"
 
 //#include "srl/skill_data.h"
 
@@ -13,19 +13,22 @@ namespace hiraeth {
 		class SkillIcon : public graphics::Sprite
 		{
 		private:
+			unsigned int m_SkillId{};
 			graphics::Sprite m_Bg;
 			graphics::Texture* m_Icon;
 			graphics::Texture* m_IconDisabled;
 			graphics::Texture* m_IconMouseOver;
-			unsigned int m_Level{0};
+			unsigned int m_Level{ 0 };
 			graphics::Label m_LevelLabel;
 			graphics::Label m_NameLabel;
-			std::map<SRL::SkillAnimationTypes, SRL::FullAnimationData> m_AnimationData;
+			//std::map<SRL::SkillAnimationTypes, SRL::FullAnimationData> m_AnimationData;
+			SRL::AnimationMap m_AnimationData;;
 			SRL::SkillInfo m_Info;
 
 		public:
-			SkillIcon(SRL::SkillData data, maths::vec2 pos)
+			SkillIcon(unsigned int skill_id, SRL::SkillData data, maths::vec2 pos)
 				: Sprite(pos),
+				m_SkillId(skill_id),
 				m_Bg(pos + maths::vec2{ -1,-2 }, graphics::TextureManager::Load("Assets/UI/Skills/Skills.main.skill1.png")),
 				m_Icon(graphics::TextureManager::Load(data.skill_info.name, data.icon_data.icon)),
 				m_IconDisabled(graphics::TextureManager::Load(data.skill_info.name + "_disabled", data.icon_data.icon_disabled)),
@@ -34,10 +37,12 @@ namespace hiraeth {
 				m_NameLabel("arial", 12, data.skill_info.name, pos + maths::vec2{ 40, 21 }, 0xff000000, graphics::Label::Alignment::LEFT),
 				m_AnimationData(data.animation_map),
 				m_Info(data.skill_info)
-
 			{
 				updateIconState(false);
 			}
+			SkillIcon(unsigned int skill_id, maths::vec2 pos)
+				: SkillIcon(skill_id, SRL::deserial<SRL::SkillData>("skills", skill_id), pos)
+			{}
 
 			SRL::SkillInfo* get_skill_info()
 			{
@@ -56,7 +61,11 @@ namespace hiraeth {
 				m_LevelLabel.draw(renderer);
 				Sprite::draw(renderer);
 			}
-
+			unsigned int getSkillId() const { return m_SkillId; }
+			unsigned int getSkillLvl() const
+			{
+				return m_Level;
+			}
 			bool inc_level()
 			{
 				return set_level(m_Level + 1);
@@ -67,7 +76,7 @@ namespace hiraeth {
 				if (new_level <= m_Info.max_level)
 				{
 					m_Level = new_level;
-					updateIconState(true);
+					updateIconState(false);
 					m_LevelLabel.setText(m_Level);
 					return true;
 				}

@@ -97,6 +97,7 @@ namespace hiraeth {
 			void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp);
 			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit);
 			void sendPickItem(unsigned int item_id);
+			void sendIncreaseSkill(unsigned int skill_id);
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

@@ -35,6 +35,10 @@ namespace hiraeth {
 				const auto temp = m_KeyControlMap[k1];
 				m_KeyControlMap[k1] = m_KeyControlMap[k2];
 				m_KeyControlMap[k2] = temp;
+				if (m_KeyControlMap[k1].first == nullptr)
+					m_KeyControlMap.erase(k1);
+				if (m_KeyControlMap[k2].first == nullptr)
+					m_KeyControlMap.erase(k1);
 			}
 
 			void registerToMouse(MouseEvent* mouse_event)

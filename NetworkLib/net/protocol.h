@@ -21,7 +21,8 @@ namespace hiraeth {
 			MSG_CTS_CHAR_USE_SKILL_E = 0x12,
 			MSG_CTS_CHAR_USE_SKILL_A = 0x13,
 			MSG_CTS_PICK_ITEM = 0x14,
-			MSG_CTS_DROP_ITEM = 0x15;
+			MSG_CTS_DROP_ITEM = 0x15,
+			MSG_CTS_INCREASE_SKILL = 0x16;
 		//enum MSG_CTS {
 		//	MSG_CTS_ACK = 0x00,
 		//	MSG_CTS_OPEN_CONNECTION,
@@ -58,7 +59,8 @@ namespace hiraeth {
 			MSG_STC_PICK_ITEM = 0x50,
 			MSG_STC_DROP_ITEM = 0x51,
 			MSG_STC_DROPPED_ITEM = 0x52,
-			MSG_STC_EXPIRE_ITEM = 0x53;
+			MSG_STC_EXPIRE_ITEM = 0x53,
+			MSG_STC_INCREASE_SKILL = 0x54;
 		//enum MSG_STC {
 		//	MSG_STC_ACK = 0x60,
 		//	MSG_STC_ESTABLISH_CONNECTION,
@@ -155,6 +157,15 @@ namespace hiraeth {
 				ar(CEREAL_NVP(monster_id), CEREAL_NVP(dropped_items));
 			}
 		};
+
+		struct SkillAlloc
+		{
+			unsigned int skill_id;
+			unsigned int pts_alloc;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(skill_id), CEREAL_NVP(pts_alloc));
+			}
+		};
 		struct PlayerData
 		{
 			std::string name;
@@ -164,7 +175,8 @@ namespace hiraeth {
 			unsigned int hp{};
 			unsigned int mp{};
 			std::vector<unsigned int> stats_alloc;
-			std::vector<unsigned int> skills_alloc;
+			//std::map<unsigned int, unsigned int> skills_alloc;
+			std::vector<SkillAlloc> skills_alloc;
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(char_lvl), CEREAL_NVP(name), CEREAL_NVP(job),
 					CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp),

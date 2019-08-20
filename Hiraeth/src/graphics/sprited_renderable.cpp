@@ -25,6 +25,8 @@ namespace hiraeth
 		SpritedRenderable::SpritedRenderable(maths::vec3 position, const std::string& tex_name,
 			SRL::FullAnimationData animation_data, bool is_one_time )
 			: SpritedRenderable(position, animation_data.animation_data, 
+			//: SpritedRenderable(position,SRL::AnimationData{},
+				//TextureManager::Load(tex_name), is_one_time)
 				TextureManager::Load(tex_name, animation_data.animation_texture ), is_one_time)
 		{
 		}

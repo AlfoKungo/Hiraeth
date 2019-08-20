@@ -12,8 +12,10 @@ namespace Checks
 		{
 			SRL::SkillInfo info{
 				{
-					{SRL::SkillDataType::mpCon, 15},
+					//{SRL::SkillDataType::mpCon, 15},
+					{SRL::SkillDataType::mpCon, "15-x*5"},
 					{SRL::SkillDataType::heal, 35},
+					//{SRL::SkillDataType::heal, "35+10*x"},
 					{SRL::SkillDataType::actTime, 1000},
 					{SRL::SkillDataType::timeOut, 10},
 				}, "Heal", true, 3 };

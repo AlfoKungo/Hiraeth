@@ -107,6 +107,8 @@ int main()
 	network::ClientHandler clientHandler{&netCharManager, &monsterManager, &itemManager}; // itemManager, 
 
 	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData());
+	//uiManager.getUiSkills()->setClientHandler(&clientHandler);
+	skillManager.setJob(clientHandler.getPlayerData().job, clientHandler.getPlayerData().skills_alloc);
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
 	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager,
 		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),

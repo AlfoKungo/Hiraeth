@@ -147,7 +147,7 @@
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;$(SolutionDir)submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN64;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -334,6 +334,7 @@
     <ClInclude Include="src\UI\ui_skills.h" />
     <ClInclude Include="src\UI\ui_stats.h" />
     <ClInclude Include="src\UI\ui_window.h" />
+    <ClInclude Include="src\utils\calculator.hpp" />
     <ClInclude Include="src\utils\fileutils.h" />
     <ClInclude Include="src\utils\static_timer.h" />
     <ClInclude Include="src\utils\timer.h" />

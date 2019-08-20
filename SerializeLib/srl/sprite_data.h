@@ -1,9 +1,8 @@
 #pragma once
 #include <cereal/cereal.hpp>
+#include <cereal/types/vector.hpp>
 #include "maths/vec2.h"
 #include "maths/rectangle.h"
-#include <map>
-#include <vector>
 
 namespace SRL
 {

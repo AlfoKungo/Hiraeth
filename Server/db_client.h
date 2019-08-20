@@ -63,42 +63,6 @@ namespace hiraeth {
 				return name;
 			}
 
-			PlayerData getPlayerDataById(unsigned int player_id)
-			{
-				const char *paramValues[1];
-				std::string id_string{ std::to_string(player_id) };
-				paramValues[0] = id_string.data();
-
-				m_Res = PQexecParams(m_Conn,
-					"SELECT * FROM players WHERE id = $1",
-					1,       /* one param */
-					NULL,    /* let the backend deduce param type */
-					paramValues,
-					NULL,    /* don't need param lengths since text */
-					NULL,    /* default to all text params */
-					1);      /* ask for binary results */
-
-				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
-				{
-					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
-					PQclear(m_Res);
-				}
-
-				const int level = getInt("level"),
-					exp = getInt("exp"),
-					job = getInt("job"),
-					hp = getInt("hp"),
-					mp = getInt("mp");
-				const auto stats_alloc = getDynamicType<decltype(PlayerData::stats_alloc)>("stats_alloc"),
-					//auto stats_alloc = getDynamicType<std::vector<unsigned int>>(PQfnumber(m_Res, "stats_alloc")),
-					skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>("skills_alloc");
-				std::string player_name{ getString("name") };
-
-				PQclear(m_Res);
-				PlayerData player_data{ player_name, level, job, exp, hp, mp, stats_alloc, skills_alloc };
-				return player_data;
-			}
-
 			unsigned int getIdByAccountName(const std::string& account_name)
 			{
 				const char *paramValues[1];
@@ -126,12 +90,46 @@ namespace hiraeth {
 				return id;
 			}
 
-			void updateValue(unsigned int client_id, std::string field, unsigned int new_value)
+			PlayerData getPlayerDataById(unsigned int player_id)
 			{
-				//std::string command = "INSERT INTO players (name, level, exp, job) VALUES ('" + name + "', 1, 0, 1)";
+				const char *paramValues[1];
+				std::string id_string{ std::to_string(player_id) };
+				paramValues[0] = id_string.data();
+
+				m_Res = PQexecParams(m_Conn,
+					"SELECT * FROM players WHERE id = $1",
+					1,       /* one param */
+					NULL,    /* let the backend deduce param type */
+					paramValues,
+					NULL,    /* don't need param lengths since text */
+					NULL,    /* default to all text params */
+					1);      /* ask for binary results */
+
+				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+				{
+					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+
+				const int level = getInt("level"),
+					exp = getInt("exp"),
+					job = getInt("job"),
+					hp = getInt("hp"),
+					mp = getInt("mp");
+				const auto stats_alloc = getDynamicType<decltype(PlayerData::stats_alloc)>("stats_alloc");
+					//auto stats_alloc = getDynamicType<std::vector<unsigned int>>(PQfnumber(m_Res, "stats_alloc")),
+				const auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>("skills_alloc");
+				std::string player_name{ getString("name") };
+
+				PQclear(m_Res);
+				PlayerData player_data{ player_name, level, job, exp, hp, mp, stats_alloc, skills_alloc };
+				return player_data;
+			}
+
+			void setValue(unsigned int client_id, std::string field, unsigned int new_value)
+			{
 				std::string command = "UPDATE players SET " + field + " = "
 					+ std::to_string(new_value) + " WHERE id = " + std::to_string(client_id);
-				//+ std::to_string(new_value) + " WHERE id = " + std::to_string(client_id);
 				m_Res = PQexec(m_Conn, command.c_str());
 				if (PQresultStatus(m_Res) != PGRES_COMMAND_OK)
 				{
@@ -140,7 +138,23 @@ namespace hiraeth {
 				}
 				PQclear(m_Res);
 			}
-
+			template <class T>
+			void setByteArray(unsigned int player_id, std::string field, const T& object)
+			{
+				auto[buffer, size] = srl_dynamic_type(object);
+				std::string ref_data{ *buffer, unsigned int(size) };
+				const std::string data{ hexStr(*buffer, size) };
+				std::string command = "UPDATE players SET " + field + " = E'\\\\x"
+					+ data + "' WHERE id = " + std::to_string(player_id);
+				std::cout << command << std::endl;
+				m_Res = PQexec(m_Conn, command.c_str());
+				if (PQresultStatus(m_Res) != PGRES_COMMAND_OK)
+				{
+					fprintf(stderr, "INSERT command failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+				PQclear(m_Res);
+			}
 			void setStatsAlloc(unsigned int player_id, const std::vector<unsigned int>& stats_alloc)
 			{
 				auto[buffer, size] = srl_dynamic_type(stats_alloc);
@@ -165,6 +179,39 @@ namespace hiraeth {
 				PQclear(m_Res);
 			}
 
+			void increaseSkillPoints(unsigned int player_id, unsigned int skill_id)
+			{
+				const char *paramValues[1];
+				std::string id_string{ std::to_string(player_id) };
+				//paramValues[0] = "skills_alloc";
+				//paramValues[0] = "*";
+				paramValues[0] = id_string.data();
+
+				m_Res = PQexecParams(m_Conn,
+					"SELECT * FROM players WHERE id = $1",
+					1,       /* one param */
+					NULL,    /* let the backend deduce param type */
+					paramValues,
+					NULL,    /* don't need param lengths since text */
+					NULL,    /* default to all text params */
+					1);      /* ask for binary results */
+
+				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+				{
+					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+				auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>("skills_alloc");
+				for (auto& alloc : skills_alloc)
+				{
+					if (alloc.skill_id == skill_id)
+						alloc.pts_alloc += 1;
+					if (alloc.skill_id == 666)
+						alloc.pts_alloc -= 1;
+				}
+				PQclear(m_Res);
+				setByteArray(player_id, "skills_alloc", skills_alloc);
+			}
 			//std::vector<unsigned int> getStatsAlloc(unsigned int player_id)
 			//{
 			//	const char *paramValues[1];
@@ -227,7 +274,7 @@ namespace hiraeth {
 				std::stringstream ss;
 				ss << std::hex;
 				for (int i = 0; i < len; ++i)
-					ss << std::setw(2) << std::setfill('0') << (int)data[i];
+					ss << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(data[i]));
 				return ss.str();
 			}
 

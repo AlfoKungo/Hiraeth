@@ -13,6 +13,7 @@
 #include "item/item_manager.h"
 #include "skills/skill_manager.h"
 #include "keyboard/key.h"
+#include "utils/calculator.hpp"
 
 namespace hiraeth {
 	namespace game {
@@ -83,6 +84,7 @@ namespace hiraeth {
 		private:
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp();
+			int getValueFromString(std::string str, unsigned int val);
 			void activateSkill(unsigned int skill_index);
 			std::vector<network::MonsterHit> activateAttackSkill(SRL::FullAnimationData hit_animation_data,
 				SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
