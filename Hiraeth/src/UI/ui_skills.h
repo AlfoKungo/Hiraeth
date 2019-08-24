@@ -68,7 +68,7 @@ namespace hiraeth {
 				else
 					for (int i = 0; i < 5; ++i)
 					{
-						for (const auto& skill_icon : m_Tabs->getTabByIndex(0)->m_TabContent->m_Renderables)
+						for (const auto& skill_icon : m_Tabs->getTabByIndex(i)->m_TabContent->m_Renderables)
 							if (skill_icon->getSkillId() == skill_id)
 							{
 								(*skill_icon).set_level(alloc);
@@ -77,7 +77,32 @@ namespace hiraeth {
 						//(*m_Tabs->getTabByIndex(0)->m_TabContent->m_Renderables[skill_id]).set_level(alloc);
 					}
 			}
-
+			//std::unique_ptr<skills::SkillIcon>* getSkill(unsigned int skill_id)
+			skills::SkillIcon* getSkillIcon(unsigned int skill_id)
+			{
+					for (int i = 0; i < 5; ++i)
+					{
+						for (auto& skill_icon : m_Tabs->getTabByIndex(i)->m_TabContent->m_Renderables)
+							if (skill_icon->getSkillId() == skill_id)
+							{
+								return skill_icon.get();
+							}
+						//(*m_Tabs->getTabByIndex(0)->m_TabContent->m_Renderables[skill_id]).set_level(alloc);
+					}
+					return nullptr;
+			}
+			//SRL::SkillInfo * getSkillInfo(unsigned int skill_id)
+			//{
+			//	for (int i = 0; i < 5; ++i)
+			//	{
+			//		for (const auto& skill_icon : m_Tabs->getTabByIndex(0)->m_TabContent->m_Renderables)
+			//			if (skill_icon->getSkillId() == skill_id)
+			//			{
+			//				return skill_icon->get_skill_info();
+			//			}
+			//	}
+			//	return nullptr;
+			//}
 			//void add_skill(SRL::SkillData skill_data, unsigned tab)
 			//{
 			//	UiTab<skills::SkillIcon> * rel_tab = m_Tabs->getTabByIndex(tab);

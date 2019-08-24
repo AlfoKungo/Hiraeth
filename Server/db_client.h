@@ -111,19 +111,50 @@ namespace hiraeth {
 					PQclear(m_Res);
 				}
 
-				const int level = getInt("level"),
+				const unsigned int level = getInt("level"),
 					exp = getInt("exp"),
 					job = getInt("job"),
+					max_hp = getInt("max_hp"),
 					hp = getInt("hp"),
+					max_mp = getInt("max_mp"),
 					mp = getInt("mp");
-				const auto stats_alloc = getDynamicType<decltype(PlayerData::stats_alloc)>("stats_alloc");
+				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>("stats_alloc");
 					//auto stats_alloc = getDynamicType<std::vector<unsigned int>>(PQfnumber(m_Res, "stats_alloc")),
-				const auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>("skills_alloc");
+				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>("skills_alloc");
 				std::string player_name{ getString("name") };
 
 				PQclear(m_Res);
-				PlayerData player_data{ player_name, level, job, exp, hp, mp, stats_alloc, skills_alloc };
+				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp, hp, max_mp, mp}, 
+					stats_alloc, skills_alloc };
 				return player_data;
+			}
+
+			template <class T>
+			T getDynamicType(unsigned int player_id, const std::string& field)
+			{
+				const char *paramValues[1];
+				std::string id_string{ std::to_string(player_id) };
+				paramValues[0] = id_string.data();
+				std::string sCommand = "SELECT " + field + " FROM players WHERE id = $1";
+
+				m_Res = PQexecParams(m_Conn,
+					sCommand.c_str(),
+					1,       /* one param */
+					NULL,    /* let the backend deduce param type */
+					paramValues,
+					NULL,    /* don't need param lengths since text */
+					NULL,    /* default to all text params */
+					1);      /* ask for binary results */
+
+				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+				{
+					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+				auto dt = getDynamicTypeFromBuffer<T>("skills_alloc");
+				PQclear(m_Res);
+				return std::move(dt);
+				//return dt;
 			}
 
 			void setValue(unsigned int client_id, std::string field, unsigned int new_value)
@@ -181,27 +212,7 @@ namespace hiraeth {
 
 			void increaseSkillPoints(unsigned int player_id, unsigned int skill_id)
 			{
-				const char *paramValues[1];
-				std::string id_string{ std::to_string(player_id) };
-				//paramValues[0] = "skills_alloc";
-				//paramValues[0] = "*";
-				paramValues[0] = id_string.data();
-
-				m_Res = PQexecParams(m_Conn,
-					"SELECT * FROM players WHERE id = $1",
-					1,       /* one param */
-					NULL,    /* let the backend deduce param type */
-					paramValues,
-					NULL,    /* don't need param lengths since text */
-					NULL,    /* default to all text params */
-					1);      /* ask for binary results */
-
-				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
-				{
-					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
-					PQclear(m_Res);
-				}
-				auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>("skills_alloc");
+				auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>(player_id, "skills_alloc");
 				for (auto& alloc : skills_alloc)
 				{
 					if (alloc.skill_id == skill_id)
@@ -209,38 +220,8 @@ namespace hiraeth {
 					if (alloc.skill_id == 666)
 						alloc.pts_alloc -= 1;
 				}
-				PQclear(m_Res);
 				setByteArray(player_id, "skills_alloc", skills_alloc);
 			}
-			//std::vector<unsigned int> getStatsAlloc(unsigned int player_id)
-			//{
-			//	const char *paramValues[1];
-			//	std::string id_s{ std::to_string(player_id) };
-			//	paramValues[0] = id_s.c_str();
-
-			//	m_Res = PQexecParams(m_Conn,
-			//		//"SELECT * FROM players WHERE id = $1",
-			//		"SELECT stats_alloc FROM players WHERE id = $1",
-			//		1,       /* one param */
-			//		NULL,    /* let the backend deduce param type */
-			//		paramValues,
-			//		NULL,    /* don't need param lengths since text */
-			//		NULL,    /* default to all text params */
-			//		1);      /* ask for binary results */
-
-			//	if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
-			//	{
-			//		fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
-			//		PQclear(m_Res);
-			//	}
-
-			//	unsigned int column = PQfnumber(m_Res, "stats_alloc");
-			//	char *val_ptr = PQgetvalue(m_Res, 0, column);
-			//	unsigned int len = PQgetlength(m_Res, 0, column);
-			//	std::string data_str{ val_ptr, len };
-			//	PQclear(m_Res);
-			//	return dsrl_dynamic_type<std::vector<unsigned int>>(data_str.c_str());
-			//}
 
 		private:
 
@@ -261,7 +242,7 @@ namespace hiraeth {
 				return std::string{ name };
 			}
 			template<class T>
-			T getDynamicType(const char* column_name)
+			T getDynamicTypeFromBuffer(const char* column_name)
 			{
 				const int column = PQfnumber(m_Res, column_name);
 				char *val_ptr = PQgetvalue(m_Res, 0, column);

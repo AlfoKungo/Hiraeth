@@ -1,0 +1,37 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 1,
+                    "data": "30 - 2*x"
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "index": 1,
+                    "data": "100 + 5*x"
+                }
+            },
+            {
+                "key": 10,
+                "value": {
+                    "index": 1,
+                    "data": "110 + 12*x"
+                }
+            },
+            {
+                "key": 11,
+                "value": {
+                    "index": 1,
+                    "data": "250 + 5*x"
+                }
+            }
+        ],
+        "name": "Rush Dash",
+        "max_level": 10,
+        "skill_type": 4
+    }
+}

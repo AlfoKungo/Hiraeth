@@ -43,12 +43,13 @@ namespace hiraeth {
 			game::NetCharManager * m_NetCharManager;
 			game::MonsterManager * m_MonsterManager;
 			item::ItemManager * m_ItemManager;
+			skills::SkillManager * m_SkillManager;
 			//std::map<unsigned int, maths::vec2> m_PlayerLocation;
 			RegularMapUpdate m_PlayersLocationStruct;
 			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 		public:
 			ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
-				item::ItemManager * item_manager);
+				item::ItemManager * item_manager, skills::SkillManager * skill_manager);
 
 			~ClientHandler();
 			void closeConnection();
@@ -87,6 +88,7 @@ namespace hiraeth {
 			void recvDropItem();
 			void recvDroppedItem();
 			void recvExpireItem();
+			void recvIncreaseSkill();
 		public:
 			//void sendAttackPacket(MonsterDamage monster_damage);
 			void sendAttackPacket(MonsterHit monster_damage);

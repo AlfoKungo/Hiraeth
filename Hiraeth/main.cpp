@@ -99,16 +99,17 @@ int main()
 	ui::UiManager uiManager(&keyboard);
 
 	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory(), uiManager.getUiEquip()};
-	skills::SkillManager skillManager{uiManager.getUiSkills()};
+	skills::SkillManager skillManager{uiManager.getUiSkills(), uiManager.getMainUi()->getCharacterStats()};
 
 
 	game::MonsterManager monsterManager(map.getMapLayer(), &itemManager);
 	game::NetCharManager netCharManager{map.getMapLayer(), &itemManager, &skillManager, monsterManager.getMonsters()};
-	network::ClientHandler clientHandler{&netCharManager, &monsterManager, &itemManager}; // itemManager, 
+	network::ClientHandler clientHandler{&netCharManager, &monsterManager, &itemManager, &skillManager}; // itemManager, 
 
-	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData());
+	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats, 
+		clientHandler.getPlayerData().stats_alloc);
 	//uiManager.getUiSkills()->setClientHandler(&clientHandler);
-	skillManager.setJob(clientHandler.getPlayerData().job, clientHandler.getPlayerData().skills_alloc);
+	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
 	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager,
 		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),

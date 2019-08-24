@@ -73,16 +73,18 @@ namespace hiraeth {
 			switch (job_id)
 			{
 			case 0:
-				return "Berserker";
+				return "Novice";
 			case 1:
-				return "Crusader Knight";
+				return "Berserker";
 			case 2:
-				return "Wizard";
+				return "Crusader Knight";
 			case 3:
-				return "Rogue";
+				return "Wizard";
 			case 4:
-				return "Archer";
+				return "Rogue";
 			case 5:
+				return "Archer";
+			case 6:
 				return "Forest Fighter";
 			default:
 				return "";

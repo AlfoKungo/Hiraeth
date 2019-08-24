@@ -1,0 +1,23 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 1,
+                    "data": "15 - x"
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "index": 1,
+                    "data": "130 + 12*x"
+                }
+            }
+        ],
+        "name": "Power Swing",
+        "max_level": 10,
+        "skill_type": 2
+    }
+}

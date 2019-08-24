@@ -1,0 +1,16 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 20,
+                "value": {
+                    "index": 1,
+                    "data": "x"
+                }
+            }
+        ],
+        "name": "Battle Rage",
+        "max_level": 10,
+        "skill_type": 4
+    }
+}

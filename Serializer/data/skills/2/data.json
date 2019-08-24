@@ -14,10 +14,17 @@
                     "index": 1,
                     "data": "x*1.5"
                 }
+            },
+            {
+                "key": 9,
+                "value": {
+                    "index": 1,
+                    "data": "600"
+                }
             }
         ],
         "name": "Snails",
-        "is_active": true,
-        "max_level": 3
+        "max_level": 3,
+        "skill_type": 0
     }
 }

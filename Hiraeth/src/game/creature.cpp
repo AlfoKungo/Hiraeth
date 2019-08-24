@@ -117,5 +117,10 @@ namespace hiraeth
 				}
 			}
 		}
+
+		Damage Creature::getDamage() const
+		{
+			return m_Stats->getDamage();
+		}
 	}
 }

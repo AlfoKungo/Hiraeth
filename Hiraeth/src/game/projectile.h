@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include "srl/sprite_data.h"
 #include "graphics/renderable.h"
 #include "creature.h"
@@ -17,37 +18,39 @@ namespace hiraeth {
 			float m_Speed{ 15.0f };
 			ATimer m_Timer;
 			std::string m_SkillName;
-			SRL::FullAnimationData m_HitAnimationData;
-			game::Damage m_Damage;
+			SRL::FullAnimationData m_HitAnimationData{};
+			game::Damage m_Damage{};
 			game::Direction m_Direction;
 			maths::vec2 m_EndPosition;
 		public:
 			Projectile(maths::vec2 org_pos, game::Direction direction,
 				const std::string& skill_name, SRL::FullAnimationData animation_data)
 				: SpritedRenderable(org_pos, skill_name + "_projectile", animation_data, false),
-			m_EndPosition(org_pos + direction * maths::vec2{500, 0}),
+				m_EndPosition(org_pos + direction * maths::vec2{ 500, 0 }),
 				m_Enemy(nullptr),
 				m_OrgPos(org_pos),
 				m_Timer(m_ProjTime),
-			m_SkillName{skill_name},
-			m_Direction{direction}
+				m_SkillName{ skill_name },
+				m_Direction{ direction }
 			{
-				
+
 			}
 
 			Projectile(maths::vec2 org_pos, game::Creature* enemy, game::Damage damage, game::Direction direction,
-				const std::string& skill_name, SRL::FullAnimationData animation_data, 
+				const std::string& skill_name, SRL::FullAnimationData animation_data,
 				SRL::FullAnimationData hit_data)
 				: SpritedRenderable(org_pos, skill_name + "_projectile", animation_data, false),
 				m_Enemy(enemy),
 				m_OrgPos(org_pos),
 				m_Timer(m_ProjTime),
-			m_SkillName{skill_name},
-			m_HitAnimationData{hit_data},
-			m_Damage{damage},
-			m_Direction{direction}
+				m_SkillName{ skill_name },
+				m_HitAnimationData{ std::move(hit_data) },
+				m_Damage{ damage },
+				m_Direction{ direction }
 			{
+
 			}
+
 			void update() override
 			{
 				//maths::vec2 Direction = (m_Enemy->getPosition() - m_OrgPos);

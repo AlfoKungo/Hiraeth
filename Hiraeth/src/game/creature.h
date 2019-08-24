@@ -52,7 +52,7 @@ namespace hiraeth
 			void update() override;
 			virtual void getHit(Direction dir, Damage damage);
 
-			Damage getDamage() const { return m_Stats->getDamage(); }
+			Damage getDamage() const;
 			//virtual Damage getDamage() const = 0;
 			void draw(graphics::Renderer* renderer) const override
 			{

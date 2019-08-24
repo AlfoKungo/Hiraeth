@@ -31,7 +31,7 @@ namespace hiraeth {
 			void StatsUpdated();
 			void StatsUpdatedT(int X);
 			game::CharacterStats * getCharacterStats() { return &m_CharacterStats; }
-			void setCharacterStats(network::PlayerData player_data)
+			void setCharacterStats(network::PlayerStats player_data, std::vector<unsigned int> stats_alloc)
 			{
 				m_StatsStruct->Name = player_data.name;
 				m_Name->setText(player_data.name);
@@ -41,10 +41,10 @@ namespace hiraeth {
 				m_StatsStruct->Hp = player_data.hp;
 				m_StatsStruct->Mp = player_data.mp;
 				m_StatsStruct->Exp = player_data.exp;
-				m_StatsStruct->Str = 4 + player_data.stats_alloc[0];
-				m_StatsStruct->Dex = 4 + player_data.stats_alloc[1];
-				m_StatsStruct->Int = 4 + player_data.stats_alloc[2];
-				m_StatsStruct->Luk = 4 + player_data.stats_alloc[3];
+				m_StatsStruct->Str = 4 + stats_alloc[0];
+				m_StatsStruct->Dex = 4 + stats_alloc[1];
+				m_StatsStruct->Int = 4 + stats_alloc[2];
+				m_StatsStruct->Luk = 4 + stats_alloc[3];
 				StatsUpdated();
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->execute(StatsUpdate);

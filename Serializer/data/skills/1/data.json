@@ -34,7 +34,7 @@
             }
         ],
         "name": "Haste",
-        "is_active": true,
-        "max_level": 3
+        "max_level": 3,
+        "skill_type": 3
     }
 }

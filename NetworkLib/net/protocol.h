@@ -166,20 +166,35 @@ namespace hiraeth {
 				ar(CEREAL_NVP(skill_id), CEREAL_NVP(pts_alloc));
 			}
 		};
-		struct PlayerData
+		struct PlayerStats
 		{
 			std::string name;
 			unsigned int char_lvl{};
 			unsigned int job{};
 			unsigned int exp{};
-			unsigned int hp{};
-			unsigned int mp{};
+			unsigned int max_hp{}, hp{};
+			unsigned int max_mp{}, mp{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(name), CEREAL_NVP(char_lvl), CEREAL_NVP(job),
+					CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp));
+			}
+		};
+		struct PlayerData
+		{
+			PlayerStats player_stats{};
+			//std::string name;
+			//unsigned int char_lvl{};
+			//unsigned int job{};
+			//unsigned int exp{};
+			//unsigned int hp{};
+			//unsigned int mp{};
 			std::vector<unsigned int> stats_alloc;
 			//std::map<unsigned int, unsigned int> skills_alloc;
 			std::vector<SkillAlloc> skills_alloc;
 			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(char_lvl), CEREAL_NVP(name), CEREAL_NVP(job),
-					CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp),
+				ar(CEREAL_NVP(player_stats),
+				//ar(CEREAL_NVP(name), CEREAL_NVP(char_lvl), CEREAL_NVP(job),
+				//	CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp),
 					CEREAL_NVP(stats_alloc), CEREAL_NVP(skills_alloc));
 			}
 		};

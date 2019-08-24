@@ -5,11 +5,12 @@ namespace hiraeth {
 	namespace network {
 
 		ClientHandler::ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
-			item::ItemManager * item_manager)
+			item::ItemManager * item_manager, skills::SkillManager * skill_manager)
 			: m_RcvBuffer{ 0 }, m_SendBuffer{ 0 },
 			m_NetCharManager(net_char_manager),
 			m_MonsterManager{ monster_manager },
-			m_ItemManager(item_manager)
+			m_ItemManager(item_manager),
+		m_SkillManager(skill_manager)
 		{
 			WSADATA wsa;
 			if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -71,6 +72,7 @@ namespace hiraeth {
 			bindFunctionToChar(MSG_STC_DROP_ITEM, &ClientHandler::recvDropItem);
 			bindFunctionToChar(MSG_STC_DROPPED_ITEM, &ClientHandler::recvDroppedItem);
 			bindFunctionToChar(MSG_STC_EXPIRE_ITEM, &ClientHandler::recvExpireItem);
+			bindFunctionToChar(MSG_STC_INCREASE_SKILL, &ClientHandler::recvIncreaseSkill);
 
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
@@ -335,6 +337,12 @@ namespace hiraeth {
 			m_ItemManager->startExpiring(expired_item_id);
 			//for (const auto& item : dropped_items)
 			//	m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
+		}
+
+		void ClientHandler::recvIncreaseSkill()
+		{
+			const auto increased_skill_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+			m_SkillManager->increasSkill(increased_skill_id);
 		}
 
 		void ClientHandler::sendAttackPacket(MonsterHit monster_damage)

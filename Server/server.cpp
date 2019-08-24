@@ -264,8 +264,7 @@ namespace hiraeth {
 			m_ClientAddress[new_char_id] = sender;
 			m_ClientsIds.push_back(new_char_id);
 			//m_ClientConnected[free_client_index] = true;
-			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,3}, {0, 1}, {1,1}, {2,1}});
-			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{3,3}, {0, 1}, {1,1}, {2,1}});
+			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,20}, {0, 1}, {1,1}, {2,1}, {5,1}, {6,1}, {7,1}});
 			const auto player_data = m_DbClient->getPlayerDataById(char_id);
 			//auto player_data = m_DbClient->getPlayerDataById(char_id);
 

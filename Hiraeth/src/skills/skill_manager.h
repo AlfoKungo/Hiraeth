@@ -12,11 +12,13 @@ namespace hiraeth {
 		{
 			std::map<unsigned int, std::tuple<SRL::SkillInfo*, SRL::AnimationMap*>> m_SkillsData;
 			std::map<unsigned int, unsigned int> m_SkillsAlloc;
+			game::CharacterStats* m_CharacterStats;
 		public:
 			ui::UiSkills * m_UiSkills;
 			graphics::Layer<TopRightIcon> m_Layer;
-			SkillManager(ui::UiSkills * ui_skills)
-				: m_UiSkills(ui_skills),
+			SkillManager(ui::UiSkills * ui_skills, game::CharacterStats * character_stats)
+				: m_CharacterStats(character_stats),
+				m_UiSkills(ui_skills),
 				m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false)
 			{
 				//SRL::AllJobsData JobInfo{ {
@@ -51,14 +53,14 @@ namespace hiraeth {
 				m_Layer.render();
 			}
 
-			void add_skill(unsigned int index)
+			void add_skill(unsigned int index, unsigned int job_index)
 			{
 				//const SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("skills", index);
 				//m_SkillsData[index] = m_UiSkills->add_skill(index, skill_data, 0);
-				m_SkillsData[index] = m_UiSkills->add_skill(index, 0);
+				m_SkillsData[index] = m_UiSkills->add_skill(index, job_index);
 			}
 
-			SRL::SkillInfo* get_skill(unsigned int skill_index)
+			SRL::SkillInfo* get_skill_info(unsigned int skill_index)
 			{
 				if (m_SkillsData.find(skill_index) != m_SkillsData.end())
 					return std::get<0>(m_SkillsData[skill_index]);
@@ -72,12 +74,22 @@ namespace hiraeth {
 				return nullptr;
 			}
 
-			std::vector<unsigned int> get_available_skills()
+			std::vector<unsigned int> get_available_active_skills()
 			{
 				std::vector<unsigned int> vints;
 				vints.reserve(m_SkillsData.size());
 				for (auto const& imap : m_SkillsData)
-					vints.push_back(imap.first);
+					if (std::get<0>(imap.second)->skill_type < SRL::passive_s)
+						vints.push_back(imap.first);
+				return vints;
+			}
+			std::vector<unsigned int> get_effect_skills()
+			{
+				std::vector<unsigned int> vints;
+				vints.reserve(m_SkillsData.size());
+				for (auto const& imap : m_SkillsData)
+					if (std::get<0>(imap.second)->skill_type == SRL::passive_effect)
+						vints.push_back(imap.first);
 				return vints;
 			}
 			unsigned int getSkillAlloc(unsigned int skill_id)
@@ -85,31 +97,81 @@ namespace hiraeth {
 				//return m_UiSkills->getSkillAlloc(skill_id);
 				return m_SkillsAlloc[skill_id];
 			}
+			void increasSkill(unsigned int skill_id)
+			{
+				m_SkillsAlloc[skill_id] += 1;
+				m_SkillsAlloc[666] -= 1;
+				m_UiSkills->setSkillPoints(skill_id, m_SkillsAlloc[skill_id]);
+				m_UiSkills->setSkillPoints(666, m_SkillsAlloc[666]);
+				updateSkillEffectIfPassive(skill_id);
+			}
+			void updateSkillEffectIfPassive( unsigned int skill_id)
+			{
+					auto skill_info = get_skill_info(skill_id);
+					if (skill_info != nullptr)
+						if (skill_info->skill_type >= SRL::passive_s)
+							//updatePassiveSkill(alloc.skill_id, m_SkillsAlloc[alloc.skill_id], &skill_info->skill_properties);
+							m_CharacterStats->updatePassiveSkill(skill_id, m_SkillsAlloc[skill_id], &skill_info->skill_properties);
+			}
 
-			void setJob(unsigned int job_id, std::vector<network::SkillAlloc> stats_alloc)
+			void setJobAndLoadSkills(unsigned int job_id, std::vector<network::SkillAlloc> skills_alloc)
 			//void setJob(unsigned int job_id, std::map<unsigned int, unsigned int> stats_alloc)
 			{
 				SRL::AllJobsData JobInfo{ {
-				{ SRL::Berserker, {{1,2,3}, {1,2,3}}},
-				{ SRL::CrusaderKnight, {{1,2,3}, {1,2,3}}},
-				{ SRL::Wizard, {{1,2,3}, {1,2,3}}},
-				{ SRL::Rogue, {{1,2,3}, {1,2,3}}},
-				{ SRL::Archer, {{1,2,3}, {1,2,3}}},
+				{ SRL::Novice, {{1,2,3}, {}}},
+				{ SRL::Berserker, {{1,2,3}, {6,7,8}}},
+				{ SRL::CrusaderKnight, {{1,2,3}, {4,5}}},
+				{ SRL::Wizard, {{1,2,3}, {4,5}}},
+				{ SRL::Rogue, {{1,2,3}, {4,5}}},
+				{ SRL::Archer, {{1,2,3}, {4,5}}},
 				{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
 					} };
 
 				//std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
 				const SRL::JobsTypes job_type{ static_cast<SRL::JobsTypes>(job_id) };
-				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).first_job_skills;
+				std::vector<unsigned int> BasicJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).first_job_skills;
+				for (const auto& index : BasicJobSkillsIndices)
+					add_skill(index - 1, 0 );
+				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).second_job_skills;
 				for (const auto& index : FirstJobSkillsIndices)
-					add_skill(index - 1);
+					add_skill(index - 1, 1);
 
-				for (const auto& alloc : stats_alloc)
+				for (const auto& alloc : skills_alloc)
 				{
 					m_SkillsAlloc[alloc.skill_id] = alloc.pts_alloc;
 					m_UiSkills->setSkillPoints(alloc.skill_id, alloc.pts_alloc);
+					updateSkillEffectIfPassive(alloc.skill_id);
 				}
 			}
+
+			//void updatePassiveSkill(unsigned int skill_id, unsigned int skill_lvl, SRL::SkillPropertiesMap* skill_properties)
+			//{
+			//	m_CharacterStats->removeEffectsFromSkill(skill_id);
+			//	for (const auto& [id, val] : (*skill_properties))
+			//	{
+			//		switch (id)
+			//		{
+			//		case SRL::SkillDataType::immp:
+			//			m_CharacterStats->addPassiveSkillValue(skill_id, game::MaxMp, 
+			//				std::get<std::string>(val), skill_lvl);
+			//			//increaseMaxMP(val);
+			//			break;
+			//		case SRL::SkillDataType::mmppl:
+			//			m_CharacterStats->addPassiveSkillValue(skill_id, game::MaxMpByLvl,
+			//				std::get<std::string>(val), skill_lvl);
+			//			//increaseMaxMpPerLvl(val);
+			//			break;
+			//		case SRL::SkillDataType::crit:
+			//			//increaseCrit(val);
+			//			m_CharacterStats->addPassiveSkillValue(skill_id, game::CritChance, 
+			//				std::get<std::string>(val), skill_lvl);
+			//			break;
+			//		default:;
+			//		}
+			//	}
+			//	m_CharacterStats->recalculateEffectsFromSkills();
+			//}
+
 			void add_icon(const std::string& name, unsigned int skill_index, float duration)
 			{
 				std::vector<TopRightIcon*>* rends = &m_Layer.m_Renderables;

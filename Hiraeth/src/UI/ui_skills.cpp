@@ -51,8 +51,9 @@ namespace hiraeth {
 
 		void UiSkills::transferSkillToKeyConfig(input::KeyCode key_code, unsigned int key, unsigned int skill_index, input::KeyboardEvent * keyboard_event)
 		{
-			auto skill_to_assign = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables[skill_index];
-			m_UiKeyConfig->addSkillIcon(key_code, key, (*skill_to_assign)->get_skill_info()->name, keyboard_event);
+			//auto skill_to_assign = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables[skill_index];
+			auto skill_to_assign = getSkillIcon(skill_index);
+			m_UiKeyConfig->addSkillIcon(key_code, key, (skill_to_assign)->get_skill_info()->name, keyboard_event);
 		}
 
 		void UiSkills::mouse_right_clicked(maths::vec2 mousePos)
@@ -66,15 +67,18 @@ namespace hiraeth {
 					return skill->getSpUpButtonBounds().Contains(mousePos); });
 				if (result_skill != std::end(*tab_rends))
 				{
-					auto changed_skill = (*result_skill)->getSkillId();
-					EventManager *m_EventManager = EventManager::Instance();
-					m_EventManager->execute<unsigned int>(SendIncreaseSkill, changed_skill);
-					//m_ClientHandler->sendIncreaseSkill(changedSkill);
-					if ((*result_skill)->inc_level())
+					if ((*result_skill)->getSkillLvl() < (*result_skill)->get_skill_info()->max_level) 
 					{
-						m_SkillPts--;
-						m_SkillPtsLabel.setText(m_SkillPts);
+						const auto changed_skill = (*result_skill)->getSkillId();
+						EventManager *m_EventManager = EventManager::Instance();
+						m_EventManager->execute<unsigned int>(SendIncreaseSkill, changed_skill);
 					}
+					//m_ClientHandler->sendIncreaseSkill(changedSkill);
+					//if ((*result_skill)->inc_level())
+					//{
+					//	m_SkillPts--;
+					//	m_SkillPtsLabel.setText(m_SkillPts);
+					//}
 				}
 			}
 		}

@@ -170,7 +170,7 @@ namespace hiraeth {
 			m_Kb->registerToKey(GLFW_KEY_LEFT_CONTROL, attack, this);
 			m_Kb->registerToKey(GLFW_KEY_Z, pick_up, this);
 			std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N };
-			std::vector<unsigned int> available_skills = m_SkillManager->get_available_skills();
+			std::vector<unsigned int> available_skills = m_SkillManager->get_available_active_skills();
 			for (int i = 0; i < available_skills.size(); ++i)
 			{
 				m_SkillKeysMap[i] = available_skills[i];
@@ -196,7 +196,8 @@ namespace hiraeth {
 				{
 					std::cout << "attacking" << std::endl;
 					const auto damage = getDamage();
-					monster->getHit(m_Direction, damage);
+					//monster->getHit(m_Direction, damage);
+					attackMonsters(std::vector<Monster*>{monster}, std::vector<Damage>{damage});
 					//m_ClientHandler->sendAttackPacket(network::MonsterDamage{float(damage.RawDamage), 
 					m_ClientHandler->sendAttackPacket(network::MonsterHit{float(damage.RawDamage), 
 						monster->getId(), new_dir });
@@ -213,6 +214,50 @@ namespace hiraeth {
 			m_IsStuck = stuck_state;
 		}
 
+		//void Character::updateComplexSkills()
+		//{
+		//	std::vector<unsigned int> effect_skills = m_SkillManager->get_effect_skills();
+		//	for (const auto& skill_id : effect_skills)
+		//	{
+		//	const auto skill_lvl = m_SkillManager->getSkillAlloc(skill_id);
+		//		auto skill_info = m_SkillManager->get_skill_info(skill_id);
+		//		for (const auto& prop : skill_info->skill_properties)
+		//		{
+		//			switch (prop.first)
+		//			{
+		//			case SRL::lifesteal:
+		//				m_AttackModifiers[skill_id].push_back(std::make_pair(SRL::lifesteal,  getInt(prop.second, skill_lvl)));
+		//				break;
+		//			default:
+		//				break;
+		//			}
+		//		}
+		//	}
+		//}
+
+		void Character::attackMonsters(std::vector<Monster*> mobs, std::vector<Damage> damages)
+		{
+			auto attack_modifiers = m_CharacterStats->getAttackModifiers();
+			for (int i = 0; i < mobs.size(); ++i)
+				//for (const auto& [mob, dmg] : [mobs, damages])
+			{
+				mobs[i]->getHit(m_Direction, damages[i]);
+				//for (const auto&[id, skill_mods] : m_AttackModifiers)
+				for (const auto&[id, skill_mods] : attack_modifiers)
+					for (const auto& mod : skill_mods)
+						//for (const auto& mod : mods)
+					{
+						switch (mod.first)
+						{
+						case SRL::lifesteal:
+							m_Stats->recoverHp(damages[i].RawDamage *(float(mod.second) / 100.0f));
+						default:
+							break;
+						}
+					}
+			}
+		}
+
 		void Character::pickItemUp()
 		{
 			item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
@@ -226,8 +271,18 @@ namespace hiraeth {
 		int Character::getValueFromString(std::string str, unsigned int val)
 		{
 			auto pos = str.find('x');
-			str.replace(pos, 1, std::to_string( val ));
+			if (pos != std::string::npos)
+				str.replace(pos, 1, std::to_string( val ));
 			return calculator::eval(str);
+		}
+
+		int Character::getInt(SRL::SkillPropertiesVar val, unsigned int skill_lvl)
+		{
+
+			if (std::holds_alternative<int>(val))
+				return std::get<int>(val);
+			std::string con_string = std::get<std::string>(val);
+			return getValueFromString(con_string, skill_lvl);
 		}
 
 
@@ -236,7 +291,7 @@ namespace hiraeth {
 			//if (!m_SkillActivationTimer.hasExpired() || // check for skill's activation time
 			//if (!m_Animations.m_Renderables.empty())
 			//	return;
-			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_id);
+			SRL::SkillInfo * skill_info = m_SkillManager->get_skill_info(skill_id);
 			SRL::SkillPropertiesMap * skill_properties = &skill_info->skill_properties;
 			const auto skill_lvl = m_SkillManager->getSkillAlloc(skill_id);
 
@@ -248,22 +303,22 @@ namespace hiraeth {
 				return; // Skill's criterions not met
 			if (skill_properties->find(SRL::SkillDataType::mpCon) != skill_properties->end())
 			{
-				//if (skill_properties->at(SRL::SkillDataType::mpCon).index() == 0)
-				if (std::holds_alternative<int>(skill_properties->at(SRL::SkillDataType::mpCon)))
-				{
-					if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
+					if (!m_CharacterStats->consumeMana(getInt(skill_properties->at(SRL::SkillDataType::mpCon), skill_lvl)))
 						return;
-				}
-				else
-				{
-					std::string con_string = std::get<std::string>(skill_properties->at(SRL::SkillDataType::mpCon));
-					auto result = getValueFromString(con_string, skill_lvl);
-					if (!m_CharacterStats->consumeMana(result))
-						return;
-				}
+				////if (skill_properties->at(SRL::SkillDataType::mpCon).index() == 0)
+				//if (std::holds_alternative<int>(skill_properties->at(SRL::SkillDataType::mpCon)))
+				//{
+				//	if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
+				//		return;
+				//}
+				//else
+				//{
+				//	std::string con_string = std::get<std::string>(skill_properties->at(SRL::SkillDataType::mpCon));
+				//	auto result = getValueFromString(con_string, skill_lvl);
+				//	if (!m_CharacterStats->consumeMana(result))
+				//		return;
+				//}
 			}
-				//if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
-				//	return;
 
 			m_ClientHandler->sendCharUseSkillE(skill_id, m_CharacterStats->getStatsStruct_()->Mp);
 
@@ -289,6 +344,20 @@ namespace hiraeth {
 			//		break;
 			//	}
 			//}
+			switch (skill_info->skill_type)
+			{
+			case SRL::active_attack_proj_targeted:
+				break;
+			case SRL::active_attack_swing:
+				break;
+			case SRL::active_buff:
+				break;
+			case SRL::active_move:
+				activateTeleport(&skill_info->skill_properties, skill_lvl);
+				break;
+			default:
+				break;
+			}
 
 			SRL::AnimationMap* skill_animation_data = m_SkillManager->getAnimationData(skill_id);
 			for (const auto& element : (*skill_animation_data))
@@ -302,8 +371,8 @@ namespace hiraeth {
 				case SRL::hitAnimation:
 					if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
 					{
-						auto monsters_hit = activateAttackSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], 
-							skill_info->name);
+						auto monsters_hit = activateProjSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], 
+							getInt(skill_properties->at(SRL::proj_range), skill_lvl), skill_info->name);
 						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
 					}
 
@@ -315,9 +384,22 @@ namespace hiraeth {
 			m_CharacterStats->activateSkill(skill_id, skill_properties);
 		}
 
+		void Character::activateTeleport(SRL::SkillPropertiesMap * skill_properties, unsigned int skill_lvl)
+		{
+			auto m_x = getValueFromString(std::get<std::string>((*skill_properties)[SRL::move_x]), skill_lvl);
+			auto m_y = getValueFromString(std::get<std::string>((*skill_properties)[SRL::move_y]), skill_lvl);
+			float mv_y{0};
+			if (m_Kb->isKeyPressed(GLFW_KEY_UP))
+			{
+				mv_y = float(m_y) /10;
+				m_Force.y = 0.0f;
+			}
+			move(maths::vec2{ float(m_x) * m_Direction, mv_y });
+		}
+
 		//void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
-		std::vector<network::MonsterHit> Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
-			SRL::FullAnimationData projectile_animation_data, const std::string& skill_name)
+		std::vector<network::MonsterHit> Character::activateProjSkill( SRL::FullAnimationData hit_animation_data, 
+			SRL::FullAnimationData projectile_animation_data, int range, const std::string& skill_name)
 		{
 			std::vector<std::pair<float, Monster*>> monsters_in_range;
 			for (auto & [key, monster] : (*m_Monsters))
@@ -329,8 +411,8 @@ namespace hiraeth {
 					dis_vec *= -1;
 				if ((dis_vec.x < 500 && dis_vec.x > 0) && (dis_vec.y > -200 && dis_vec.y < 200))
 				{
-					float pyth = pow(dis_vec.x, 2) + pow(dis_vec.y, 2);
-					monsters_in_range.emplace_back(std::make_pair(pyth, monster));
+					float dis_pow = pow(dis_vec.x, 2) + pow(dis_vec.y, 2);
+					monsters_in_range.emplace_back(std::make_pair(dis_pow, monster));
 				}
 			}
 			if (!monsters_in_range.empty())

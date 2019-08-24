@@ -1,0 +1,30 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 12,
+                "value": {
+                    "index": 1,
+                    "data": "x"
+                }
+            },
+            {
+                "key": 13,
+                "value": {
+                    "index": 1,
+                    "data": "20 + 5*x"
+                }
+            },
+            {
+                "key": 14,
+                "value": {
+                    "index": 1,
+                    "data": "3"
+                }
+            }
+        ],
+        "name": "MP Boost",
+        "max_level": 20,
+        "skill_type": 5
+    }
+}

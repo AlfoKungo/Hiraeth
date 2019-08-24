@@ -183,7 +183,7 @@ namespace hiraeth {
 			if (m_SkillsTimeouts.find(skill_index) != m_SkillsTimeouts.end() ) // check for skill's timeout
 				return; // Skill's criterions not met
 
-			SRL::SkillInfo * skill_info = m_SkillManager->get_skill(skill_index);
+			SRL::SkillInfo * skill_info = m_SkillManager->get_skill_info(skill_index);
 			//SRL::SkillPropertiesMap * item_properties = &skill_info->skill_properties;
 			//if (item_properties->find(SRL::SkillDataType::mpCon) != item_properties->end())
 			//	if (!m_CharacterStats->consumeMana(std::get<int>(item_properties->at(SRL::SkillDataType::mpCon))))
@@ -219,8 +219,8 @@ namespace hiraeth {
 			auto animation_data = m_SkillManager->getAnimationData(attack_msg.skill_id);
 			auto hit_animation_data = (*animation_data) [SRL::hitAnimation];
 			auto projectile_animation_data = (*animation_data) [SRL::ballAnimation];
-			auto skill_name = m_SkillManager->get_skill(attack_msg.skill_id)->name;
-			if (attack_msg.monsters_hit.size() == 0)
+			auto skill_name = m_SkillManager->get_skill_info(attack_msg.skill_id)->name;
+			if (attack_msg.monsters_hit.empty())
 			{
 				m_Animations.add(
 					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 

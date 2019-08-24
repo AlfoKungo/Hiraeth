@@ -6,12 +6,13 @@ namespace hiraeth {
 			:
 			//Stats(),
 			m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 2042185, 4, 45,
-							   "Good Music", 430, 430, 200, 180, 9999, 3, 4, 9, 9, 4 , false },
+							   "Good Music", 430, 430, 200, 180, 430, 200, BASE_HP_REG, BASE_MP_REG, 9999, 3, 4, 9, 9, 4 , false },
 			m_DetailsStruct{ 40, 40, 10, 10, 20, 20, 30, 30, 25, 13 }
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->createEvent<>(StatsUpdate);
 		}
+
 
 		void CharacterStats::updateStats()
 		{
@@ -21,6 +22,20 @@ namespace hiraeth {
 
 		Damage CharacterStats::getDamage() const
 		{
+			Damage d{ m_StatsStruct.Str * m_DetailsStruct.Attack, m_DetailsStruct.WeaponAcc };
+			for (const auto& [id, mods]: m_AttackModifiers)
+			{
+				for (const auto& mod : mods)
+				{
+					switch (mod.first)
+					{
+					case SRL::lifesteal:
+						//m_StatsStruct.Hp += int(d.RawDamage);
+					default:
+						break;
+					}
+				}
+			}
 			return Damage{ m_StatsStruct.Str * m_DetailsStruct.Attack, m_DetailsStruct.WeaponAcc };
 		}
 

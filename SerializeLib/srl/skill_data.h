@@ -14,20 +14,49 @@ namespace SRL
 {
 	enum SkillDataType
 	{
-		// ints
+		// -- ints --
 		mpCon, //skill mp consumption
 		dmg,
 		heal , // heal hp
 		actTime, // activation time in mili-seconds
 		timeOut, // in seconds
 		duration,
-		// TimedValue
-		speed, //enhance speed
-		jump, //enhance speed
-		// strings
-		dmgS,
+		// -- TimedValue -- DELETE THIS
+		speed, // enhance speed
+		jump, // enhance speed
+		// -- strings --
+		// active attack
+		damage, // fixed
+		// proj
+		proj_range,
+		// active_move
+		move_x, // moves on x axis
+		move_y, // moves on y axis
+		// passive stats
+		immp, // increase max MP
+		mmppl, // increase max MP by value per level
+		crit, // increase crit
+		// attack modifier
+		lifesteal, //
+		disable_lifesteal,  
+		// passive update-required effects
+		spd_by_mhealth, // speed by minus health
+		jmp_by_mhealth, // jump by minus health
+		atk_spd_by_mhealth, // attack speed by minus health
+		dmg_by_mhealth, // attack speed by minus health
 		// Sprited Renderable
 		//skillAnimation
+	};
+	enum SkillType
+	{
+		active_attack_proj_targeted,
+		active_attack_proj_straight,
+		active_attack_swing,
+		active_buff,
+		active_move,
+		passive_s,
+		passive_effect,
+		passive_togle, 
 	};
 
 	enum SkillAnimationTypes
@@ -37,17 +66,21 @@ namespace SRL
 		ballAnimation,
 	};
 
-	using SkillPropertiesMap = std::map<SkillDataType, std::variant<int, std::string, TimedValue>>;
-	using SkillPropertiesMapPair = std::pair<SkillDataType, std::variant<int, std::string, TimedValue>>;
+	using SkillPropertiesVar = std::variant<int, std::string, TimedValue>;
+	using SkillPropertiesMap = std::map<SkillDataType, SkillPropertiesVar>;
+	using SkillPropertiesMapPair = std::pair<SkillDataType, SkillPropertiesVar>;
 
 	struct SkillInfo
 	{
 		SkillPropertiesMap skill_properties;
 		std::string name;
-		bool is_active{true};
+		//bool is_active{true};
 		unsigned int max_level{1};
+		SkillType skill_type{};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(skill_properties), CEREAL_NVP(name), CEREAL_NVP(is_active), CEREAL_NVP(max_level));
+			//ar(CEREAL_NVP(skill_properties), CEREAL_NVP(name), CEREAL_NVP(is_active),
+			ar(CEREAL_NVP(skill_properties), CEREAL_NVP(name),
+				CEREAL_NVP(max_level), CEREAL_NVP(skill_type));
 		}
 	};
 
@@ -90,6 +123,7 @@ namespace SRL
 
 	enum JobsTypes
 	{
+		Novice,
 		Berserker,
 		CrusaderKnight,
 		Wizard,

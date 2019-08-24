@@ -44,6 +44,8 @@ namespace hiraeth {
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
+			//std::map<unsigned int, std::vector<std::pair<SRL::SkillDataType, int>>> m_AttackModifiers;
+			std::map<unsigned int, std::vector<std::tuple<SRL::SkillDataType, int>>> m_ComplexEffects;
 
 			bool m_IsStuck{ false };
 		public:
@@ -80,14 +82,19 @@ namespace hiraeth {
 			void setStuck(bool stuck_state);
 			maths::vec2 getForce() const { return m_Force; }
 			network::Direction getDirection() const { return static_cast<network::Direction>(m_Direction); }
+			//void updateComplexSkills();
 			//CharacterStats* getCharacterStats() const;
 		private:
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
+			void attackMonsters(std::vector<Monster*> mobs, std::vector<Damage> damages);
 			void pickItemUp();
 			int getValueFromString(std::string str, unsigned int val);
+			int getInt(SRL::SkillPropertiesVar val, unsigned int skill_lvl);
 			void activateSkill(unsigned int skill_index);
-			std::vector<network::MonsterHit> activateAttackSkill(SRL::FullAnimationData hit_animation_data,
-				SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
+			void activateTeleport(SRL::SkillPropertiesMap * skill_properties, unsigned int skill_lvl);
+			std::vector<network::MonsterHit> activateProjSkill(SRL::FullAnimationData hit_animation_data,
+				SRL::FullAnimationData ball_animation_data, 
+				int range, const std::string& skill_name);
 			//void activateAttackSkill(SRL::FullAnimationData hit_animation_data,
 			//	SRL::FullAnimationData ball_animation_data, const std::string& skill_name);
 		};

@@ -261,6 +261,7 @@
     <ClInclude Include="src\character\character_arm.h" />
     <ClInclude Include="src\character\character_body.h" />
     <ClInclude Include="src\game\base_creature.h" />
+    <ClInclude Include="src\game\base_projectile.h" />
     <ClInclude Include="src\game\character.h" />
     <ClInclude Include="src\game\character_stats.h" />
     <ClInclude Include="src\game\creature.h" />
@@ -273,6 +274,8 @@
     <ClInclude Include="src\game\projectile.h" />
     <ClInclude Include="src\game\stats.h" />
     <ClInclude Include="src\game\stats\timed_stat.h" />
+    <ClInclude Include="src\game\straight_projectile.h" />
+    <ClInclude Include="src\game\targeted_projectile.h" />
     <ClInclude Include="src\graphics\layers\t_group.h" />
     <ClInclude Include="src\graphics\percented_sprite.h" />
     <ClInclude Include="src\graphics\renderer.h" />
