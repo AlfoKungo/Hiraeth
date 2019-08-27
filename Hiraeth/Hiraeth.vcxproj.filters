@@ -572,5 +572,17 @@
     <ClInclude Include="src\game\straight_projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\editor\editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\editor\mob_animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\character_graphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\editor\mob_controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

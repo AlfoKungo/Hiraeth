@@ -27,22 +27,24 @@ namespace hiraeth {
 		{
 			m_Layer.update();
 
-			////destroying dead monsters
-			//for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
-			//{
-			//	if ((*monster)->has_died)
-			//	{
-			//		m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
-			//		SRL::Summon summon = (*monster)->getSummon();
-			//		delete (*monster);
-			//		monster = m_Layer.m_Renderables.erase(monster);
-			//		m_SummonQueue.push(Summoner{summon, StaticTimer::timer.elapsed() + 1.0f});
-			//	}
-			//	else
-			//	{
-			//		++monster;
-			//	}
-			//}
+			//destroying dead monsters
+			for (auto monster = m_Layer.m_Renderables.begin(); monster != m_Layer.m_Renderables.end();)
+			{
+				if ((*monster)->has_died)
+				{
+					auto monster_id = (*monster)->getId();
+					m_Monsters.erase((*monster)->getId());
+					delete (*monster);
+					monster = m_Layer.m_Renderables.erase(monster);
+					EventManager *m_EventManager = EventManager::Instance();
+					m_EventManager->execute<unsigned int>(MonsterDied, monster_id);
+					//++monster;
+				}
+				else
+				{
+					++monster;
+				}
+			}
 
 			//checkCollision();
 		}

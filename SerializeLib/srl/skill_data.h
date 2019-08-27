@@ -27,15 +27,36 @@ namespace SRL
 		// -- strings --
 		// active attack
 		damage, // fixed
+		hit_count,
+		mobs_hit,
+		elemental_type,
 		// proj
 		proj_range,
 		// active_move
 		move_x, // moves on x axis
 		move_y, // moves on y axis
 		// passive stats
-		immp, // increase max MP
-		mmppl, // increase max MP by value per level
-		crit, // increase crit
+		inc_str, // increases str
+		inc_dex, // increases dex
+		inc_int, // increases int
+		inc_wit, // increases wit
+		inc_med, // increases med
+		inc_str_by_perc, // increases str by percentage
+		inc_dex_by_perc, // increases dex by percentage
+		inc_int_by_perc, // increases int by percentage
+		inc_wit_by_perc, // increases wit by percentage
+		inc_med_by_perc, // increases med by percentage
+		inc_max_hp, // increase max HP
+		inc_max_hp_per_lvl, // increase max HP by value per level
+		inc_max_mp, // increase max MP
+		inc_max_mp_per_lvl, // increase max MP by value per level
+		inc_hp_reg, // increase Hp regen
+		inc_mp_reg, // increase Mp regen
+		inc_def, // increase defense
+		inc_crit_chance, // increase crit chance
+		inc_crit_dmg, // increase crit damage
+		inc_drop_perc, // increase drop percentage
+		inc_atk_spd, 
 		// attack modifier
 		lifesteal, //
 		disable_lifesteal,  

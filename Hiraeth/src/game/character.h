@@ -42,6 +42,7 @@ namespace hiraeth {
 			CharacterStats * m_CharacterStats;
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
+			graphics::TGroup<skills::TargetedProjectile> m_ProjectileAnimations;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
 			//std::map<unsigned int, std::vector<std::pair<SRL::SkillDataType, int>>> m_AttackModifiers;
@@ -70,6 +71,7 @@ namespace hiraeth {
 					m_Animation->draw(renderer);
 					renderer->pop();
 				}
+				m_ProjectileAnimations.draw(renderer);
 			}
 
 			void ButtonClicked(input::Key control) override;
@@ -82,6 +84,7 @@ namespace hiraeth {
 			void setStuck(bool stuck_state);
 			maths::vec2 getForce() const { return m_Force; }
 			network::Direction getDirection() const { return static_cast<network::Direction>(m_Direction); }
+			void attackMonster(Creature* attacked, Damage d) override;
 			//void updateComplexSkills();
 			//CharacterStats* getCharacterStats() const;
 		private:

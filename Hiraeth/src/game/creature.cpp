@@ -46,9 +46,9 @@ namespace hiraeth
 						m_Force.x = 0;
 					if (m_AttackTimer.hasExpired())
 					{
-						carryOutAttack();
+						//carryOutAttack();
 						m_AttackState = PostHit;
-						m_AttackTimer.reSet(0.25f);
+						m_AttackTimer.reSet(POSTHIT_DELAY);
 					}
 					break;
 				case PostHit:
@@ -57,7 +57,7 @@ namespace hiraeth
 					if (m_AttackTimer.hasExpired())
 					{
 						m_AttackState = PostHitMovable;
-						m_AttackTimer.reSet(0.2f);
+						m_AttackTimer.reSet(POSTHIT_MOVEABLE_DELAY);
 					}
 					break;
 				case PostHitMovable:
@@ -70,6 +70,14 @@ namespace hiraeth
 					break;
 				}
 			analyze_stance();
+		}
+
+		void Creature::change_stance_to_attack()
+		{
+				change_stance(Attack);
+				m_AttackState = PreHit;
+				m_AttackTimer.reSet(PREHIT_DELAY);
+				AttackStatus = true;
 		}
 
 		void Creature::apply_hit_state()
@@ -91,10 +99,12 @@ namespace hiraeth
 		{
 			if ((m_Controls.attack && Attack != m_StanceState) && (!(Attack == m_StanceState && PostHitMovable == m_AttackState)))
 			{
-				change_stance(Attack);
-				m_AttackState = PreHit;
-				m_AttackTimer.reSet(0.35f);
-				AttackStatus = true;
+				//change_stance(Attack);
+				//m_AttackState = PreHit;
+				//m_AttackTimer.reSet(0.35f);
+				//AttackStatus = true;
+				carryOutAttack();
+				change_stance_to_attack();
 				return;
 			}
 			if (Attack == m_StanceState && (PreHit == m_AttackState || PostHit == m_AttackState))

@@ -49,9 +49,9 @@ namespace Checks
 		{
 			SRL::SkillInfo info{
 				{
-					{SRL::SkillDataType::immp, "x"},
-					{SRL::SkillDataType::mmppl, "20 + 5*x"},
-					{SRL::SkillDataType::crit, "3"},
+					{SRL::SkillDataType::inc_max_mp, "x"},
+					{SRL::SkillDataType::inc_max_mp_per_lvl, "20 + 5*x"},
+					{SRL::SkillDataType::inc_crit_chance, "3"},
 				}, "MP Boost", 20, SRL::passive_s };
 			std::ofstream data_file("data/" + SRL_TYPE + "/3/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
@@ -80,7 +80,6 @@ namespace Checks
 		{
 			SRL::SkillInfo info{
 				{
-
 					{SRL::SkillDataType::disable_lifesteal, "100 - x"},
 					{SRL::SkillDataType::spd_by_mhealth, "x"},
 					{SRL::SkillDataType::jmp_by_mhealth, "x"},

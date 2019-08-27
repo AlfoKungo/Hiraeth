@@ -1,11 +1,14 @@
 #include "character.h"
 #include "projectile.h"
+#include "targeted_projectile.h"
+#include "straight_projectile.h"
+#include "character_graphics.h"
 
 namespace hiraeth {
 	namespace game {
 
 		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer,
-			item::ItemManager *item_manager, skills::SkillManager *skill_manager, 
+			item::ItemManager *item_manager, skills::SkillManager *skill_manager,
 			CharacterStats * character_stats, std::map<unsigned int, Monster*>* monsters,
 			network::ClientHandler * client_handler)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
@@ -14,53 +17,14 @@ namespace hiraeth {
 			m_Monsters(monsters),
 			m_SkillManager(skill_manager),
 			m_CharacterStats(character_stats),
-		m_ClientHandler(client_handler)
-		//m_Animations(m_TransformationMatrix)
-	{
-			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterBody>(
-				SRL::AnimationData{ {{{0, 0, 23, 31}, {15, 0}, 0.4f}, {{23, 0, 23, 31}, {15, 0}, 0.4f}, {{46, 0, 23, 31}, {15, 0}, 0.4f}}, true },
-				graphics::TextureManager::Load("char_body_stand.png")));
-			m_StatesRenderables[Stand].push_back(std::make_unique<character::CharacterArm>(
-				SRL::AnimationData{ {{{0, 0, 11, 19}, {33, 10}, 0.4f}, {{11, 0, 11, 19}, {33, 10}, 0.4f}, {{22, 0, 11, 19}, {33, 10}, 0.4f}}, true },
-				graphics::TextureManager::Load("char_hand_stand.png"),
-				std::vector<maths::vec2>{maths::vec2(28, 10), maths::vec2(28, 9), maths::vec2(30, 10)}));
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0 },
-				SRL::AnimationData{ {{{0, 0, 45, 35}, {11, 29}, 0.4f}, {{45, 0, 45, 35}, {11, 29}, 0.4f}, {{90, 0, 45, 35}, {11, 29}, 0.4f}}, true },
-				graphics::TextureManager::Load("char_head.png")));
-
-			m_StatesRenderables[Walk].push_back(std::make_unique<character::CharacterBody>(
-				SRL::AnimationData{ {{{0, 0, 35, 32}, {18, 0}, 0.18f}, {{35, 0, 35, 32}, {18, 0}, 0.18f}, {{70, 0, 35, 32}, {18, 0}, 0.18f}, {{105, 0, 35, 32}, {18, 0}, 0.18f}}, false },
-				graphics::TextureManager::Load("char_body_walk.png")));
-			m_StatesRenderables[Walk].push_back(std::make_unique<character::CharacterArm>(
-				SRL::AnimationData{ {{{0, 0, 30, 17}, {29, 11}, 0.18f}, {{30, 0, 30, 17}, {29, 11}, 0.18f},
-					{{60, 0, 30, 17}, {29, 11}, 0.18f}, {{90, 0, 30, 17}, {29, 11}, 0.18f}}, false },
-				graphics::TextureManager::Load("char_hand_walk.png"), std::vector<maths::vec2>{ maths::vec2(33, 11),
-				maths::vec2(22, 10), maths::vec2(33, 11), maths::vec2(35, 12) }));
-			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0 },
-				SRL::AnimationData{ {{{0, 0, 45, 35}, {14, 29}, 0.18f}, {{45, 0, 45, 35}, {14, 29}, 0.18f}, {{90, 0, 45, 35}, {14, 29}, 0.18f}}, false },
-				graphics::TextureManager::Load("char_head.png")));
-
-			m_StatesRenderables[Attack].push_back(std::make_unique<character::CharacterBody>(
-				SRL::AnimationData{ {{{0, 0, 45, 33}, {19, 0}, 0.35f}, {{45, 0, 45, 33}, {19, 0}, 0.45f }}, false },
-				graphics::TextureManager::Load("char_body_attack.png")));
-			m_StatesRenderables[Attack].push_back(std::make_unique<character::CharacterArm>(
-				SRL::AnimationData{ {{{0, 0, 30, 18}, {49, 10}, 0.35f}, {{30, 0, 30, 18}, {0, 11}, 0.45f}}, false },
-				graphics::TextureManager::Load("char_hand_attack.png"), std::vector<maths::vec2>{ maths::vec2(47, 10), maths::vec2(-8, 19)}));
-			m_StatesRenderables[Attack].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0 },
-				SRL::AnimationData{ {{{0, 0, 45, 35}, {25, 27}, 0.35f}, {{45, 0, 45, 35}, {8, 26}, 0.45f}}, false },
-				graphics::TextureManager::Load("char_head_attack.png")));
-
-			m_StatesRenderables[Jump].push_back(std::make_unique<character::CharacterBody>(
-				SRL::AnimationData{ {{{0, 0, 35, 30}, {17, 0}, 0.4f}}, false },
-				graphics::TextureManager::Load("char_body_jump.png")));
-			m_StatesRenderables[Jump].push_back(std::make_unique<character::CharacterArm>(
-				SRL::AnimationData{ {{{0, 0, 13, 11}, {34, 17}, 0.4f}}, false },
-				graphics::TextureManager::Load("char_hand_jump.png"), std::vector<maths::vec2>{ maths::vec2{ 28, 18 }}));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0 }, SRL::AnimationData{ {{{0, 0, 39, 35}, {18, 28}, 0.4f}}, false }, graphics::TextureManager::Load("char_head_jump.png")));
+			m_ClientHandler(client_handler)
+			//m_Animations(m_TransformationMatrix)
+		{
+			FillCharacterTextureData(m_StatesRenderables);
 
 			m_HitBox = maths::vec2{ 32, 45 };
 			m_Org = maths::vec2{ m_HitBox.x / 2, 0 };
-			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), getBounds().width, 
+			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), getBounds().width,
 				getBounds().height, 0x60ff4500 };
 
 			registerKeys();
@@ -80,9 +44,26 @@ namespace hiraeth {
 					m_Animation.reset(nullptr);
 			}
 			m_Animations.update();
-			m_Animations.m_Renderables.erase(
-				std::remove_if(begin(m_Animations.m_Renderables), end(m_Animations.m_Renderables),
-					[](const auto& sr) {return sr->hasSpriteFinished(); }), end(m_Animations.m_Renderables));
+			m_Animations.clear_done();
+			//m_Animations.m_Renderables.erase(
+			//	std::remove_if(begin(m_Animations.m_Renderables), end(m_Animations.m_Renderables),
+			//		[](const auto& sr) {return sr->hasSpriteFinished(); }), end(m_Animations.m_Renderables));
+
+			//m_ProjectileAnimations.update();
+			//for (auto iter = m_ProjectileAnimations.m_Renderables.begin(); iter != m_ProjectileAnimations.m_Renderables.end() ;)
+			//{
+			//	if ((*iter)->hasHitClashed())
+			//	{
+			//		//(*iter)->m_Enemy->addHit
+			//		m_Animations.add(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0,0 },
+			//			(*iter)->getSkillName() + "_hit", (*iter)->getHitAnimationData(), true));
+			//		//Creature::getHit((*iter)->getDirection(), (*iter)->getDamage());
+			//		(*iter)->m_Enemy->getHit((*iter)->getDirection(), (*iter)->getDamage());
+			//		iter = m_ProjectileAnimations.m_Renderables.erase(iter);
+			//	}
+			//	else
+			//		++iter;
+			//}
 
 			m_Speed = m_CharacterStats->getSpeed();
 			m_Jump = m_CharacterStats->getJump();
@@ -235,11 +216,27 @@ namespace hiraeth {
 		//	}
 		//}
 
+		void Character::attackMonster(Creature* attacked, Damage d)
+		{
+			attacked->getHit(m_Direction, d);
+			auto attack_modifiers = m_CharacterStats->getAttackModifiers();
+			for (const auto&[id, skill_mods] : attack_modifiers)
+				for (const auto& mod : skill_mods)
+				{
+					switch (mod.first)
+					{
+					case SRL::lifesteal:
+						m_Stats->recoverHp(d.RawDamage *(float(mod.second) / 100.0f));
+					default:
+						break;
+					}
+				}
+		}
+
 		void Character::attackMonsters(std::vector<Monster*> mobs, std::vector<Damage> damages)
 		{
 			auto attack_modifiers = m_CharacterStats->getAttackModifiers();
 			for (int i = 0; i < mobs.size(); ++i)
-				//for (const auto& [mob, dmg] : [mobs, damages])
 			{
 				mobs[i]->getHit(m_Direction, damages[i]);
 				//for (const auto&[id, skill_mods] : m_AttackModifiers)
@@ -371,6 +368,7 @@ namespace hiraeth {
 				case SRL::hitAnimation:
 					if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
 					{
+						change_stance_to_attack();
 						auto monsters_hit = activateProjSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], 
 							getInt(skill_properties->at(SRL::proj_range), skill_lvl), skill_info->name);
 						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
@@ -404,6 +402,7 @@ namespace hiraeth {
 			std::vector<std::pair<float, Monster*>> monsters_in_range;
 			for (auto & [key, monster] : (*m_Monsters))
 			{
+				//if (monster->)
 				const maths::vec2 mon_pos = monster->getBounds().GetMiddle();
 				const maths::vec2 char_pos = getBounds().GetMiddle();
 				maths::vec2 dis_vec = char_pos - mon_pos;
@@ -419,16 +418,20 @@ namespace hiraeth {
 			{
 				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
 					[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
+				//m_ProjectileAnimations.add(
+					//std::make_unique<skills::TargetedProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
+					//	m_Direction, skill_name, this, hit_monster, Damage{ 250, 90 }, projectile_animation_data, hit_animation_data));
 				hit_monster->setProjectileAnimation(
-					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
-						hit_monster, Damage{ 250, 90 }, m_Direction, skill_name, projectile_animation_data, hit_animation_data));
+					std::make_unique<skills::TargetedProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
+						m_Direction, skill_name, this, hit_monster, Damage{ 250, 90 }, 
+						projectile_animation_data, hit_animation_data, PREHIT_DELAY));
 				return std::vector<network::MonsterHit>{network::MonsterHit{ 250.0f, hit_monster->getId(), static_cast<network::Direction>(m_Direction) }};
 			}
 			else
 			{
 				m_Animations.add(
-					std::make_unique<skills::Projectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
-						m_Direction, skill_name, projectile_animation_data));
+					std::make_unique<skills::StraightProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
+						m_Direction, skill_name, projectile_animation_data, 400, PREHIT_DELAY));
 				return {};
 			}
 		}

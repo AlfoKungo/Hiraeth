@@ -11,7 +11,7 @@
 #include "monster_data_manager.h"
 #include "srl/deserial.h"
 #include "graphics/layers/t_group.h"
-#include "game/projectile.h"
+#include "game/targeted_projectile.h"
 
 namespace hiraeth
 {
@@ -26,7 +26,7 @@ namespace hiraeth
 			MonsterStats m_MonsterStats;
 			SRL::MonsterStatsStruct* m_StatsStruct;
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
-			graphics::TGroup<skills::Projectile> m_ProjectileAnimations;
+			graphics::TGroup<skills::TargetedProjectile> m_ProjectileAnimations;
 			bool m_HasFinished{ false };
 			unsigned int m_Id{};
 
@@ -70,7 +70,8 @@ namespace hiraeth
 				}
 			}
 			void getHit(Direction dir, Damage damage) override;
-			void setProjectileAnimation(std::unique_ptr<skills::Projectile> projectile_animation);
+			void setHitAnimation(std::unique_ptr<graphics::SpritedRenderable> hit_animation);
+			void setProjectileAnimation(std::unique_ptr<skills::TargetedProjectile> projectile_animation);
 			void setForceByMove(float x_force) override { m_Force.x = x_force; } 
 			unsigned int getId() const { return m_Id; }
 			//void change_stance(StanceState new_state) override;

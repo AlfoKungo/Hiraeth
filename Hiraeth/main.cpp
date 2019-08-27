@@ -21,6 +21,9 @@
 #include <cstdio>
 #include "skills/skill_manager.h"
 #include "game/net_chars/net_char_manager.h"
+#include "editor/editor.h"
+
+//#define EDITOR
 
 #if 0
 static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
@@ -83,7 +86,10 @@ int main()
 	using namespace graphics;
 	using namespace map;
 	using namespace view;
-
+#ifdef EDITOR
+	editor::Editor editor;
+	editor.Main();
+#endif
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);
 

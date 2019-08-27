@@ -283,10 +283,8 @@ namespace hiraeth {
 
 		void ClientHandler::recvMobDied()
 		{
-			//auto dead_monster_id = dsrl_types<unsigned int>(m_RcvBuffer + 1);
 			auto monster_died_msg = dsrl_dynamic_type<MonsterDiedMsg>(m_RcvBuffer + 1);
-			//m_MonsterManager->killMonster(monster_died_msg.monster_id, monster_died_msg.dropped_items);
-			m_MonsterManager->killMonster(monster_died_msg.monster_id);
+			//m_MonsterManager->killMonster(monster_died_msg.monster_id);
 			for (const auto& item : monster_died_msg.dropped_items)
 				m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
 		}

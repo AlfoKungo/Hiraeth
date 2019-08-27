@@ -15,6 +15,7 @@ namespace hiraeth
 	namespace game
 	{
 
+		const float PREHIT_DELAY = 0.35f, POSTHIT_DELAY = 0.25f, POSTHIT_MOVEABLE_DELAY = 0.2f;
 		enum AttackState
 		{
 			PreHit,
@@ -66,6 +67,9 @@ namespace hiraeth
 				return maths::Rectangle{ m_Bounds.position, m_HitBox };
 			}
 			virtual void carryOutAttack() = 0;
+			void change_stance_to_attack();
+			virtual void attackMonster(Creature* attacked, Damage d)
+			{}
 		private:
 			//virtual void cause_damage(Damage damage) = 0;
 			virtual void cause_damage(Damage damage)  { m_Stats->causeDamage(damage); }

@@ -6,6 +6,7 @@
 #include "vec3.h"
 #include "../../Dependencies/Cereal/include/cereal/cereal.hpp"
 
+
 namespace maths {
 
 	struct vec2

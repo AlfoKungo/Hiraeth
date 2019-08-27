@@ -3,7 +3,7 @@
 namespace hiraeth {
 	namespace game {
 
-			Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id)
+		Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id)
 			: Creature(maths::Rectangle(position, maths::vec2(50, 50)), mapLayer,
 				//new MonsterStats(monster_data.StatsStruct), false),
 				//&m_MonsterStats, false),
@@ -12,9 +12,9 @@ namespace hiraeth {
 			m_Hp(maths::vec2(10, 40), 30, 6, 0xff0000ff),
 			m_XStart(NULL),
 			m_XEnd(NULL),
-			m_MonsterStats{monster_data.StatsStruct},
-			m_StatsStruct{&m_MonsterStats.m_Stats},
-			m_Id{mob_id}
+			m_MonsterStats{ monster_data.StatsStruct },
+			m_StatsStruct{ &m_MonsterStats.m_Stats },
+			m_Id{ mob_id }
 			//m_Summon(summon)
 		{
 			auto mtd = SRL::deserial<SRL::MonsterTexturesData>("monster",
@@ -23,13 +23,13 @@ namespace hiraeth {
 			m_HitBox = mtd.creature_sprites.hit_box;
 			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), m_HitBox.x, m_HitBox.y, 0xb066ccff };
 
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), 
+			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_stand", mtd.creature_sprites.sprited_data[SRL::MoveState::Stand]));
 			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_walk", mtd.creature_sprites.sprited_data[SRL::MoveState::Walk]));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), 
+			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_hit", mtd.creature_sprites.sprited_data[SRL::MoveState::Hit]));
-			m_StatesRenderables[Die].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(), 
+			m_StatesRenderables[Die].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_die", mtd.creature_sprites.sprited_data[SRL::MoveState::Die], true));
 
 			m_Org = maths::vec2{ m_HitBox.x / 2, 0 };
@@ -59,7 +59,7 @@ namespace hiraeth {
 				}
 				if (m_Bounds.x > (foothold.p2.x - edge_length))
 				{
-					move({ -(m_Bounds.x - (foothold.p2.x - edge_length) ) * 2 , 0 });
+					move({ -(m_Bounds.x - (foothold.p2.x - edge_length)) * 2 , 0 });
 					m_Controls.left = true;
 					m_Controls.right = false;
 				}
@@ -68,16 +68,18 @@ namespace hiraeth {
 			m_Animations.update();
 			m_Animations.clear_done();
 			m_ProjectileAnimations.update();
-				//for (auto it = m_ProjectileAnimations.m_Renderables.begin(); it != m_ProjectileAnimations.m_Renderables.end() /* not hoisted */; /* no increment */)
-			//auto iter = m_ProjectileAnimations.m_Renderables.begin();
-			//auto endIter = m_ProjectileAnimations.m_Renderables.end();
-			//for (; iter != endIter; )
-			for (auto iter = m_ProjectileAnimations.m_Renderables.begin(); iter != m_ProjectileAnimations.m_Renderables.end() ;)
+			//for (auto it = m_ProjectileAnimations.m_Renderables.begin(); it != m_ProjectileAnimations.m_Renderables.end() /* not hoisted */; /* no increment */)
+		//auto iter = m_ProjectileAnimations.m_Renderables.begin();
+		//auto endIter = m_ProjectileAnimations.m_Renderables.end();
+		//for (; iter != endIter; )
+			for (auto iter = m_ProjectileAnimations.m_Renderables.begin(); iter != m_ProjectileAnimations.m_Renderables.end();)
 			{
 				if ((*iter)->hasHitClashed())
 				{
-					m_Animations.add(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0,0 }, (*iter)->getSkillName() + "_hit", (*iter)->getAnimationData(), true));
-					Creature::getHit((*iter)->getDirection(), (*iter)->getDamage());
+					m_Animations.add(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0,0 },
+						(*iter)->getSkillName() + "_hit", (*iter)->getHitAnimationData(), true));
+					//Creature::getHit((*iter)->getDirection(), (*iter)->getDamage());
+					(*iter)->m_Attacker->attackMonster(this, (*iter)->getDamage());
 					iter = m_ProjectileAnimations.m_Renderables.erase(iter);
 				}
 				else
@@ -96,17 +98,20 @@ namespace hiraeth {
 			m_ProjectileAnimations.draw(renderer);
 		}
 
-		bool Monster::check_collision(const maths::Rectangle& rec) 
+		bool Monster::check_collision(const maths::Rectangle& rec)
 		{
 			maths::Rectangle hit_box{ m_Bounds.position, m_HitBox };
 			return ((rec.x < hit_box.x + hit_box.width) && (hit_box.x < rec.x + rec.width)
 				&& (rec.y < hit_box.y + hit_box.height) && (hit_box.y < rec.y + rec.height));
 		}
 
-		void Monster::setProjectileAnimation(std::unique_ptr<skills::Projectile> projectile_animation)
+		void Monster::setHitAnimation(std::unique_ptr<graphics::SpritedRenderable> hit_animation)
+		{
+			m_Animations.add(std::move(hit_animation));
+		}
+		void Monster::setProjectileAnimation(std::unique_ptr<skills::TargetedProjectile> projectile_animation)
 		{
 			m_ProjectileAnimations.add(std::move(projectile_animation));
-
 		}
 		void Monster::getHit(Direction dir, Damage damage)
 		{
