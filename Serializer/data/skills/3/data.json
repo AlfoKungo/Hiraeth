@@ -2,21 +2,21 @@
     "info": {
         "skill_properties": [
             {
-                "key": 12,
+                "key": 27,
                 "value": {
                     "index": 1,
                     "data": "x"
                 }
             },
             {
-                "key": 13,
+                "key": 28,
                 "value": {
                     "index": 1,
                     "data": "20 + 5*x"
                 }
             },
             {
-                "key": 14,
+                "key": 32,
                 "value": {
                     "index": 1,
                     "data": "3"

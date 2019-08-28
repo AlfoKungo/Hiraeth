@@ -23,7 +23,7 @@ namespace hiraeth {
 				//m_TalkLabel{"arial", 16, "hey im your npc", { 40, -10 }, 0xff000000, graphics::Label::Alignment::LEFT},
 				//m_IsTalking{false}
 			{
-				m_StatesRenderables[game::Stand].push_back(std::make_unique<graphics::SpritedRenderable>(
+				m_StatesRenderables[game::StcStand].push_back(std::make_unique<graphics::SpritedRenderable>(
 					maths::vec2(), m_Data.npc_frames_amount, 0.6f, false,
 					graphics::TextureManager::Load(m_Data.info.npc_name + "_stand", m_Data.texture_data)));
 			}

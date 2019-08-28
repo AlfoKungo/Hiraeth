@@ -22,16 +22,16 @@ namespace hiraeth {
 				switch (control)
 				{
 				case 1:
-					m_Mob->changeStanceState(game::Stand);
+					m_Mob->changeStanceState(game::StcStand);
 					break;
 				case 2:
-					m_Mob->changeStanceState(game::Walk);
+					m_Mob->changeStanceState(game::StcWalk);
 					break;
 				case 3:
-					m_Mob->changeStanceState(game::Jump);
+					m_Mob->changeStanceState(game::StcJump);
 					break;
 				case 4:
-					m_Mob->changeStanceState(game::Die);
+					m_Mob->changeStanceState(game::StcDie);
 					break;
 				default:
 					break;

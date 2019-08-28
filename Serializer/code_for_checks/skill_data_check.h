@@ -83,6 +83,7 @@ namespace Checks
 					{SRL::SkillDataType::disable_lifesteal, "100 - x"},
 					{SRL::SkillDataType::spd_by_mhealth, "x"},
 					{SRL::SkillDataType::jmp_by_mhealth, "x"},
+					{SRL::SkillDataType::inc_str, "5*x"},
 					{SRL::SkillDataType::atk_spd_by_mhealth, "x"},
 				}, "State Enhancer", 10, SRL::passive_effect };
 			std::ofstream data_file("data/" + SRL_TYPE + "/6/data.json", std::ios::out);

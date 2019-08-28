@@ -8,15 +8,15 @@ namespace hiraeth
 			float speed, float jump,
 			unsigned int foothold)
 			: Collisionable(m_Bounds, map_layer, foothold),
-			  m_StanceState(Stand), m_Direction(Left), m_CurrentRenderables(nullptr),
+			  m_StanceState(StcStand), m_Direction(Left), m_CurrentRenderables(nullptr),
 			  m_TransformationMatrix(maths::mat4::Translate(bounds.position)), 
 			  //m_Speed(std::move(speed)), m_Jump(std::move(jump))
 			  m_Speed(speed), m_Jump(jump)
 		{
-			m_StatesRenderables[Stand] = std::vector<std::unique_ptr<Renderable>>();
-			m_StatesRenderables[Walk] = std::vector<std::unique_ptr<Renderable>>();
-			m_StatesRenderables[Attack] = std::vector<std::unique_ptr<Renderable>>();
-			m_StatesRenderables[Jump] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[StcStand] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[StcWalk] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[StcAttack] = std::vector<std::unique_ptr<Renderable>>();
+			m_StatesRenderables[StcJump] = std::vector<std::unique_ptr<Renderable>>();
 			m_Bounds = bounds;
 		}
 
@@ -46,7 +46,7 @@ namespace hiraeth
 
 		void BaseCreature::analyze_controls()
 		{
-			if (m_StanceState != Die)
+			if (m_StanceState != StcDie)
 			{
 				if (m_Controls.right)
 				{
@@ -69,19 +69,19 @@ namespace hiraeth
 
 		void BaseCreature::analyze_stance()
 		{
-			if (Attack != m_StanceState)
+			if (StcAttack != m_StanceState)
 			{
 				if (m_Foothold != NO_FOOTHOLD)
 				{
 					if (m_Force.x < -0.1f || m_Force.x > 0.1f)
-						change_stance(Walk);
-					else if (Stand != m_StanceState)
-						change_stance(Stand);
+						change_stance(StcWalk);
+					else if (StcStand != m_StanceState)
+						change_stance(StcStand);
 
 				}
 				else
 				{
-					change_stance(Jump);
+					change_stance(StcJump);
 				}
 			}
 		}

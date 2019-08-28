@@ -23,13 +23,13 @@ namespace hiraeth {
 			m_HitBox = mtd.creature_sprites.hit_box;
 			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), m_HitBox.x, m_HitBox.y, 0xb066ccff };
 
-			m_StatesRenderables[Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+			m_StatesRenderables[StcStand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_stand", mtd.creature_sprites.sprited_data[SRL::MoveState::Stand]));
-			m_StatesRenderables[Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+			m_StatesRenderables[StcWalk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_walk", mtd.creature_sprites.sprited_data[SRL::MoveState::Walk]));
-			m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+			m_StatesRenderables[StcJump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_hit", mtd.creature_sprites.sprited_data[SRL::MoveState::Hit]));
-			m_StatesRenderables[Die].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+			m_StatesRenderables[StcDie].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 				monster_data.StatsStruct.Name + "_die", mtd.creature_sprites.sprited_data[SRL::MoveState::Die], true));
 
 			m_Org = maths::vec2{ m_HitBox.x / 2, 0 };
@@ -130,7 +130,7 @@ namespace hiraeth {
 		}
 		void Monster::triggerDeathAnimation()
 		{
-			change_stance(Die);
+			change_stance(StcDie);
 		}
 	}
 }

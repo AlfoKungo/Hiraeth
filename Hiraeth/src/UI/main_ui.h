@@ -44,7 +44,7 @@ namespace hiraeth {
 				m_StatsStruct->Str = 4 + stats_alloc[0];
 				m_StatsStruct->Dex = 4 + stats_alloc[1];
 				m_StatsStruct->Int = 4 + stats_alloc[2];
-				m_StatsStruct->Luk = 4 + stats_alloc[3];
+				m_StatsStruct->Wit = 4 + stats_alloc[3];
 				StatsUpdated();
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->execute(StatsUpdate);

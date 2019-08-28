@@ -111,7 +111,7 @@ namespace hiraeth {
 					if (skill_info != nullptr)
 						if (skill_info->skill_type >= SRL::passive_s)
 							//updatePassiveSkill(alloc.skill_id, m_SkillsAlloc[alloc.skill_id], &skill_info->skill_properties);
-							m_CharacterStats->updatePassiveSkill(skill_id, m_SkillsAlloc[skill_id], &skill_info->skill_properties);
+							m_CharacterStats->updatePassiveSkill(skill_id, m_SkillsAlloc[skill_id], skill_info->skill_properties);
 			}
 
 			void setJobAndLoadSkills(unsigned int job_id, std::vector<network::SkillAlloc> skills_alloc)

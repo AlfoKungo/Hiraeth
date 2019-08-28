@@ -2,7 +2,7 @@
     "info": {
         "skill_properties": [
             {
-                "key": 15,
+                "key": 36,
                 "value": {
                     "index": 1,
                     "data": "20 + 2*x"

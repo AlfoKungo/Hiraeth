@@ -14,12 +14,12 @@ namespace hiraeth {
 
 		enum StanceState {
 			NoStance = 0,
-			Stand = 1,
-			Walk = 2,
-			Attack = 3,
-			Die = 4,
-			Jump = 5,
-			Skill = 6,
+			StcStand = 1,
+			StcWalk = 2,
+			StcAttack = 3,
+			StcDie = 4,
+			StcJump = 5,
+			StcSkill = 6,
 		};
 
 		struct CreatureControls

@@ -6,9 +6,41 @@ namespace hiraeth {
 			:
 			//Stats(),
 			m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 2042185, 4, 45,
-							   "Good Music", 430, 430, 200, 180, 430, 200, BASE_HP_REG, BASE_MP_REG, 9999, 3, 4, 9, 9, 4 , false },
-			m_DetailsStruct{ 40, 40, 10, 10, 20, 20, 30, 30, 25, 13 }
+							   "Good Music", 430, 430, 200, 180, 430, 200, BASE_HP_REG, BASE_MP_REG, 9999,
+				3, 4, 9, 9, 4, 5 },
+			m_DetailsStruct{ 40, 40, 40, 10, 10, 20, 20, 30, 30, 25, 13 }
 		{
+
+			m_BaseStats.MaxHp = m_StatsStruct.MaxHp;
+			m_BaseStats.MaxMp = m_StatsStruct.MaxMp;
+			m_BaseStats.HpReg = m_StatsStruct.HpReg;
+			m_BaseStats.MpReg = m_StatsStruct.MpReg;
+			m_BaseStats.Str = m_StatsStruct.Str;
+			m_BaseStats.Dex = m_StatsStruct.Dex;
+			m_BaseStats.Int = m_StatsStruct.Int;
+			m_BaseStats.Wit = m_StatsStruct.Wit;
+			m_BaseStats.Med = m_StatsStruct.Med;
+			m_BaseStats.Attack = m_DetailsStruct.Attack;
+			m_BaseStats.CritRate = m_DetailsStruct.CritRate;
+			m_BaseStats.CritDmg = m_DetailsStruct.CritDmg;
+			m_BaseStats.Speed = m_DetailsStruct.Speed;
+			m_BaseStats.Jump = m_DetailsStruct.Jump;
+
+			//m_StatsMap[ST_MaxHp] = m_AddOnStats.MaxHp;
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_MaxHp, m_AddOnStats.MaxHp));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_MaxMp, m_AddOnStats.MaxMp));
+			//m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_HpReg, m_AddOnStats.HpReg));
+			//m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_MpReg, m_AddOnStats.MpReg));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Str, m_AddOnStats.Str));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Dex, m_AddOnStats.Dex));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Int, m_AddOnStats.Int));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Wit, m_AddOnStats.Wit));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Med, m_AddOnStats.Med));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Speed, m_AddOnStats.Speed));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Jump, m_AddOnStats.Jump));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_CritChance, m_AddOnStats.CritRate));
+			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_CritDmg, m_AddOnStats.CritDmg));
+
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->createEvent<>(StatsUpdate);
 		}
@@ -65,6 +97,16 @@ namespace hiraeth {
 		{
 			m_StatsStruct.Mp = std::min(m_StatsStruct.Mp + heal_amount, m_StatsStruct.MaxMp);
 			updateStats();
+		}
+
+		unsigned CharacterStats::getHpPercent() const
+		{
+			return unsigned int(float(m_StatsStruct.Hp) / float(m_StatsStruct.MaxHp) * 100.0f);
+		}
+
+		unsigned CharacterStats::getMHpPercent() const
+		{
+			return unsigned int((1.0f - float(m_StatsStruct.Hp) / float(m_StatsStruct.MaxHp)) * 100.0f);
 		}
 
 		bool CharacterStats::activateUseItem(SRL::ItemPropertiesMap* item_properties)

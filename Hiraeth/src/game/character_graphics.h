@@ -10,23 +10,23 @@ namespace hiraeth {
 		enum BodyPart { CBody, CArm, CHead };
 		const std::map<StanceState, std::map<BodyPart, SRL::AnimationData>> cg_data_map
 		{
-		{Stand,	{
+		{StcStand,	{
 			{CBody, SRL::AnimationData{ {{{0, 0, 23, 31}, {15, 0}, 0.4f}, {{23, 0, 23, 31}, {15, 0}, 0.4f}, {{46, 0, 23, 31}, {15, 0}, 0.4f}}, true }},
 			{CArm, SRL::AnimationData{ {{{0, 0, 11, 19}, {33, 10}, 0.4f}, {{11, 0, 11, 19}, {33, 10}, 0.4f}, {{22, 0, 11, 19}, {33, 10}, 0.4f}}, true }},
 			{CHead, SRL::AnimationData{ {{{0, 0, 45, 35}, {11, 29}, 0.4f}, {{45, 0, 45, 35}, {11, 29}, 0.4f}, {{90, 0, 45, 35}, {11, 29}, 0.4f}}, true }},
 			}
 		},
-		{Walk, {
+		{StcWalk, {
 			{CBody, SRL::AnimationData{ {{{0, 0, 35, 32}, {18, 0}, 0.18f}, {{35, 0, 35, 32}, {18, 0}, 0.18f}, {{70, 0, 35, 32}, {18, 0}, 0.18f}, {{105, 0, 35, 32}, {18, 0}, 0.18f}}, false }},
 			{CArm, SRL::AnimationData{ {{{0, 0, 30, 17}, {29, 11}, 0.18f}, {{30, 0, 30, 17}, {29, 11}, 0.18f}, {{60, 0, 30, 17}, {29, 11}, 0.18f}, {{90, 0, 30, 17}, {29, 11}, 0.18f}}, false }},
 			{CHead, SRL::AnimationData{ {{{0, 0, 45, 35}, {14, 29}, 0.18f}, {{45, 0, 45, 35}, {14, 29}, 0.18f}, {{90, 0, 45, 35}, {14, 29}, 0.18f}}, false }},
 		}},
-		{Attack, {
+		{StcAttack, {
 			{CBody, SRL::AnimationData{ {{{0, 0, 45, 33}, {19, 0}, 0.35f}, {{45, 0, 45, 33}, {19, 0}, 0.45f }}, false }},
 			{CArm, SRL::AnimationData{ {{{0, 0, 30, 18}, {49, 10}, 0.35f}, {{30, 0, 30, 18}, {0, 11}, 0.45f}}, false }},
 			{CHead, SRL::AnimationData{ {{{0, 0, 45, 35}, {25, 27}, 0.35f}, {{45, 0, 45, 35}, {8, 26}, 0.45f}}, false }},
 		}},
-		{Jump, {
+		{StcJump, {
 			{CBody, SRL::AnimationData{ {{{0, 0, 35, 30}, {17, 0}, 0.4f}}, false }},
 			{CArm, SRL::AnimationData{ {{{0, 0, 13, 11}, {34, 17}, 0.4f}}, false }},
 			{CHead, SRL::AnimationData{ {{{0, 0, 39, 35}, {18, 28}, 0.4f}}, false }},
@@ -34,16 +34,16 @@ namespace hiraeth {
 		};
 		const std::map<StanceState, std::vector<maths::vec2>> cg_weapons_locs_map
 		{
-			{Stand, std::vector<maths::vec2>{maths::vec2(28, 10), maths::vec2(28, 9), maths::vec2(30, 10)}},
-			{Walk, std::vector<maths::vec2>{ maths::vec2(33, 11), maths::vec2(22, 10), maths::vec2(33, 11), maths::vec2(35, 12) }},
-			{Attack, std::vector<maths::vec2>{ maths::vec2(47, 10), maths::vec2(-8, 19)}},
-			{Jump, std::vector<maths::vec2>{ maths::vec2{ 28, 18 }}},
+			{StcStand, std::vector<maths::vec2>{maths::vec2(28, 10), maths::vec2(28, 9), maths::vec2(30, 10)}},
+			{StcWalk, std::vector<maths::vec2>{ maths::vec2(33, 11), maths::vec2(22, 10), maths::vec2(33, 11), maths::vec2(35, 12) }},
+			{StcAttack, std::vector<maths::vec2>{ maths::vec2(47, 10), maths::vec2(-8, 19)}},
+			{StcJump, std::vector<maths::vec2>{ maths::vec2{ 28, 18 }}},
 		};
 		const std::map<StanceState, std::string> cg_stance_to_names{
-			{Stand, "stand"},
-			{Walk, "walk"},
-			{Attack, "attack"},
-			{Jump, "jump"},
+			{StcStand, "stand"},
+			{StcWalk, "walk"},
+			{StcAttack, "attack"},
+			{StcJump, "jump"},
 		};
 
 		inline void FillCharacterTextureData(std::map<StanceState, std::vector<std::unique_ptr<graphics::Renderable>>>& stance_renderables)

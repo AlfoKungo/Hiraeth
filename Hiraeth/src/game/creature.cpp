@@ -26,9 +26,9 @@ namespace hiraeth
 
 		void Creature::update()
 		{
-			if (m_StanceState == Die)
+			if (m_StanceState == StcDie)
 			{
-				if (m_StatesRenderables[Die][0]->hasSpriteFinished())
+				if (m_StatesRenderables[StcDie][0]->hasSpriteFinished())
 					has_died = true;
 				BaseCreature::update();
 				return;
@@ -38,7 +38,7 @@ namespace hiraeth
 			//m_Controls.left = true;
 
 			BaseCreature::update();
-			if (m_StanceState == Attack)
+			if (m_StanceState == StcAttack)
 				switch (m_AttackState)
 				{
 				case PreHit:
@@ -74,7 +74,7 @@ namespace hiraeth
 
 		void Creature::change_stance_to_attack()
 		{
-				change_stance(Attack);
+				change_stance(StcAttack);
 				m_AttackState = PreHit;
 				m_AttackTimer.reSet(PREHIT_DELAY);
 				AttackStatus = true;
@@ -97,7 +97,7 @@ namespace hiraeth
 
 		void Creature::analyze_controls()
 		{
-			if ((m_Controls.attack && Attack != m_StanceState) && (!(Attack == m_StanceState && PostHitMovable == m_AttackState)))
+			if ((m_Controls.attack && StcAttack != m_StanceState) && (!(StcAttack == m_StanceState && PostHitMovable == m_AttackState)))
 			{
 				//change_stance(Attack);
 				//m_AttackState = PreHit;
@@ -107,7 +107,7 @@ namespace hiraeth
 				change_stance_to_attack();
 				return;
 			}
-			if (Attack == m_StanceState && (PreHit == m_AttackState || PostHit == m_AttackState))
+			if (StcAttack == m_StanceState && (PreHit == m_AttackState || PostHit == m_AttackState))
 				return;
 			BaseCreature::analyze_controls();
 		}

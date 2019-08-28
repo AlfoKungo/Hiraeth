@@ -8,7 +8,7 @@ namespace hiraeth {
 
 		class MobAnimation : public graphics::Renderable
 		{
-			game::StanceState m_StanceState{ game::Stand };
+			game::StanceState m_StanceState{ game::StcStand };
 			std::map<game::StanceState, std::vector<std::unique_ptr<Renderable>>> m_StatesRenderables;
 			maths::mat4 m_TransformationMatrix;
 		public:
@@ -17,13 +17,13 @@ namespace hiraeth {
 			{
 				auto mtd = SRL::deserial<SRL::MonsterTexturesData>("monster",
 					(100 + monster_data.TextureIndex));
-				m_StatesRenderables[game::Stand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+				m_StatesRenderables[game::StcStand].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 					monster_data.StatsStruct.Name + "_stand", mtd.creature_sprites.sprited_data[SRL::MoveState::Stand]));
-				m_StatesRenderables[game::Walk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+				m_StatesRenderables[game::StcWalk].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 					monster_data.StatsStruct.Name + "_walk", mtd.creature_sprites.sprited_data[SRL::MoveState::Walk]));
-				m_StatesRenderables[game::Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+				m_StatesRenderables[game::StcJump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 					monster_data.StatsStruct.Name + "_hit", mtd.creature_sprites.sprited_data[SRL::MoveState::Hit]));
-				m_StatesRenderables[game::Die].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
+				m_StatesRenderables[game::StcDie].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2(),
 					monster_data.StatsStruct.Name + "_die", mtd.creature_sprites.sprited_data[SRL::MoveState::Die], true));
 			}
 			MobAnimation(unsigned int mob_id)

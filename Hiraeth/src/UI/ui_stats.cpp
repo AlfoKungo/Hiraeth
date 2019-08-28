@@ -29,7 +29,7 @@ namespace hiraeth {
 		void UiStats::fillGroup()
 		{
 			m_ForegroundGroup->clear();
-			m_ForegroundGroup->add(new graphics::Label("arial", 13, m_StatsStruct->Luk, { 74, 44 }, 0xff000000));
+			m_ForegroundGroup->add(new graphics::Label("arial", 13, m_StatsStruct->Wit, { 74, 44 }, 0xff000000));
 			m_ForegroundGroup->add(new graphics::Label("arial", 13, m_StatsStruct->Int, { 74, 62 }, 0xff000000));
 			m_ForegroundGroup->add(new graphics::Label("arial", 13, m_StatsStruct->Dex, { 74, 80 }, 0xff000000));
 			m_ForegroundGroup->add(new graphics::Label("arial", 13, m_StatsStruct->Str, { 74, 98 }, 0xff000000));
