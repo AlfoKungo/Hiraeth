@@ -93,7 +93,7 @@ namespace Checks
 		{
 			SRL::SkillInfo info{
 				{
-					{SRL::SkillDataType::dmg_by_mhealth, "x"},
+					{SRL::SkillDataType::atk_by_mhealth, "x"},
 				}, "Battle Rage", 10, SRL::active_move };
 			std::ofstream data_file("data/" + SRL_TYPE + "/7/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
@@ -118,6 +118,17 @@ namespace Checks
 					{SRL::SkillDataType::dmg, "100 + 5*x"},
 				}, "Rush Dash", 10, SRL::active_move };
 			std::ofstream data_file("data/" + SRL_TYPE + "/9/data.json", std::ios::out);
+			cereal::JSONOutputArchive arout(data_file);
+			arout(CEREAL_NVP(info));
+		}
+		{
+			SRL::SkillInfo info{
+				{
+					{SRL::SkillDataType::inc_max_mp_perc, "x"},
+					{SRL::SkillDataType::inc_max_mp_per_lvl, "30 + x"},
+					{SRL::SkillDataType::inc_mp_reg, "x"},
+				}, "Mana Mash", 10, SRL::active_move };
+			std::ofstream data_file("data/" + SRL_TYPE + "/10/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
 		}

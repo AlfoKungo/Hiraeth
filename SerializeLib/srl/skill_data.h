@@ -47,8 +47,10 @@ namespace SRL
 		inc_wit_by_perc, // increases wit by percentage
 		inc_med_by_perc, // increases med by percentage
 		inc_max_hp, // increase max HP
+		inc_max_hp_perc, // increase max HP by percentage
 		inc_max_hp_per_lvl, // increase max HP by value per level
 		inc_max_mp, // increase max MP
+		inc_max_mp_perc, // increase max MP by percentage
 		inc_max_mp_per_lvl, // increase max MP by value per level
 		inc_hp_reg, // increase Hp regen
 		inc_mp_reg, // increase Mp regen
@@ -64,7 +66,7 @@ namespace SRL
 		spd_by_mhealth, // speed by minus health
 		jmp_by_mhealth, // jump by minus health
 		atk_spd_by_mhealth, // attack speed by minus health
-		dmg_by_mhealth, // attack speed by minus health
+		atk_by_mhealth, // attack speed by minus health
 		// Sprited Renderable
 		//skillAnimation
 	};

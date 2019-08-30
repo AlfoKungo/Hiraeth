@@ -584,5 +584,8 @@
     <ClInclude Include="src\editor\mob_controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\editor\map_controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

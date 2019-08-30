@@ -38,9 +38,9 @@ namespace hiraeth {
 			void draw() const;
 			//void set_keyboard(input::Keyboard* keyboard) { m_Kb = keyboard; }
 			bool leftButtonClicked(float mx, float my) override;
-			bool leftButtonReleased(float mx, float my) const override;
+			bool leftButtonReleased(float mx, float my)  override;
 			bool rightButtonClicked(float mx, float my) override;
-			bool mouseMove(float pmx, float pmy, float mx, float my) const override;
+			bool mouseMove(float pmx, float pmy, float mx, float my)  override;
 			bool is_window_contains(maths::vec2 mouse_pos) const override;
 			void ButtonClicked(input::Key key) override;
 			void ButtonReleased(input::Key key) override;

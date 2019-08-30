@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics/shader.h"
-#include "graphics/Texture.h"
+#include "graphics/texture.h"
 #include "view/camera.h"
 #include "tile.h"
 #include "physics/foothold.h"
@@ -18,10 +18,10 @@ namespace hiraeth {
 		private:
 			graphics::Shader m_Shader;
 			MapRenderer m_Renderer;
-			std::vector<Tile> m_Tiles;
 			//std::vector<Portal> m_Portals;
 			std::vector<physics::FootHold> m_FootHolds;
 		public:
+			std::vector<Tile> m_Tiles;
 			SRL::MapData m_MapData{};
 			MapLayer();
 			~MapLayer();

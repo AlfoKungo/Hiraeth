@@ -27,19 +27,19 @@ namespace hiraeth {
 			m_BaseStats.Jump = m_DetailsStruct.Jump;
 
 			//m_StatsMap[ST_MaxHp] = m_AddOnStats.MaxHp;
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_MaxHp, m_AddOnStats.MaxHp));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_MaxMp, m_AddOnStats.MaxMp));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_MaxHp, m_AddOnStats.MaxHp));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_MaxMp, m_AddOnStats.MaxMp));
 			//m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_HpReg, m_AddOnStats.HpReg));
 			//m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_MpReg, m_AddOnStats.MpReg));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Str, m_AddOnStats.Str));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Dex, m_AddOnStats.Dex));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Int, m_AddOnStats.Int));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Wit, m_AddOnStats.Wit));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Med, m_AddOnStats.Med));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Speed, m_AddOnStats.Speed));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_Jump, m_AddOnStats.Jump));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_CritChance, m_AddOnStats.CritRate));
-			m_StatsMap.insert(std::pair<StatsType, unsigned int&>(ST_CritDmg, m_AddOnStats.CritDmg));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Str, m_AddOnStats.Str));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Dex, m_AddOnStats.Dex));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Int, m_AddOnStats.Int));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Wit, m_AddOnStats.Wit));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Med, m_AddOnStats.Med));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Speed, m_AddOnStats.Speed));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_Jump, m_AddOnStats.Jump));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_CritChance, m_AddOnStats.CritRate));
+			m_AddOnMap.insert(std::pair<StatsType, unsigned int&>(ST_CritDmg, m_AddOnStats.CritDmg));
 
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->createEvent<>(StatsUpdate);

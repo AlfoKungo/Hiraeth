@@ -57,11 +57,11 @@ namespace hiraeth
 		{
 			return false;
 		}
-		bool NpcManager::leftButtonReleased(float mx, float my) const
+		bool NpcManager::leftButtonReleased(float mx, float my) 
 		{
 			return false;
 		}
-		bool NpcManager::mouseMove(float pmx, float pmy, float mx, float my) const
+		bool NpcManager::mouseMove(float pmx, float pmy, float mx, float my) 
 		{
 			return false;
 		}

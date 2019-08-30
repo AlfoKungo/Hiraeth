@@ -26,6 +26,7 @@ namespace hiraeth {
 			~Tile();
 
 			float get_scale() const { return m_Scale; }
+			void move(maths::vec2 step) { m_Position += step; }
 			//maths::vec2 get_uv_pos() const { return m_Uv_pos; }
 			//maths::vec2 get_uv_size() const { return m_Uv_size; }
 			//unsigned int getType() const { return m_Type; }

@@ -32,7 +32,7 @@ namespace hiraeth {
 
 			m_Tiles.clear();
 			for (auto& tile_data : m_MapData.Tiles)
-				m_Tiles.push_back(Tile(tile_data));
+				m_Tiles.emplace_back(tile_data);
 
 			//m_Portals.clear();
 			//for (auto& portal_data : m_MapData.m_Portals)
@@ -40,7 +40,8 @@ namespace hiraeth {
 
 			m_FootHolds.clear();
 			for (auto& foothold_data : m_MapData.FootHolds)
-				m_FootHolds.push_back(physics::FootHold(foothold_data));
+				//m_FootHolds.push_back(physics::FootHold(foothold_data));
+				m_FootHolds.emplace_back(foothold_data);
 
 			m_Renderer.changeTexture(m_MapData.TileTexture);
 		}

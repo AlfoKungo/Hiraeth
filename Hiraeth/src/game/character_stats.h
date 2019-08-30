@@ -113,16 +113,11 @@ namespace hiraeth {
 			std::vector<stats::TimedStat> m_TimedItemStats;
 			//std::map<unsigned int, std::vector<IncStatStruct>> m_IncStatsMap;
 			std::map<unsigned int, std::vector<stats::TimedStat>> m_TimedSkillStats;
+			std::map<unsigned int, std::map<SRL::SkillDataType, int>> m_AttackModifiers;
 			std::map<unsigned int, std::map<StatsType, unsigned int>> m_StatsIncBySimple;
 			std::map<unsigned int, std::map<StatsType, unsigned int>> m_StatsIncByComplex;
-			//std::map<unsigned int, std::vector<std::pair<SRL::SkillDataType, int>>> m_AttackModifiers;
-			std::map<unsigned int, std::map<SRL::SkillDataType, int>> m_AttackModifiers;
-			//std::map<unsigned int, std::vector<std::pair<SRL::SkillDataType, int>>> m_LivelySkills;
-			//std::vector<CompSkillStruct> m_ComplexSkills;
-			//std::map<unsigned int, SimpleBonusStruct> m_SimpleBonuses;
-			//std::map<unsigned int, SimpleBonusStructB> m_SimpleBonusesB;
 			std::map<unsigned int, std::map<StatsType, ComplexBonusStruct>> m_ComplexBonuses;
-			std::map<StatsType, unsigned int&> m_StatsMap;
+			std::map<StatsType, unsigned int&> m_AddOnMap;
 			float m_HpAccum{0.0f}, m_HpH{0.0f}, m_MpAccum{0.0f}, m_MpH{0.0f};
 		public:
 			CharacterStats();
@@ -267,94 +262,20 @@ namespace hiraeth {
 			}
 			int getInt(SRL::SkillPropertiesVar val, unsigned int skill_lvl)
 			{
-
 				if (std::holds_alternative<int>(val))
 					return std::get<int>(val);
 				std::string con_string = std::get<std::string>(val);
 				return getValueFromString(con_string, skill_lvl);
 			}
-			//void removeEffectsFromSkill(unsigned int skill_id)
-			//{
-			//	m_IncStatsMap.erase(skill_id);
-			//	m_AttackModifiers.erase(skill_id);
-			//}
-			//void recalculateEffectsFromSkills()
-			//{
-			//	returnAllToBaseStats();
-			//	reCalculateAllStats();
-			//	EventManager *m_EventManager = EventManager::Instance();
-			//	m_EventManager->execute(StatsUpdate);
-			//}
-			//void applySkillStats(unsigned int skill_id, StatsType stat_type, 
-			//	std::string val_func, unsigned int skill_lvl)
-			//{
-			//	float amount = float(getValueFromString(val_func, skill_lvl));
-			//	//for (auto& element : (item->getProperties()))
-			//	//{
-			//		switch (stat_type)
-			//		{
-			//		//case Str: break;
-			//		//case Dex: break;
-			//		//case Luk: break;
-			//		//case Int: break;
-			//		case ST_MaxMp:
-			//			m_StatsStruct.MaxMp *= (1.0f + (amount/ 100.0f));
-			//			break;
-			//		case ST_MaxMpByLvl:
-			//			m_StatsStruct.MaxMp += amount * m_StatsStruct.Level;
-			//			break;
-			//		case ST_CritChance:
-			//			m_DetailsStruct.CritRate += amount;
-			//			break;
-			//		default:
-			//			break;
-			//		}
-			//	//}
-			//}
-			//void addPassiveSkillValue(unsigned int skill_id, StatsType stat_type, 
-			//	std::string val_func, unsigned int skill_lvl)
-			//{
-			//	m_IncStatsMap[skill_id].push_back(IncStatStruct{ stat_type, val_func, skill_lvl});
-			//}
-			//void incStat(int val, unsigned int& f, unsigned int& s)
-			//{
-			//	f += val;
-			//	s = val;
-			//}
-			//void incStatB(int val, unsigned int skill_id, unsigned int& f, StatsType stat_type)
-			//{
-			//	f += val;
-			//	//m_AddOnStats.Str += val;
-			//	m_StatsIncBySimple[skill_id][stat_type] = val;
-			//}
-			void incStatC(int val, unsigned int skill_id, StatsType stat_type)
-			{
-				incAddOn(stat_type, val);
-				m_StatsIncBySimple[skill_id][stat_type] = val;
-			}
+
 			void addAttackModifier(unsigned int skill_id, SRL::SkillDataType skill_data_type, 
 				std::string val_func, unsigned int skill_lvl)
 			{
 				m_AttackModifiers[skill_id][skill_data_type] = getValueFromString(val_func, skill_lvl);
 			}
-			//void reCalculateAllStats()
-			//{
-			//	for (const auto& [key, vals] : m_IncStatsMap)
-			//	{
-			//		for (const auto& inc_val : vals)
-			//		{
-			//			applySkillStats(key, inc_val.stat_type, inc_val.val_func, inc_val.skill_lvl);
-			//		}
-			//	}
-			//}
-			//void addComplexSkill(unsigned int skill_id, unsigned int skill_lvl, SRL::SkillPropertiesMap& skill_properties)
-			//{
-			//	m_SimpleBonuses[skill_id] = SimpleBonusStruct{ skill_properties , skill_lvl};
-			//}
+			
 			void updatePassiveSkill(unsigned int skill_id, unsigned int skill_lvl, const SRL::SkillPropertiesMap& skill_properties)
 			{
-				//removeEffectsFromSkill(skill_id);
-				//m_SimpleBonuses[skill_id] = SimpleBonusStruct{ skill_properties , skill_lvl};
 				removeSimpleBonus(skill_id);
 				removeComplexBonus(skill_id);
 				for (const auto&[id, val] : (skill_properties))
@@ -362,24 +283,24 @@ namespace hiraeth {
 					switch (id)
 					{
 					case SRL::SkillDataType::inc_max_hp:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_MaxHp);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_MaxHp);
 						break;
 					case SRL::SkillDataType::inc_max_hp_per_lvl:
-						incStatC(getInt(val, skill_lvl) * m_StatsStruct.Level, skill_id, ST_MaxHp);
+						addSimpleBonus(getInt(val, skill_lvl) * m_StatsStruct.Level, skill_id, ST_MaxHp);
 						break;
 					case SRL::SkillDataType::inc_max_mp:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_MaxMp);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_MaxMp);
 						//increaseMaxMP(val);
 						break;
 					case SRL::SkillDataType::inc_max_mp_per_lvl:
 						//addPassiveSkillValue(skill_id, ST_MaxMpByLvl,
 						//	std::get<std::string>(val), skill_lvl);
 						//incStatB(getInt(val, skill_lvl) * m_StatsStruct.Level, skill_id, m_AddOnStats.MaxMp, ST_MaxMp);
-						incStatC(getInt(val, skill_lvl) * m_StatsStruct.Level, skill_id, ST_MaxMp);
+						addSimpleBonus(getInt(val, skill_lvl) * m_StatsStruct.Level, skill_id, ST_MaxMp);
 						//increaseMaxMpPerLvl(val);
 						break;
 					case SRL::SkillDataType::inc_crit_chance:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_CritChance);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_CritChance);
 						break;
 					case SRL::SkillDataType::lifesteal:
 						//increaseCrit(val);
@@ -387,24 +308,19 @@ namespace hiraeth {
 							std::get<std::string>(val), skill_lvl);
 						break;
 					case SRL::inc_str:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_Str);
-						//incStat(getInt(val, skill_lvl), m_AddOnStats.Str, m_StatsIncBySkill[skill_id][ST_Str]);
-						//incStatB(getInt(val, skill_lvl), skill_id, m_AddOnStats.Str, ST_Str);
-						//auto d = getInt(val, skill_lvl);
-						//m_AddOnStats.Str += d;
-						//m_StatsIncBySkill[skill_id][StatsType::Str] = d;
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_Str);
 						break;
 					case SRL::inc_dex:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_Dex);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_Dex);
 						break;
 					case SRL::inc_int:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_Int);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_Int);
 						break;
 					case SRL::inc_wit:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_Wit);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_Wit);
 						break;
 					case SRL::inc_med:
-						incStatC(getInt(val, skill_lvl), skill_id, ST_Med);
+						addSimpleBonus(getInt(val, skill_lvl), skill_id, ST_Med);
 						break;
 					//case SRL::inc_str_by_perc:
 					//	//incStat(int(float(getInt(val, skill_lvl)) / 100.0f * m_BaseStats.Str), m_AddOnStats.Str, m_StatsIncBySkill[skill_id][ST_Str]);
@@ -412,9 +328,6 @@ namespace hiraeth {
 					//	m_ComplexBonuses[skill_id][ST_Str] = ComplexBonusStruct{ float(getInt(val, skill_lvl)) / 100.0f, UpdMHealth};
 					//	break;
 					case SRL::spd_by_mhealth:
-						//incStat(int(float(getInt(val, skill_lvl)) / 100.0f * getMHpPercent()), m_AddOnStats.Speed, m_StatsIncBySkill[skill_id][ST_Speed]);
-						//incStatB(int(float(getInt(val, skill_lvl)) / 100.0f * getMHpPercent()), skill_id, m_AddOnStats.Speed, ST_Speed);
-						//m_ComplexBonuses[skill_id][ST_Speed] = ComplexBonusStruct{ float(getInt(val, skill_lvl)) / 100.0f, UpdMHealth};
 						m_ComplexBonuses[skill_id][ST_Speed] = ComplexBonusStruct{ float(getInt(val, skill_lvl)), UpdMHealth};
 						break;
 					case SRL::jmp_by_mhealth:
@@ -427,6 +340,7 @@ namespace hiraeth {
 				//recalculateEffectsFromSkills();
 				calculateStats();
 			}
+
 			unsigned int getValueBaseOn(UpdBaseTypes upd_base, float multi)
 			{
 				switch (upd_base)
@@ -455,6 +369,11 @@ namespace hiraeth {
 				}
 				m_StatsIncBySimple.erase(skill_id);
 			}
+			void addSimpleBonus(int val, unsigned int skill_id, StatsType stat_type)
+			{
+				incAddOn(stat_type, val);
+				m_StatsIncBySimple[skill_id][stat_type] = val;
+			}
 			void removeComplexBonus(unsigned int skill_id)
 			{
 				for (const auto& [id, val] : m_StatsIncByComplex[skill_id])
@@ -469,26 +388,8 @@ namespace hiraeth {
 				incAddOn(stat_type, val);
 				m_StatsIncByComplex[skill_id][stat_type] = val;
 			}
-			//void calcComplexSkill(SRL::SkillDataType skill_data_type)
-			//{
-			//	switch (skill_data_type)
-			//	{
-			//	case SRL::spd_by_mhealth:
-			//		
-			//	default:
-			//		break;
-			//	}
-			//}
-			//void removeAllSkillsEffect()
-			//{
-			//	m_IncStatsMap.erase(m_IncStatsMap.begin(), m_IncStatsMap.end());
-			//	m_AddOnStats = AddOnStats{};
-			//	for (const auto& comp : m_SimpleBonuses)
-			//		addEffectFromSkill(comp.skill_id, comp.props, comp.skill_lvl);
-			//}
 			void calculateStats()
 			{
-				//removeAllSkillsEffect();
 				m_StatsStruct.MaxHp = m_BaseStats.MaxHp + m_AddOnStats.MaxHp;
 				m_StatsStruct.MaxMp = m_BaseStats.MaxMp + m_AddOnStats.MaxMp;
 				m_StatsStruct.HpReg = m_BaseStats.HpReg + m_AddOnStats.HpReg;
@@ -503,93 +404,10 @@ namespace hiraeth {
 				m_DetailsStruct.CritDmg = m_BaseStats.CritDmg + m_AddOnStats.CritDmg;
 				m_DetailsStruct.Speed = m_BaseStats.Speed + m_AddOnStats.Speed;
 			}
-			//void removeEffectFromSkill(unsigned skill_id)
-			//{
-			//	for (const auto& [id, val] : m_StatsIncBySimple[skill_id])
-			//	{
-			//		switch (id)
-			//		{
-			//		case ST_MaxMp:
-			//			m_AddOnStats.MaxMp -= val;
-			//			break;
-			//		default:
-			//			break;
-			//		}
-			//	}
-			//	m_StatsIncBySimple.erase(skill_id);
-			//	calculateStats();
-			//}
 			void incAddOn(StatsType stat_type, int value)
 			{
-				//m_StatsMap[ST_MaxHp] = m_AddOnStats.MaxMp;
-				m_StatsMap.at(stat_type) += value;
-				//switch (stat_type)
-				//{
-				//case ST_MaxHp:
-				//	m_AddOnStats.MaxHp += value;
-				//	break;
-				//case ST_MaxMp:
-				//	m_AddOnStats.MaxMp += value;
-				//	break;
-				//case ST_HpReg:
-				//	m_AddOnStats.HpReg += value;
-				//	break;
-				//case ST_MpReg:
-				//	m_AddOnStats.MpReg += value;
-				//	break;
-				//case ST_Str:
-				//	m_AddOnStats.Str += value;
-				//	break;
-				//case ST_Dex:
-				//	m_AddOnStats.Dex += value;
-				//	break;
-				//case ST_Int:
-				//	m_AddOnStats.Int += value;
-				//	break;
-				//case ST_Wit:
-				//	m_AddOnStats.Wit += value;
-				//	break;
-				//case ST_Med:
-				//	m_AddOnStats.Med += value;
-				//	break;
-				//case ST_Speed:
-				//	m_AddOnStats.Speed += value;
-				//	break;
-				//case ST_Jump:
-				//	m_AddOnStats.Jump += value;
-				//	break;
-				//case ST_CritChance:
-				//	m_AddOnStats.CritRate += value;
-				//	break;
-				//case ST_CritDmg:
-				//	m_AddOnStats.CritDmg += value;
-				//	break;
-				//default:
-				//	break;
-				//}
+				m_AddOnMap.at(stat_type) += value;
 			}
-			//void addEffectFromSkill(unsigned int skill_id, const SRL::SkillPropertiesMap& data_map, unsigned int skill_lvl)
-			//{
-			//	for (const auto& [type, val] : data_map)
-			//	{
-			//		switch (type)
-			//		{
-			//		case SRL::inc_str:
-			//			incStat(getInt(val, skill_lvl), m_AddOnStats.Str, m_StatsIncBySkill[skill_id][ST_Str]);
-			//			//auto d = getInt(val, skill_lvl);
-			//			//m_AddOnStats.Str += d;
-			//			//m_StatsIncBySkill[skill_id][StatsType::Str] = d;
-			//			break;
-			//		case SRL::inc_str_by_perc:
-			//			incStat(int(float(getInt(val, skill_lvl)) / 100.0f * m_BaseStats.Str), m_AddOnStats.Str, m_StatsIncBySkill[skill_id][ST_Str]);
-			//			break;
-			//		case SRL::spd_by_mhealth:
-			//			incStat(int(float(getInt(val, skill_lvl)) / 100.0f * getMHpPercent()), m_AddOnStats.Speed, m_StatsIncBySkill[skill_id][ST_Speed]);
-			//		default:
-			//			break;
-			//		}
-			//	}
-			//}
 		};
 
 	}

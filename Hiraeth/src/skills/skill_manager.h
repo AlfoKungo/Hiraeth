@@ -118,23 +118,23 @@ namespace hiraeth {
 			//void setJob(unsigned int job_id, std::map<unsigned int, unsigned int> stats_alloc)
 			{
 				SRL::AllJobsData JobInfo{ {
-				{ SRL::Novice, {{1,2,3}, {}}},
-				{ SRL::Berserker, {{1,2,3}, {6,7,8}}},
-				{ SRL::CrusaderKnight, {{1,2,3}, {4,5}}},
-				{ SRL::Wizard, {{1,2,3}, {4,5}}},
-				{ SRL::Rogue, {{1,2,3}, {4,5}}},
-				{ SRL::Archer, {{1,2,3}, {4,5}}},
-				{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
+				{ SRL::Novice, {{0,1,2}, {}}},
+				{ SRL::Berserker, {{0,1,2}, {5,6,7}}},
+				{ SRL::CrusaderKnight, {{0,1,2}, {10,11}}},
+				{ SRL::Wizard, {{0,1,2}, {3,4}}},
+				{ SRL::Rogue, {{0,1,2}, {3,4}}},
+				{ SRL::Archer, {{0,1,2}, {3,4}}},
+				{ SRL::ForestFighter, {{0,1,2}, {1,2,3}}},
 					} };
 
 				//std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
 				const SRL::JobsTypes job_type{ static_cast<SRL::JobsTypes>(job_id) };
 				std::vector<unsigned int> BasicJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).first_job_skills;
 				for (const auto& index : BasicJobSkillsIndices)
-					add_skill(index - 1, 0 );
+					add_skill(index, 0 );
 				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).second_job_skills;
 				for (const auto& index : FirstJobSkillsIndices)
-					add_skill(index - 1, 1);
+					add_skill(index, 1);
 
 				for (const auto& alloc : skills_alloc)
 				{

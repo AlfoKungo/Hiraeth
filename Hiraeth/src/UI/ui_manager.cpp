@@ -69,7 +69,7 @@ namespace hiraeth {
 			return false;
 		}
 
-		bool UiManager::leftButtonReleased(float mx, float my) const
+		bool UiManager::leftButtonReleased(float mx, float my) 
 		{
 			for (const auto& window : m_Windows)
 			{
@@ -121,7 +121,7 @@ namespace hiraeth {
 			return false;
 		}
 
-		bool UiManager::mouseMove(float pmx, float pmy, float mx, float my) const
+		bool UiManager::mouseMove(float pmx, float pmy, float mx, float my) 
 		{
 			for (const auto& window : m_Windows)
 			{

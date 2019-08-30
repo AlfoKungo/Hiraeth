@@ -127,12 +127,12 @@ namespace hiraeth {
 				return false;
 			}
 
-			bool leftButtonReleased(float mx, float my) const override
+			bool leftButtonReleased(float mx, float my)  override
 			{
 				return false;
 			}
 
-			bool mouseMove(float pmx, float pmy, float mx, float my) const override
+			bool mouseMove(float pmx, float pmy, float mx, float my)  override
 			{
 				return false;
 			}

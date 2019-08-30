@@ -173,7 +173,8 @@ namespace hiraeth {
 			void setByteArray(unsigned int player_id, std::string field, const T& object)
 			{
 				auto[buffer, size] = srl_dynamic_type(object);
-				std::string ref_data{ *buffer, unsigned int(size) };
+				//std::string ref_data{ *buffer, unsigned int(size) };
+				std::string ref_data{ *buffer, (unsigned int)(size) };
 				const std::string data{ hexStr(*buffer, size) };
 				std::string command = "UPDATE players SET " + field + " = E'\\\\x"
 					+ data + "' WHERE id = " + std::to_string(player_id);

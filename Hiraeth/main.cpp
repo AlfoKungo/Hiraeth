@@ -88,7 +88,8 @@ int main()
 	using namespace view;
 #ifdef EDITOR
 	editor::Editor editor;
-	editor.Main();
+	//editor.MobEditor();
+	editor.MapEditor();
 #endif
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);

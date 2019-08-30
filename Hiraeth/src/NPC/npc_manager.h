@@ -33,9 +33,9 @@ namespace hiraeth
 
 			// MOUSE EVENT FUNCTIONS
 			bool leftButtonClicked(float mx, float my) override;
-			bool leftButtonReleased(float mx, float my) const override;
+			bool leftButtonReleased(float mx, float my)  override;
 			bool rightButtonClicked(float mx, float my) override;
-			bool mouseMove(float pmx, float pmy, float mx, float my) const override;
+			bool mouseMove(float pmx, float pmy, float mx, float my)  override;
 			bool is_window_contains(maths::vec2 mouse_pos) const override;
 		};
 	}

@@ -6,6 +6,7 @@
 #include "graphics/window.h"
 #include "utils/static_timer.h"
 
+#define EDITOR
 namespace hiraeth {
 	namespace view {
 
@@ -14,8 +15,13 @@ namespace hiraeth {
 #define CAMERA_VP_SIZE_X_HALF 800
 #define CAMERA_VP_SIZE_Y 900
 #define CAMERA_VP_SIZE_Y_HALF 450
+#ifndef EDITOR
 #define CAMERA_X_LERP_VALUE 0.040f
 #define CAMERA_Y_LERP_VALUE 0.085f
+#else
+#define CAMERA_X_LERP_VALUE 1.00f
+#define CAMERA_Y_LERP_VALUE 1.05f
+#endif
 
 		class Camera 
 		{
