@@ -47,6 +47,10 @@ namespace hiraeth {
 			x = mx;
 			y = my;
 		}
+		maths::vec2 Keyboard::getMousePosition() const
+		{
+			return maths::vec2{ float(mx), float(my) };
+		}
 		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			auto kb = static_cast<Keyboard*>(glfwGetWindowUserPointer(window));

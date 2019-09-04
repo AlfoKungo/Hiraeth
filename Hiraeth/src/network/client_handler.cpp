@@ -94,7 +94,7 @@ namespace hiraeth {
 			//	printf("sendto() failed with error code : %d\n", WSAGetLastError());
 			//	exit(EXIT_FAILURE);
 			//}
-			printf("Sent keep_alive\n");
+			//printf("Sent keep_alive\n");
 		}
 
 		void ClientHandler::Update(PlayerStateUpdateMsg psu)
@@ -149,7 +149,7 @@ namespace hiraeth {
 					printf("sendto() failed with error code : %d\n", WSAGetLastError());
 					exit(EXIT_FAILURE);
 				}
-				printf("Sent keep_alive\n");
+				//printf("Sent keep_alive\n");
 				m_KATimer.reSet(KA_TIMEOUT);
 			}
 			memset(m_RcvBuffer, '\0', BUFLEN);

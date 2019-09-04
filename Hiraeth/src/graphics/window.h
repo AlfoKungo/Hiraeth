@@ -9,6 +9,7 @@
 namespace hiraeth {
 	namespace graphics {
 
+		const int WINDOW_WIDTH = 1600, WINDOW_HEIGHT = 900;
 		class Window
 		{
 		private:
@@ -17,6 +18,7 @@ namespace hiraeth {
 			GLFWwindow *m_Window;
 			input::Keyboard *m_Keyboard;
 			bool m_Closed;
+
 
 		public:
 			Window(const char *name, int width, int height, input::Keyboard *keyboard);

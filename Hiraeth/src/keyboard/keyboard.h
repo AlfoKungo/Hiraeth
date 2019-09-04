@@ -25,6 +25,10 @@ namespace hiraeth {
 			double mx{}, my{}, pmx{}, pmy{};
 			Keyboard();
 
+			void registerToKey(KeyCode keycode, KeyboardEvent* key_event)
+			{
+				registerToKey(keycode, keycode, key_event);
+			}
 			void registerToKey(KeyCode keycode, Key key, KeyboardEvent* key_event)
 			{
 				m_KeyControlMap[keycode] = std::make_pair(key_event, key);
@@ -50,6 +54,7 @@ namespace hiraeth {
 			bool isKeyClicked(KeyCode keycode);
 			bool isMouseButtonPressed(unsigned int button) const;
 			void getMousePosition(double& x, double& y) const;
+			maths::vec2 getMousePosition() const;
 			friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 			friend void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 			friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);

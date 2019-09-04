@@ -10,6 +10,18 @@ namespace hiraeth {
 
 		}
 
+		bool FootHold::isOnFoothold(maths::vec2 pt) const
+		{
+			//maths::vec2 s1{ p2 - p1 };
+			//maths::vec2 s2{ p2 - pt };
+			//if (p1.x > pt.x || p2.x < pt.x)
+			//	return false;
+			//if (s1.y != 0 )
+			//	return s1.x / s2.x == s1.y / s2.y;
+			pt = { round(pt.x), round(pt.y) };
+			return p1.x <= pt.x && p2.x >= pt.x && pt.y == p1.y;
+		}
+
 		bool FootHold::Intersects(maths::Rectangle rec) const
 		{
 			return CohenSutherlandLineClipAndDraw(rec);

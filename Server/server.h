@@ -110,11 +110,7 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_INR_ROUTINE_UPDATE, &Server::RoutineUpdate);
 
 				//for (unsigned int i = 0; i < 15; ++i)
-				for (unsigned int i = 0; i < 15; ++i)
-					sendDropItem(addItem((i %9) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
-				//for ( m_ItemsIdCounter = 0; m_ItemsIdCounter < 15; ++m_ItemsIdCounter)
-				//	sendDropItem(ItemDropMsg{ m_ItemsIdCounter, (m_ItemsIdCounter % 9) % 5,
-				//	(m_ItemsIdCounter / 5) % 2, maths::vec2(int(m_ItemsIdCounter - 6) * 80, 0) });
+				//	sendDropItem(addItem((i %9) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
 			}
 			void main_60fps_loop();
 			void main_block_receive_and_async_send();

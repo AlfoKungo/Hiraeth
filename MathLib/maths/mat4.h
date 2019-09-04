@@ -40,9 +40,25 @@ namespace maths {
 		void SetColumn(uint32_t index, const vec4& column);
 		//inline vec3 GetPosition() const { return vec3(GetColumn(3)); }
 		//inline vec3 GetPosition() const { return vec3(Transpose(Invert()).GetColumn(3)); }
-		inline vec3 GetPosition() const { return Transpose(Invert(mat4(*this))).GetColumn(3); }
+		inline vec3 GetPosition() const
+		{
+			return Transpose(Invert(mat4(*this))).GetColumn(3);
+		}
 		//inline vec3 GetPosition(mat4 m) const { return m.Invert().GetColumn(3); }
-		inline void SetPosition(const vec3& position) { SetColumn(3, vec4(position, 1.0f)); }
+		inline void SetPosition(const vec3& position)
+		{
+			auto mat = Transpose(Invert(mat4(*this)));
+			mat.elements[3] = position.x;
+			mat.elements[7] = position.y;
+			//mat.elements[11] = position.z;
+			//SetColumn(3, vec4(position, 1.0f));
+			mat = Invert(Transpose(mat));
+			//mat4(*this) = mat;
+			for (int i = 0; i<16 ; ++i)
+			{
+				elements[i] = mat.elements[i];
+			}
+		}
 
 		static mat4 Orthographic(float left, float right, float bottom, float top, float near, float far);
 		static mat4 Perspective(float fov, float aspectRatio, float near, float far);

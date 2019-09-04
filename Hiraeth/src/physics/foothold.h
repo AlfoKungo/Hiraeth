@@ -37,6 +37,7 @@ namespace hiraeth {
 			explicit FootHold(SRL::FootHoldData fh_data)
 				: FootHold(fh_data.p1, fh_data.p2, fh_data.direction) {}
 			~FootHold() {}
+			bool isOnFoothold(maths::vec2 pt) const;
 			bool Intersects(maths::Rectangle rec) const;
 			bool CohenSutherlandLineClipAndDraw(maths::Rectangle rec) const;
 			bool LinesIntersect(maths::vec2 lp1, maths::vec2 lp2) const;

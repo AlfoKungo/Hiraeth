@@ -19,7 +19,7 @@ namespace hiraeth {
 			graphics::Window m_Window;
 		public:
 			Editor()
-				: m_Window("Hiraeth", 1600, 900, &m_Keyboard)
+				: m_Window("Hiraeth", graphics::WINDOW_WIDTH , graphics::WINDOW_HEIGHT, &m_Keyboard)
 			{
 				
 				StaticTimer::init();
@@ -105,7 +105,8 @@ namespace hiraeth {
 				//graphics::Renderable
 				graphics::Layer<graphics::Renderable> MainLayer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false);
 				
-				MainLayer.add(new graphics::Sprite{ maths::vec2{-750,-160}, graphics::TextureManager::Load("tile_", ttd.texture_data) });
+				MainLayer.add(new graphics::Sprite{ maths::vec2{-750,110}, graphics::TextureManager::Load("tile_", ttd.texture_data) });
+				MainLayer.add(new graphics::Sprite(maths::vec2(-900, -450), new graphics::Texture("bg.png", 0)));
 				//map::MapRenderer mr;
 				map::MapLayer ml{};
 				ml.reloadData(0);
@@ -132,7 +133,8 @@ namespace hiraeth {
 				//graphics::Renderable focus_rend{ maths::vec3{0,0,0}, maths::vec2{100,100}, 0x55555555 };
 				//view::Camera::init(MainLayer.m_Renderables[0]);
 				graphics::Renderable camTarget{ maths::vec3{0}, maths::vec2{0}, 0x00000000 };
-				MapController mc{ ttd.info, &ml, &ml.m_MapData.Tiles, &m_Keyboard,
+				//MapController mc{ ttd.info, &ml, &ml.m_MapData.Tiles, &mapData, &m_Keyboard,
+				MapController mc{ ttd.info, &ml, &mapData.Tiles, &mapData, &m_Keyboard,
 					maths::vec2{float(ttd.texture_data.width), float(ttd.texture_data.height)}, &camTarget };
 				view::Camera::init(&camTarget);
 
@@ -155,6 +157,7 @@ namespace hiraeth {
 					//draw
 					MainLayer.render();
 					ml.draw();
+					mc.draw();
 
 					m_Window.update();
 					++frames;

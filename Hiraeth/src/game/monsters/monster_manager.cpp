@@ -56,6 +56,7 @@ namespace hiraeth {
 
 		void MonsterManager::addMonster(unsigned monster_id, network::MonsterStateUpdate monster_state)
 		{
+			return;
 			if (m_Monsters.find(monster_id) == m_Monsters.end())
 			{
 				const auto new_monster = new Monster{ monster_state.monster_type, monster_state.pos, m_MapLayer, monster_id };
@@ -68,6 +69,7 @@ namespace hiraeth {
 		void MonsterManager::updateMonster(unsigned monster_id, network::MonsterStateUpdate monster_state)
 		{
 			//printf("received some data (%f, %f), (%d, %d)", monster_state.pos.x, monster_state.pos.y, monster_state.left, monster_state.right);
+			return;
 			printf("received some data (%f, %f), (%d)\n", monster_state.pos.x, monster_state.pos.y, monster_state.dir);
 			if (m_Monsters.find(monster_id) == m_Monsters.end())
 			{

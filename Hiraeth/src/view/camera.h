@@ -6,21 +6,21 @@
 #include "graphics/window.h"
 #include "utils/static_timer.h"
 
-#define EDITOR
+//#define EDITOR
 namespace hiraeth {
 	namespace view {
 
-#define CAMERA_TIME_BETWEEN_MOVEMENT 0.001f
-#define CAMERA_VP_SIZE_X 1600
-#define CAMERA_VP_SIZE_X_HALF 800
-#define CAMERA_VP_SIZE_Y 900
-#define CAMERA_VP_SIZE_Y_HALF 450
+constexpr auto CAMERA_TIME_BETWEEN_MOVEMENT = 0.001f;
+constexpr auto CAMERA_VP_SIZE_X = 1600;
+constexpr auto CAMERA_VP_SIZE_X_HALF = 800;
+constexpr auto CAMERA_VP_SIZE_Y = 900;
+constexpr auto CAMERA_VP_SIZE_Y_HALF = 450;
 #ifndef EDITOR
-#define CAMERA_X_LERP_VALUE 0.040f
-#define CAMERA_Y_LERP_VALUE 0.085f
+constexpr auto CAMERA_X_LERP_VALUE = 0.040f;
+constexpr auto CAMERA_Y_LERP_VALUE = 0.085f;
 #else
-#define CAMERA_X_LERP_VALUE 1.00f
-#define CAMERA_Y_LERP_VALUE 1.05f
+constexpr auto CAMERA_X_LERP_VALUE = 1.0f;
+constexpr auto CAMERA_Y_LERP_VALUE = 1.0f;
 #endif
 
 		class Camera 
@@ -41,7 +41,7 @@ namespace hiraeth {
 			static maths::vec2 getCharacterPos();
 			static maths::vec2 mouse_to_map_position(maths::vec2 mouse_pos);
 		private:
-			static void setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t);
+			static void setNewPosition(maths::vec2 char_pos, maths::vec2 cam_pos, maths::vec2 lerp);
 
 			Camera() {}
 		};

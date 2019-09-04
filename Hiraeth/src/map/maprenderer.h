@@ -39,6 +39,7 @@ namespace hiraeth {
 		private:
 			std::vector<maths::mat4> m_TransformationStack;
 			const maths::mat4* m_TransformationBack;
+			maths::vec2 m_TexSize{  };
 		public:
 			void push(const maths::mat4& matrix, bool override = false)
 			{

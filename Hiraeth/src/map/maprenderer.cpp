@@ -14,6 +14,8 @@ namespace hiraeth {
 			GLuint result;
 			glGenTextures(1, &result);
 			glBindTexture(GL_TEXTURE_2D, result);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_TTD.texture_data.pic);
@@ -81,7 +83,8 @@ namespace hiraeth {
 			const SRL::TileUv tile_uv = m_TTD.info[type];
 			const maths::vec2& size = tile_uv.UvSize;
 			const unsigned int color = renderable->getColor();
-			const std::vector<maths::vec2>& uv = create_uv_by_pos_size(tile_uv.UvPos, tile_uv.UvSize, maths::vec2(621,328));
+			const std::vector<maths::vec2>& uv = create_uv_by_pos_size(tile_uv.UvPos, tile_uv.UvSize, 
+				m_TexSize);
 
 
 			m_Buffer->vertex = *m_TransformationBack * position;
@@ -132,7 +135,7 @@ namespace hiraeth {
 		{
 			reloadTTD(tile_index - 1);
 			update_texture();
-
+			m_TexSize = maths::vec2{ float(m_TTD.texture_data.width), float(m_TTD.texture_data.height)};
 			delete[] m_TTD.texture_data.pic;
 		}
 

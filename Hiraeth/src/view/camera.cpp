@@ -60,10 +60,21 @@ namespace hiraeth {
 			return  { mouse_pos.x + cam_position.x, (mouse_pos.y + cam_position.y) };
 		}
 
-		void Camera::setNewPosition(maths::vec2 a, maths::vec2 b, maths::vec2 t)
+		void Camera::setNewPosition(maths::vec2 char_pos, maths::vec2 cam_pos, maths::vec2 lerp)
 		{
-			maths::mat4 Translated = maths::mat4::Translate(-maths::vec2((a - b)*t).Divide(maths::vec2(CAMERA_VP_SIZE_X_HALF, CAMERA_VP_SIZE_Y_HALF)));
+			auto pos = -maths::vec2((char_pos - cam_pos)*lerp).Divide(maths::vec2(CAMERA_VP_SIZE_X_HALF, CAMERA_VP_SIZE_Y_HALF));
+			maths::mat4 Translated = maths::mat4::Translate(pos);
 			m_Ortho *= maths::mat4::Transpose(Translated);
+			maths::vec3 new_pos = m_Ortho.GetPosition();
+			m_Ortho.SetPosition(maths::vec3{ floor(new_pos.x), floor(new_pos.y), new_pos.z });
+			;
 		}
+		//void Camera::setNewPosition(maths::vec2 char_pos, maths::vec2 cam_pos, maths::vec2 lerp)
+		//{
+		//	auto pos = -maths::vec2((char_pos - cam_pos)*lerp).Divide(maths::vec2(CAMERA_VP_SIZE_X_HALF, CAMERA_VP_SIZE_Y_HALF));
+		//	//pos = maths::vec2{ round(pos.x), round(pos.y) };
+		//	maths::mat4 Translated = maths::mat4::Translate(pos);
+		//	m_Ortho *= maths::mat4::Transpose(Translated);
+		//}
 	}
 }
