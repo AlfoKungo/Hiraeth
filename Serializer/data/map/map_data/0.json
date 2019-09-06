@@ -22,14 +22,18 @@
                 "position": {
                     "x": -200.0,
                     "y": -90.0
-                }
+                },
+				"XBegin": -800.0,
+				"XEnd": 800.0
             },
             {
                 "monster_type": 2,
                 "position": {
                     "x": 200.0,
                     "y": -90.0
-                }
+                },
+				"XBegin": -800.0,
+				"XEnd": 800.0
             }
         ],
         "Npcs": [

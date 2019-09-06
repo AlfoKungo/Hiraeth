@@ -109,8 +109,8 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
 				bindFunctionToChar(MSG_INR_ROUTINE_UPDATE, &Server::RoutineUpdate);
 
-				//for (unsigned int i = 0; i < 15; ++i)
-				//	sendDropItem(addItem((i %9) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
+				for (unsigned int i = 0; i < 15; ++i)
+					sendDropItem(addItem((i %9) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
 			}
 			void main_60fps_loop();
 			void main_block_receive_and_async_send();

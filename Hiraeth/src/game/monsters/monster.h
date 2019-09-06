@@ -32,10 +32,13 @@ namespace hiraeth
 
 		public:
 			//SRL::Summon m_Summon;
-			Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id);
+			Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id,
+				float x_start, float x_end);
 
-			Monster(unsigned int monster_type, maths::vec2 position, map::MapLayer* map_layer, unsigned int mob_id) :
-				Monster(MonsterDataManager::Get(monster_type), position, map_layer, mob_id)
+			Monster(unsigned int monster_type, maths::vec2 position, map::MapLayer* map_layer, unsigned int mob_id,
+				float x_start, float x_end) :
+				Monster(MonsterDataManager::Get(monster_type), position, map_layer, mob_id,
+				 x_start,x_end)
 			{
 			}
 

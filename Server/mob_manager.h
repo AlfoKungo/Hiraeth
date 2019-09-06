@@ -72,15 +72,22 @@ namespace hiraeth {
 					return;
 				}
 				const auto mob_speed = m_MonsterTypeToData[m_MonsterIdToType[mob_index]].StatsStruct.Speed / 4;
+				const auto x_start = m_Summons[mob_index].XBegin;
+				const auto x_end = m_Summons[mob_index].XEnd;
 				const auto duration = (mmc.duration) - mmc.timer.timeRemain();
 				const auto frames_amount = (duration) * 60;
 				mmc.duration = mmc.timer.timeRemain();
-				const auto& foothold = m_Footholds[0];
-				const auto p1 = foothold.p1 + maths::vec2{ 320, 0 } +22.5f;
-				const auto p2 = foothold.p2 - maths::vec2{320, 0} - 22.5f;
-				const auto length = p2.x - p1.x;
+				const auto& foothold = m_Footholds[4];
+				//const auto p1 = foothold.p1 + maths::vec2{ 320, 0 } +22.5f;
+				//const auto p2 = foothold.p2 - maths::vec2{320, 0} - 22.5f;
+				const auto length = (x_end - x_start) * 0.6f;
+				const auto edge = (x_end - x_start) * 0.2f;
+				const auto p1 = maths::vec2{ x_start + edge, foothold.p1.y };
+				const auto p2 = maths::vec2{ x_end - edge, foothold.p1.y };
+				//const auto length = p2.x - p1.x;
 				const auto distance_walked = frames_amount * mob_speed;
 				auto rel_loc = mob.pos.x - p1.x;
+				mob.pos.y = foothold.p1.y + 10;
 				if (mmc.dir == Left)
 				{
 					rel_loc = length - rel_loc;

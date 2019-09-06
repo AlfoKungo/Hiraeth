@@ -162,7 +162,7 @@ int main()
 		if (StaticTimer::timer.elapsed() - timer > 1.0f)
 		{
 			timer += 1.0f;
-			//printf("%d fps, %f frame time\n", frames, 1.0 / frames);
+			printf("%d fps, %f frame time\n", frames, 1.0 / frames);
 			frames = 0;
 		}
 

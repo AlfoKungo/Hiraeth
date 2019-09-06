@@ -56,10 +56,11 @@ namespace hiraeth {
 
 		void MonsterManager::addMonster(unsigned monster_id, network::MonsterStateUpdate monster_state)
 		{
-			return;
 			if (m_Monsters.find(monster_id) == m_Monsters.end())
 			{
-				const auto new_monster = new Monster{ monster_state.monster_type, monster_state.pos, m_MapLayer, monster_id };
+				auto x_start = m_MapLayer->m_MapData.Summons[monster_id].XBegin, x_end = m_MapLayer->m_MapData.Summons[monster_id].XEnd;
+				const auto new_monster = new Monster{ monster_state.monster_type, monster_state.pos, m_MapLayer, monster_id ,
+				x_start, x_end};
 				m_Monsters[monster_id] = new_monster;
 				m_Layer.add(new_monster);
 			}
@@ -69,13 +70,14 @@ namespace hiraeth {
 		void MonsterManager::updateMonster(unsigned monster_id, network::MonsterStateUpdate monster_state)
 		{
 			//printf("received some data (%f, %f), (%d, %d)", monster_state.pos.x, monster_state.pos.y, monster_state.left, monster_state.right);
-			return;
 			printf("received some data (%f, %f), (%d)\n", monster_state.pos.x, monster_state.pos.y, monster_state.dir);
 			if (m_Monsters.find(monster_id) == m_Monsters.end())
 			{
 				addMonster(monster_id, monster_state);
 			}
-			m_Monsters[monster_id]->setPosition(monster_state.pos);
+			std::cout << "id is "<< monster_id << " org pos is " << m_Monsters[monster_id]->getPosition() << " new_pos is " << monster_state.pos << std::endl;
+			//m_Monsters[monster_id]->setPosition(monster_state.pos);
+			m_Monsters[monster_id]->setPosition(maths::vec2{ monster_state.pos.x ,m_Monsters[monster_id]->getPosition().y });
 			m_Monsters[monster_id]->setControls(0, monster_state.dir == network::Left);
 			m_Monsters[monster_id]->setControls(1, monster_state.dir == network::Right);
 		}

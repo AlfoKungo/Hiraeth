@@ -31,13 +31,13 @@ namespace hiraeth {
 						m_Force = set_y_by_foothold(m_Force);
 						m_Foothold = NO_FOOTHOLD;
 						m_Foothold = find_next_foothold_x(m_Force);
-						if (m_Foothold == NO_FOOTHOLD)
-						{
- 							std::cout << "deleted foothold and now is" << m_Foothold << std::endl;
+						//if (m_Foothold == NO_FOOTHOLD)
+						//{
+ 							//std::cout << "deleted foothold and now is" << m_Foothold << std::endl;
 							//m_Foothold = m_LastFoothold;
 							//m_Force = set_y_by_foothold(m_Force);
 							//m_Foothold = find_next_foothold_x(m_Force);
-						}
+						//}
 					}
 					//else
 					if (m_Foothold != NO_FOOTHOLD)
@@ -47,7 +47,7 @@ namespace hiraeth {
 					auto temp = checkIfNewFoothold(m_Force);
 					if (temp != m_Foothold && temp != NO_FOOTHOLD)
 					{
-						std::cout << "found next foothold old=" << m_Foothold << " new=" << temp << "and force="<<m_Force <<" mid="<< m_Box.GetBottomMiddle() << std::endl;
+						//std::cout << "found next foothold old=" << m_Foothold << " new=" << temp << "and force="<<m_Force <<" mid="<< m_Box.GetBottomMiddle() << std::endl;
 						m_Foothold = temp;
 						m_Force = set_y_by_foothold(m_Force);
 					}
@@ -168,12 +168,12 @@ namespace hiraeth {
 			}
 			if (!save_vec.empty())
 			{
-				std::cout << "size of list is " << save_vec.size() << std::endl;
+				//std::cout << "size of list is " << save_vec.size() << std::endl;
 				float  min_y = save_vec[0].rec_force.y;
 				int  min_id = save_vec[0].id;
 				for (const auto& dat : save_vec)
 				{
-				std::cout << "my data is " << dat.id << " and " << dat.rec_force << std::endl;
+				//std::cout << "my data is " << dat.id << " and " << dat.rec_force << std::endl;
 					if (dat.rec_force.y > min_y)
 						min_id = dat.id;
 				}

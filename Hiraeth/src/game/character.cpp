@@ -294,8 +294,10 @@ namespace hiraeth {
 
 			if (skill_lvl == 0)
 				return;
-			if (m_Animation)
+			if (m_StanceState == StcAttack)
 				return;
+			//if (m_Animation)
+			//	return;
 			if (m_SkillsTimeouts.find(skill_id) != m_SkillsTimeouts.end()) // check for skill's timeout
 				return; // Skill's criterions not met
 			if (skill_properties->find(SRL::SkillDataType::mpCon) != skill_properties->end())

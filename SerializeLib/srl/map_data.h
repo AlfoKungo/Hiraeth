@@ -46,10 +46,12 @@ namespace SRL {
 	{
 		unsigned int monster_type;
 		vec2 position;
+		float XBegin{}, XEnd{};
 		template<class Archive>
 		void serialize(Archive& ar)
 		{
-			ar(CEREAL_NVP(monster_type), CEREAL_NVP(position));
+			ar(CEREAL_NVP(monster_type), CEREAL_NVP(position),
+				CEREAL_NVP(XBegin), CEREAL_NVP(XEnd));
 		}
 	};
 

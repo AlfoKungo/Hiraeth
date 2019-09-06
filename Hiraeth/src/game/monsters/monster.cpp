@@ -3,15 +3,16 @@
 namespace hiraeth {
 	namespace game {
 
-		Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id)
+		Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id,
+				float x_start, float x_end)
 			: Creature(maths::Rectangle(position, maths::vec2(50, 50)), mapLayer,
 				//new MonsterStats(monster_data.StatsStruct), false),
 				//&m_MonsterStats, false),
 				monster_data.StatsStruct.Speed / 4, monster_data.StatsStruct.Jump,
 				&m_MonsterStats, false),
 			m_Hp(maths::vec2(10, 40), 30, 6, 0xff0000ff),
-			m_XStart(NULL),
-			m_XEnd(NULL),
+			m_XStart(x_start),
+			m_XEnd(x_end),
 			m_MonsterStats{ monster_data.StatsStruct },
 			m_StatsStruct{ &m_MonsterStats.m_Stats },
 			m_Id{ mob_id }
@@ -42,24 +43,28 @@ namespace hiraeth {
 			if (m_Foothold != NO_FOOTHOLD)
 			{
 				//const physics::FootHold& foothold = m_MapLayer->getFootHolds().at(m_Foothold);
-				physics::FootHold foothold{ m_MapLayer->getFootHolds().at(m_Foothold) };
-				foothold.p1 += 22.5f;
-				foothold.p2 -= 22.5f;
-				if (m_XStart == NULL && m_XEnd == NULL)
+				//physics::FootHold foothold{ m_MapLayer->getFootHolds().at(m_Foothold) };
+				//foothold.p1 += 22.5f;
+				//foothold.p2 -= 22.5f;
+				//if (m_XStart == NULL && m_XEnd == NULL)
+				//{
+				//	m_XStart = -800;
+				//	m_XEnd = 800;
+				//	//m_XStart = foothold.getXStart();
+				//	//m_XEnd = foothold.getXEnd();
+				//}
+				//const float&& edge_length = (foothold.p2.x - foothold.p1.x) * 0.2;
+				const float edge_length = (m_XEnd - m_XStart) * 0.2f;
+				//if (m_Bounds.x < (m_XStart + edge_length))
+				if (m_Bounds.x < (m_XStart + edge_length))
 				{
-					m_XStart = foothold.getXStart();
-					m_XEnd = foothold.getXEnd();
-				}
-				const float&& edge_length = (foothold.p2.x - foothold.p1.x) * 0.2;
-				if (m_Bounds.x < (foothold.p1.x + edge_length))
-				{
-					move({ ((foothold.p1.x + edge_length) - m_Bounds.x) * 2, 0 });
+					//move({ ((m_XStart + edge_length) - m_Bounds.x) * 2, 0 });
 					m_Controls.left = false;
 					m_Controls.right = true;
 				}
-				if (m_Bounds.x > (foothold.p2.x - edge_length))
+				if (m_Bounds.x > (m_XEnd - edge_length))
 				{
-					move({ -(m_Bounds.x - (foothold.p2.x - edge_length)) * 2 , 0 });
+					//move({ -(m_Bounds.x - (m_XEnd - edge_length)) * 2 , 0 });
 					m_Controls.left = true;
 					m_Controls.right = false;
 				}
