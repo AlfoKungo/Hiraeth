@@ -4,7 +4,7 @@ namespace hiraeth {
 	namespace game {
 
 		Monster::Monster(const SRL::MonsterData& monster_data, maths::vec2 position, map::MapLayer* mapLayer, unsigned int mob_id,
-				float x_start, float x_end)
+			float x_start, float x_end)
 			: Creature(maths::Rectangle(position, maths::vec2(50, 50)), mapLayer,
 				//new MonsterStats(monster_data.StatsStruct), false),
 				//&m_MonsterStats, false),
@@ -113,6 +113,13 @@ namespace hiraeth {
 		void Monster::setHitAnimation(std::unique_ptr<graphics::SpritedRenderable> hit_animation)
 		{
 			m_Animations.add(std::move(hit_animation));
+		}
+		void Monster::setStrikeAnimation(std::string skill_name,
+			const SRL::FullAnimationData& hit_animation)
+		{
+			m_Animations.add(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0,0 },
+				skill_name + "_hit", hit_animation, true));
+
 		}
 		void Monster::setProjectileAnimation(std::unique_ptr<skills::TargetedProjectile> projectile_animation)
 		{

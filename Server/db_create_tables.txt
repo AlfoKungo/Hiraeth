@@ -1,0 +1,10 @@
+DROP TABLE accounts;
+DROP TABLE players;
+DROP TABLE equips;
+\i db_create_players.txt
+\i db_create_accounts.txt
+\i db_create_equips.txt
+
+SELECT * FROM accounts ORDER BY id;
+SELECT * FROM players ORDER BY id;
+SELECT * FROM equips ORDER BY id;

@@ -56,5 +56,16 @@ namespace Checks
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
 		}
+		{
+			SRL::EquipItemInfo info{
+				{
+					{SRL::EquipItemDataType::DexInc, 15},
+				},
+				{"Zakum Hat", SRL::Equip, "Gives Swag"},
+				SRL::EquipItemType::Hat};
+			std::ofstream data_file("data/" + SRL_TYPE + "/4/data.json", std::ios::out);
+			cereal::JSONOutputArchive arout(data_file);
+			arout(CEREAL_NVP(info));
+		}
 	}
 }

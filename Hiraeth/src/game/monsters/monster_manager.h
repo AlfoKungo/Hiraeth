@@ -28,11 +28,11 @@ namespace hiraeth
 			graphics::Shader m_Shader;
 			std::map<unsigned int, Monster*> m_Monsters;
 			graphics::Layer<Monster> m_Layer;
-			item::ItemManager* m_ItemManager;
+			//item::ItemManager* m_ItemManager;
 			//Character* const m_Char;
 		public:
 			//MonsterManager(map::MapLayer* map_layer, Character* character, item::ItemManager* item_manager);
-			MonsterManager(map::MapLayer* map_layer, item::ItemManager* item_manager);
+			MonsterManager(map::MapLayer* map_layer);
 			void draw() const;
 			void update() override;
 			//void addMonster(unsigned int monster_id, unsigned int summon_index);

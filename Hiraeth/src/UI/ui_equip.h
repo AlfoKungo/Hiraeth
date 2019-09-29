@@ -26,9 +26,13 @@ namespace hiraeth {
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override;
 			void fillGroup();
 			void StatsUpdated();
+			item::EquipItem* getEquip(SRL::EquipItemType equip_type)
+			{
+				return m_Equips[equip_type];
+			}
 			item::EquipItem* addEquip(item::EquipItem * equip_item)
 			{
-				equip_item->m_State = item::Item::InInventory;
+				//equip_item->m_State = item::Item::InInventory;
 				const SRL::EquipItemType item_type = equip_item->getItemType();
 				item::EquipItem * old_item = nullptr;
 				if (m_Equips.find(item_type) != m_Equips.end())
@@ -59,6 +63,7 @@ namespace hiraeth {
 				}
 				return return_item;
 			}
+			std::map<SRL::EquipItemType, item::EquipItem*>& getEquips(){ return m_Equips; }
 		};
 
 	}

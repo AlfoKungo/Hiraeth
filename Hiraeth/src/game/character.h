@@ -36,43 +36,38 @@ namespace hiraeth {
 			input::Keyboard* m_Kb;
 			std::map<unsigned int, Monster*>* m_Monsters;
 			item::ItemManager* m_ItemManager;
+			ui::UiEquip* m_UiEquip;
+			ui::UiManager* m_UiManager;
 			skills::SkillManager* m_SkillManager;
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
-			CharacterStats * m_CharacterStats;
+			CharacterStats* m_CharacterStats;
 			graphics::TGroup<graphics::SpritedRenderable> m_Animations;
 			std::unique_ptr<graphics::SpritedRenderable> m_Animation;
 			graphics::TGroup<skills::TargetedProjectile> m_ProjectileAnimations;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
+			//graphics::Sprite* m_Hat;
+			//graphics::TGroup<graphics::Sprite> m_EquipsGroup;
+			//std::map<SRL::EquipItemType,  graphics::Sprite> m_Equips;
 			//std::map<unsigned int, std::vector<std::pair<SRL::SkillDataType, int>>> m_AttackModifiers;
 			std::map<unsigned int, std::vector<std::tuple<SRL::SkillDataType, int>>> m_ComplexEffects;
 
 			bool m_IsStuck{ false };
 		public:
-			network::ClientHandler * m_ClientHandler;
+			network::ClientHandler* m_ClientHandler;
 
 		public:
-			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer,
-				item::ItemManager *item_manager, skills::SkillManager *skill_manager,
-				CharacterStats * character_stats, std::map<unsigned int, Monster*>* monsters, 
-				network::ClientHandler * client_handler);
+			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer* map_layer,
+				ui::UiEquip* ui_equip,ui::UiManager * ui_manager,
+				item::ItemManager* item_manager, skills::SkillManager* skill_manager,
+				CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters,
+				network::ClientHandler* client_handler);
 			~Character();
 
 			void update() override;
 			void checkMobsCollision();
-			void draw(graphics::Renderer* renderer) const override
-			{
-				Creature::draw(renderer);
-				m_Animations.draw(renderer);
-				if (m_Animation)
-				{
-					renderer->push(m_TransformationMatrix);
-					m_Animation->draw(renderer);
-					renderer->pop();
-				}
-				m_ProjectileAnimations.draw(renderer);
-			}
+			void draw(graphics::Renderer* renderer) const override;
 
 			void ButtonClicked(input::Key control) override;
 			void ButtonReleased(input::Key control) override;
@@ -85,6 +80,8 @@ namespace hiraeth {
 			maths::vec2 getForce() const { return m_Force; }
 			network::Direction getDirection() const { return static_cast<network::Direction>(m_Direction); }
 			void attackMonster(Creature* attacked, Damage d) override;
+			void wearItem(SRL::EquipItemType item_type, unsigned int item_loc);
+			void unWearItem(SRL::EquipItemType item_type);
 			//void updateComplexSkills();
 			//CharacterStats* getCharacterStats() const;
 		private:
@@ -93,10 +90,13 @@ namespace hiraeth {
 			void pickItemUp();
 			int getValueFromString(std::string str, unsigned int val);
 			int getInt(SRL::SkillPropertiesVar val, unsigned int skill_lvl);
-			void activateSkill(unsigned int skill_index);
-			void activateTeleport(SRL::SkillPropertiesMap * skill_properties, unsigned int skill_lvl);
+			void activateSkill(unsigned int skill_id);
+			void activateTeleport(SRL::SkillPropertiesMap* skill_properties, unsigned int skill_lvl);
+			std::vector<std::pair<float, Monster*>> findMonstersInRange(maths::vec2 atk_range) const;
+			std::vector<network::MonsterHit> activateAttackSkill(SRL::FullAnimationData hit_animation_data,
+				int range, const std::string& skill_name);
 			std::vector<network::MonsterHit> activateProjSkill(SRL::FullAnimationData hit_animation_data,
-				SRL::FullAnimationData ball_animation_data, 
+				const SRL::FullAnimationData& ball_animation_data,
 				int range, const std::string& skill_name);
 			//void activateAttackSkill(SRL::FullAnimationData hit_animation_data,
 			//	SRL::FullAnimationData ball_animation_data, const std::string& skill_name);

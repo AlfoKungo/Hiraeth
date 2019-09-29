@@ -7,7 +7,6 @@
 
 //#include <WinDef.h>
 //#include <WinGDI.h>
-//#include <GL/gl.h>
 
 namespace hiraeth {
 

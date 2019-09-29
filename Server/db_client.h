@@ -8,7 +8,15 @@ namespace hiraeth {
 	namespace network {
 		class DbClient
 		{
-
+			const char* STATS_ALLOC = "stats_alloc";
+			const char* SKILLS_ALLOC = "skills_alloc";
+			const char* INV_EQUIP = "inv_equip";
+			const char* INV_USE = "inv_use";
+			const char* INV_SETUP = "inv_setup";
+			const char* INV_ETC = "inv_etc";
+			const char* INV_CASH = "inv_cash";
+			//const std::string EQUIP_CHAR = "equips_char";
+			const char* EQUIP_CHAR = "equips_char";
 			//int nFields{ 0 };
 			PGconn *m_Conn;
 			PGresult   *m_Res;
@@ -118,14 +126,19 @@ namespace hiraeth {
 					hp = getInt("hp"),
 					max_mp = getInt("max_mp"),
 					mp = getInt("mp");
-				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>("stats_alloc");
-					//auto stats_alloc = getDynamicType<std::vector<unsigned int>>(PQfnumber(m_Res, "stats_alloc")),
-				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>("skills_alloc");
+				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>(STATS_ALLOC);
+				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>(SKILLS_ALLOC);
+				const auto inv_equip = getDynamicTypeFromBuffer<decltype(PlayerData::inv_equip)>(INV_EQUIP);
+				const auto inv_use = getDynamicTypeFromBuffer<decltype(PlayerData::inv_use)>(INV_USE);
+				const auto inv_setup = getDynamicTypeFromBuffer<decltype(PlayerData::inv_setup)>(INV_SETUP);
+				const auto inv_etc = getDynamicTypeFromBuffer<decltype(PlayerData::inv_etc)>(INV_ETC);
+				const auto inv_cash = getDynamicTypeFromBuffer<decltype(PlayerData::inv_cash)>(INV_CASH);
+				const auto equips_char = getDynamicTypeFromBuffer<decltype(PlayerData::equips_char)>(EQUIP_CHAR);
 				std::string player_name{ getString("name") };
 
 				PQclear(m_Res);
-				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp, hp, max_mp, mp}, 
-					stats_alloc, skills_alloc };
+				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp, hp, max_mp, mp},
+					stats_alloc, skills_alloc , inv_equip, inv_use, inv_setup, inv_etc, inv_cash, equips_char};
 				return player_data;
 			}
 
@@ -151,7 +164,7 @@ namespace hiraeth {
 					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
 					PQclear(m_Res);
 				}
-				auto dt = getDynamicTypeFromBuffer<T>("skills_alloc");
+				auto dt = getDynamicTypeFromBuffer<T>(field.c_str());
 				PQclear(m_Res);
 				return std::move(dt);
 				//return dt;
@@ -170,14 +183,14 @@ namespace hiraeth {
 				PQclear(m_Res);
 			}
 			template <class T>
-			void setByteArray(unsigned int player_id, std::string field, const T& object)
+			void setByteArray(unsigned int player_id, std::string field, const T& object, std::string table_name = "players")
 			{
 				auto[buffer, size] = srl_dynamic_type(object);
 				//std::string ref_data{ *buffer, unsigned int(size) };
 				std::string ref_data{ *buffer, (unsigned int)(size) };
 				const std::string data{ hexStr(*buffer, size) };
-				std::string command = "UPDATE players SET " + field + " = E'\\\\x"
-					+ data + "' WHERE id = " + std::to_string(player_id);
+				std::string command = "UPDATE " + table_name + " SET " + field +
+					" = E'\\\\x" + data + "' WHERE id = " + std::to_string(player_id);
 				std::cout << command << std::endl;
 				m_Res = PQexec(m_Conn, command.c_str());
 				if (PQresultStatus(m_Res) != PGRES_COMMAND_OK)
@@ -210,10 +223,97 @@ namespace hiraeth {
 				}
 				PQclear(m_Res);
 			}
+			
+			template <class T>
+			unsigned int findAvailableLoc(std::map<unsigned int, T> m) const
+			{
+				unsigned int val = 0;
+				for (const auto& [key, d] : m)
+				{
+					if (key != val)
+						break;
+					val++;
+				}
+				return val;
+			}
+
+			unsigned int addItem(unsigned int tab_index, unsigned int player_id, unsigned int item_id)
+			{
+				std::map<unsigned int, const char*> tabs_map{ {USE_ITEM, INV_USE},
+					{SETUP_ITEM, INV_SETUP},{ETC_ITEM, INV_ETC},{CASH_ITEM, INV_CASH} };
+				const char* inv_name = tabs_map[tab_index];
+				auto items = getDynamicType<decltype(PlayerData::inv_use)>(player_id, inv_name);
+				unsigned int item_loc = 0;
+				bool found = false;
+				for (auto& [key, alloc] : items)
+				{
+					if (alloc.item_type_id == item_id)
+					{
+						alloc.item_amount += 1;
+						item_loc = key;
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					item_loc = findAvailableLoc(items);
+					items.insert({ item_loc, { item_id , 1} });
+				}
+				setByteArray(player_id, INV_USE, items);
+				return item_loc;
+			}
+
+			unsigned int addEquipInv(unsigned int player_id, unsigned int equip_loc)
+			{
+				auto inv_equip = getDynamicType<decltype(PlayerData::inv_equip)>(player_id, INV_EQUIP);
+				const auto item_loc = findAvailableLoc(inv_equip);
+				//inv_equip[item_loc] = equip_loc;
+				inv_equip[item_loc] = equip_loc;
+				setByteArray(player_id, INV_EQUIP, inv_equip);
+				return item_loc;
+			}
+
+			void wearEquip(unsigned int player_id,SRL::EquipItemType equip_type, unsigned int equip_loc)
+			{
+				auto equips_inv = getDynamicType<decltype(PlayerData::inv_equip)>(player_id, INV_EQUIP);
+				auto equips_char = getDynamicType<decltype(PlayerData::equips_char)>(player_id, EQUIP_CHAR);
+				unsigned int old_equip = 0;
+				bool is_old_equip{ false };
+				if (equips_char.find(equip_type) != equips_char.end())
+				{
+					old_equip = equips_char[equip_type];
+					is_old_equip = true;
+				}
+				equips_char[equip_type] = equips_inv[equip_loc];
+				equips_inv.erase(equip_loc);
+				if (is_old_equip)
+					equips_inv[equip_loc] = old_equip;
+				setByteArray(player_id, INV_EQUIP, equips_inv);
+				setByteArray(player_id, EQUIP_CHAR, equips_char);
+			}
+
+			void switchInventoryItems(unsigned int player_id, unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index)
+			{
+				auto inv_equip = getDynamicType<decltype(PlayerData::inv_equip)>(player_id, INV_EQUIP);
+				auto item2 = inv_equip.find(item_loc2);
+				if (item2 != inv_equip.end())
+				{
+					auto item1 = inv_equip.find(item_loc1);
+					std::swap(item1->second, item2->second);
+				}
+				else
+				{
+					auto nh = inv_equip.extract(item_loc1);
+					nh.key() = item_loc2;
+					inv_equip.insert(move(nh));
+				}
+				setByteArray(player_id, INV_EQUIP, inv_equip);
+			}
 
 			void increaseSkillPoints(unsigned int player_id, unsigned int skill_id)
 			{
-				auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>(player_id, "skills_alloc");
+				auto skills_alloc = getDynamicType<decltype(PlayerData::skills_alloc)>(player_id, SKILLS_ALLOC);
 				for (auto& alloc : skills_alloc)
 				{
 					if (alloc.skill_id == skill_id)
@@ -221,7 +321,7 @@ namespace hiraeth {
 					if (alloc.skill_id == 666)
 						alloc.pts_alloc -= 1;
 				}
-				setByteArray(player_id, "skills_alloc", skills_alloc);
+				setByteArray(player_id, SKILLS_ALLOC, skills_alloc);
 			}
 
 		private:

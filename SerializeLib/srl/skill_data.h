@@ -21,6 +21,7 @@ namespace SRL
 		actTime, // activation time in mili-seconds
 		timeOut, // in seconds
 		duration,
+		mob_amt, // amount of mobs attacked
 		// -- TimedValue -- DELETE THIS
 		speed, // enhance speed
 		jump, // enhance speed
@@ -79,7 +80,7 @@ namespace SRL
 		active_move,
 		passive_s,
 		passive_effect,
-		passive_togle, 
+		passive_toggle, 
 	};
 
 	enum SkillAnimationTypes
@@ -97,7 +98,6 @@ namespace SRL
 	{
 		SkillPropertiesMap skill_properties;
 		std::string name;
-		//bool is_active{true};
 		unsigned int max_level{1};
 		SkillType skill_type{};
 		template<class A> void serialize(A& ar) {

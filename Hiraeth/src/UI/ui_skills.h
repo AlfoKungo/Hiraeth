@@ -32,7 +32,9 @@ namespace hiraeth {
 		class UiSkills : public UiWindow
 		{
 		private:
-			UiTabs<skills::SkillIcon> * m_Tabs;
+			//UiTabs<skills::SkillIcon> * m_Tabs;
+			//UiTabs<skills::SkillIcon> m_Tabs;
+			UiTabs<UiTab<skills::SkillIcon>> m_Tabs;
 			unsigned int m_SkillPts{6};
 			graphics::Label m_SkillPtsLabel;
 			UiKeyConfig * m_UiKeyConfig;
@@ -48,7 +50,7 @@ namespace hiraeth {
 			std::tuple<SRL::SkillInfo*, SRL::AnimationMap*> add_skill(unsigned int skill_id, unsigned tab)
 			{
 				const SRL::SkillData skill_data = SRL::deserial<SRL::SkillData>("skills", skill_id);
-				UiTab<skills::SkillIcon> * rel_tab = m_Tabs->getTabByIndex(tab);
+				UiTab<skills::SkillIcon> * rel_tab = m_Tabs.getTabByIndex(tab);
 				skills::SkillIcon * skill = new skills::SkillIcon{ skill_id, {11, 172 - float(36 * rel_tab->m_TabContent->m_Renderables.size())} };
 				rel_tab->add_data(skill);
 				return std::make_tuple(skill->get_skill_info(), skill->get_animation_data());
@@ -56,7 +58,7 @@ namespace hiraeth {
 			void transferSkillToKeyConfig(input::KeyCode key_code, unsigned int key, unsigned int skill_index, input::KeyboardEvent * keyboard_event);
 			unsigned int getSkillAlloc(unsigned int skill_id)
 			{
-				return (*m_Tabs->getTabByIndex(0)->m_TabContent->m_Renderables[skill_id]).getSkillLvl();
+				return (*m_Tabs.getTabByIndex(0)->m_TabContent->m_Renderables[skill_id]).getSkillLvl();
 			}
 			void setSkillPoints(unsigned int skill_id, unsigned int alloc)
 			{
@@ -68,7 +70,7 @@ namespace hiraeth {
 				else
 					for (int i = 0; i < 5; ++i)
 					{
-						for (const auto& skill_icon : m_Tabs->getTabByIndex(i)->m_TabContent->m_Renderables)
+						for (const auto& skill_icon : m_Tabs.getTabByIndex(i)->m_TabContent->m_Renderables)
 							if (skill_icon->getSkillId() == skill_id)
 							{
 								(*skill_icon).set_level(alloc);
@@ -82,7 +84,7 @@ namespace hiraeth {
 			{
 					for (int i = 0; i < 5; ++i)
 					{
-						for (auto& skill_icon : m_Tabs->getTabByIndex(i)->m_TabContent->m_Renderables)
+						for (auto& skill_icon : m_Tabs.getTabByIndex(i)->m_TabContent->m_Renderables)
 							if (skill_icon->getSkillId() == skill_id)
 							{
 								return skill_icon.get();

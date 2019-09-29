@@ -1,25 +1,29 @@
 #pragma once
-#include "item.h"
+//#include "item.h"
 
 
 namespace hiraeth {
 	namespace item {
 
-		class UseItem : public Item
+		class UseItem : public ItemHold
 		{
 		private:
 			SRL::ItemPropertiesMap m_PropertiesMap;
+			unsigned int m_Amount{ 0 };
 		public:
-			UseItem(maths::vec2 pos, SRL::UseItemData item_data, const std::vector<physics::FootHold>& foot_holds,
-				unsigned int item_id)
-				: Item(pos, item_data.info.basic_item_info, item_data.texture_data, foot_holds, item_id),
-				m_PropertiesMap(item_data.info.item_properties)
+			UseItem(unsigned int item_type_id, SRL::UseItemData item_data,
+				unsigned int amount)
+				: ItemHold(item_type_id, item_data.info.basic_item_info,
+					item_data.texture_data),
+				//item_data.texture_data, foot_holds, item_id),
+				m_PropertiesMap(item_data.info.item_properties),
+				m_Amount(amount)
 			{
 			}
 			
 			void update() override
 			{
-				Item::update();
+				ItemHold::update();
 			}
 
 			SRL::ItemPropertiesMap * getItemProperties() { return &m_PropertiesMap; }

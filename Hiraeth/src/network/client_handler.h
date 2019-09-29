@@ -15,6 +15,7 @@
 #include "game/net_chars/net_char_manager.h"
 #include "game/monsters/monster_manager.h"
 #include "net/srl_funcs.h"
+#include "UI/ui_manager.h"
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
  
@@ -40,6 +41,7 @@ namespace hiraeth {
 			ATimer m_KATimer{ KA_TIMEOUT }, m_KALossTimer{ KA_LOSS_TIMEOUT };
 			PlayerData m_PlayerData;
 
+			ui::UiManager * m_UiManager;
 			game::NetCharManager * m_NetCharManager;
 			game::MonsterManager * m_MonsterManager;
 			item::ItemManager * m_ItemManager;
@@ -48,7 +50,8 @@ namespace hiraeth {
 			RegularMapUpdate m_PlayersLocationStruct;
 			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 		public:
-			ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
+			ClientHandler(ui::UiManager * ui_manager, game::NetCharManager * net_char_manager, 
+				game::MonsterManager * monster_manager,
 				item::ItemManager * item_manager, skills::SkillManager * skill_manager);
 
 			~ClientHandler();
@@ -88,6 +91,7 @@ namespace hiraeth {
 			void recvDropItem();
 			void recvDroppedItem();
 			void recvExpireItem();
+			void recvAddItem();
 			void recvIncreaseSkill();
 		public:
 			//void sendAttackPacket(MonsterDamage monster_damage);
@@ -99,7 +103,9 @@ namespace hiraeth {
 			void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp);
 			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit);
 			void sendPickItem(unsigned int item_id);
-			void sendIncreaseSkill(unsigned int skill_id);
+			auto sendIncreaseSkill(unsigned int skill_id) -> void;
+			void sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc);
+			void switchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index);
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

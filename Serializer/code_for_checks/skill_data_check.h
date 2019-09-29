@@ -94,7 +94,7 @@ namespace Checks
 			SRL::SkillInfo info{
 				{
 					{SRL::SkillDataType::atk_by_mhealth, "x"},
-				}, "Battle Rage", 10, SRL::active_move };
+				}, "Battle Rage", 10, SRL::passive_effect };
 			std::ofstream data_file("data/" + SRL_TYPE + "/7/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
@@ -104,6 +104,7 @@ namespace Checks
 				{
 					{SRL::SkillDataType::mpCon, "15 - x"},
 					{SRL::SkillDataType::dmg, "130 + 12*x"},
+					{SRL::SkillDataType::mob_amt, 2},
 				}, "Power Swing", 10, SRL::active_attack_swing };
 			std::ofstream data_file("data/" + SRL_TYPE + "/8/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);

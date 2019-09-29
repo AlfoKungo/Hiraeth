@@ -13,6 +13,8 @@ namespace hiraeth {
 			init_all_windows(kb, m_MainUi.getCharacterStats());
 			kb->registerToMouse(this);
 			kb->registerToKey(GLFW_KEY_ESCAPE, escape, this);
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->createEvent<SRL::EquipItemType, unsigned int>(ItemWore);
 		}
 		void UiManager::draw() const
 		{
@@ -92,20 +94,27 @@ namespace hiraeth {
 				{
 					auto equip_to_move_to_inventory = m_UiEquip->unEquip((*result_window)->getRelativeLocation(mx, my));
 					if (equip_to_move_to_inventory != nullptr)
+					{
 						m_UiInventory->addItem(equip_to_move_to_inventory);
+						EventManager *m_EventManager = EventManager::Instance();
+						m_EventManager->execute<SRL::EquipItemType>(ItemUnWore, equip_to_move_to_inventory->getItemType());
+					}
 					std::rotate(m_Windows.begin(), result_window, result_window + 1);
 					break;
 				}
 				case (UiKey::inventory):
 				{
 					//auto equip_to_wear = m_UiInventory->getEquipItem((*result_window)->getRelativeLocation(mx, my));
-					auto equip_to_wear = m_UiInventory->itemClickedOn((*result_window)->getRelativeLocation(mx, my));
+					auto [index, equip_to_wear] = m_UiInventory->itemClickedOn((*result_window)->getRelativeLocation(mx, my));
 					if (equip_to_wear != nullptr)
 					{
-						maths::vec2 old_item_pos = equip_to_wear->getPosition();
+						//maths::vec2 old_item_pos = equip_to_wear->getPosition();
 						auto equip_to_return_to_inventory = m_UiEquip->addEquip(equip_to_wear);
+						EventManager *m_EventManager = EventManager::Instance();
+						m_EventManager->execute<SRL::EquipItemType>(ItemWore, equip_to_wear->getItemType(), index);
 						if (equip_to_return_to_inventory != nullptr)
-							m_UiInventory->addItem(equip_to_return_to_inventory, old_item_pos);
+							//m_UiInventory->addItem(equip_to_return_to_inventory, old_item_pos);
+							m_UiInventory->addItem(index,equip_to_return_to_inventory );
 					}
 					std::rotate(m_Windows.begin(), result_window, result_window + 1);
 					break;

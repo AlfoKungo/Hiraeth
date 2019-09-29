@@ -3,11 +3,11 @@
 namespace hiraeth {
 	namespace game {
 
-		MonsterManager::MonsterManager(map::MapLayer* map_layer, item::ItemManager* item_manager)
+		MonsterManager::MonsterManager(map::MapLayer* map_layer)
 			: m_MapLayer(map_layer),
 			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
-			m_Layer(&m_Shader, true),
-			m_ItemManager(item_manager)
+			m_Layer(&m_Shader, true)
+			//m_ItemManager(item_manager)
 			//m_Char(character)
 		{
 			EventManager *m_EventManager = EventManager::Instance();

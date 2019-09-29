@@ -178,6 +178,7 @@
     <ClCompile Include="src\basic\EventManager.cpp" />
     <ClCompile Include="src\character\character_arm.cpp" />
     <ClCompile Include="src\character\character_body.cpp" />
+    <ClCompile Include="src\editor\map_controller.cpp" />
     <ClCompile Include="src\game\base_creature.cpp" />
     <ClCompile Include="src\game\character.cpp" />
     <ClCompile Include="src\game\character_stats.cpp" />
@@ -204,6 +205,8 @@
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\item\item.cpp" />
     <ClCompile Include="src\item\item_data_manager.cpp" />
+    <ClCompile Include="src\item\item_drop.cpp" />
+    <ClCompile Include="src\item\item_hoid.cpp" />
     <ClCompile Include="src\item\item_manager.cpp" />
     <ClCompile Include="src\keyboard\key.cpp" />
     <ClCompile Include="src\keyboard\keyboard.cpp" />
@@ -281,6 +284,7 @@
     <ClInclude Include="src\game\stats\timed_stat.h" />
     <ClInclude Include="src\game\straight_projectile.h" />
     <ClInclude Include="src\game\targeted_projectile.h" />
+    <ClInclude Include="src\graphics\layers\mt_group.h" />
     <ClInclude Include="src\graphics\layers\t_group.h" />
     <ClInclude Include="src\graphics\percented_sprite.h" />
     <ClInclude Include="src\graphics\renderer.h" />
@@ -303,6 +307,8 @@
     <ClInclude Include="src\item\equip_item.h" />
     <ClInclude Include="src\item\item.h" />
     <ClInclude Include="src\item\item_data_manager.h" />
+    <ClInclude Include="src\item\item_drop.h" />
+    <ClInclude Include="src\item\item_hold.h" />
     <ClInclude Include="src\item\item_manager.h" />
     <ClInclude Include="src\item\use_item.h" />
     <ClInclude Include="src\keyboard\key.h" />
@@ -333,6 +339,7 @@
     <ClInclude Include="src\UI\ui_basic\ui_button_side_menu.h" />
     <ClInclude Include="src\UI\ui_basic\ui_tab.h" />
     <ClInclude Include="src\UI\ui_basic\ui_tabs.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_tab_inventory.h" />
     <ClInclude Include="src\UI\ui_equip.h" />
     <ClInclude Include="src\UI\ui_inventory.h" />
     <ClInclude Include="src\UI\ui_keyconfig.h" />

@@ -1,4 +1,5 @@
 #include "character.h"
+#include <utility>
 #include "projectile.h"
 #include "targeted_projectile.h"
 #include "straight_projectile.h"
@@ -7,13 +8,16 @@
 namespace hiraeth {
 	namespace game {
 
-		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer *map_layer,
-			item::ItemManager *item_manager, skills::SkillManager *skill_manager,
-			CharacterStats * character_stats, std::map<unsigned int, Monster*>* monsters,
-			network::ClientHandler * client_handler)
+		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer* map_layer,
+			ui::UiEquip* ui_equip, ui::UiManager * ui_manager,
+			item::ItemManager* item_manager, skills::SkillManager* skill_manager,
+			CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters,
+			network::ClientHandler* client_handler)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
 			m_Kb(kb),
 			m_ItemManager(item_manager),
+			m_UiEquip(ui_equip),
+			m_UiManager(ui_manager),
 			m_Monsters(monsters),
 			m_SkillManager(skill_manager),
 			m_CharacterStats(character_stats),
@@ -27,6 +31,12 @@ namespace hiraeth {
 			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), getBounds().width,
 				getBounds().height, 0x60ff4500 };
 
+			for (auto [key, d] : ui_equip->getEquips())
+				wearItem(key, 0);
+			
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->subscribe(ItemWore, this, &Character::wearItem);
+			m_EventManager->subscribe(ItemUnWore, this, &Character::unWearItem);
 			registerKeys();
 		}
 
@@ -106,6 +116,26 @@ namespace hiraeth {
 				}
 		}
 
+		void Character::draw(graphics::Renderer* renderer) const
+		{
+			Creature::draw(renderer);
+			m_Animations.draw(renderer);
+			//renderer->push(m_TransformationMatrix);
+			if (m_Direction == Left)
+				renderer->push(m_TransformationMatrix * maths::mat4::Translate(-maths::vec3(m_Org)));
+			else
+				renderer->push(m_TransformationMatrix * maths::mat4::Translate(maths::vec3(m_Org)) * 
+					maths::mat4::Scale(maths::vec3(-1, 1, 1)) * maths::mat4::Translate(- maths::vec3(2 * m_Org)));
+			if (m_Animation)
+			{
+				m_Animation->draw(renderer);
+			}
+			//for (auto [f, s] : m_Equips)
+			//	s.draw(renderer);
+			renderer->pop();
+			m_ProjectileAnimations.draw(renderer);
+		}
+
 		void Character::ButtonReleased(input::Key control)
 		{
 			ButtonUpdate(control, false);
@@ -150,12 +180,13 @@ namespace hiraeth {
 			m_Kb->registerToKey(GLFW_KEY_SPACE, jump, this);
 			m_Kb->registerToKey(GLFW_KEY_LEFT_CONTROL, attack, this);
 			m_Kb->registerToKey(GLFW_KEY_Z, pick_up, this);
-			std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N };
+			std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N,
+				GLFW_KEY_T, GLFW_KEY_Y };
 			std::vector<unsigned int> available_skills = m_SkillManager->get_available_active_skills();
 			for (int i = 0; i < available_skills.size(); ++i)
 			{
 				m_SkillKeysMap[i] = available_skills[i];
-				m_SkillManager->m_UiSkills->transferSkillToKeyConfig(skill_keys[i], 
+				m_SkillManager->m_UiSkills->transferSkillToKeyConfig(skill_keys[i],
 					(controls_size)+i, available_skills[i], this);
 			}
 		}
@@ -166,7 +197,7 @@ namespace hiraeth {
 			network::Direction new_dir{ network::Direction::Right };
 			if (Left == m_Direction)
 			{
-				 new_dir = network::Direction::Left;
+				new_dir = network::Direction::Left;
 				attack_rec.x = attack_rec.x - (85 - attack_rec.width);
 			}
 			attack_rec.width = 85;
@@ -180,10 +211,10 @@ namespace hiraeth {
 					//monster->getHit(m_Direction, damage);
 					attackMonsters(std::vector<Monster*>{monster}, std::vector<Damage>{damage});
 					//m_ClientHandler->sendAttackPacket(network::MonsterDamage{float(damage.RawDamage), 
-					m_ClientHandler->sendAttackPacket(network::MonsterHit{float(damage.RawDamage), 
+					m_ClientHandler->sendAttackPacket(network::MonsterHit{ float(damage.RawDamage),
 						monster->getId(), new_dir });
-						//monster->getId(), 0, static_cast<network::Direction>(m_Direction) });
-					// send the information to the server
+					//monster->getId(), 0, static_cast<network::Direction>(m_Direction) });
+				// send the information to the server
 				}
 			}
 		}
@@ -220,17 +251,45 @@ namespace hiraeth {
 		{
 			attacked->getHit(m_Direction, d);
 			auto attack_modifiers = m_CharacterStats->getAttackModifiers();
-			for (const auto&[id, skill_mods] : attack_modifiers)
+			for (const auto& [id, skill_mods] : attack_modifiers)
 				for (const auto& mod : skill_mods)
 				{
 					switch (mod.first)
 					{
 					case SRL::lifesteal:
-						m_Stats->recoverHp(d.RawDamage *(float(mod.second) / 100.0f));
+						m_Stats->recoverHp(d.RawDamage * (float(mod.second) / 100.0f));
 					default:
 						break;
 					}
 				}
+		}
+
+		void Character::wearItem(SRL::EquipItemType item_type, unsigned int item_loc)
+		{
+			auto equip = m_UiEquip->getEquip(item_type);
+			auto& equip_tex_data = equip->m_Textures[SRL::as_Default];
+			//switch (item_type)
+			//{
+			//case SRL::Weapon:
+			if (m_Equips.find(item_type) != m_Equips.end())
+				m_Equips.erase(item_type);
+			m_Equips.emplace(std::make_pair(item_type, graphics::Sprite{ {5, 40},equip_tex_data.org,
+				graphics::TextureManager::Load(equip->getName() + "_def", equip_tex_data.tex_data) }));
+			//	break;
+			//case SRL::Hat:
+			//	if (m_Equips.find(item_type) != m_Equips.end())
+			//		m_Equips.erase(item_type);
+			//	m_Equips.emplace(std::make_pair(SRL::Hat, graphics::Sprite{ {5, 40},equip_tex_data.org,
+			//		graphics::TextureManager::Load(equip->getName() + "_def", equip_tex_data.tex_data)}));
+			//	break;
+			//default:
+			//	break;
+			//}
+		}
+		void Character::unWearItem(SRL::EquipItemType item_type)
+		{
+			if (m_Equips.find(item_type) != m_Equips.end())
+				m_Equips.erase(item_type);
 		}
 
 		void Character::attackMonsters(std::vector<Monster*> mobs, std::vector<Damage> damages)
@@ -240,14 +299,14 @@ namespace hiraeth {
 			{
 				mobs[i]->getHit(m_Direction, damages[i]);
 				//for (const auto&[id, skill_mods] : m_AttackModifiers)
-				for (const auto&[id, skill_mods] : attack_modifiers)
+				for (const auto& [id, skill_mods] : attack_modifiers)
 					for (const auto& mod : skill_mods)
 						//for (const auto& mod : mods)
 					{
 						switch (mod.first)
 						{
 						case SRL::lifesteal:
-							m_Stats->recoverHp(damages[i].RawDamage *(float(mod.second) / 100.0f));
+							m_Stats->recoverHp(damages[i].RawDamage * (float(mod.second) / 100.0f));
 						default:
 							break;
 						}
@@ -257,9 +316,10 @@ namespace hiraeth {
 
 		void Character::pickItemUp()
 		{
-			item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
+			auto* item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
 			if (item != nullptr)
 			{
+				//auto item_loc = m_UiManager->getUiInventory()->findEmptyPosition(0);
 				m_ClientHandler->sendPickItem(item->getId());
 				item->pickUp(&getBounds());
 			}
@@ -269,7 +329,7 @@ namespace hiraeth {
 		{
 			auto pos = str.find('x');
 			if (pos != std::string::npos)
-				str.replace(pos, 1, std::to_string( val ));
+				str.replace(pos, 1, std::to_string(val));
 			return calculator::eval(str);
 		}
 
@@ -288,8 +348,8 @@ namespace hiraeth {
 			//if (!m_SkillActivationTimer.hasExpired() || // check for skill's activation time
 			//if (!m_Animations.m_Renderables.empty())
 			//	return;
-			SRL::SkillInfo * skill_info = m_SkillManager->get_skill_info(skill_id);
-			SRL::SkillPropertiesMap * skill_properties = &skill_info->skill_properties;
+			SRL::SkillInfo* skill_info = m_SkillManager->get_skill_info(skill_id);
+			SRL::SkillPropertiesMap* skill_properties = &skill_info->skill_properties;
 			const auto skill_lvl = m_SkillManager->getSkillAlloc(skill_id);
 
 			if (skill_lvl == 0)
@@ -302,21 +362,8 @@ namespace hiraeth {
 				return; // Skill's criterions not met
 			if (skill_properties->find(SRL::SkillDataType::mpCon) != skill_properties->end())
 			{
-					if (!m_CharacterStats->consumeMana(getInt(skill_properties->at(SRL::SkillDataType::mpCon), skill_lvl)))
-						return;
-				////if (skill_properties->at(SRL::SkillDataType::mpCon).index() == 0)
-				//if (std::holds_alternative<int>(skill_properties->at(SRL::SkillDataType::mpCon)))
-				//{
-				//	if (!m_CharacterStats->consumeMana(std::get<int>(skill_properties->at(SRL::SkillDataType::mpCon))))
-				//		return;
-				//}
-				//else
-				//{
-				//	std::string con_string = std::get<std::string>(skill_properties->at(SRL::SkillDataType::mpCon));
-				//	auto result = getValueFromString(con_string, skill_lvl);
-				//	if (!m_CharacterStats->consumeMana(result))
-				//		return;
-				//}
+				if (!m_CharacterStats->consumeMana(getInt(skill_properties->at(SRL::SkillDataType::mpCon), skill_lvl)))
+					return;
 			}
 
 			m_ClientHandler->sendCharUseSkillE(skill_id, m_CharacterStats->getStatsStruct_()->Mp);
@@ -371,12 +418,22 @@ namespace hiraeth {
 					if (skill_animation_data->find(SRL::ballAnimation) != skill_animation_data->end())
 					{
 						change_stance_to_attack();
-						auto monsters_hit = activateProjSkill(element.second, (*skill_animation_data)[SRL::ballAnimation], 
+						auto monsters_hit = activateProjSkill(element.second, (*skill_animation_data)[SRL::ballAnimation],
 							getInt(skill_properties->at(SRL::proj_range), skill_lvl), skill_info->name);
 						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
 					}
-
-					//activateAttackSkill(element.second, skill_info->name);
+					else
+					{
+						change_stance_to_attack();
+						auto monsters_hit = activateAttackSkill(element.second,
+							200, skill_info->name);
+						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
+						for (auto mob : monsters_hit)
+						{
+							//m_Monsters[mob.monster_id].attack;
+							attackMonster(m_Monsters->at(mob.monster_id), Damage{ unsigned int(mob.damage), 90});
+						}
+					}
 					break;
 				default:;
 				}
@@ -384,38 +441,63 @@ namespace hiraeth {
 			m_CharacterStats->activateSkill(skill_id, skill_properties);
 		}
 
-		void Character::activateTeleport(SRL::SkillPropertiesMap * skill_properties, unsigned int skill_lvl)
+		void Character::activateTeleport(SRL::SkillPropertiesMap* skill_properties, unsigned int skill_lvl)
 		{
 			auto m_x = getValueFromString(std::get<std::string>((*skill_properties)[SRL::move_x]), skill_lvl);
 			auto m_y = getValueFromString(std::get<std::string>((*skill_properties)[SRL::move_y]), skill_lvl);
-			float mv_y{0};
+			float mv_y{ 0 };
 			if (m_Kb->isKeyPressed(GLFW_KEY_UP))
 			{
-				mv_y = float(m_y) /10;
+				mv_y = float(m_y) / 10;
 				m_Force.y = 0.0f;
 			}
 			move(maths::vec2{ float(m_x) * m_Direction, mv_y });
 		}
 
-		//void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
-		std::vector<network::MonsterHit> Character::activateProjSkill( SRL::FullAnimationData hit_animation_data, 
-			SRL::FullAnimationData projectile_animation_data, int range, const std::string& skill_name)
+		std::vector<std::pair<float, Monster*>> Character::findMonstersInRange(maths::vec2 atk_range) const
 		{
 			std::vector<std::pair<float, Monster*>> monsters_in_range;
-			for (auto & [key, monster] : (*m_Monsters))
+			for (auto& [key, monster] : (*m_Monsters))
 			{
-				//if (monster->)
 				const maths::vec2 mon_pos = monster->getBounds().GetMiddle();
 				const maths::vec2 char_pos = getBounds().GetMiddle();
 				maths::vec2 dis_vec = char_pos - mon_pos;
 				if (Right == m_Direction)
 					dis_vec *= -1;
-				if ((dis_vec.x < 500 && dis_vec.x > 0) && (dis_vec.y > -200 && dis_vec.y < 200))
+				if ((dis_vec.x < atk_range.x && dis_vec.x > 0) && (dis_vec.y > -atk_range.y && dis_vec.y < atk_range.y))
 				{
 					float dis_pow = pow(dis_vec.x, 2) + pow(dis_vec.y, 2);
 					monsters_in_range.emplace_back(std::make_pair(dis_pow, monster));
 				}
 			}
+			return monsters_in_range;
+		}
+
+		std::vector<network::MonsterHit> Character::activateAttackSkill(SRL::FullAnimationData hit_animation_data,
+			int range, const std::string& skill_name)
+		{
+			auto monsters_in_range = findMonstersInRange({ float(range), 200 });
+			if (!monsters_in_range.empty())
+			{
+				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
+					[](auto& pr1, auto& pr2) {return pr1.first < pr2.first; })->second;
+				hit_monster->setStrikeAnimation(skill_name,
+					std::move(hit_animation_data));
+				return std::vector<network::MonsterHit>{network::MonsterHit{ 250.0f,
+					hit_monster->getId(), static_cast<network::Direction>(m_Direction) }};
+			}
+			else
+			{
+				return {};
+			}
+		}
+
+		//void Character::activateAttackSkill( SRL::FullAnimationData hit_animation_data, 
+		std::vector<network::MonsterHit> Character::activateProjSkill(SRL::FullAnimationData hit_animation_data,
+			const SRL::FullAnimationData& projectile_animation_data,
+			int range, const std::string& skill_name)
+		{
+			auto monsters_in_range = findMonstersInRange({ float(range), 200 });
 			if (!monsters_in_range.empty())
 			{
 				Monster* hit_monster = std::min_element(monsters_in_range.begin(), monsters_in_range.end(),
@@ -425,14 +507,14 @@ namespace hiraeth {
 					//	m_Direction, skill_name, this, hit_monster, Damage{ 250, 90 }, projectile_animation_data, hit_animation_data));
 				hit_monster->setProjectileAnimation(
 					std::make_unique<skills::TargetedProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
-						m_Direction, skill_name, this, hit_monster, Damage{ 250, 90 }, 
+						m_Direction, skill_name, this, hit_monster, Damage{ 250, 90 },
 						projectile_animation_data, hit_animation_data, PREHIT_DELAY));
 				return std::vector<network::MonsterHit>{network::MonsterHit{ 250.0f, hit_monster->getId(), static_cast<network::Direction>(m_Direction) }};
 			}
 			else
 			{
 				m_Animations.add(
-					std::make_unique<skills::StraightProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 }, 
+					std::make_unique<skills::StraightProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
 						m_Direction, skill_name, projectile_animation_data, 400, PREHIT_DELAY));
 				return {};
 			}

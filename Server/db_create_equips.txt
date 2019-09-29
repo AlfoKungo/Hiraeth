@@ -1,0 +1,11 @@
+DROP TABLE equips;
+
+CREATE TABLE equips(
+id BIGSERIAL NOT NULL PRIMARY KEY,
+item_reqs BYTEA,
+properties BYTEA);
+
+INSERT INTO equips (item_reqs)
+VALUES (E'\\x08000000000000000000');
+INSERT INTO equips (item_reqs)
+VALUES (E'\\x08000000000000000000');

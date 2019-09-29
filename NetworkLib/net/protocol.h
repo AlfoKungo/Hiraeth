@@ -2,6 +2,8 @@
 #include "cereal/archives/binary.hpp"
 #include <map>
 #include "maths/vec2.h"
+#include "srl/item_data.h"
+#include "srl/equip_item_data.h"
 
 namespace hiraeth {
 	namespace network {
@@ -22,7 +24,9 @@ namespace hiraeth {
 			MSG_CTS_CHAR_USE_SKILL_A = 0x13,
 			MSG_CTS_PICK_ITEM = 0x14,
 			MSG_CTS_DROP_ITEM = 0x15,
-			MSG_CTS_INCREASE_SKILL = 0x16;
+			MSG_CTS_INCREASE_SKILL = 0x16,
+			MSG_CTS_WEAR_EQUIP = 0x17,
+			MSG_CTS_INVENTORY_ACTION = 0x18;
 		//enum MSG_CTS {
 		//	MSG_CTS_ACK = 0x00,
 		//	MSG_CTS_OPEN_CONNECTION,
@@ -58,9 +62,10 @@ namespace hiraeth {
 			MSG_STC_CHAR_USE_SKILL_A = 0x4F,
 			MSG_STC_PICK_ITEM = 0x50,
 			MSG_STC_DROP_ITEM = 0x51,
-			MSG_STC_DROPPED_ITEM = 0x52,
+			MSG_STC_DROPPED_ITEMS = 0x52,
 			MSG_STC_EXPIRE_ITEM = 0x53,
-			MSG_STC_INCREASE_SKILL = 0x54;
+			MSG_STC_ADD_ITEM_TO_INVENTORY = 0x54,
+			MSG_STC_INCREASE_SKILL = 0x55;
 		//enum MSG_STC {
 		//	MSG_STC_ACK = 0x60,
 		//	MSG_STC_ESTABLISH_CONNECTION,
@@ -88,8 +93,11 @@ namespace hiraeth {
  			//#define MSG_INR_FIND_MOB_POS 0xA2
 
 		PROTOCOL_CODE
-			USE_ITEM = 0,
-			EQUIP_ITEM = 1;
+			EQUIP_ITEM = 0,
+			USE_ITEM = 1,
+			SETUP_ITEM = 2,
+			ETC_ITEM = 3,
+			CASH_ITEM = 4;
 		using BufferType = char;
 
 		enum Direction {
@@ -182,20 +190,25 @@ namespace hiraeth {
 		struct PlayerData
 		{
 			PlayerStats player_stats{};
-			//std::string name;
-			//unsigned int char_lvl{};
-			//unsigned int job{};
-			//unsigned int exp{};
-			//unsigned int hp{};
-			//unsigned int mp{};
 			std::vector<unsigned int> stats_alloc;
-			//std::map<unsigned int, unsigned int> skills_alloc;
 			std::vector<SkillAlloc> skills_alloc;
+			std::map<unsigned int, unsigned int> inv_equip;
+			std::map<unsigned int, SRL::ItemDbStruct> inv_use;
+			std::map<unsigned int, SRL::ItemDbStruct> inv_setup;
+			std::map<unsigned int, SRL::ItemDbStruct> inv_etc;
+			std::map<unsigned int, SRL::ItemDbStruct> inv_cash;
+			//std::vector<SRL::ItemDbStruct> items;
+			//std::vector<unsigned int> equips_inv;
+			//std::map<unsigned int, unsigned int> equips_inv;
+			std::map<SRL::EquipItemType, unsigned int> equips_char;
 			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(player_stats),
-				//ar(CEREAL_NVP(name), CEREAL_NVP(char_lvl), CEREAL_NVP(job),
-				//	CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp),
-					CEREAL_NVP(stats_alloc), CEREAL_NVP(skills_alloc));
+				ar(CEREAL_NVP(player_stats), CEREAL_NVP(stats_alloc),
+					CEREAL_NVP(skills_alloc), CEREAL_NVP(inv_equip),
+					CEREAL_NVP(inv_use), CEREAL_NVP(inv_setup),
+					CEREAL_NVP(inv_etc), CEREAL_NVP(inv_cash),
+					CEREAL_NVP(equips_char));
+					//CEREAL_NVP(skills_alloc), CEREAL_NVP(items),
+					//CEREAL_NVP(equips_inv), CEREAL_NVP(equips_char));
 			}
 		};
 		struct ConnectionEstablishMsg

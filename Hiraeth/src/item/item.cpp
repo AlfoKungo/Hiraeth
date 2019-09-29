@@ -3,7 +3,7 @@
 namespace hiraeth {
 	namespace item {
 
-		Item::Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, 
+		Item::Item(maths::vec2 pos, unsigned int item_type_id, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, 
 			const std::vector<physics::FootHold>& foot_holds, unsigned int item_id)
 			: Sprite(pos, graphics::TextureManager::Load(item_info.item_name, item_texture_data)),
 			m_State(InAir),
@@ -11,6 +11,7 @@ namespace hiraeth {
 			m_Force(0, 7),
 			m_FootHolds(foot_holds),
 			m_Id(item_id),
+			m_TypeId(item_id),
 			m_DetailsBoxSprite(maths::vec2(30, -75), 180, 80, 0x88331a00),
 			m_DetailsBoxLabelHeader("arial", 16, m_BasicItemInfo.item_name, { 40, -10 }, 0xffffffff, graphics::Label::Alignment::LEFT),
 			m_DetailsBoxLabelContent("arial", 13, m_BasicItemInfo.item_description, { 40, -30 }, 0xffffffff, graphics::Label::Alignment::LEFT),

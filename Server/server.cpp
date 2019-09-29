@@ -1,5 +1,6 @@
 #include "server.h"
 #include "srl/skill_data.h"
+#include "srl/equip_item_data.h"
 
 //#include <windows.h>
 
@@ -264,7 +265,20 @@ namespace hiraeth {
 			m_ClientAddress[new_char_id] = sender;
 			m_ClientsIds.push_back(new_char_id);
 			//m_ClientConnected[free_client_index] = true;
-			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,20}, {0, 1}, {1,1}, {2,1}, {5,1}, {6,1}, {7,1}});
+			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,20}, 
+			//	{0, 1}, {1,1}, {2,1}, {5,1},
+			//	{6,1}, {7,1}, {8,1}, {9,1}});
+			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) { {1, 1}});
+			//m_DbClient->setByteArray(1, "inv_use", decltype(PlayerData::inv_use) { });
+			//m_DbClient->setByteArray(1, "inv_setup", decltype(PlayerData::inv_setup) { });
+			//m_DbClient->setByteArray(1, "inv_etc", decltype(PlayerData::inv_etc) { });
+			//m_DbClient->setByteArray(1, "inv_cash", decltype(PlayerData::inv_cash) { });
+			//m_DbClient->setByteArray(1, "equips_char", decltype(PlayerData::equips_char) { });
+			//m_DbClient->setByteArray(1, "equips_char", std::map<SRL::EquipItemType, unsigned int> { });
+			//m_DbClient->setByteArray(1, "item_reqs", 
+			//	std::map<SRL::EquipReqEnum, int> { {SRL::eReqLvl, 5}, {SRL::eReqStr, 3}}, "equips");
+			//m_DbClient->setByteArray(1, "properties", 
+			//	std::map<SRL::EquipItemDataType, int> { {SRL::StrInc, 5}, {SRL::IntInc, 3}}, "equips");
 			const auto player_data = m_DbClient->getPlayerDataById(char_id);
 			//auto player_data = m_DbClient->getPlayerDataById(char_id);
 

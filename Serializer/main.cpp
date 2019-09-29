@@ -109,8 +109,31 @@ void just_tex(std::string path, std::vector<TData>& data_vec)
 	data_vec.push_back(Td);
 }
 
+template <class TData = SRL::EquipItemData>
+void equip_data(std::string path, std::vector<TData> & data_vec)
+{
+	TData Td{};
 
-template <class TData>
+	const std::string tex_path = path + "\\tex.png";
+	dsrl_json(Td.info, path + "\\data.json");
+
+	for (auto& pp : fs::directory_iterator(path))
+	{
+		if (pp.path().filename().string() == "default.default.png")
+		{
+			//SRL::FullAnimationData fad;
+			//fad.load_data(pp.path().parent_path().string(), "default.default");
+			//Td.textures[SRL::as_Default] = fad;
+			Td.textures[SRL::as_Default].tex_data.load_texture(path + "\\default.default.png");
+			dsrl_json(Td.textures[SRL::as_Default].org, (path + "\\default.default.json"));
+		}
+	}
+	
+	Td.icon_texture.load_texture(tex_path);
+	data_vec.push_back(Td);
+}
+
+template <class TData = SRL::SkillData>
 //typename std::enable_if<
 //	std::conditional<std::is_same<TData, SRL::UseItemData>::value || std::is_same<TData, SRL::EquipItemData>::value, 
 //std::false_type, std::true_type>::value>::type
@@ -237,7 +260,7 @@ int main()
 
 	// Serialize Equip Data
 	Checks::create_equip_data();
-	serialize_generic<SRL::EquipItemData>("equip", tex_n_data<SRL::EquipItemData>);
+	serialize_generic<SRL::EquipItemData>("equip", equip_data<SRL::EquipItemData>);
 
 	// Serialize NPC Data
 	serialize_generic<SRL::NpcData>("npc", tex_n_data<SRL::NpcData>);

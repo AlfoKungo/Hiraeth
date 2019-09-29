@@ -74,6 +74,7 @@ namespace hiraeth
 			}
 			void getHit(Direction dir, Damage damage) override;
 			void setHitAnimation(std::unique_ptr<graphics::SpritedRenderable> hit_animation);
+			void setStrikeAnimation(std::string skill_name, const SRL::FullAnimationData& hit_animation);
 			void setProjectileAnimation(std::unique_ptr<skills::TargetedProjectile> projectile_animation);
 			void setForceByMove(float x_force) override { m_Force.x = x_force; } 
 			unsigned int getId() const { return m_Id; }

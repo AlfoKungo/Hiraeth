@@ -28,7 +28,9 @@ namespace hiraeth {
 		class UiQuests : public UiWindow
 		{
 		private:
-			UiTabs<quest::QuestLabel> * m_Tabs;
+			//UiTabs<quest::QuestLabel> * m_Tabs;
+			//UiTabs<quest::QuestLabel>  m_Tabs;
+			UiTabs<UiTab<quest::QuestLabel>> m_Tabs;
 			std::vector<std::string> m_Quests;
 			//std::vector<QuestGoal> m_Goals;
 			std::map<unsigned int, std::vector<QuestGoal>> m_QuestGoals;

@@ -13,6 +13,11 @@ namespace hiraeth {
 		{
 			m_Texture = texture;
 		}
+		Sprite::Sprite(maths::vec2 pos, maths::vec2 org, Texture* texture)
+			: Renderable(maths::vec3{pos}, texture->getSize(), 0xffffffff, org)
+		{
+			m_Texture = texture;
+		}
 
 		Sprite::Sprite(maths::vec2 pos)
 			: Renderable(maths::vec3{pos}, maths::vec2{0,0}, 0xffffffff)

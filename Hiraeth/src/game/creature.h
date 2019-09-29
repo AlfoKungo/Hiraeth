@@ -9,6 +9,7 @@
 #include "physics/collisionable.h"
 #include "stats.h"
 #include "basic/a_timer.h"
+#include "srl/equip_item_data.h"
 
 namespace hiraeth
 {
@@ -39,6 +40,8 @@ namespace hiraeth
 			maths::vec2 m_HitBox;
 			graphics::Sprite m_HitSprite;
 
+			std::map<SRL::EquipItemType,  graphics::Sprite> m_Equips;
+
 		private:
 			ATimer m_HitTimer;
 			std::vector<int> actions; //this is to create a list of actions to do.
@@ -58,6 +61,14 @@ namespace hiraeth
 			void draw(graphics::Renderer* renderer) const override
 			{
 				BaseCreature::draw(renderer);
+				if (m_Direction == Left)
+					renderer->push(m_TransformationMatrix * maths::mat4::Translate(-maths::vec3(m_Org)));
+				else
+					renderer->push(m_TransformationMatrix * maths::mat4::Translate(maths::vec3(m_Org)) *
+						maths::mat4::Scale(maths::vec3(-1, 1, 1)) * maths::mat4::Translate(-maths::vec3(2 * m_Org)));
+				for (auto [f, s] : m_Equips)
+					s.draw(renderer);
+				renderer->pop();
 				renderer->push(m_TransformationMatrix);
 				renderer->submit(&m_HitSprite);
 				renderer->pop();

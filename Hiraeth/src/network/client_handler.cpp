@@ -4,9 +4,11 @@
 namespace hiraeth {
 	namespace network {
 
-		ClientHandler::ClientHandler(game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
+		ClientHandler::ClientHandler(ui::UiManager * ui_manager, 
+			game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
 			item::ItemManager * item_manager, skills::SkillManager * skill_manager)
 			: m_RcvBuffer{ 0 }, m_SendBuffer{ 0 },
+		m_UiManager(ui_manager),
 			m_NetCharManager(net_char_manager),
 			m_MonsterManager{ monster_manager },
 			m_ItemManager(item_manager),
@@ -70,13 +72,16 @@ namespace hiraeth {
 			bindFunctionToChar(MSG_STC_CHAR_USE_SKILL_A, &ClientHandler::recvPlayerUseSkillA);
 			bindFunctionToChar(MSG_STC_PICK_ITEM, &ClientHandler::recvPickItem);
 			bindFunctionToChar(MSG_STC_DROP_ITEM, &ClientHandler::recvDropItem);
-			bindFunctionToChar(MSG_STC_DROPPED_ITEM, &ClientHandler::recvDroppedItem);
+			bindFunctionToChar(MSG_STC_DROPPED_ITEMS, &ClientHandler::recvDroppedItem);
 			bindFunctionToChar(MSG_STC_EXPIRE_ITEM, &ClientHandler::recvExpireItem);
+			bindFunctionToChar(MSG_STC_ADD_ITEM_TO_INVENTORY, &ClientHandler::recvAddItem);
 			bindFunctionToChar(MSG_STC_INCREASE_SKILL, &ClientHandler::recvIncreaseSkill);
 
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
 			m_EventManager->subscribe(SendIncreaseSkill, this, &ClientHandler::sendIncreaseSkill);
+			m_EventManager->subscribe(ItemWore, this, &ClientHandler::sendItemWore);
+			m_EventManager->subscribe(SwitchInventoryItems, this, &ClientHandler::switchInventoryItems);
 		}
 
 		ClientHandler::~ClientHandler()
@@ -311,8 +316,9 @@ namespace hiraeth {
 		void ClientHandler::recvPickItem()
 		{
 			const auto pick_item_msg = dsrl_type<PickItemMsg>(m_RcvBuffer + 1);
-			//m_NetCharManager->charUseSkillA(CharAttackMsg.char_id, CharAttackMsg.attack_msg);
-			m_NetCharManager->charPickItem(pick_item_msg.char_id, pick_item_msg.item_id);
+			//m_NetCharManager->charPickItem(pick_item_msg.char_id, pick_item_msg.item_id);
+			auto* item = m_ItemManager->getItem(pick_item_msg.item_id);
+			item->pickUp(&m_NetCharManager->getCharsMap()[pick_item_msg.char_id]->getBounds());
 		}
 
 		void ClientHandler::recvDropItem()
@@ -335,6 +341,12 @@ namespace hiraeth {
 			m_ItemManager->startExpiring(expired_item_id);
 			//for (const auto& item : dropped_items)
 			//	m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
+		}
+
+		void ClientHandler::recvAddItem()
+		{
+			const auto [item_kind,item_loc, item_picked_id] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_RcvBuffer + 1);
+			m_ItemManager->addItemToInv(item_kind, item_loc, item_picked_id);
 		}
 
 		void ClientHandler::recvIncreaseSkill()
@@ -393,8 +405,6 @@ namespace hiraeth {
 
 		void ClientHandler::sendPickItem(unsigned int item_id)
 		{
-			//AttackSkillMsg msg{ skill_id, monsters_hit };
-			//auto[data, size] = srl_dynamic_type(msg);
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PICK_ITEM, m_Id, item_id);
 			Send();
 		}
@@ -402,6 +412,21 @@ namespace hiraeth {
 		void ClientHandler::sendIncreaseSkill(unsigned skill_id)
 		{
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_INCREASE_SKILL, m_Id, skill_id);
+			Send();
+		}
+
+		void ClientHandler::sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc)
+		{
+			auto equip = m_UiManager->getUiEquip()->getEquip(item_type);
+
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_WEAR_EQUIP, m_Id, item_type, item_loc);
+			Send();
+		}
+
+		void ClientHandler::switchInventoryItems(unsigned item_loc1, unsigned item_loc2, unsigned tab_index)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_INVENTORY_ACTION, m_Id, 
+				item_loc1, item_loc2, tab_index);
 			Send();
 		}
 	}

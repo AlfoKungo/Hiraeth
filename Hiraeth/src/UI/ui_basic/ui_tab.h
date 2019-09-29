@@ -16,6 +16,7 @@ namespace hiraeth {
 			graphics::Group m_Tab;
 			graphics::Sprite * m_Header;
 			graphics::TGroup<TabDataType> * m_TabContent;
+			//std::map<unsigned int, TabDataType> m_ItemsOrd;
 
 			UiTab(maths::vec2 tab_pos, std::string window_name, std::string tab_name, TabIdType tab_id)
 				:
@@ -26,12 +27,12 @@ namespace hiraeth {
 				m_Tab.add(m_TabContent);
 			}
 
-			void draw(graphics::Renderer* renderer) const override 
-			{ 
-				m_Tab.draw(renderer); 
+			void draw(graphics::Renderer* renderer) const override
+			{
+				m_Tab.draw(renderer);
 			}
 
-			void add_data(TabDataType * tab_data)
+			virtual void add_data(TabDataType* tab_data)
 			{
 				m_TabContent->add(tab_data);
 			}

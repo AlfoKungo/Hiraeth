@@ -1,5 +1,4 @@
 #include "item_manager.h"
-#include "net/protocol.h"
 
 namespace hiraeth {
 	namespace item {
@@ -9,7 +8,8 @@ namespace hiraeth {
 			:
 			m_DroppedItems(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
 			m_FootHolds(foot_holds),
-			m_Inventory(inventory)
+			m_Inventory(inventory),
+			m_Equip(equip)
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
@@ -45,43 +45,89 @@ namespace hiraeth {
 				}
 				else
 					if ((*item)->hasBeenTaken())
-				{
-					m_InventoryItems.push_back(*item);
-					m_Inventory->addItem(*item);
-					//(*item)->setDrawDetails(true);
-					item = m_DroppedItems.m_Renderables.erase(item);
-				}
-				else
-				{
-					++item;
-				}
+					{
+						//m_InventoryItems.push_back(*item);
+						//auto item_loc = m_Inventory->addItem(*item);
+						//(*item)->setDrawDetails(true);
+						item = m_DroppedItems.m_Renderables.erase(item);
+					}
+					else
+					{
+						++item;
+					}
+			}
+		}
+
+		void ItemManager::setInvEquip(decltype(network::PlayerData::inv_equip) equips)
+		{
+			for (auto [equip_loc, equip_id] : equips)
+			{
+				ItemHold* item = new EquipItem( equip_id, 
+					ItemDataManager::GetEquip(equip_id));
+				//m_InventoryItems.push_back(item);
+				m_Inventory->addItem(equip_loc, item);
+			}
+		}
+
+		void ItemManager::setInvUse(decltype(network::PlayerData::inv_use) items)
+		{
+			for (auto [key, val]: items)
+			{
+				auto [item_id, item_amount] = val;
+				ItemHold* item = new UseItem(item_id, 
+					ItemDataManager::Get(item_id), item_amount);
+				//m_InventoryItems.push_back(item);
+				m_Inventory->addItem(key, item);
+			}
+		}
+
+		void ItemManager::setEquipsChar(decltype(network::PlayerData::equips_char) equips)
+		{
+			for (auto [equip_type, equip_id] : equips)
+			{
+				EquipItem* item = new EquipItem(equip_id, ItemDataManager::GetEquip(equip_id));
+				m_Equip->addEquip(item);
 			}
 		}
 
 		void ItemManager::dropItem(unsigned int item_id, unsigned int item_type_id,
 			unsigned int item_kind, maths::vec2 pos)
 		{
-			//SRL::ItemData item_data = ItemDataManager::Get(item_id);
-			//m_DroppedItems.add(new Item(pos, ItemDataManager::Get(item_id), m_FootHolds));
-
 			if (item_kind == network::USE_ITEM)
 			{
-				Item* temp = new UseItem(pos, ItemDataManager::Get(item_type_id), m_FootHolds, item_id);
+				const auto item_data = ItemDataManager::Get(item_type_id);
+				ItemDrop* temp = new ItemDrop(pos, item_type_id,
+					item_data.info.basic_item_info.item_name, item_data.texture_data, m_FootHolds, item_id);
 				m_DroppedItems.add(temp);
 				m_DroppedItemsMap.insert(std::make_pair(item_id, temp));
 			}
 			else
 			{
 				//Item* temp = new EquipItem(pos, ItemDataManager::GetEquip(item_type_id - 5), m_FootHolds, item_id);
-				Item* temp = new EquipItem(pos, ItemDataManager::GetEquip(item_type_id), m_FootHolds, item_id);
+				const auto item_data = ItemDataManager::GetEquip(item_type_id );
+				ItemDrop* temp = new ItemDrop(pos, item_type_id,
+					item_data.info.item_info.item_name, item_data.icon_texture, m_FootHolds, item_id);
 				m_DroppedItems.add(temp);
 				m_DroppedItemsMap.insert(std::make_pair(item_id, temp));
 			}
-			//m_Counter++;
-			//if (item_id < 5)
-			//	m_DroppedItems.add(new UseItem(pos, ItemDataManager::Get(item_id), m_FootHolds, m_Counter++));
-			//else
-			//	m_DroppedItems.add(new EquipItem(pos, ItemDataManager::GetEquip(item_id - 5), m_FootHolds, m_Counter++));
+		}
+
+		void ItemManager::addItemToInv(unsigned int item_kind, unsigned int item_loc, unsigned int item_id)
+		{
+			if (item_kind == network::EQUIP_ITEM)
+			{
+				ItemHold* item = new EquipItem(item_id,
+					ItemDataManager::GetEquip(item_id));
+				//m_InventoryItems.push_back(item);
+				m_Inventory->addItem(item_loc, item);
+			}
+			else if (item_kind == network::USE_ITEM)
+			{
+				ItemHold* item = new UseItem(item_id,
+					ItemDataManager::Get(item_id), 0);
+				//m_InventoryItems.push_back(item);
+				m_Inventory->addItem(item_loc, item);
+			}
 		}
 
 		void ItemManager::startExpiring(unsigned int item_id)
@@ -106,7 +152,7 @@ namespace hiraeth {
 			m_DroppedItems.clear();
 		}
 
-		Item * ItemManager::getItem(maths::vec2 pos)
+		ItemDrop * ItemManager::getItem(maths::vec2 pos)
 		{
 			for (auto item : m_DroppedItems.m_Renderables)
 				if (item->isPickedUp())

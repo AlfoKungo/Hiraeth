@@ -1,8 +1,15 @@
 #pragma once
 #include <utility>
+#include "graphics/sprite.h"
 #include "keyboard/keyboard.h"
 #include <cereal/archives/json.hpp>
 #include "graphics/window.h"
+#include "map/maplayer.h"
+#include "graphics/layers/layer.h"
+#include "srl/map_data.h"
+#include "srl/tile_texture_data.h"
+#include "srl/npc_data.h"
+#include "graphics/label.h"
 
 namespace hiraeth {
 	namespace editor {
@@ -19,8 +26,11 @@ namespace hiraeth {
 			unsigned int m_MapIndex{ 0 };
 			SRL::MapData* m_MapData;
 			graphics::Layer<graphics::Renderable> m_FootholdsLayer;
+			graphics::Layer<graphics::Renderable> m_PortalsLayer;
+			graphics::Layer<graphics::Renderable> m_NpcLayer;
+			graphics::Layer<graphics::Renderable> m_MobsLayer;
 			graphics::Layer<graphics::Renderable> m_UiLayer;
-			graphics::Label m_EditStateLabel, m_SelectionLabel;
+			graphics::Label m_MainEditStateLabel, m_EditStateLabel, m_SelectionLabel;
 			graphics::Sprite m_SelectionSquare;
 			std::vector<unsigned int> m_GroupingList{ 6, 2, 2, 3, 4, 1, 1, 1, 1,2 ,2 };
 			std::vector<unsigned int> m_SelectionVector{};
@@ -31,6 +41,14 @@ namespace hiraeth {
 			//std::vector<unsigned int> m_FootholdTiles;
 			//std::vector<SRL::TileData> m_CopyBuffer{};
 			std::vector<unsigned int> m_CopyBuffer{};
+			enum MainEditState
+			{
+				Tiles,
+				Footholds,
+				Portals,
+				Npcs,
+				Mobs,
+			} m_MainEditState{ Tiles };
 			enum EditState
 			{
 				Add,
@@ -58,42 +76,80 @@ namespace hiraeth {
 				m_Tiles{ tiles },
 				m_MapData(map_data),
 				m_FootholdsLayer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
+				m_PortalsLayer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
+				m_NpcLayer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
+				m_MobsLayer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true),
 				m_UiLayer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag")),
 				m_MapLayer{ map_layer },
+				m_MainEditStateLabel{ "arial", 15, "Main: Tiles", maths::vec2{-650, 420}, 0xffffffff },
 				m_EditStateLabel{ "arial", 15, "Mode: Add", maths::vec2{-650, 400}, 0xffffffff },
-				m_SelectionLabel{ "arial", 15, "Selection: {0, 6}", maths::vec2{-650, 380}, 0xffffffff },
+				m_SelectionLabel{ "arial", 15, "Adding: {0, 6}", maths::vec2{-650, 380}, 0xffffffff },
 				m_SelectionSquare{ maths::vec2{0,0}, 0, 0, 0xaaffffff }
 			{
-				for (const auto& portal : m_MapData->Portals)
-					m_FootholdsLayer.add(new graphics::Sprite{ portal.position,
-						60.0f,	80.0f , 0xaaffaa45 });
 				loadFootholdsLayer();
-				//m_FootholdsLayer.add(new graphics::Sprite{ foothold.p1, (foothold.p2.x - foothold.p1.x) + 8.0f,
-				//float(abs(foothold.p2.y - foothold.p1.y)) + 8.0f, 0xaaaa33bb });
+				for (const auto& portal : m_MapData->Portals)
+				{
+					m_PortalsLayer.add(new graphics::Label("arial", 20, portal.next_map,
+						portal.position + maths::vec2{ 30, 40 }, 0xff000000, graphics::Label::Alignment::CENTER));
+					m_PortalsLayer.add(new graphics::Sprite{ portal.position,
+						60.0f,	80.0f, 0xaaffaa45 });
+				}
+				for (const auto& summon : m_MapData->Summons)
+				{
+					m_MobsLayer.add(new graphics::Label("arial", 20, summon.monster_type,
+						summon.position + maths::vec2{ 30, 40 }, 0xff000000, graphics::Label::Alignment::CENTER));
+					m_MobsLayer.add(new graphics::Sprite{ summon.position,
+						60.0f,	80.0f , 0xaa88d8fc });
+				}
+				for (const auto& npc : m_MapData->Npcs)
+				{
+					auto npc_data = SRL::deserial<SRL::NpcData>("npc", npc);
+					maths::vec2 npc_pos{ npc_data.info.npc_x_value, 0 };
+					m_NpcLayer.add(new graphics::Label("arial", 20, npc,
+						npc_pos + maths::vec2{ 30, 40 }, 0xff000000, graphics::Label::Alignment::CENTER));
+					m_NpcLayer.add(new graphics::Sprite{ npc_pos,
+						60.0f,	80.0f , 0xaaaeff80 });
+				}
 				m_NewTileSize = m_TilesUv[0].UvSize;
 				m_Shift = maths::vec2{ m_TilesUv[0].UvSize.x / 2.0f, -m_TilesUv[0].UvSize.y / 2.0f };
+				m_UiLayer.add_ref(&m_MainEditStateLabel);
 				m_UiLayer.add_ref(&m_EditStateLabel);
 				m_UiLayer.add_ref(&m_SelectionLabel);
 				m_UiLayer.add_ref(&m_SelectionSquare);
 				m_Keyboard->registerToMouse(this);
-				m_Keyboard->registerToKey(GLFW_KEY_LEFT_SHIFT, this);
-				m_Keyboard->registerToKey(GLFW_KEY_RIGHT, this);
-				m_Keyboard->registerToKey(GLFW_KEY_LEFT, this);
-				m_Keyboard->registerToKey(GLFW_KEY_UP, this);
-				m_Keyboard->registerToKey(GLFW_KEY_DOWN, this);
-				m_Keyboard->registerToKey(GLFW_KEY_Z, this);
-				m_Keyboard->registerToKey(GLFW_KEY_X, this);
-				m_Keyboard->registerToKey(GLFW_KEY_C, this);
-				m_Keyboard->registerToKey(GLFW_KEY_Q, this);
-				m_Keyboard->registerToKey(GLFW_KEY_F, this);
-				//m_Keyboard->registerToKey(GLFW_KEY_Y, this);
-				m_Keyboard->registerToKey(GLFW_KEY_P, this);
-				m_Keyboard->registerToKey(GLFW_KEY_DELETE, this);
+				std::vector<input::KeyCode> keys_to_register
+				{
+					GLFW_KEY_LEFT_SHIFT,GLFW_KEY_RIGHT, GLFW_KEY_LEFT,
+					GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_Z,
+					GLFW_KEY_X, GLFW_KEY_C,	GLFW_KEY_Q,
+					GLFW_KEY_F, GLFW_KEY_P, GLFW_KEY_DELETE,
+					GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3,
+					GLFW_KEY_4, GLFW_KEY_5,
+				};
+				for (const auto& key : keys_to_register)
+					m_Keyboard->registerToKey(key, this);
+
+				//m_Keyboard->registerToKey(GLFW_KEY_LEFT_SHIFT, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_RIGHT, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_LEFT, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_UP, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_DOWN, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_Z, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_X, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_C, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_Q, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_F, this);
+				////m_Keyboard->registerToKey(GLFW_KEY_Y, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_P, this);
+				//m_Keyboard->registerToKey(GLFW_KEY_DELETE, this);
 			}
 
 			void update()
 			{
 				m_FootholdsLayer.update();
+				m_PortalsLayer.update();
+				m_MobsLayer.update();
+				m_NpcLayer.update();
 				m_UiLayer.update();
 				if (!m_ShiftPressed)
 				{
@@ -111,34 +167,30 @@ namespace hiraeth {
 			void draw()
 			{
 				m_FootholdsLayer.render();
+				m_PortalsLayer.render();
+				m_MobsLayer.render();
+				m_NpcLayer.render();
 				m_UiLayer.render();
 			}
 
-			void setModeLabel(EditState new_mode)
-			{
-				m_EditState = new_mode;
-				switch (m_EditState)
-				{
-				case Add:
-					m_EditStateLabel.setText("Mode: Add");
-					m_SelectionLabel.setText("Selection: {" + std::to_string(m_RandBegin) + "," + std::to_string(m_RandBegin + m_RandRange) + "}");
-					break;
-				case Move:
-					m_EditStateLabel.setText("Mode: Move");
-					setSelectionLabel();
-					break;
-				case Delete:
-					m_EditStateLabel.setText("Mode: Delete");
-					m_SelectionLabel.setText("Deleting");
-					break;
-				default:break;
-				}
-			}
+			void setModeLabel(EditState new_mode);
+			void updateModeLabels();
+			void setMainModeLabel(MainEditState new_mode);
 
 			void ButtonClicked(input::Key control) override
 			{
 				if (control == GLFW_KEY_LEFT_SHIFT)
 					m_ShiftPressed = true;
+				else if (control == GLFW_KEY_1)
+					setMainModeLabel(Tiles);
+				else if (control == GLFW_KEY_2)
+					setMainModeLabel(Footholds);
+				else if (control == GLFW_KEY_3)
+					setMainModeLabel(Portals);
+				else if (control == GLFW_KEY_4)
+					setMainModeLabel(Npcs);
+				else if (control == GLFW_KEY_5)
+					setMainModeLabel(Mobs);
 				else if (control == GLFW_KEY_Z)
 					setModeLabel(Add);
 				else if (control == GLFW_KEY_X)
@@ -300,15 +352,9 @@ namespace hiraeth {
 				}
 				return true;
 			}
-			void setSelectionLabel()
-			{
-				std::string sel{};
-				for (const auto& num : m_SelectionVector)
-					sel.append(std::to_string(num) + ", ");
-				if (sel.length() > 0)
-					sel.erase(sel.end() - 2, sel.end());
-				m_SelectionLabel.setText("Selection: {" + sel + "}");
-			}
+
+			void setSelectionLabel();
+
 			bool leftButtonReleased(float mx, float my) override
 			{
 				m_MouseHold = false;
@@ -344,12 +390,6 @@ namespace hiraeth {
 			}
 			bool rightButtonClicked(float mx, float my) override
 			{
-				//if (m_ShiftPressed )
-				//{
-				//	deleteTile(mx, my);
-				//}
-
-				//else 
 				switch (m_EditState)
 				{
 				case Add:
@@ -364,35 +404,9 @@ namespace hiraeth {
 				}
 				return true;
 			}
-			void setUvAdd(float mx, float my)
-			{
-				maths::vec2 rel_pos{ mx - 50, 450 - 110 - my };
-				unsigned int i = 0;
-				for (const auto& tile_data : m_TilesUv)
-				{
-					if (maths::Rectangle{ tile_data.UvPos, tile_data.UvSize }.Contains(rel_pos))
-					{
-						m_TileIndex = i;
-						unsigned int c = 0;
-						for (auto j : m_GroupingList)
-						{
-							if (i < c + j)
-							{
-								m_RandBegin = c;
-								m_RandRange = j;
-								m_SelectionLabel.setText("Selection: {" + std::to_string(m_RandBegin) + "," +
-									std::to_string(m_RandBegin + m_RandRange) + "}");
-								break;
-							}
-							c += j;
-						}
-						m_NewTileSize = tile_data.UvSize;
-						m_Shift = maths::vec2{ tile_data.UvSize.x / 2.0f, -tile_data.UvSize.y / 2.0f };
-						return;
-					}
-					i++;
-				}
-			}
+
+			void setUvAdd(float mx, float my);
+
 			bool mouseMove(float pmx, float pmy, float mx, float my)  override
 			{
 				//if (m_ShiftPressed)
@@ -441,68 +455,11 @@ namespace hiraeth {
 					}
 				}
 				return true;
-				//if (m_EditState == Move)
-				//{
-				//	if (m_SelectedTile != -1 && m_Keyboard->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
-				//	{
-				//		(*m_Tiles)[m_SelectedTile].position += maths::vec2{ -pmx, pmy } -maths::vec2{ -mx, my };
-				//		m_MapLayer->m_Tiles[m_SelectedTile].move(maths::vec2{ -pmx, pmy } -maths::vec2{ -mx, my });
-				//	}
-				//	if (m_Keyboard->isMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
-				//	{
-				//		deleteTile(mx, my);
-				//	}
-				//}
-				//else
-				//	if (m_MouseHold)
-				//	{
-				//		//maths::vec2 new_pos = maths::vec2{ mx - 900, -my + 450 } +m_Cam->getPosition() + m_Shift;
-				//		maths::vec2 new_pos = maths::vec2{ mx, -my };
-				//		if (new_pos.x < m_LastPos.x - m_NewTileSize.x)
-				//			setNewTile(maths::vec2{ m_LastPos.x - m_NewTileSize.x, m_LastPos.y });
-				//		if (new_pos.x > m_LastPos.x + m_LastTileSize.x)
-				//			setNewTile(maths::vec2{ m_LastPos.x + m_LastTileSize.x, m_LastPos.y });
-				//		if (new_pos.y < m_LastPos.y - m_NewTileSize.y)
-				//			setNewTile(maths::vec2{ m_LastPos.x , m_LastPos.y - m_NewTileSize.y });
-				//		if (new_pos.y > m_LastPos.y + m_LastTileSize.y)
-				//			setNewTile(maths::vec2{ m_LastPos.x , m_LastPos.y + m_LastTileSize.y });
-				//	}
-				//return true;
 			}
 			bool is_window_contains(maths::vec2 mouse_pos) const override { return true; }
-			void addTile(const SRL::TileData& tdb)
-			{
-				m_Tiles->push_back(tdb);
-				m_MapLayer->m_Tiles.emplace_back(tdb);
-			}
-			void setNewTile(maths::vec2 ms_pos)
-			{
-				if (findCurrentTile(ms_pos.x, ms_pos.y) == -1)
-				{
-					//SRL::TileData td{ ms_pos + maths::vec2{ -900,  450} +m_Cam->getPosition() + m_Shift, 1.0f, m_TileIndex };
-					SRL::TileData td{ ms_pos + maths::vec2{ -900,  450} +m_Cam->getPosition() + m_Shift,
-						1.0f, m_RandBegin + std::rand() % m_RandRange };
-					std::cout << "set Tile in " << td.position << " and type is " << td.type << std::endl;
-					m_LastPos = ms_pos;
-					addTile(td);
-					//m_Tiles->push_back(td);
-					//m_MapLayer->m_Tiles.emplace_back(td);
-					if (m_RandBegin == 6)
-					{
-						ms_pos.x += m_TilesUv[6].UvSize.x / 2 - m_TilesUv[8].UvSize.x / 2;
-						ms_pos.y += m_TilesUv[6].UvSize.y;
-						SRL::TileData tdb{ ms_pos + maths::vec2{ -900,  450} +m_Cam->getPosition() + m_Shift,
-							1.0f, 9 };
-						//SRL::TileData td{ ms_pos + maths::vec2{ -900,  450} + m_Cam->getPosition() + m_Shift,
-						//	1.0f, m_RandBegin + 2 + std::rand() % m_RandRange };
-						std::cout << "set Tile in " << tdb.position << " and type is " << tdb.type << std::endl;
-						m_LastPos = ms_pos;
-						addTile(tdb);
-						//m_Tiles->push_back(tdb);
-						//m_MapLayer->m_Tiles.emplace_back(tdb);
-					}
-				}
-			}
+			void addTile(const SRL::TileData& tdb);
+
+			void setNewTile(maths::vec2 ms_pos);
 
 			int findCurrentTile(float mx, float my)
 			{
@@ -521,53 +478,15 @@ namespace hiraeth {
 				return -1;
 			}
 
-			void moveTile(int tile_to_move, maths::vec2 step)
-			{
-				(*m_Tiles)[tile_to_move].position += step;
-				m_MapLayer->m_Tiles[tile_to_move].move(step);
-			}
-			void moveTiles(maths::vec2 step)
-			{
-				for (const auto& tile_to_move : m_SelectionVector)
-				{
-					(*m_Tiles)[tile_to_move].position += step;
-					m_MapLayer->m_Tiles[tile_to_move].move(step);
-				}
-			}
+			void moveTile(int tile_to_move, maths::vec2 step);
 
-			void deleteTile(unsigned int id)
-			{
-				m_Tiles->erase(m_Tiles->begin() + id);
-				m_MapLayer->m_Tiles.erase(m_MapLayer->m_Tiles.begin() + id);
-			}
-			void deleteTile(float mx, float my)
-			{
-				m_SelectedTile = findCurrentTile(mx, -my);
-				if (m_SelectedTile != -1)
-				{
-					std::cout << "delete Tile in " << (*m_Tiles)[m_SelectedTile].position << " and type is " << (*m_Tiles)[m_SelectedTile].type << std::endl;
-					//m_Tiles->erase(m_Tiles->begin() + m_SelectedTile);
-					//m_MapLayer->m_Tiles.erase(m_MapLayer->m_Tiles.begin() + m_SelectedTile);
-					deleteTile(m_SelectedTile);
-					m_SelectedTile = -1;
-				}
-			}
-			void loadFootholdsLayer()
-			{
-				m_FootholdsLayer.clear();
-				for (const auto& foothold : m_MapData->FootHolds)
-					if (foothold.direction.x == 1.0f)
-						m_FootholdsLayer.add(new graphics::Sprite{ foothold.p1,
-							8.0f,	float(abs(foothold.p2.y - foothold.p1.y)) , 0xaaaa33bb });
-					else
-					{
-						const auto height = foothold.p2.y - foothold.p1.y;
-						m_FootholdsLayer.add(new graphics::Sprite{ foothold.p1,
-						foothold.p2.x - foothold.p1.x,
-						copysignf(1.0, height) * (abs(height) + 8.0f), 0xaaaa33bb });
-					}
-				
-			}
+			void moveTiles(maths::vec2 step);
+
+			void deleteTile(unsigned int id);
+
+			void deleteTile(float mx, float my);
+
+			void loadFootholdsLayer();
 		};
 	}
 }

@@ -9,7 +9,7 @@ namespace hiraeth {
 		UiSkills::UiSkills(maths::vec2 pos, UiKey control_key, UiKeyConfig * ui_key_config)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 174, 299), control_key),
 			m_SkillPtsLabel("arial", 13, m_SkillPts, maths::vec2{ 144, 31 }, 0xff000000, graphics::Label::Alignment::LEFT),
-			m_Tabs(new UiTabs<skills::SkillIcon>()),
+			//m_Tabs(new UiTabs<skills::SkillIcon>()),
 		m_UiKeyConfig(ui_key_config)
 		{
 			m_BackgroundGroup->add(new graphics::Sprite(maths::vec2(0, 0), graphics::TextureManager::Load("Assets/UI/Skills/Skills.main.backgrnd.png")));
@@ -18,9 +18,9 @@ namespace hiraeth {
 
 			for (int tab_index = TAB_BEG; tab_index < TAB_END; ++tab_index)
 			{
-				m_Tabs->add_tab(tab_index, maths::vec2(9 + 31 * tab_index, 252), "Skills", "main", m_BackgroundGroup);
+				m_Tabs.add_tab(tab_index, maths::vec2(9 + 31 * tab_index, 252), "Skills", "main", m_BackgroundGroup);
 			}
-			m_BackgroundGroup->add(m_Tabs);
+			m_BackgroundGroup->add(&m_Tabs);
 			fillGroup();
 		}
 
@@ -34,7 +34,7 @@ namespace hiraeth {
 		void UiSkills::mouse_left_clicked(maths::vec2 mousePos)
 		{
 			if (mousePos.y < 270 && mousePos.y > 252)
-				m_Tabs->mouse_left_clicked(mousePos);
+				m_Tabs.mouse_left_clicked(mousePos);
 			else
 			{
 				//std::vector<std::unique_ptr<skills::SkillIcon>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
@@ -60,7 +60,7 @@ namespace hiraeth {
 		{
 			if (m_SkillPts > 0)
 			{
-				std::vector<std::unique_ptr<skills::SkillIcon>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
+				std::vector<std::unique_ptr<skills::SkillIcon>> * tab_rends = &m_Tabs.getCurrentTabGroup()->m_TabContent->m_Renderables;
 				auto result_skill = std::find_if(std::begin(*tab_rends),
 					std::end(*tab_rends), [&](auto const& skill)
 				{
@@ -86,7 +86,7 @@ namespace hiraeth {
 		void UiSkills::mouse_moved(float mx, float my, maths::vec2 mousePos)
 		{
 
-				std::vector<std::unique_ptr<skills::SkillIcon>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
+				std::vector<std::unique_ptr<skills::SkillIcon>> * tab_rends = &m_Tabs.getCurrentTabGroup()->m_TabContent->m_Renderables;
 				for (auto & skill_icon : *tab_rends)
 					skill_icon->updateIconState(false);
 				auto result_skill = std::find_if(std::begin(*tab_rends),

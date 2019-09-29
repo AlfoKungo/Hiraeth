@@ -4,10 +4,10 @@
 namespace hiraeth {
 	namespace game {
 
-		NetChar::NetChar(maths::vec2 pos, map::MapLayer *map_layer, item::ItemManager *item_manager,
+		NetChar::NetChar(maths::vec2 pos, map::MapLayer *map_layer,
 			skills::SkillManager *skill_manager, std::map<unsigned int, Monster*>* monsters)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, new CharacterStats{}, true),
-			m_ItemManager(item_manager),
+			//m_ItemManager(item_manager),
 			m_SkillManager(skill_manager), m_Monsters(monsters)
 			//m_Animations(m_TransformationMatrix)
 		{
@@ -131,10 +131,9 @@ namespace hiraeth {
 
 		void NetChar::pickItemUp(unsigned int item_id)
 		{
-			//item::Item * item = m_ItemManager->getItem(m_Bounds.GetBottomMiddle());
-			item::Item * item = m_ItemManager->getItem(item_id);
-			if (item != nullptr)
-				item->pickUp(&getBounds());
+			//item::Item * item = m_ItemManager->getItem(item_id);
+			//if (item != nullptr)
+			//	item->pickUp(&getBounds());
 		}
 
 

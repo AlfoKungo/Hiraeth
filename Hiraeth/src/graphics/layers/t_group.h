@@ -47,7 +47,7 @@ namespace hiraeth {
 			{
 				renderer->push(m_TransformationMatrix);
 
-				for (const auto & renderable : m_Renderables)
+				for (const auto& renderable : m_Renderables)
 					renderable->draw(renderer);
 				//for (const auto & renderable : m_RefRenderables)
 				//	if (auto spt = renderable.lock())

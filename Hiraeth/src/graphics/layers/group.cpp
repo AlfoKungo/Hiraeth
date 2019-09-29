@@ -29,6 +29,7 @@ namespace hiraeth {
 		void Group::add(Renderable* renderable)
 		{
 			m_Renderables.emplace_back(renderable);
+			//m_Renderables.push_back(std::make_unique<Renderable>(renderable));
 		}
 		
 		void Group::add(std::unique_ptr<Renderable> renderable)

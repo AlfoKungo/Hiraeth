@@ -6,9 +6,10 @@ namespace hiraeth {
 	namespace ui {
 		UiInventory::UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 172, 335), control_key),
-			m_Tabs(new UiTabs<item::Item>()),
+			//m_Tabs(new UiTabs<item::Item>()),
+			m_Tabs(new UiTabs<UiTabInventory<item::ItemHold>>()),
 			m_CharacterStats(character_stats),
-			m_HoldItem(nullptr)
+			m_HoldItem(0, nullptr)
 		{
 
 			m_BackgroundGroup->add(new graphics::Sprite(maths::vec2(0, 0), graphics::TextureManager::Load("Assets/UI/Inventory/Item.backgrnd.png")));
@@ -22,6 +23,9 @@ namespace hiraeth {
 				m_Tabs->add_tab(tab_index, maths::vec2(9 + 31 * tab, 287), "Inventory", "main", m_BackgroundGroup);
 			}
 			m_BackgroundGroup->add(m_Tabs);
+
+			EventManager *m_EventManager = EventManager::Instance();
+			m_EventManager->createEvent<unsigned int, unsigned int, unsigned int>(SwitchInventoryItems);
 		}
 
 		void UiInventory::fillGroup()
@@ -36,43 +40,51 @@ namespace hiraeth {
 			}
 			else
 			{
-				std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
-				auto result_item = std::find_if(std::begin(*tab_rends),
-					std::end(*tab_rends), [&](auto const& inv_item)
-				{ inv_item->setDrawDetails(false);
-				return inv_item->getBounds().Contains(mousePos); });
-				if (result_item != std::end(*tab_rends))
+				auto rends = &m_Tabs->getCurrentTabGroup()->m_MtGroup->m_Renderables;
+				//auto tab = m_Tabs->getCurrentTabGroup();
+				//const auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
+				//auto item = rends->find(new_pos_index);
+			auto item = getItemPair(mousePos);
+				if (item != rends->end())
 				{
-					m_OldItemPos = (*result_item)->getPosition();
-					m_HoldItem = (*result_item).get();
+					item->second->setDrawDetails(false);
+					m_HoldItem = std::make_pair(item->first, item->second.get());
 					m_IsHolding = true;
-					return;
 				}
 			}
 		}
 
 		void UiInventory::mouse_left_released(maths::vec2 mousePos)
 		{
-			if (m_HoldItem != nullptr)
+			if (m_HoldItem.second != nullptr)
 			{
 				m_IsHolding = false;
-				maths::vec2 item_pos = m_HoldItem->getBounds().GetMiddle();
-				// set new location according to item's center
-				const maths::vec2 newPos = ((unsigned int((item_pos.x - 11) / 36) >= 4) || ((unsigned int(item_pos.y - 75) / 35) >= 6))
-					? m_OldItemPos :
-					maths::vec2((unsigned int((item_pos.x - 11) / 36) % 4) * 36 + 11, (unsigned int(item_pos.y - 75) / 35) % 6 * 35 + 75);
-				if (newPos != m_OldItemPos)
+				auto tab = m_Tabs->getCurrentTabGroup();
+				auto& rends = tab->m_MtGroup->m_Renderables;
+				auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
+				if (new_pos_index != m_HoldItem.first)
 				{
-					std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
-					auto result_item = std::find_if(std::begin(*tab_rends),
-						std::end(*tab_rends),
-						[&](auto const& inv_item)
-					{ return (inv_item.get() != m_HoldItem && inv_item->getPosition() == newPos); });
-					if (result_item != std::end(*tab_rends))
-						(*result_item)->setPosition(m_OldItemPos);
+					auto item2 = rends.find(new_pos_index);
+					//if ((item1 != rends.end()) && (item2 != rends.end()))
+					if (item2 != rends.end())
+					{
+						auto item1 = rends.find(m_HoldItem.first);
+						std::swap(item1->second, item2->second);
+						item1->second->setPosition(UiTabInventory<item::Item>::getPosByLocIndex(m_HoldItem.first));
+						item2->second->setPosition(UiTabInventory<item::Item>::getPosByLocIndex(new_pos_index));
+					}
+					else
+					{
+						tab->changeItemPos(m_HoldItem.first, new_pos_index);
+					}
+					EventManager* m_EventManager = EventManager::Instance();
+					m_EventManager->execute(SwitchInventoryItems, m_HoldItem.first, new_pos_index, m_Tabs->getTabIndex());
 				}
-				m_HoldItem->setPosition(newPos);
-				m_HoldItem = nullptr;
+				else
+				{
+					m_HoldItem.second->setPosition(tab->getPosByLocIndex(new_pos_index));
+				}
+				m_HoldItem = std::make_pair(0, nullptr);
 			}
 		}
 
@@ -82,118 +94,111 @@ namespace hiraeth {
 
 		void UiInventory::mouse_moved(float mx, float my, maths::vec2 mousePos)
 		{
-			if (m_HoldItem != nullptr)
+			if (m_HoldItem.second != nullptr)
 			{
-				m_HoldItem->setPosition(m_HoldItem->getBounds().position + maths::vec2(-mx, my));
+				m_HoldItem.second->setPosition(m_HoldItem.second->getBounds().position + maths::vec2(-mx, my));
 			}
 			else
 			{
-				std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
+				auto tab_rends = &m_Tabs->getCurrentTabGroup()->m_MtGroup->m_Renderables;
 				for (auto & item : *tab_rends)
-					item->setDrawDetails(false);
-				auto result_item = std::find_if(std::begin(*tab_rends),
-					std::end(*tab_rends), [&](auto const& inv_item)
-				{ return inv_item->getBounds().Contains(mousePos); });
-				if (result_item != std::end(*tab_rends))
-				{
-					(*result_item)->setDrawDetails(true);
-					std::rotate(result_item, result_item + 1, (*tab_rends).end());
-				}
+					item.second->setDrawDetails(false);
+				auto pos_index = m_Tabs->getCurrentTabGroup()->getPosIndexByMousePos(mousePos);
+				auto item = tab_rends->find(pos_index);
+				if (item != tab_rends->end())
+					(item->second)->setDrawDetails(true);
 			}
 		}
 
-		void UiInventory::addItem(item::Item * new_item)
+		unsigned int UiInventory::addItem(item::ItemHold* new_item)
 		{
-			UiTab<item::Item> * containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
-			new_item->setPosition(findEmptyPosition(new_item->getTabType()));
-			containing_tab->add_data(new_item);
+			auto containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
+			auto pos_index = containing_tab->add_data_b(new_item);
+			return pos_index;
 		}
 
-		void UiInventory::addItem(item::Item * new_item, maths::vec2 new_item_pos)
+		void UiInventory::addItem(unsigned int pos_index, item::ItemHold * new_item)
 		{
-			UiTab<item::Item> * containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
-			new_item->setPosition(new_item_pos);
-			containing_tab->add_data(new_item);
+			auto containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
+			containing_tab->add_data(pos_index, new_item);
 		}
 
-		maths::vec2 UiInventory::findEmptyPosition(unsigned int tab_type) const
-		{
-			UiTab<item::Item> * containing_tab = m_Tabs->getTabByIndex(tab_type);
-			for (int index = 0; index < 50; ++index)
-			{
-				bool flag = false;
-				maths::vec2 pos((index % 4) * 36 + 11, 250 - (index / 4) * 35);
-				for (auto const & item : containing_tab->m_TabContent->m_Renderables)
-				{
-					if (item->getBounds().position == pos)
-					{
-						flag = true;
-						break;
-					}
-				}
-				if (!flag)
-					return pos;
-			}
-			return maths::vec2(11, 250);
-		}
-
-		item::Item * UiInventory::getItemByMousePos(maths::vec2 mousePos)
-		{
-			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
-			auto result_item = std::find_if(std::begin(*tab_rends),
-				std::end(*tab_rends), [&](auto const& inv_item)
-			{ inv_item->setDrawDetails(false);
-			return inv_item->getBounds().Contains(mousePos); });
-			if (result_item != std::end(*tab_rends))
-			{
-				return (*result_item).get();
-			}
-			return nullptr;
-		}
+		//void UiInventory::addItem(item::Item * new_item, maths::vec2 new_item_pos)
+		//{
+		//	auto containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
+		//	containing_tab->add_data(new_item);
+		//	new_item->setPosition(new_item_pos);
+		//}
 
 		void UiInventory::use_item(maths::vec2 mousePos)
 		{
-			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
-			auto result_item = std::find_if(std::begin(*tab_rends),
-				std::end(*tab_rends), [&](auto const& inv_item)
-			{ inv_item->setDrawDetails(false);
-			return inv_item->getBounds().Contains(mousePos); });
-			if (result_item != std::end(*tab_rends))
+			auto rends = &m_Tabs->getCurrentTabGroup()->m_MtGroup->m_Renderables;
+			//auto tab = m_Tabs->getCurrentTabGroup();
+			//const auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
+			//auto item = rends->find(new_pos_index);
+			auto item = getItemPair(mousePos);
+			if (item != rends->end())
 			{
-				item::UseItem* use_item = dynamic_cast<item::UseItem*>((*result_item).get());
-				m_OldItemPos = use_item->getPosition();
-				SRL::ItemPropertiesMap * item_stats = use_item->getItemProperties();
+				item->second->setDrawDetails(false);
+				auto use_item = dynamic_cast<item::UseItem*>(item->second.get());
+				SRL::ItemPropertiesMap* item_stats = use_item->getItemProperties();
 				if (m_CharacterStats->activateUseItem(item_stats))
 				{
-					tab_rends->erase(result_item);
-					m_IsHolding = true;
+					rends->erase(item);
 				}
 			}
+			
+			//auto result_item = std::find_if(std::begin(*tab_rends),
+			//	std::end(*tab_rends), [&](auto const& inv_item)
+			//{
+			//	return inv_item.second->getBounds().Contains(mousePos); });
+			//if (result_item != std::end(*tab_rends))
+			//{
+			//	auto use_item = dynamic_cast<item::UseItem*>(result_item->second.get());
+			//	//m_OldItemPos = use_item->getPosition();
+			//	SRL::ItemPropertiesMap* item_stats = use_item->getItemProperties();
+			//	if (m_CharacterStats->activateUseItem(item_stats))
+			//	{
+			//		tab_rends->erase(result_item);
+			//		m_IsHolding = true;
+			//	}
+			//}
 		}
 
-		item::EquipItem* UiInventory::getEquipItem(maths::vec2 mousePos)
+		std::pair<unsigned int, item::EquipItem*> UiInventory::getEquipItem(maths::vec2 mousePos)
 		{
-			std::vector<std::unique_ptr<item::Item>> * tab_rends = &m_Tabs->getCurrentTabGroup()->m_TabContent->m_Renderables;
-			auto result_item = std::find_if(std::begin(*tab_rends),
-				std::end(*tab_rends), [&](auto const& inv_item)
-			{ inv_item->setDrawDetails(false);
-			return inv_item->getBounds().Contains(mousePos); });
-			if (result_item != std::end(*tab_rends))
+			auto rends = &m_Tabs->getCurrentTabGroup()->m_MtGroup->m_Renderables;
+			//auto tab = m_Tabs->getCurrentTabGroup();
+			//const auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
+			//auto item = rends->find(new_pos_index);
+			auto item = getItemPair(mousePos);
+			if (item != rends->end())
 			{
-				//auto* equip_item = dynamic_cast<item::EquipItem*>((*result_item).get());
-				auto * equip_item = dynamic_cast<item::EquipItem*>((*result_item).get());
-				if (equip_item != nullptr)
-				{
-					//auto new_data = new item::EquipItem(equip_item);
-					result_item->release();
-					tab_rends->erase(result_item);
-					return equip_item;
-				}
+				item->second->setDrawDetails(false);
+				auto index = item->first;
+				auto* equip_item = dynamic_cast<item::EquipItem*>(item->second.release());
+				rends->erase(item->first);
+				return std::make_pair(index, equip_item);
 			}
-			return nullptr;
+
+			return std::make_pair(0, nullptr);
 		}
 
-		item::EquipItem* UiInventory::itemClickedOn(maths::vec2 mousePos)
+		unsigned int UiInventory::findEmptyPosition(unsigned int tab_type)
+		{
+			auto containing_tab = m_Tabs->getTabByIndex(tab_type);
+			return containing_tab->findAvailableLoc();
+		}
+
+		std::map<unsigned, std::unique_ptr<item::ItemHold>>::iterator UiInventory::getItemPair(maths::vec2 mouse_pos)
+		{
+			auto rends = &m_Tabs->getCurrentTabGroup()->m_MtGroup->m_Renderables;
+			auto tab = m_Tabs->getCurrentTabGroup();
+			const auto new_pos_index = tab->getPosIndexByMousePos(mouse_pos);
+			return rends->find(new_pos_index);
+		}
+
+		std::pair<unsigned int, item::EquipItem*> UiInventory::itemClickedOn(maths::vec2 mousePos)
 		{
 			switch (m_Tabs->getTabIndex())
 			{
@@ -201,9 +206,9 @@ namespace hiraeth {
 				return getEquipItem(mousePos);
 			case 1:
 				use_item(mousePos);
-				return nullptr;
+				return std::make_pair(0, nullptr);
 			default:
-				return nullptr;
+				return std::make_pair(0, nullptr);
 			}
 
 		}

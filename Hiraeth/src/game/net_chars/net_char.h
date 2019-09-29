@@ -7,7 +7,6 @@
 #include "skills/skill_manager.h"
 #include "net/protocol.h"
 #include "game/monsters/monster.h"
-#include "item/item_manager.h"
 
 namespace hiraeth {
 	namespace game {
@@ -29,7 +28,7 @@ namespace hiraeth {
 		private:
 			//input::Keyboard* m_Kb;
 			//std::vector<Monster*>* m_MonstersLayer;
-			item::ItemManager *m_ItemManager;
+			//item::ItemManager *m_ItemManager;
 			skills::SkillManager* m_SkillManager;
 			ATimer m_SkillTimer;
 			std::map<size_t, unsigned int> m_SkillKeysMap;
@@ -43,7 +42,7 @@ namespace hiraeth {
 			bool m_IsStuck{false};
 
 		public:
-			NetChar(maths::vec2 pos, map::MapLayer *map_layer, item::ItemManager *item_manager, 
+			NetChar(maths::vec2 pos, map::MapLayer *map_layer, 
 				skills::SkillManager *skill_manager,
 				std::map<unsigned int, Monster*>* monsters);
 			~NetChar();

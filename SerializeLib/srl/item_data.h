@@ -35,6 +35,15 @@ namespace SRL {
 	using ItemPropertiesMap = std::map<UseItemDataType, std::variant<int, std::string, TimedValue>>;
 	using ItemPropertiesMapPair = std::pair<UseItemDataType, std::variant<int, std::string, TimedValue>>;
 
+	struct ItemDbStruct
+	{
+		unsigned int item_type_id;
+		unsigned int item_amount;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(item_type_id), CEREAL_NVP(item_amount));
+		}
+	};
+	
 	struct BasicItemInfo
 	{
 		std::string item_name;

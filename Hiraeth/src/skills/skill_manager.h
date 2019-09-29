@@ -119,7 +119,7 @@ namespace hiraeth {
 			{
 				SRL::AllJobsData JobInfo{ {
 				{ SRL::Novice, {{0,1,2}, {}}},
-				{ SRL::Berserker, {{0,1,2}, {5,6,7}}},
+				{ SRL::Berserker, {{0,1,2}, {5,6,7,8,9}}},
 				{ SRL::CrusaderKnight, {{0,1,2}, {10,11}}},
 				{ SRL::Wizard, {{0,1,2}, {3,4}}},
 				{ SRL::Rogue, {{0,1,2}, {3,4}}},

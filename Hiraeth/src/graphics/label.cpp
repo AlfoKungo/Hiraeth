@@ -65,7 +65,7 @@ namespace hiraeth
 				m_AlignmentOffset.x = 0;
 				break;
 			case Alignment::CENTER:
-				m_AlignmentOffset.x = size.x / 2;
+				m_AlignmentOffset.x = -size.x / 2;
 				break;
 			case Alignment::RIGHT:
 				m_AlignmentOffset.x = -size.x;

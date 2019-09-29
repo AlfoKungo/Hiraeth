@@ -105,12 +105,14 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_CHAR_USE_SKILL_A, &Server::CharUseSkillA);
 				bindFunctionToChar(MSG_CTS_PICK_ITEM, &Server::PickItem);
 				bindFunctionToChar(MSG_CTS_INCREASE_SKILL, &Server::IncreaseSkill);
+				bindFunctionToChar(MSG_CTS_WEAR_EQUIP, &Server::WearEquip);
+				bindFunctionToChar(MSG_CTS_INVENTORY_ACTION, &Server::SwitchInventoryItems);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
 				bindFunctionToChar(MSG_INR_ROUTINE_UPDATE, &Server::RoutineUpdate);
 
 				for (unsigned int i = 0; i < 15; ++i)
-					sendDropItem(addItem((i %9) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
+					sendDropItem(addItem((i %10) %5, (i/5) %2, maths::vec2(int(i - 6) *80, 0)));
 			}
 			void main_60fps_loop();
 			void main_block_receive_and_async_send();
@@ -267,10 +269,24 @@ namespace hiraeth {
 			void PickItem(Address sender)
 			{
 				auto[client_id, item_id] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
-				//const auto buffer_size = construct_server_packet(m_Buffer, MSC_STC_CHAR_USE_SKILL_A, client_id, item_id);
-				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_PICK_ITEM, PickItemMsg{ client_id, item_id });
+				auto item_picked = m_ItemsDropped[item_id];
+				unsigned int item_loc = 0;
+				if (item_picked.item_kind == network::USE_ITEM)
+					item_loc = m_DbClient->addItem(item_picked.item_kind, client_id, item_picked.item_type_id);
+				else if (item_picked.item_kind == network::EQUIP_ITEM)
+					item_loc = m_DbClient->addEquipInv(client_id, item_picked.item_type_id);
+				//std::cout << "inserted item " << item_picked.item_type_id << " at place " << item_loc << std::endl;
 				m_ItemsDropped.erase(item_id);
-				sendDataToAllClientsExcept(buffer_size, client_id);
+				{
+					const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_ADD_ITEM_TO_INVENTORY,
+						 item_picked.item_kind, item_loc, item_picked.item_type_id);
+					m_Socket.Send(sender, m_Buffer, buffer_size);
+				}
+				{
+					const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_PICK_ITEM,
+						PickItemMsg{ client_id, item_id });
+					sendDataToAllClientsExcept(buffer_size, client_id);
+				}
 				//sendDataToAllClients(buffer_size);
 			}
 			void IncreaseSkill(Address sender)
@@ -279,6 +295,20 @@ namespace hiraeth {
 				m_DbClient->increaseSkillPoints(client_id, skill_id);
 				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_INCREASE_SKILL,  skill_id);
 				m_Socket.Send(sender, m_Buffer, buffer_size);
+			}
+			void WearEquip(Address sender)
+			{
+				auto[client_id, equip_type, equip_loc] = dsrl_types<unsigned int, SRL::EquipItemType, unsigned int>(m_Buffer + 1);
+				m_DbClient->wearEquip(client_id, equip_type, equip_loc);
+			}
+			void SwitchInventoryItems(Address sender)
+			{
+				auto [client_id, item_loc1, item_loc2, tab_index] =
+					dsrl_types<unsigned int, unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
+				if (tab_index == 0)
+					m_DbClient->switchInventoryItems(client_id, item_loc1, item_loc2, tab_index);
+				else if (tab_index == 1)
+					m_DbClient->switchInventoryItems(client_id, item_loc1, item_loc2, tab_index);
 			}
 			void InrMobGotHit(Address sender)
 			{
@@ -302,7 +332,7 @@ namespace hiraeth {
 					dropped_items.push_back(di.second);
 				auto[data, size] = srl_dynamic_type(dropped_items);
 				const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
-					MSG_STC_DROPPED_ITEM, *data, size);
+					MSG_STC_DROPPED_ITEMS, *data, size);
 				m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 			void sendItemExpired(unsigned int item_id)

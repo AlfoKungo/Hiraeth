@@ -35,6 +35,7 @@ namespace hiraeth {
 			ATimer m_Timer;
 			bool m_IsExpiring = false;
 			unsigned int m_Id{};
+			unsigned int m_TypeId{};
 
 		protected:
 			//graphics::Group m_DetailsBox;
@@ -43,7 +44,7 @@ namespace hiraeth {
 			bool m_IsDrawDetails;
 		public:
 			//Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
-			Item(maths::vec2 pos, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, 
+			Item(maths::vec2 pos, unsigned int item_type_id, SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data, 
 				const std::vector<physics::FootHold>& foot_holds, unsigned int item_id);
 
 			void draw(graphics::Renderer * renderer) const override;
@@ -71,6 +72,8 @@ namespace hiraeth {
 				}
 			}
 			SRL::ItemTab getTabType() const { return m_BasicItemInfo.type; }
+			std::string getName() const { return m_BasicItemInfo.item_name; }
+			unsigned int getTypeId() { return m_TypeId; }
 			//SRL::ItemPropertiesMap * getItemProperties() { return &m_ItemInfo.item_properties; }
 		};
 	}
