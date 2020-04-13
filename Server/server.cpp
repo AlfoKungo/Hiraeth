@@ -268,6 +268,9 @@ namespace hiraeth {
 			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,20}, 
 			//	{0, 1}, {1,1}, {2,1}, {5,1},
 			//	{6,1}, {7,1}, {8,1}, {9,1}});
+			//m_DbClient->setByteArray(m_NumConnectedClients, "player_state", decltype(PlayerData::player_hold_state) { });
+			m_DbClient->setByteArray(m_NumConnectedClients, "quests_in_prog", decltype(PlayerData::quests_in_progress) { });
+			m_DbClient->setByteArray(m_NumConnectedClients, "quests_done", decltype(PlayerData::quests_done) { });
 			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) { {1, 1}});
 			//m_DbClient->setByteArray(1, "inv_use", decltype(PlayerData::inv_use) { });
 			//m_DbClient->setByteArray(1, "inv_setup", decltype(PlayerData::inv_setup) { });
@@ -280,6 +283,7 @@ namespace hiraeth {
 			//m_DbClient->setByteArray(1, "properties", 
 			//	std::map<SRL::EquipItemDataType, int> { {SRL::StrInc, 5}, {SRL::IntInc, 3}}, "equips");
 			const auto player_data = m_DbClient->getPlayerDataById(char_id);
+			m_PlayersState[char_id] = player_data.player_hold_state;
 			//auto player_data = m_DbClient->getPlayerDataById(char_id);
 
 			//auto player_data = PlayerData{"shd", 10, 1, 0, 300, 300, {}, {}};

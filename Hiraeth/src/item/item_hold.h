@@ -33,13 +33,10 @@ namespace hiraeth {
 			graphics::Label m_DetailsBoxLabelHeader, m_DetailsBoxLabelContent;
 			bool m_IsDrawDetails;
 		public:
-			//Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
 			ItemHold(unsigned int item_type_id, SRL::BasicItemInfo item_info,
 				SRL::TextureData item_texture_data);
 
 			void draw(graphics::Renderer * renderer) const override;
-			void update() override;
-			//unsigned int getId() const { return m_Id; }
 			void setDrawDetails(bool is_draw_details)
 			{
 				m_IsDrawDetails = is_draw_details;
@@ -52,7 +49,7 @@ namespace hiraeth {
 			}
 			SRL::ItemTab getTabType() const { return m_BasicItemInfo.type; }
 			std::string getName() const { return m_BasicItemInfo.item_name; }
-			unsigned int getTypeId() { return m_TypeId; }
+			unsigned int getTypeId() const { return m_TypeId; }
 			//SRL::ItemPropertiesMap * getItemProperties() { return &m_ItemInfo.item_properties; }
 		};
 	}

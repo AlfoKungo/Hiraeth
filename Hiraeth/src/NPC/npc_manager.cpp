@@ -10,8 +10,9 @@ namespace hiraeth
 			m_Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_Npcs(&m_Shader, true),
 			m_Kb(kb),
-			m_DialogManager{ character, ui_quests },
-			m_UiQuests(ui_quests)
+			m_DialogManager{ character},
+			m_UiQuests(ui_quests),
+			m_ClientHandler(character->m_ClientHandler)
 		{
 			EventManager* m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &NpcManager::mapChanged);
@@ -41,6 +42,11 @@ namespace hiraeth
 				m_Npcs.add(new npc::Npc{ npc_index, m_MapLayer, m_Kb });
 		}
 
+		void NpcManager::sendStartDialog(unsigned npc_index)
+		{
+			m_ClientHandler->sendNpcClick(npc_index);
+		}
+
 		bool NpcManager::leftButtonClicked(float mx, float my)
 		{
 			const maths::vec2 translated_pos = view::Camera::mouse_to_map_position(maths::vec2(mx, my));
@@ -48,7 +54,7 @@ namespace hiraeth
 				if (npc->getBounds().Contains(translated_pos))
 				{
 					npc->onNpcClick();
-					m_DialogManager.sendStartDialog(npc->getNpcId());
+					sendStartDialog(npc->getNpcId());
 					return true;
 				}
 			return false;

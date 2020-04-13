@@ -10,10 +10,11 @@ namespace Checks
 	{
 		const std::string SRL_TYPE{ "quest" };
 		{
-			SRL::QuestData quest{"first",
+			SRL::QuestData quest{"first", "I need you to kill all the fags", 1,
 				{
 					{SRL::QuestProps::KillAmount, SRL::QuestDouble{0, 20}},
 					{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 10}},
+					{SRL::QuestProps::GatherAmount, SRL::QuestDouble{0, 10}},
 					{SRL::QuestProps::ExpReward, 5000},
 				}
 			};
@@ -22,7 +23,7 @@ namespace Checks
 			arout(CEREAL_NVP(quest));
 		}
 		{
-			SRL::QuestData quest{"second",
+			SRL::QuestData quest{"second", "It's party time", 1,
 				{
 					{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 15}},
 					{SRL::QuestProps::MoneyReward, 3000},

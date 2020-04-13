@@ -1,6 +1,8 @@
 #include "ui_skills.h"
 #include "basic/EventManager.h"
 #include "srl/monster_data.h"
+#include "basic/network_handler.h"
+
 //#include "network/client_handler.h"
 
 namespace hiraeth {
@@ -70,8 +72,9 @@ namespace hiraeth {
 					if ((*result_skill)->getSkillLvl() < (*result_skill)->get_skill_info()->max_level) 
 					{
 						const auto changed_skill = (*result_skill)->getSkillId();
-						EventManager *m_EventManager = EventManager::Instance();
-						m_EventManager->execute<unsigned int>(SendIncreaseSkill, changed_skill);
+						//EventManager *m_EventManager = EventManager::Instance();
+						//m_EventManager->execute<unsigned int>(SendIncreaseSkill, changed_skill);
+						NetworkManager::Instance()->sendIncreaseSkill(changed_skill);
 					}
 					//m_ClientHandler->sendIncreaseSkill(changedSkill);
 					//if ((*result_skill)->inc_level())

@@ -24,12 +24,15 @@ namespace hiraeth
 			input::Keyboard* m_Kb;
 			npc::DialogManager m_DialogManager;
 			ui::UiQuests * m_UiQuests;
+			network::ClientHandler * m_ClientHandler;
 		public:
 			NpcManager(map::MapLayer* map_layer, input::Keyboard* kb, 
 				game::Character * character, ui::UiQuests * ui_quests);
 			void draw() const;
 			void update() override;
 			void mapChanged();
+			void sendStartDialog(unsigned int npc_index);
+
 
 			// MOUSE EVENT FUNCTIONS
 			bool leftButtonClicked(float mx, float my) override;

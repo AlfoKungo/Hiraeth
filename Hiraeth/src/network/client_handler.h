@@ -16,6 +16,7 @@
 #include "game/monsters/monster_manager.h"
 #include "net/srl_funcs.h"
 #include "UI/ui_manager.h"
+#include "basic/network_handler.h"
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
  
@@ -26,7 +27,7 @@ const int PORT = 8888;   //The port on which to listen for incoming data
 namespace hiraeth {
 	namespace network {
 
-		class ClientHandler
+		class ClientHandler : public NetworkHandler
 		{
 		private:
 			const float KA_TIMEOUT = 1.0f, KA_LOSS_TIMEOUT = 3.0f;
@@ -93,8 +94,9 @@ namespace hiraeth {
 			void recvExpireItem();
 			void recvAddItem();
 			void recvIncreaseSkill();
+			void recvPlayerSay();
+			void recvSetQuestAsInProgress();
 		public:
-			//void sendAttackPacket(MonsterDamage monster_damage);
 			void sendAttackPacket(MonsterHit monster_damage);
 			void sendNpcClick(unsigned int npc_id);
 			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id);
@@ -103,9 +105,10 @@ namespace hiraeth {
 			void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp);
 			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit);
 			void sendPickItem(unsigned int item_id);
-			auto sendIncreaseSkill(unsigned int skill_id) -> void;
-			void sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc);
-			void switchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index);
+			void sendIncreaseSkill(unsigned int skill_id) override;
+			void sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc) override;
+			void sendSwitchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index) override;
+			void sendChatMsg(std::string) override;
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

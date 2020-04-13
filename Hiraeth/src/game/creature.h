@@ -10,6 +10,7 @@
 #include "stats.h"
 #include "basic/a_timer.h"
 #include "srl/equip_item_data.h"
+#include "graphics/text_box.h"
 
 namespace hiraeth
 {
@@ -45,6 +46,8 @@ namespace hiraeth
 		private:
 			ATimer m_HitTimer;
 			std::vector<int> actions; //this is to create a list of actions to do.
+			graphics::TextBox<graphics::BoxTexturedFull> m_SayBox;
+			ATimer m_SayTimer;
 		public:
 			Creature(maths::Rectangle bounds, map::MapLayer* map_layer,
 			         Stats* stats, bool is_immune_after_hit);
@@ -70,6 +73,8 @@ namespace hiraeth
 					s.draw(renderer);
 				renderer->pop();
 				renderer->push(m_TransformationMatrix);
+			if (!m_SayTimer.hasExpired())
+				m_SayBox.draw(renderer);
 				renderer->submit(&m_HitSprite);
 				renderer->pop();
 			}
@@ -81,6 +86,11 @@ namespace hiraeth
 			void change_stance_to_attack();
 			virtual void attackMonster(Creature* attacked, Damage d)
 			{}
+			void writeSayBubble(std::string say_text)
+			{
+				m_SayTimer.reSet(5.0f);
+				m_SayBox.setText(say_text);
+			}
 		private:
 			//virtual void cause_damage(Damage damage) = 0;
 			virtual void cause_damage(Damage damage)  { m_Stats->causeDamage(damage); }

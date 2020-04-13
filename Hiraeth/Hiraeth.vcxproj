@@ -171,11 +171,13 @@
     <ClCompile Include="ext\freetype-gl\texture-font.c" />
     <ClCompile Include="ext\freetype-gl\utf8-utils.c" />
     <ClCompile Include="ext\freetype-gl\vector.c" />
+    <ClCompile Include="src\basic\char_handler.cpp" />
     <ClCompile Include="src\basic\log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\audio\sound.cpp" />
     <ClCompile Include="src\audio\sound_manager.cpp" />
     <ClCompile Include="src\basic\EventManager.cpp" />
+    <ClCompile Include="src\basic\network_handler.cpp" />
     <ClCompile Include="src\character\character_arm.cpp" />
     <ClCompile Include="src\character\character_body.cpp" />
     <ClCompile Include="src\editor\map_controller.cpp" />
@@ -203,7 +205,6 @@
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_manager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
-    <ClCompile Include="src\item\item.cpp" />
     <ClCompile Include="src\item\item_data_manager.cpp" />
     <ClCompile Include="src\item\item_drop.cpp" />
     <ClCompile Include="src\item\item_hoid.cpp" />
@@ -254,12 +255,14 @@
     <ClInclude Include="ext\freetype-gl\utf8-utils.h" />
     <ClInclude Include="ext\freetype-gl\vec234.h" />
     <ClInclude Include="ext\freetype-gl\vector.h" />
+    <ClInclude Include="src\basic\char_handler.h" />
     <ClInclude Include="src\basic\log.h" />
     <ClInclude Include="src\audio\sound.h" />
     <ClInclude Include="src\audio\sound_manager.h" />
     <ClInclude Include="src\basic\a_timer.h" />
     <ClInclude Include="src\basic\drawable.h" />
     <ClInclude Include="src\basic\EventManager.h" />
+    <ClInclude Include="src\basic\network_handler.h" />
     <ClInclude Include="src\basic\updatable.h" />
     <ClInclude Include="src\character\character_arm.h" />
     <ClInclude Include="src\character\character_body.h" />
@@ -284,6 +287,8 @@
     <ClInclude Include="src\game\stats\timed_stat.h" />
     <ClInclude Include="src\game\straight_projectile.h" />
     <ClInclude Include="src\game\targeted_projectile.h" />
+    <ClInclude Include="src\graphics\box_textured.h" />
+    <ClInclude Include="src\graphics\box_textured_full.h" />
     <ClInclude Include="src\graphics\layers\mt_group.h" />
     <ClInclude Include="src\graphics\layers\t_group.h" />
     <ClInclude Include="src\graphics\percented_sprite.h" />
@@ -303,9 +308,9 @@
     <ClInclude Include="src\graphics\sprited_renderable.h" />
     <ClInclude Include="src\graphics\texture.h" />
     <ClInclude Include="src\graphics\texture_manager.h" />
+    <ClInclude Include="src\graphics\text_box.h" />
     <ClInclude Include="src\graphics\window.h" />
     <ClInclude Include="src\item\equip_item.h" />
-    <ClInclude Include="src\item\item.h" />
     <ClInclude Include="src\item\item_data_manager.h" />
     <ClInclude Include="src\item\item_drop.h" />
     <ClInclude Include="src\item\item_hold.h" />
@@ -328,18 +333,21 @@
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\quest\quest_label.h" />
+    <ClInclude Include="src\quest\quest_manager.h" />
     <ClInclude Include="src\save\serializer.h" />
     <ClInclude Include="src\skills\skill_icon.h" />
     <ClInclude Include="src\skills\skill_manager.h" />
     <ClInclude Include="src\skills\top_right_icon.h" />
     <ClInclude Include="src\UI\main_ui.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_button_basic.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_flashing.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_normal.h" />
     <ClInclude Include="src\UI\ui_basic\ui_button_side_menu.h" />
     <ClInclude Include="src\UI\ui_basic\ui_tab.h" />
     <ClInclude Include="src\UI\ui_basic\ui_tabs.h" />
     <ClInclude Include="src\UI\ui_basic\ui_tab_inventory.h" />
+    <ClInclude Include="src\UI\ui_basic\ui_tab_quests.h" />
     <ClInclude Include="src\UI\ui_equip.h" />
     <ClInclude Include="src\UI\ui_inventory.h" />
     <ClInclude Include="src\UI\ui_keyconfig.h" />
@@ -362,6 +370,9 @@
     <ProjectReference Include="..\SerializeLib\SerializeLib.vcxproj">
       <Project>{d7d76bde-7dca-40d5-92af-f83ede064043}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

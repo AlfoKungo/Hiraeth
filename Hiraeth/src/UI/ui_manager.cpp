@@ -8,13 +8,13 @@ namespace hiraeth {
 			: m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag")),
 			m_Windows(m_Layer.m_RefRenderables),
 			m_Kb(kb),
-			m_MainUi()
+			m_MainUi(kb)
 		{
 			init_all_windows(kb, m_MainUi.getCharacterStats());
 			kb->registerToMouse(this);
 			kb->registerToKey(GLFW_KEY_ESCAPE, escape, this);
-			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->createEvent<SRL::EquipItemType, unsigned int>(ItemWore);
+			//EventManager *m_EventManager = EventManager::Instance();
+			//m_EventManager->createEvent<SRL::EquipItemType>(ItemWore);
 		}
 		void UiManager::draw() const
 		{
@@ -96,8 +96,9 @@ namespace hiraeth {
 					if (equip_to_move_to_inventory != nullptr)
 					{
 						m_UiInventory->addItem(equip_to_move_to_inventory);
-						EventManager *m_EventManager = EventManager::Instance();
-						m_EventManager->execute<SRL::EquipItemType>(ItemUnWore, equip_to_move_to_inventory->getItemType());
+						//EventManager *m_EventManager = EventManager::Instance();
+						//m_EventManager->execute<SRL::EquipItemType>(ItemUnWore, equip_to_move_to_inventory->getItemType());
+						CharManager::Instance()->unWearItem(equip_to_move_to_inventory->getItemType());
 					}
 					std::rotate(m_Windows.begin(), result_window, result_window + 1);
 					break;
@@ -110,8 +111,10 @@ namespace hiraeth {
 					{
 						//maths::vec2 old_item_pos = equip_to_wear->getPosition();
 						auto equip_to_return_to_inventory = m_UiEquip->addEquip(equip_to_wear);
-						EventManager *m_EventManager = EventManager::Instance();
-						m_EventManager->execute<SRL::EquipItemType>(ItemWore, equip_to_wear->getItemType(), index);
+						//EventManager *m_EventManager = EventManager::Instance();
+						//m_EventManager->execute<SRL::EquipItemType>(ItemWore, equip_to_wear->getItemType());
+						CharManager::Instance()->wearItem(equip_to_wear->getItemType());
+						NetworkManager::Instance()->sendItemWore(equip_to_wear->getItemType(), index);
 						if (equip_to_return_to_inventory != nullptr)
 							//m_UiInventory->addItem(equip_to_return_to_inventory, old_item_pos);
 							m_UiInventory->addItem(index,equip_to_return_to_inventory );

@@ -51,13 +51,22 @@ namespace hiraeth {
 		{
 			return maths::vec2{ float(mx), float(my) };
 		}
+
+		void Keyboard::setTyping(KeyboardEvent* keyboard_event, bool is_typing)
+		{
+			if (is_typing)
+				m_TypingKeyboardEvent = keyboard_event;
+			else
+				m_TypingKeyboardEvent = nullptr;
+		}
+
 		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			auto kb = static_cast<Keyboard*>(glfwGetWindowUserPointer(window));
-				if (key == GLFW_KEY_RIGHT_CONTROL)
-					key = GLFW_KEY_LEFT_CONTROL;
-				if (key == GLFW_KEY_RIGHT_ALT)
-					key = GLFW_KEY_LEFT_ALT;
+			if (key == GLFW_KEY_RIGHT_CONTROL)
+				key = GLFW_KEY_LEFT_CONTROL;
+			if (key == GLFW_KEY_RIGHT_ALT)
+				key = GLFW_KEY_LEFT_ALT;
 			kb->m_Keys[key] = action;
 			kb->clicked(key, action);
 		}
@@ -101,6 +110,12 @@ namespace hiraeth {
 						return;
 				}
 
+		}
+
+		void char_callback(GLFWwindow* window, unsigned int codepoint)
+		{
+			auto kb = static_cast<Keyboard*>(glfwGetWindowUserPointer(window));
+			kb->char_input(codepoint);
 		}
 	}
 }

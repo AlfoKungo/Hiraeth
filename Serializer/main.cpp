@@ -22,6 +22,7 @@
 #include "code_for_checks/skill_data_check.h"
 #include "code_for_checks/item_data_check.h"
 #include "code_for_checks/equip_data_check.h"
+#include "code_for_checks/npc_data_check.h"
 #include "code_for_checks/quest_data_check.h"
 
 typedef int Address;
@@ -263,6 +264,7 @@ int main()
 	serialize_generic<SRL::EquipItemData>("equip", equip_data<SRL::EquipItemData>);
 
 	// Serialize NPC Data
+	Checks::create_npc_data();
 	serialize_generic<SRL::NpcData>("npc", tex_n_data<SRL::NpcData>);
 
 	// Serialize Skills Data

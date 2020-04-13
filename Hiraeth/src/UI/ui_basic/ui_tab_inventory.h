@@ -5,20 +5,22 @@
 namespace hiraeth {
 	namespace ui {
 
-		template <class TabDataType = graphics::Renderable>
-		class UiTabInventory : public UiTab<TabDataType>
+		using namespace item;
+		//template <class TabDataType = graphics::Renderable>
+		//class UiTabInventory : public UiTab<TabDataType>
+		class UiTabInventory : public UiTab<ItemHold>
 		{
 		public:
 			//std::map<unsigned int, TabDataType*> m_ItemsOrd;
-			graphics::MTGroup<TabDataType> *m_MtGroup;
+			graphics::MTGroup<ItemHold> *m_MtGroup;
 			UiTabInventory(maths::vec2 tab_pos, const std::string& window_name, const std::string& tab_name, TabIdType tab_id)
-				: UiTab(tab_pos, window_name, tab_name, tab_id),
-				m_MtGroup(new graphics::MTGroup<TabDataType>)
-			{	
+				: UiTab<ItemHold>(tab_pos, window_name, tab_name, tab_id),
+				m_MtGroup(new graphics::MTGroup<ItemHold>)
+			{
 				m_Tab.add(m_MtGroup);
 			}
 
-			void add_data(TabDataType* tab_data) override
+			void add_data(ItemHold* tab_data) override
 			{
 				//UiTab<TabDataType>::add_data(tab_data);
 				//m_ItemsOrd[loc] = tab_data;
@@ -26,14 +28,14 @@ namespace hiraeth {
 				tab_data->setPosition(getPosByLocIndex(loc));
 				m_MtGroup->add(loc, tab_data);
 			}
-			unsigned int add_data_b(TabDataType* tab_data) 
+			unsigned int add_data_b(ItemHold* tab_data) 
 			{
 				auto loc = findAvailableLoc();
 				tab_data->setPosition(getPosByLocIndex(loc));
 				m_MtGroup->add(loc, tab_data);
 				return loc;
 			}
-			void add_data(unsigned int loc, TabDataType* tab_data)
+			void add_data(unsigned int loc, ItemHold* tab_data)
 			{
 				tab_data->setPosition(getPosByLocIndex(loc));
 				m_MtGroup->add(loc, tab_data);

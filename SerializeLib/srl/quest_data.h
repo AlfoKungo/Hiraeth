@@ -12,10 +12,19 @@ namespace SRL {
 	enum QuestTab {
 		Available = 0,
 		InProgress = 1,
-		Completed = 2,
+		Done = 2,
 		Recommended = 3,
 	};
 
+	struct QuestDBStruct
+	{
+		unsigned int type{};
+		unsigned int stage{};
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(type), CEREAL_NVP(stage));
+		}
+	};
+	
 	struct QuestDouble
 	{
 		unsigned int type{};
@@ -24,6 +33,7 @@ namespace SRL {
 			ar(CEREAL_NVP(type), CEREAL_NVP(amount));
 		}
 	};
+
 	enum QuestProps {
 		// tasks - QuestDouble
 		KillAmount = 0,
@@ -53,10 +63,12 @@ namespace SRL {
 	struct QuestData
 	{
 		std::string name;
+		std::string description;
+		unsigned int req_lvl;
 		QuestPropertiesMap quest_properties;
 
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(name), CEREAL_NVP(quest_properties));
+			ar(CEREAL_NVP(name), CEREAL_NVP(description), CEREAL_NVP(req_lvl), CEREAL_NVP(quest_properties));
 		}
 	};
 

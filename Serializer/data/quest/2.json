@@ -1,6 +1,8 @@
 {
     "quest": {
         "name": "kanyethethird",
+		"description": "As Patrice said",
+        "req_lvl": 1,
         "quest_properties": [
             {
                 "key": 0,

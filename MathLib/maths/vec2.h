@@ -66,6 +66,9 @@ namespace maths {
 
 		std::string ToString() const;
 
+		vec2 getX() const;
+		vec2 getY() const;
+
 		friend std::ostream& operator<<(std::ostream& stream, const vec2& vector);
 
 		template<class Archive>

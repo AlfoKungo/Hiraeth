@@ -1,4 +1,5 @@
 #include "font.h"
+#include <algorithm>
 
 namespace hiraeth {
 	namespace graphics {
@@ -42,42 +43,105 @@ namespace hiraeth {
 				0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, m_FTAtlas->data);
 		}
 
-		float Font::GetWidth(const std::string& text) const
+		//float Font::GetWidth(const std::string& text) const
+		//{
+		//	using namespace ftgl;
+
+		//	std::stringstream ss(text);
+		//	std::string to;
+
+		//	while (std::getline(ss, to, '\n')) 
+		//	{
+		//		cout << to << endl;
+		//		float width = 0.0f;
+		//		const maths::vec2& scale = maths::vec2(1);
+		//		for (int i = 0; i < text.size(); i++)
+		//		{
+		//			texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, &text[i]);
+		//			if (i > 0)
+		//			{
+		//				float kerning = texture_glyph_get_kerning(glyph, &text[i - 1]);
+		//				width += kerning / scale.x;
+		//			}
+		//			width += glyph->advance_x / scale.x;
+		//		}
+		//	}
+		//	return width;
+		//}
+
+		float Font::GetWidth(const std::string& full_text) const
 		{
 			using namespace ftgl;
 
-			float width = 0.0f;
-			const maths::vec2& scale = maths::vec2(1);
-			for (int i = 0; i < text.size(); i++)
+			std::stringstream ss(full_text);
+			std::string line;
+			float max_width = 0;
+			while (std::getline(ss, line, '\n')) 
 			{
-				texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, &text[i]);
-				if (i > 0)
+				float width = 0.0f;
+				const maths::vec2& scale = maths::vec2(1);
+				for (int i = 0; i < line.size(); i++)
 				{
-					float kerning = texture_glyph_get_kerning(glyph, &text[i - 1]);
-					width += kerning / scale.x;
+					texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, &line[i]);
+					if (i > 0)
+					{
+						float kerning = texture_glyph_get_kerning(glyph, &line[i - 1]);
+						width += kerning / scale.x;
+					}
+					width += glyph->advance_x / scale.x;
 				}
-				width += glyph->advance_x / scale.x;
+				max_width = std::max(width, max_width);
 			}
-			return width;
+			return max_width;
 		}
+
+		//float Font::GetHeight(const std::string& text) const
+		//{
+		//	using namespace ftgl;
+
+		//	const maths::vec2& scale = maths::vec2(1);
+		//	float min = 0.0f;
+		//	float max = 0.0f;
+		//	for (int i = 0; i < text.size(); i++)
+		//	{
+		//		texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, &text[i]);
+		//		float height = glyph->height / scale.y;
+		//		float offset = glyph->offset_y / scale.y - height;
+		//		if (offset < min)
+		//			min = offset;
+		//		if (height > max)
+		//			max = height;
+		//	}
+		//	return abs(min) + abs(max);
+
+		//}
 
 		float Font::GetHeight(const std::string& text) const
 		{
 			using namespace ftgl;
 
+			//std::stringstream ss(full_text);
+			//std::string line;
 			const maths::vec2& scale = maths::vec2(1);
 			float min = 0.0f;
 			float max = 0.0f;
-			for (int i = 0; i < text.size(); i++)
-			{
-				texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, &text[i]);
-				float height = glyph->height / scale.y;
-				float offset = glyph->offset_y / scale.y - height;
-				if (offset < min)
-					min = offset;
-				if (height > max)
-					max = height;
-			}
+			float current_height = 0.0f;
+			//while (std::getline(ss, line, '\n'))
+			//{
+				for (int i = 0; i < text.size(); i++)
+				{
+					texture_glyph_t* glyph = texture_font_get_glyph(m_FTFont, &text[i]);
+					if (text[i] == '\n')
+					{
+						current_height += floorf(float(glyph->offset_y) * 1.5f);
+						continue;
+					}
+					float height = glyph->height / scale.y ;
+					float offset = glyph->offset_y / scale.y - height - current_height;
+					min = std::min(offset, min);
+					max = std::max(max, height - current_height);
+				}
+			//}
 			return abs(min) + abs(max);
 
 		}

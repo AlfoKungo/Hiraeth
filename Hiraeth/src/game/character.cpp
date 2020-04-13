@@ -9,7 +9,7 @@ namespace hiraeth {
 	namespace game {
 
 		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer* map_layer,
-			ui::UiEquip* ui_equip, ui::UiManager * ui_manager,
+			ui::UiEquip* ui_equip, ui::UiManager* ui_manager,
 			item::ItemManager* item_manager, skills::SkillManager* skill_manager,
 			CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters,
 			network::ClientHandler* client_handler)
@@ -32,11 +32,8 @@ namespace hiraeth {
 				getBounds().height, 0x60ff4500 };
 
 			for (auto [key, d] : ui_equip->getEquips())
-				wearItem(key, 0);
+				Character::wearItem(key);
 			
-			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->subscribe(ItemWore, this, &Character::wearItem);
-			m_EventManager->subscribe(ItemUnWore, this, &Character::unWearItem);
 			registerKeys();
 		}
 
@@ -264,7 +261,7 @@ namespace hiraeth {
 				}
 		}
 
-		void Character::wearItem(SRL::EquipItemType item_type, unsigned int item_loc)
+		void Character::wearItem(SRL::EquipItemType item_type)
 		{
 			auto equip = m_UiEquip->getEquip(item_type);
 			auto& equip_tex_data = equip->m_Textures[SRL::as_Default];
@@ -290,6 +287,11 @@ namespace hiraeth {
 		{
 			if (m_Equips.find(item_type) != m_Equips.end())
 				m_Equips.erase(item_type);
+		}
+
+		void Character::writeSay(const std::string say_msg)
+		{
+			Creature::writeSayBubble(say_msg);
 		}
 
 		void Character::attackMonsters(std::vector<Monster*> mobs, std::vector<Damage> damages)

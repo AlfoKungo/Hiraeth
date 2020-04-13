@@ -29,10 +29,5 @@ namespace hiraeth {
 			}
 		}
 
-		void ItemHold::update()
-		{
-			Sprite::update();
-		}
-
 	}
 }

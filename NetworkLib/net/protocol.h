@@ -4,29 +4,32 @@
 #include "maths/vec2.h"
 #include "srl/item_data.h"
 #include "srl/equip_item_data.h"
+#include "srl/quest_data.h"
 
 namespace hiraeth {
 	namespace network {
-#define PROTOCOL_CODE const unsigned char
+#define PROTOCOL_CODE const char
 		PROTOCOL_CODE
 			MSG_CTS_ACK = 0x00,
-			MSG_CTS_OPEN_CONNECTION = 0x01,
-			MSG_CTS_CLOSE_CONNECTION = 0x02,
-			MSG_CTS_LOCATION_UPDATE = 0x03,
-			MSG_CTS_KA = 0x05,
-			MSG_CTS_HIT_MOB = 0x06,
-			MSG_CTS_KILL_MOB = 0x07,
-			MSG_CTS_NPC_CLICK = 0x08,
-			MSG_CTS_DIALOG_NEXT = 0x09,
-			MSG_CTS_ACCEPT_QUEST = 0x10,
-			MSG_CTS_CHAR_GOT_HIT = 0x11,
-			MSG_CTS_CHAR_USE_SKILL_E = 0x12,
-			MSG_CTS_CHAR_USE_SKILL_A = 0x13,
-			MSG_CTS_PICK_ITEM = 0x14,
-			MSG_CTS_DROP_ITEM = 0x15,
-			MSG_CTS_INCREASE_SKILL = 0x16,
-			MSG_CTS_WEAR_EQUIP = 0x17,
-			MSG_CTS_INVENTORY_ACTION = 0x18;
+			MSG_CTS_OPEN_CONNECTION = -0x01,
+			MSG_CTS_CLOSE_CONNECTION = -0x02,
+			MSG_CTS_LOCATION_UPDATE = -0x03,
+			MSG_CTS_KA = -0x05,
+			MSG_CTS_HIT_MOB = -0x06,
+			MSG_CTS_KILL_MOB = -0x07,
+			MSG_CTS_NPC_CLICK = -0x08,
+			MSG_CTS_DIALOG_NEXT = -0x09,
+			MSG_CTS_ACCEPT_QUEST = -0x10,
+			MSG_CTS_CHAR_GOT_HIT = -0x11,
+			MSG_CTS_CHAR_USE_SKILL_E = -0x12,
+			MSG_CTS_CHAR_USE_SKILL_A = -0x13,
+			MSG_CTS_PICK_ITEM = -0x14,
+			MSG_CTS_DROP_ITEM = -0x15,
+			MSG_CTS_INCREASE_SKILL = -0x16,
+			MSG_CTS_WEAR_EQUIP = -0x17,
+			MSG_CTS_USE_ITEM = -0x18,
+			MSG_CTS_INVENTORY_ACTION = -0x19,
+			MSG_CTS_PLAYER_SAY = -0x20;
 		//enum MSG_CTS {
 		//	MSG_CTS_ACK = 0x00,
 		//	MSG_CTS_OPEN_CONNECTION,
@@ -65,7 +68,9 @@ namespace hiraeth {
 			MSG_STC_DROPPED_ITEMS = 0x52,
 			MSG_STC_EXPIRE_ITEM = 0x53,
 			MSG_STC_ADD_ITEM_TO_INVENTORY = 0x54,
-			MSG_STC_INCREASE_SKILL = 0x55;
+			MSG_STC_INCREASE_SKILL = 0x55,
+			MSG_STC_PLAYER_SAY = 0x56,
+			MSG_STC_SET_QUEST_IP = 0x57; // IP = In progress
 		//enum MSG_STC {
 		//	MSG_STC_ACK = 0x60,
 		//	MSG_STC_ESTABLISH_CONNECTION,
@@ -187,6 +192,27 @@ namespace hiraeth {
 					CEREAL_NVP(exp), CEREAL_NVP(hp), CEREAL_NVP(mp));
 			}
 		};
+
+		struct KillStruct
+		{
+			//unsigned int mob_type;
+			unsigned int kill_amount = 0;
+			unsigned int target_amount;
+			template<class A> void serialize(A& ar) {
+				//ar(CEREAL_NVP(mob_type), CEREAL_NVP(kill_amount), 
+				ar(CEREAL_NVP(kill_amount), 
+					CEREAL_NVP(target_amount));
+			}
+		};
+		
+		struct PlayerHoldState
+		{
+			std::map<unsigned int, std::map<unsigned int, KillStruct>> active_kill_quests;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(active_kill_quests));
+			}
+		};
+		
 		struct PlayerData
 		{
 			PlayerStats player_stats{};
@@ -197,16 +223,17 @@ namespace hiraeth {
 			std::map<unsigned int, SRL::ItemDbStruct> inv_setup;
 			std::map<unsigned int, SRL::ItemDbStruct> inv_etc;
 			std::map<unsigned int, SRL::ItemDbStruct> inv_cash;
-			//std::vector<SRL::ItemDbStruct> items;
-			//std::vector<unsigned int> equips_inv;
-			//std::map<unsigned int, unsigned int> equips_inv;
 			std::map<SRL::EquipItemType, unsigned int> equips_char;
+			PlayerHoldState player_hold_state;
+			std::vector<SRL::QuestDBStruct> quests_in_progress;
+			std::vector<unsigned int> quests_done;
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(player_stats), CEREAL_NVP(stats_alloc),
 					CEREAL_NVP(skills_alloc), CEREAL_NVP(inv_equip),
 					CEREAL_NVP(inv_use), CEREAL_NVP(inv_setup),
 					CEREAL_NVP(inv_etc), CEREAL_NVP(inv_cash),
-					CEREAL_NVP(equips_char));
+					CEREAL_NVP(equips_char), CEREAL_NVP(player_hold_state),
+					CEREAL_NVP(quests_in_progress), CEREAL_NVP(quests_done));
 					//CEREAL_NVP(skills_alloc), CEREAL_NVP(items),
 					//CEREAL_NVP(equips_inv), CEREAL_NVP(equips_char));
 			}
@@ -263,6 +290,14 @@ namespace hiraeth {
 			unsigned int item_id{};
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(char_id), CEREAL_NVP(item_id));
+			}
+		};
+		struct PlayerSayMsg
+		{
+			unsigned int char_id{};
+			std::string say_msg{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(char_id), CEREAL_NVP(say_msg));
 			}
 		};
 

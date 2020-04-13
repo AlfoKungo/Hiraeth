@@ -24,10 +24,10 @@ namespace hiraeth {
 		InventoryUpdated, // 0
 		MonsterDied, // 1
 		DialogStart, // unsigned int
-		SendIncreaseSkill, // unsigned int
-		ItemWore, // EquipItemType, unsigned int
-		ItemUnWore, // EquipItemType
-		SwitchInventoryItems, // unsigned int, unsigned int, unsigned int 
+		//SendIncreaseSkill, // unsigned int
+		//ItemWore, // EquipItemType
+		//ItemUnWore, // EquipItemType
+		//SwitchInventoryItems, // unsigned int, unsigned int, unsigned int 
 	};
 
 	class BaseEvent {

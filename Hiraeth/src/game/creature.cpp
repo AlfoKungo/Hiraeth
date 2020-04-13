@@ -14,7 +14,8 @@ namespace hiraeth
 			m_AttackState(),
 			m_IsImmuneAfterHit(is_immune_after_hit),
 			m_Stats(stats),
-			m_HitSprite(maths::vec2(0, 0), 0, 0, 0xe066ccff)
+			m_HitSprite(maths::vec2(0, 0), 0, 0, 0xe066ccff),
+			m_SayBox{{12,77}, "", 0xff000000, "Assets/UI/ChatBox/0"}
 		{
 		}
 

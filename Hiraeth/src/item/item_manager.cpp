@@ -124,7 +124,7 @@ namespace hiraeth {
 			else if (item_kind == network::USE_ITEM)
 			{
 				ItemHold* item = new UseItem(item_id,
-					ItemDataManager::Get(item_id), 0);
+					ItemDataManager::Get(item_id), 1);
 				//m_InventoryItems.push_back(item);
 				m_Inventory->addItem(item_loc, item);
 			}

@@ -53,6 +53,17 @@ namespace hiraeth
 			m_Text = m_Text + '\n' + new_line_text;
 		}
 
+		maths::vec2 Label::getSize() const
+		{
+			return m_Font->GetSize(m_Text);
+		}
+
+		maths::vec2 Label::getSize(unsigned length) const
+		{
+			auto sstr = m_Text.substr(0, length);
+			return m_Font->GetSize(sstr);
+		}
+
 		void Label::updateBounds()
 		{
 			using namespace maths;

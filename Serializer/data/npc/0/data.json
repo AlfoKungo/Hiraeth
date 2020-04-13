@@ -1,7 +1,37 @@
 {
-	"info": {
-		"npc_name": "Chief Guatamala",
-		"npc_foothold": 0,
-		"npc_x_value": 0.0
-	}
+    "info": {
+        "npc_name": "Chief Guatamala",
+        "npc_foothold": 0,
+        "npc_x_value": 0.0,
+        "say_lines": [
+            "Hey, care for some CDs nigga?",
+            "May I interest you in\nsome Kanye?"
+        ],
+        "dialog_tree": [
+            {
+                "key": 0,
+                "value": [
+                    {
+                        "text": "They tryna find TuPaC",
+                        "buttons": [
+                            0
+                        ]
+                    },
+                    {
+                        "text": "Don't let them find tupac",
+                        "buttons": [
+                            0
+                        ]
+                    },
+                    {
+                        "text": "La da da da",
+                        "buttons": [
+                            2,
+                            1
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 }

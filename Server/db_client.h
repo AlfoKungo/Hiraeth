@@ -6,17 +6,23 @@
 
 namespace hiraeth {
 	namespace network {
+			inline const char* STATS_ALLOC = "stats_alloc";
+			inline const char* SKILLS_ALLOC = "skills_alloc";
+			inline const char* INV_EQUIP = "inv_equip";
+			inline const char* INV_USE = "inv_use";
+			inline const char* INV_SETUP = "inv_setup";
+			inline const char* INV_ETC = "inv_etc";
+			inline const char* INV_CASH = "inv_cash";
+			inline const char* EQUIP_CHAR = "equips_char";
+			inline const char* PLAYER_STATE = "player_state";
+			inline const char* QUESTS_IN_PROGRESS = "quests_in_prog";
+			inline const char* QUESTS_DONE = "quests_done";
 		class DbClient
 		{
-			const char* STATS_ALLOC = "stats_alloc";
-			const char* SKILLS_ALLOC = "skills_alloc";
-			const char* INV_EQUIP = "inv_equip";
-			const char* INV_USE = "inv_use";
-			const char* INV_SETUP = "inv_setup";
-			const char* INV_ETC = "inv_etc";
-			const char* INV_CASH = "inv_cash";
-			//const std::string EQUIP_CHAR = "equips_char";
-			const char* EQUIP_CHAR = "equips_char";
+			const std::map<unsigned int, const char*> TABS_MAP{
+				{EQUIP_ITEM, INV_EQUIP}, {USE_ITEM, INV_USE},
+				{SETUP_ITEM, INV_SETUP},{ETC_ITEM, INV_ETC},{CASH_ITEM, INV_CASH} };
+			const char* get_name_by_index(unsigned int tab_index) const { return TABS_MAP.at(tab_index); }
 			//int nFields{ 0 };
 			PGconn *m_Conn;
 			PGresult   *m_Res;
@@ -126,6 +132,7 @@ namespace hiraeth {
 					hp = getInt("hp"),
 					max_mp = getInt("max_mp"),
 					mp = getInt("mp");
+				std::string player_name{ getString("name") };
 				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>(STATS_ALLOC);
 				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>(SKILLS_ALLOC);
 				const auto inv_equip = getDynamicTypeFromBuffer<decltype(PlayerData::inv_equip)>(INV_EQUIP);
@@ -134,11 +141,14 @@ namespace hiraeth {
 				const auto inv_etc = getDynamicTypeFromBuffer<decltype(PlayerData::inv_etc)>(INV_ETC);
 				const auto inv_cash = getDynamicTypeFromBuffer<decltype(PlayerData::inv_cash)>(INV_CASH);
 				const auto equips_char = getDynamicTypeFromBuffer<decltype(PlayerData::equips_char)>(EQUIP_CHAR);
-				std::string player_name{ getString("name") };
+				const auto player_state = getDynamicTypeFromBuffer<decltype(PlayerData::player_hold_state)>(PLAYER_STATE);
+				const auto quests_in_progress = getDynamicTypeFromBuffer<decltype(PlayerData::quests_in_progress)>(QUESTS_IN_PROGRESS);
+				const auto quests_done = getDynamicTypeFromBuffer<decltype(PlayerData::quests_done)>(QUESTS_DONE);
 
 				PQclear(m_Res);
-				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp, hp, max_mp, mp},
-					stats_alloc, skills_alloc , inv_equip, inv_use, inv_setup, inv_etc, inv_cash, equips_char};
+				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp,
+					hp, max_mp, mp}, stats_alloc, skills_alloc , inv_equip, inv_use,
+					inv_setup, inv_etc, inv_cash, equips_char, player_state, quests_in_progress, quests_done};
 				return player_data;
 			}
 
@@ -239,10 +249,8 @@ namespace hiraeth {
 
 			unsigned int addItem(unsigned int tab_index, unsigned int player_id, unsigned int item_id)
 			{
-				std::map<unsigned int, const char*> tabs_map{ {USE_ITEM, INV_USE},
-					{SETUP_ITEM, INV_SETUP},{ETC_ITEM, INV_ETC},{CASH_ITEM, INV_CASH} };
-				const char* inv_name = tabs_map[tab_index];
-				auto items = getDynamicType<decltype(PlayerData::inv_use)>(player_id, inv_name);
+				const char* tab_name = get_name_by_index(tab_index);
+				auto items = getDynamicType<decltype(PlayerData::inv_use)>(player_id, tab_name);
 				unsigned int item_loc = 0;
 				bool found = false;
 				for (auto& [key, alloc] : items)
@@ -293,22 +301,36 @@ namespace hiraeth {
 				setByteArray(player_id, EQUIP_CHAR, equips_char);
 			}
 
-			void switchInventoryItems(unsigned int player_id, unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index)
+			void switchInventoryItems(unsigned int player_id, unsigned int item_loc1, 
+				unsigned int item_loc2, unsigned int tab_index)
 			{
-				auto inv_equip = getDynamicType<decltype(PlayerData::inv_equip)>(player_id, INV_EQUIP);
-				auto item2 = inv_equip.find(item_loc2);
-				if (item2 != inv_equip.end())
+				if (tab_index == EQUIP_ITEM)
+					switchInventoryItems<decltype(PlayerData::inv_equip)>(player_id, item_loc1,
+						item_loc2, tab_index);
+				else
+					switchInventoryItems<decltype(PlayerData::inv_use)>(player_id, item_loc1,
+						item_loc2, tab_index);
+			}
+
+			template <class T>
+			void switchInventoryItems(unsigned int player_id, unsigned int item_loc1, 
+				unsigned int item_loc2, unsigned int tab_index)
+			{
+				const char* tab_name = get_name_by_index(tab_index);
+				auto inv = getDynamicType<T>(player_id, tab_name);
+				auto item2 = inv.find(item_loc2);
+				if (item2 != inv.end())
 				{
-					auto item1 = inv_equip.find(item_loc1);
+					auto item1 = inv.find(item_loc1);
 					std::swap(item1->second, item2->second);
 				}
 				else
 				{
-					auto nh = inv_equip.extract(item_loc1);
+					auto nh = inv.extract(item_loc1);
 					nh.key() = item_loc2;
-					inv_equip.insert(move(nh));
+					inv.insert(move(nh));
 				}
-				setByteArray(player_id, INV_EQUIP, inv_equip);
+				setByteArray(player_id, tab_name, inv);
 			}
 
 			void increaseSkillPoints(unsigned int player_id, unsigned int skill_id)
@@ -322,6 +344,13 @@ namespace hiraeth {
 						alloc.pts_alloc -= 1;
 				}
 				setByteArray(player_id, SKILLS_ALLOC, skills_alloc);
+			}
+
+			void setQuestAsActive(unsigned int player_id, unsigned int quest_id)
+			{
+				auto quests_in_progress = getDynamicType<decltype(PlayerData::quests_in_progress)>(player_id, QUESTS_IN_PROGRESS);
+				quests_in_progress.push_back({ quest_id, 0});
+				setByteArray(player_id, QUESTS_IN_PROGRESS, quests_in_progress);
 			}
 
 		private:

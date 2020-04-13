@@ -9,7 +9,6 @@
 #include <tuple>
 #include "stats/timed_stat.h"
 #include "srl/skill_data.h"
-#include "item/item.h"
 #include "item/equip_item.h"
 #include "utils/calculator.hpp"
 

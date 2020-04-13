@@ -4,8 +4,9 @@
 namespace hiraeth {
 	namespace ui {
 
-		MainUi::MainUi()
-			: m_CharacterStats(),
+		MainUi::MainUi(input::Keyboard* kb)
+			: m_Kb(kb),
+		m_CharacterStats(),
 			m_StatsStruct(m_CharacterStats.getStatsStruct_()),
 			m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag")),
 		m_GraphicGroup(new graphics::Group(maths::vec2(-555, -450))),
@@ -18,6 +19,11 @@ namespace hiraeth {
 			m_Layer.add(m_Job);
 			m_Name = new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff);
 			m_Layer.add(m_Name);
+			m_TypingLabel = new graphics::Label("arial", 15, m_TextWritten, { -730, -407 }, 0xff000000);
+			m_Layer.add(m_TypingLabel);
+			m_CursorSprite = new graphics::Sprite({ -730, -407 }, 2, 12, 0xff000000);
+			m_Layer.add(m_CursorSprite);
+
 			//m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Job, { -730, -429 }, 0xff70cdd0));
 			//m_Layer.add(new graphics::Label("arial", 11, m_StatsStruct->Name, { -730, -441 }, 0xffffffff));
 			m_Layer.add(m_LabelGroup);
@@ -27,6 +33,8 @@ namespace hiraeth {
 			m_Layer.add(new graphics::Sprite(maths::vec2(-797, -430), graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.lvCover.png")));
 			m_Layer.add(new graphics::Sprite(maths::vec2(-799, -448), graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.lvBacktrnd.png")));
 			m_Layer.add(new graphics::Sprite(maths::vec2(-800, -450), graphics::TextureManager::Load("Assets/UI/MainUi/mainBar.backgrnd.png")));
+
+			setTypingState(false);
 		}
 
 			//void MainUi::StatsUpdatedT(int X)
@@ -48,6 +56,93 @@ namespace hiraeth {
 		void MainUi::StatsUpdated()
 		{
 			fill_stats_group();
+		}
+
+		void MainUi::ButtonClicked(input::Key control)
+		{
+			if (control == GLFW_KEY_ENTER)
+			{
+				if (m_IsTyping)
+					if (!m_TextWritten.empty())
+					{
+						NetworkManager::Instance()->sendChatMsg(m_TextWritten);
+						CharManager::Instance()->writeSay(m_TextWritten);
+					}
+				setTypingState(!m_IsTyping);
+			}
+			else
+			{
+				if (control >= 32 && control <= 126)
+				{
+					m_TextWritten.insert(m_TextWritten.begin() + m_TextCursor, char(control));
+					m_TypingLabel->setText(m_TextWritten);
+					m_TextCursor++;
+				}
+				else
+				{
+					switch (control)
+					{
+					case GLFW_KEY_ESCAPE:
+						setTypingState(false);
+						break;
+					case GLFW_KEY_RIGHT:
+						m_TextCursor = std::min<unsigned int>(m_TextWritten.size(), m_TextCursor + 1);
+						break;
+					case GLFW_KEY_LEFT:
+						if (m_TextCursor > 0)
+							m_TextCursor -= 1;
+						break;
+					case GLFW_KEY_BACKSPACE:
+						if (m_TextCursor > 0)
+						{
+							m_TextWritten.erase(m_TextWritten.begin() + m_TextCursor - 1);
+							m_TypingLabel->setText(m_TextWritten);
+							m_TextCursor--;
+						}
+						break;
+					case GLFW_KEY_DELETE:
+						if (m_TextCursor < m_TextWritten.size())
+						{
+							m_TextWritten.erase(m_TextWritten.begin() + m_TextCursor);
+							m_TypingLabel->setText(m_TextWritten);
+						}
+						break;
+					case GLFW_KEY_END:
+						m_TextCursor = m_TextWritten.size();
+						break;
+					case GLFW_KEY_HOME:
+						m_TextCursor = 0;
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			updateCursorPos();
+		}
+
+		void MainUi::setTypingState(bool new_state)
+		{
+			m_IsTyping = new_state;
+			m_Kb->setTyping(this, m_IsTyping);
+			if (new_state)
+			{
+				m_CursorSprite->setColor(0xff000000);
+			}
+			else
+			{
+				m_TextWritten.erase();
+				m_TypingLabel->setText(m_TextWritten);
+				m_IsTyping = false;
+				m_TextCursor = 0;
+				m_CursorSprite->setColor(0x00000000);
+			}
+		}
+
+		void MainUi::updateCursorPos()
+		{
+			auto text_size = m_TypingLabel->getSize(m_TextCursor);
+			m_CursorSprite->setPosition(maths::vec2{-730 + text_size.x, -407});
 		}
 
 		void MainUi::fill_stats_group()

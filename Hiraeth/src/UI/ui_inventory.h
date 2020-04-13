@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <iterator>
 #include "srl/item_data.h"
-//#include "item/item.h"
 #include "ui_basic/ui_tabs.h"
 #include "game/character_stats.h"
 #include "ui_basic/ui_tab_inventory.h"
@@ -16,7 +15,7 @@ namespace hiraeth {
 		class UiInventory : public UiWindow
 		{
 		private:
-			UiTabs<UiTabInventory<item::ItemHold>>* m_Tabs;
+			UiTabs<UiTabInventory>* m_Tabs;
 			//UiTabs<UiTabInventory<item::Item>> m_Tabs;
 			//UiTabs<item::Item> * m_Tabs;
 			//std::map<unsigned int, unsigned int> m_ItemsOrd;

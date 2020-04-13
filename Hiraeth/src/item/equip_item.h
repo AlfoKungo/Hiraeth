@@ -1,5 +1,4 @@
 #pragma once
-//#include "item.h"
 #include "srl/equip_item_data.h"
 #include "item_hold.h"
 

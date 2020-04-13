@@ -55,9 +55,15 @@ namespace hiraeth {
 		maths::vec2 Camera::mouse_to_map_position(maths::vec2 mouse_pos)
 		{
 			maths::vec2 cam_position = m_Ortho.GetPosition();
-			cam_position *= maths::vec2{ 1,1 };
+			//cam_position *= maths::vec2{ 1,1 };
 			mouse_pos = { mouse_pos.x - 800, -mouse_pos.y + 450 };
 			return  { mouse_pos.x + cam_position.x, (mouse_pos.y + cam_position.y) };
+		}
+
+		maths::vec2 Camera::mouse_to_screen_position(maths::vec2 mouse_pos)
+		{
+			mouse_pos = { mouse_pos.x - 800, -mouse_pos.y + 450 };
+			return  mouse_pos;
 		}
 
 		void Camera::setNewPosition(maths::vec2 char_pos, maths::vec2 cam_pos, maths::vec2 lerp)

@@ -31,6 +31,8 @@ namespace hiraeth
 			void setText(unsigned int new_text) { setText(std::to_string(new_text)); }
 			std::string getText() const;
 			void addLine(const std::string& new_line_text);
+			maths::vec2 getSize() const override;
+			maths::vec2 getSize(unsigned int length) const;
 		private:
 			void updateBounds();
 		};

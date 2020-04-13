@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <fstream>
-#include "item.h"
 #include "item_drop.h"
 #include "graphics/layers/layer.h"
 #include "graphics/texture_manager.h"

@@ -144,9 +144,6 @@
     <ClCompile Include="src\item\item_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\item\item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\item\item_data_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -244,6 +241,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\item\item_hoid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\basic\network_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\basic\char_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -399,9 +402,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\basic\a_timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\item\item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\item\item_manager.h">
@@ -608,5 +608,32 @@
     <ClInclude Include="src\item\item_hold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\quest\quest_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ui_basic\ui_tab_quests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\box_textured.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\box_textured_full.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\text_box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\basic\network_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\basic\char_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\ui_basic\ui_button_basic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

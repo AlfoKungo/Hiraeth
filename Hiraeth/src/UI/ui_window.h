@@ -41,7 +41,7 @@ namespace hiraeth {
 
 			void move(float mx, float my);
 
-			bool isWindowContains(maths::vec2 pos) const;
+			virtual bool isWindowContains(maths::vec2 pos) const;
 			bool isTitlebarContains(float x, float y) const;
 
 			void attach() { m_IsAttached = true; }

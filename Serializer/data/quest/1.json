@@ -1,6 +1,8 @@
 {
     "quest": {
         "name": "second",
+        "description": "It's party time",
+        "req_lvl": 1,
         "quest_properties": [
             {
                 "key": 0,

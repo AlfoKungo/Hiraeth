@@ -39,6 +39,7 @@ namespace hiraeth {
 			glfwSetKeyCallback(m_Window, input::key_callback);
 			glfwSetMouseButtonCallback(m_Window, input::mouse_button_callback);
 			glfwSetCursorPosCallback(m_Window, input::cursor_position_callback);
+			glfwSetCharCallback(m_Window, input::char_callback);
 
 			// Disable VSYN
 			//glfwSwapInterval(0.0);

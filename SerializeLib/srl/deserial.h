@@ -3,6 +3,10 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/cereal.hpp>
 
+inline const char * DF_QUEST = "quest";
+inline const char * DF_MAP = "map";
+inline const char * DF_MONSTER = "monster";
+
 namespace SRL {
 	template <class Rtype>
 	static Rtype deserial(const char* datafile_name, unsigned int address)

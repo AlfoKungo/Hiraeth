@@ -48,13 +48,14 @@ namespace hiraeth {
 
 			// gets
 			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
-			inline const maths::vec2& getSize() const { return m_Bounds.size; }
+			virtual maths::vec2 getSize() const { return m_Bounds.size; }
 			inline const maths::Rectangle& getBounds() const { return m_Bounds; }
 			//inline maths::Rectangle& getBounds() { return m_Bounds; }
 			inline Texture* getTexture() const { return m_Texture; }
 			inline unsigned int getColor() const { return m_Color; }
 			inline const std::vector<maths::vec2>& getUV() const { return m_UV; }
 			inline const maths::vec2& getOrigin() const { return m_Org; }
+			void setUv(std::vector<maths::vec2> uv) { m_UV = uv; }
 			virtual bool hasSpriteFinished() const { return false; }
 			//inline GLuint getTID() const { return m_Texture == nullptr ? 0 : m_Texture->getID(); }
 			GLuint getTID() const

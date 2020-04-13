@@ -76,7 +76,7 @@
     <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)MathLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)MathLib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)MathLib;$(SolutionDir)SerializeLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)MathLib;$(IncludePath)</IncludePath>

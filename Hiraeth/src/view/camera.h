@@ -40,6 +40,7 @@ constexpr auto CAMERA_Y_LERP_VALUE = 1.0f;
 			static void setCharacter(graphics::Renderable* character);
 			static maths::vec2 getCharacterPos();
 			static maths::vec2 mouse_to_map_position(maths::vec2 mouse_pos);
+			static maths::vec2 mouse_to_screen_position(maths::vec2 mouse_pos);
 		private:
 			static void setNewPosition(maths::vec2 char_pos, maths::vec2 cam_pos, maths::vec2 lerp);
 

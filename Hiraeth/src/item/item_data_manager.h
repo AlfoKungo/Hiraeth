@@ -4,7 +4,6 @@
 #include <fstream>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/string.hpp>
-#include "item.h"
 #include "UI/ui_inventory.h"
 #include "srl/deserial.h"
 

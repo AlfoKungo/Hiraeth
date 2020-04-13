@@ -36,6 +36,9 @@ namespace hiraeth {
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override {}
 			void fillGroup();
 			void StatsUpdated();
+			//bool isWindowContains(maths::vec2 pos) const override
+			//{
+			//}
 		};
 
 	}

@@ -57,10 +57,12 @@ namespace hiraeth {
 			void onMove(maths::vec2 mouse_pos) override
 			{
 				if (m_IsEnabled && !m_IsClickedOn)
+				{
 					if (isContains(mouse_pos))
 						m_Rend = &m_MouseOver;
 					else
 						m_Rend = &m_FlashingTexture;
+				}
 			}
 		};
 	}

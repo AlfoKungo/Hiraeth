@@ -76,12 +76,14 @@ namespace hiraeth {
 			bindFunctionToChar(MSG_STC_EXPIRE_ITEM, &ClientHandler::recvExpireItem);
 			bindFunctionToChar(MSG_STC_ADD_ITEM_TO_INVENTORY, &ClientHandler::recvAddItem);
 			bindFunctionToChar(MSG_STC_INCREASE_SKILL, &ClientHandler::recvIncreaseSkill);
+			bindFunctionToChar(MSG_STC_PLAYER_SAY, &ClientHandler::recvPlayerSay);
+			bindFunctionToChar(MSG_STC_SET_QUEST_IP, &ClientHandler::recvSetQuestAsInProgress);
 
-			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
-			m_EventManager->subscribe(SendIncreaseSkill, this, &ClientHandler::sendIncreaseSkill);
-			m_EventManager->subscribe(ItemWore, this, &ClientHandler::sendItemWore);
-			m_EventManager->subscribe(SwitchInventoryItems, this, &ClientHandler::switchInventoryItems);
+			//EventManager *m_EventManager = EventManager::Instance();
+			//m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
+			//m_EventManager->subscribe(SendIncreaseSkill, this, &ClientHandler::sendIncreaseSkill);
+			//m_EventManager->subscribe(ItemWore, this, &ClientHandler::sendItemWore);
+			//m_EventManager->subscribe(SwitchInventoryItems, this, &ClientHandler::sendSwitchInventoryItems);
 		}
 
 		ClientHandler::~ClientHandler()
@@ -296,9 +298,9 @@ namespace hiraeth {
 
 		void ClientHandler::recvStartDialog()
 		{
-			const auto dialog_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+			const auto [npc_id, dialog_id] = dsrl_types<unsigned int, unsigned int>(m_RcvBuffer + 1);
 			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->execute<unsigned int>(DialogStart, dialog_id);
+			m_EventManager->execute<unsigned int>(DialogStart, npc_id, dialog_id);
 		}
 
 		void ClientHandler::recvPlayerUseSkillE()
@@ -353,6 +355,18 @@ namespace hiraeth {
 		{
 			const auto increased_skill_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
 			m_SkillManager->increasSkill(increased_skill_id);
+		}
+
+		void ClientHandler::recvPlayerSay()
+		{
+			const auto msg = dsrl_dynamic_type<PlayerSayMsg>(m_RcvBuffer + 1);
+			m_NetCharManager->getCharsMap()[msg.char_id]->writeSayBubble(msg.say_msg);
+		}
+
+		void ClientHandler::recvSetQuestAsInProgress()
+		{
+			const auto quest_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+			m_UiManager->getUiQuests()->setQuestAsActive(quest_id);
 		}
 
 		void ClientHandler::sendAttackPacket(MonsterHit monster_damage)
@@ -417,16 +431,25 @@ namespace hiraeth {
 
 		void ClientHandler::sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc)
 		{
-			auto equip = m_UiManager->getUiEquip()->getEquip(item_type);
+			//auto equip = m_UiManager->getUiEquip()->getEquip(item_type);
 
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_WEAR_EQUIP, m_Id, item_type, item_loc);
 			Send();
 		}
 
-		void ClientHandler::switchInventoryItems(unsigned item_loc1, unsigned item_loc2, unsigned tab_index)
+		void ClientHandler::sendSwitchInventoryItems(unsigned item_loc1, unsigned item_loc2, unsigned tab_index)
 		{
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_INVENTORY_ACTION, m_Id, 
 				item_loc1, item_loc2, tab_index);
+			Send();
+		}
+
+		void ClientHandler::sendChatMsg(std::string msg)
+		{
+			auto[data, size] = srl_dynamic_type(msg);
+			//m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PLAYER_MSG, m_Id, 
+			//	msg);
+			m_SendSize = create_client_packet_with_buffer(m_SendBuffer, MSG_CTS_PLAYER_SAY, m_Id, *data, size);
 			Send();
 		}
 	}

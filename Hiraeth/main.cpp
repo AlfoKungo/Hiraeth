@@ -22,6 +22,8 @@
 #include "skills/skill_manager.h"
 #include "game/net_chars/net_char_manager.h"
 #include "editor/editor.h"
+#include "basic/network_handler.h"
+#include "basic/char_handler.h"
 
 //#define EDITOR
 
@@ -105,30 +107,39 @@ int main()
 
 	ui::UiManager uiManager(&keyboard);
 
-	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory(), uiManager.getUiEquip()};
-	skills::SkillManager skillManager{uiManager.getUiSkills(), uiManager.getMainUi()->getCharacterStats()};
+	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory(), uiManager.getUiEquip() };
+	skills::SkillManager skillManager{ uiManager.getUiSkills(), uiManager.getMainUi()->getCharacterStats() };
 
 
 	game::MonsterManager monsterManager(map.getMapLayer());
 	game::NetCharManager netCharManager{ map.getMapLayer(), &skillManager, monsterManager.getMonsters() };
-	network::ClientHandler clientHandler{&uiManager, &netCharManager, &monsterManager, &itemManager, &skillManager}; // itemManager, 
 
-	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats, 
+	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, &itemManager, &skillManager }; // itemManager, 
+	NetworkManager::setHandler(&clientHandler);
+	
+	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats,
 		clientHandler.getPlayerData().stats_alloc);
 	//uiManager.getUiSkills()->setClientHandler(&clientHandler);
 	itemManager.setInvEquip(clientHandler.getPlayerData().inv_equip);
 	itemManager.setInvUse(clientHandler.getPlayerData().inv_use);
 	itemManager.setEquipsChar(clientHandler.getPlayerData().equips_char);
+	std::vector<unsigned int> aval{ 0,1,2 };
+	uiManager.getUiQuests()->setQuestsTab(aval, SRL::QuestTab::Available);
+	for (auto [active_quest_id, quest_stage] : clientHandler.getPlayerData().quests_in_progress)
+		uiManager.getUiQuests()->setQuestAsActive(active_quest_id);
+	//uiManager.getUiQuests()->setQuestsInProgress(clientHandler.getPlayerData().quests_in_progress, SRL::QuestTab::InProgress);
+	uiManager.getUiQuests()->setQuestsTab(clientHandler.getPlayerData().quests_done, SRL::QuestTab::Done);
 	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
-	game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), 
+	game::Character Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), 
 		uiManager.getUiEquip(), &uiManager, &itemManager,
 		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),
 		&clientHandler);
-	m_CrLayer.add_ref(&m_Char);
-	view::Camera::init(&m_Char);
+	CharManager::setChar(&Char);
+	m_CrLayer.add_ref(&Char);
+	view::Camera::init(&Char);
 
-	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &m_Char, uiManager.getUiQuests());
+	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &Char, uiManager.getUiQuests());
 
 	unsigned int frames = 0;
 	while (!window.closed())
@@ -137,7 +148,10 @@ int main()
 		window.clear();
 		double x, y;
 		window.getKeyboard()->getMousePosition(x, y);
-		std::string s = "my name is : " + std::to_string(m_Char.getBounds().x) + ", "+ std::to_string(m_Char.getBounds().y) + ", " + std::to_string(m_Char.getBounds().width) + ", "  + std::to_string(m_Char.getBounds().height);
+		auto mouse_pos = window.getKeyboard()->getMousePosition();
+		std::string s = "my name is : " + std::to_string(Char.getBounds().x) + ", "+ 
+			std::to_string(Char.getBounds().y) + ", " + std::to_string(Char.getBounds().width) + ", "  + 
+			std::to_string(Char.getBounds().height) + "; " + std::to_string(mouse_pos.x) + "," + std::to_string(mouse_pos.y);
 		window.setTitle(s.c_str());
 		Camera::update();
 		map.update();
@@ -147,7 +161,7 @@ int main()
 		m_CrLayer.update();
 		itemManager.update();
 		uiManager.update();
-		clientHandler.Update(network::PlayerStateUpdateMsg{ m_Char.getPosition(), m_Char.getForce() , m_Char.getDirection()});
+		clientHandler.Update(network::PlayerStateUpdateMsg{ Char.getPosition(), Char.getForce() , Char.getDirection()});
 		netCharManager.update();
 
 

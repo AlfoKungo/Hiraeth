@@ -14,11 +14,13 @@
 #include "skills/skill_manager.h"
 #include "keyboard/key.h"
 #include "utils/calculator.hpp"
+#include "basic/char_handler.h"
+#include "graphics/text_box.h"
 
 namespace hiraeth {
 	namespace game {
 
-		class Character : public Creature, public input::KeyboardEvent
+		class Character : public Creature, public input::KeyboardEvent, public CharHandler
 		{
 			enum Controls
 			{
@@ -47,7 +49,6 @@ namespace hiraeth {
 			graphics::TGroup<skills::TargetedProjectile> m_ProjectileAnimations;
 			std::map<unsigned int, ATimer> m_SkillsTimeouts;
 			ATimer m_SkillActivationTimer{};
-			//graphics::Sprite* m_Hat;
 			//graphics::TGroup<graphics::Sprite> m_EquipsGroup;
 			//std::map<SRL::EquipItemType,  graphics::Sprite> m_Equips;
 			//std::map<unsigned int, std::vector<std::pair<SRL::SkillDataType, int>>> m_AttackModifiers;
@@ -80,8 +81,9 @@ namespace hiraeth {
 			maths::vec2 getForce() const { return m_Force; }
 			network::Direction getDirection() const { return static_cast<network::Direction>(m_Direction); }
 			void attackMonster(Creature* attacked, Damage d) override;
-			void wearItem(SRL::EquipItemType item_type, unsigned int item_loc);
-			void unWearItem(SRL::EquipItemType item_type);
+			void wearItem(SRL::EquipItemType item_type) override;
+			void unWearItem(SRL::EquipItemType item_type) override;
+			void writeSay(std::string say_msg) override;
 			//void updateComplexSkills();
 			//CharacterStats* getCharacterStats() const;
 		private:

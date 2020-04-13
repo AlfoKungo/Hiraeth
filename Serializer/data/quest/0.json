@@ -1,6 +1,8 @@
 {
     "quest": {
         "name": "first",
+        "description": "I need you to kill all the fags",
+        "req_lvl": 1,
         "quest_properties": [
             {
                 "key": 0,
@@ -18,6 +20,16 @@
                     "index": 2,
                     "data": {
                         "type": 1,
+                        "amount": 10
+                    }
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "index": 2,
+                    "data": {
+                        "type": 0,
                         "amount": 10
                     }
                 }

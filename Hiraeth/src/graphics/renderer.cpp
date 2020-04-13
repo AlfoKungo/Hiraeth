@@ -136,6 +136,9 @@ namespace hiraeth {
 				}
 			}
 
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 			m_Buffer->vertex = *m_TransformationBack * position; 
 			m_Buffer->uv = uv[0];
 			m_Buffer->tid = ts;

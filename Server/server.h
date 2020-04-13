@@ -39,6 +39,7 @@ namespace hiraeth {
 			//float expire_time;
 			ATimer expire_timer;
 		};
+
 		//struct PlayerQuestData
 		//{
 		//	unsigned int quest_id, quest_stage;
@@ -60,6 +61,7 @@ namespace hiraeth {
 			MobManager m_MobManager;
 			std::map<unsigned int, ItemDropMsg> m_ItemsDropped;
 			std::queue<ItemExpirer> m_ExpiringQueue;
+			std::map<unsigned int, PlayerHoldState> m_PlayersState;
 			unsigned int m_ItemsIdCounter{};
 			//players_states
 			//std::map<unsigned int, std::vector<PlayerQuestData>> m_PlayerQuestData;
@@ -107,6 +109,7 @@ namespace hiraeth {
 				bindFunctionToChar(MSG_CTS_INCREASE_SKILL, &Server::IncreaseSkill);
 				bindFunctionToChar(MSG_CTS_WEAR_EQUIP, &Server::WearEquip);
 				bindFunctionToChar(MSG_CTS_INVENTORY_ACTION, &Server::SwitchInventoryItems);
+				bindFunctionToChar(MSG_CTS_PLAYER_SAY, &Server::PlayerMsg);
 				bindFunctionToChar(MSG_INR_MOB_HIT, &Server::InrMobGotHit);
 				bindFunctionToChar(MSG_INR_MOB_UPDATE, &Server::InrMobUpdate);
 				bindFunctionToChar(MSG_INR_ROUTINE_UPDATE, &Server::RoutineUpdate);
@@ -183,7 +186,8 @@ namespace hiraeth {
 					//m_ItemsDropped[m_ItemsIdCounter] = ItemDropMsg{ m_ItemsIdCounter ,0, 0, dead_pos };
 					//auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {m_ItemsDropped[m_ItemsIdCounter] } });
 					//m_ItemsIdCounter++;
-					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {addItem(0, 0, dead_pos)} });
+					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, 
+						{addItem(0, 0, dead_pos)} });
 					const auto buffer_size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_MOB_DIED, *data, size);
 					sendDataToAllClients(buffer_size);
 				}
@@ -214,8 +218,8 @@ namespace hiraeth {
 			void NpcClick(Address sender)
 			{
 				auto[client_id, npc_index] = dsrl_types<unsigned int, unsigned int>(m_Buffer + 1);
-				unsigned int dialog_id = 0;
-				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_START_DIALOG, dialog_id);
+				unsigned int npc_id = 0, dialog_id = 0;
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_START_DIALOG, npc_id, dialog_id);
 				m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 			void DialogNext(Address sender)
@@ -228,12 +232,28 @@ namespace hiraeth {
 			}
 			void AcceptQuest(Address sender)
 			{
+				std::map<unsigned int, unsigned int> npc_n_did_to_quest{{2,0},{3,1}};
 				auto[client_id, npc_index, dialog_index] = dsrl_types<unsigned int, unsigned int, unsigned int>(m_Buffer + 1);
-				if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
-					m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
-				if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
-					m_PlayerQuestData[client_id][npc_index] = 0;
-				m_PlayerQuestData[client_id][npc_index] += 1;
+				unsigned int key = (npc_index + 1) * 2 + dialog_index;
+				unsigned int quest_id = npc_n_did_to_quest[key];
+				auto quest_data = SRL::deserial<SRL::QuestData>(DF_QUEST, quest_id);
+
+				for (auto prop : quest_data.quest_properties)
+				{
+					if (prop.key == SRL::KillAmount)
+					{
+						auto quest_double = std::get<SRL::QuestDouble>(prop.value);
+						m_PlayersState[client_id].active_kill_quests[quest_id][quest_double.type] = KillStruct{ 0, quest_double.amount };
+					}
+				}
+				//if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
+				//	m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
+				//if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
+				//	m_PlayerQuestData[client_id][npc_index] = 0;
+				//m_PlayerQuestData[client_id][npc_index] += 1;
+				m_DbClient->setQuestAsActive(client_id, quest_id);
+				const auto buffer_size = construct_server_packet(m_Buffer, MSG_STC_SET_QUEST_IP, quest_id);
+				m_Socket.Send(sender, m_Buffer, buffer_size);
 			}
 			void CharGotHit(Address sender)
 			{
@@ -259,6 +279,7 @@ namespace hiraeth {
 				for (const auto& monster_hit : attack_skill_msg.monsters_hit)
 				if (m_MobManager.damageMob(monster_hit))
 				{
+					UpdateQuestOnKill(client_id, monster_hit.monster_id);
 					auto dead_pos = m_MobManager.monsterDied(monster_hit.monster_id);
 					auto[data, size] = srl_dynamic_type(MonsterDiedMsg{ monster_hit.monster_id, {addItem(0, 0, dead_pos)} });
 					const auto buffer_size2 = construct_server_packet_with_buffer(m_Buffer, MSG_STC_MOB_DIED, *data, size);
@@ -310,6 +331,16 @@ namespace hiraeth {
 				else if (tab_index == 1)
 					m_DbClient->switchInventoryItems(client_id, item_loc1, item_loc2, tab_index);
 			}
+			void PlayerMsg(Address sender)
+			{
+				auto [client_id] =
+					dsrl_types<unsigned int>(m_Buffer + 1);
+				auto msg = dsrl_dynamic_type<std::string>(m_Buffer + 5);
+				auto [data, size] = srl_dynamic_type(PlayerSayMsg{ client_id, msg });
+				const auto buffer_size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_PLAYER_SAY,
+					*data, size);
+				sendDataToAllClientsExcept(buffer_size, client_id);
+			}
 			void InrMobGotHit(Address sender)
 			{
 			}
@@ -345,6 +376,22 @@ namespace hiraeth {
 			{
 				findExpiredItems();
 				createMessageThread(MSG_INR_ROUTINE_UPDATE, 1000);
+			}
+
+			void UpdateQuestOnKill(unsigned int client_id, unsigned int mob_id)
+			{
+					for (auto & [quest_id, quest_props] : m_PlayersState[client_id].active_kill_quests)
+					{
+						for (auto& [quest_mob_id, kill_struct] : quest_props)
+						{
+							if (quest_mob_id == mob_id)
+							{
+								kill_struct.kill_amount++;
+								m_DbClient->setByteArray(client_id, PLAYER_STATE, m_PlayersState[client_id]);
+								return;
+							}
+						}
+					}
 			}
 
 			//void sendKeepAliveAnswer(Address sender)

@@ -1,13 +1,13 @@
 ﻿#include "ui_inventory.h"
-#include "item/item.h"
 #include "item/use_item.h"
+#include "basic/network_handler.h"
 
 namespace hiraeth {
 	namespace ui {
 		UiInventory::UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 172, 335), control_key),
 			//m_Tabs(new UiTabs<item::Item>()),
-			m_Tabs(new UiTabs<UiTabInventory<item::ItemHold>>()),
+			m_Tabs(new UiTabs<UiTabInventory>()),
 			m_CharacterStats(character_stats),
 			m_HoldItem(0, nullptr)
 		{
@@ -24,8 +24,8 @@ namespace hiraeth {
 			}
 			m_BackgroundGroup->add(m_Tabs);
 
-			EventManager *m_EventManager = EventManager::Instance();
-			m_EventManager->createEvent<unsigned int, unsigned int, unsigned int>(SwitchInventoryItems);
+			//EventManager *m_EventManager = EventManager::Instance();
+			//m_EventManager->createEvent<unsigned int, unsigned int, unsigned int>(SwitchInventoryItems);
 		}
 
 		void UiInventory::fillGroup()
@@ -70,15 +70,17 @@ namespace hiraeth {
 					{
 						auto item1 = rends.find(m_HoldItem.first);
 						std::swap(item1->second, item2->second);
-						item1->second->setPosition(UiTabInventory<item::Item>::getPosByLocIndex(m_HoldItem.first));
-						item2->second->setPosition(UiTabInventory<item::Item>::getPosByLocIndex(new_pos_index));
+						item1->second->setPosition(UiTabInventory::getPosByLocIndex(m_HoldItem.first));
+						item2->second->setPosition(UiTabInventory::getPosByLocIndex(new_pos_index));
 					}
 					else
 					{
 						tab->changeItemPos(m_HoldItem.first, new_pos_index);
 					}
-					EventManager* m_EventManager = EventManager::Instance();
-					m_EventManager->execute(SwitchInventoryItems, m_HoldItem.first, new_pos_index, m_Tabs->getTabIndex());
+					NetworkManager::Instance()->sendSwitchInventoryItems(m_HoldItem.first,
+						new_pos_index, m_Tabs->getTabIndex());
+					//EventManager* m_EventManager = EventManager::Instance();
+					//m_EventManager->execute(SwitchInventoryItems, m_HoldItem.first, new_pos_index, m_Tabs->getTabIndex());
 				}
 				else
 				{
@@ -117,18 +119,21 @@ namespace hiraeth {
 			return pos_index;
 		}
 
-		void UiInventory::addItem(unsigned int pos_index, item::ItemHold * new_item)
+		void UiInventory::addItem(unsigned int pos_index, item::ItemHold* new_item)
 		{
 			auto containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
-			containing_tab->add_data(pos_index, new_item);
+			auto& rends = containing_tab->m_MtGroup->m_Renderables;
+			if (rends.find(pos_index) != rends.end())
+			{
+				auto use_item = dynamic_cast<item::UseItem*>(rends.find(pos_index)->second.get());
+				use_item->increaseAmount(1);
+				delete new_item;
+			}
+			else
+			{
+				containing_tab->add_data(pos_index, new_item);
+			}
 		}
-
-		//void UiInventory::addItem(item::Item * new_item, maths::vec2 new_item_pos)
-		//{
-		//	auto containing_tab = m_Tabs->getTabByIndex(new_item->getTabType());
-		//	containing_tab->add_data(new_item);
-		//	new_item->setPosition(new_item_pos);
-		//}
 
 		void UiInventory::use_item(maths::vec2 mousePos)
 		{
@@ -139,12 +144,15 @@ namespace hiraeth {
 			auto item = getItemPair(mousePos);
 			if (item != rends->end())
 			{
-				item->second->setDrawDetails(false);
+				//item->second->setDrawDetails(false);
 				auto use_item = dynamic_cast<item::UseItem*>(item->second.get());
 				SRL::ItemPropertiesMap* item_stats = use_item->getItemProperties();
 				if (m_CharacterStats->activateUseItem(item_stats))
 				{
-					rends->erase(item);
+					if (use_item->getAmount() > 1)
+						use_item->increaseAmount(-1);
+					else
+						rends->erase(item);
 				}
 			}
 			

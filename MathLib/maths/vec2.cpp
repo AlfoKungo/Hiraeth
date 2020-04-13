@@ -242,6 +242,16 @@ namespace maths {
 		return result.str();
 	}
 
+	vec2 vec2::getX() const
+	{
+		return vec2{ x, 0 };
+	}
+
+	vec2 vec2::getY() const
+	{
+		return vec2{ 0, y };
+	}
+
 	std::ostream& operator<<(std::ostream& stream, const vec2& vector)
 	{
 		stream << vector.ToString();

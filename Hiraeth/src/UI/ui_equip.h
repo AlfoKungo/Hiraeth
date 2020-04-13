@@ -3,7 +3,6 @@
 #include "game/character_stats.h"
 
 #include <iostream>
-#include "item/item.h"
 #include "srl/equip_item_data.h"
 #include "item/equip_item.h"
 
