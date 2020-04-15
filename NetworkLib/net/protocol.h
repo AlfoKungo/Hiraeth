@@ -198,6 +198,19 @@ namespace hiraeth {
 			//unsigned int mob_type;
 			unsigned int kill_amount = 0;
 			unsigned int target_amount;
+
+			//KillStruct(unsigned int kill_amount, unsigned int target_amount)
+			//	: kill_amount(kill_amount), target_amount(target_amount)
+			//{}
+			KillStruct() = default;
+			KillStruct(SRL::QuestDouble qd)
+			{
+				target_amount = qd.amount;
+			}
+			bool checkIfAccomplished() const
+			{
+				return kill_amount == target_amount;
+			}
 			template<class A> void serialize(A& ar) {
 				//ar(CEREAL_NVP(mob_type), CEREAL_NVP(kill_amount), 
 				ar(CEREAL_NVP(kill_amount), 
@@ -207,7 +220,8 @@ namespace hiraeth {
 		
 		struct PlayerHoldState
 		{
-			std::map<unsigned int, std::map<unsigned int, KillStruct>> active_kill_quests;
+			using MobId = unsigned int;
+			std::map<unsigned int, std::map<MobId, KillStruct>> active_kill_quests;
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(active_kill_quests));
 			}

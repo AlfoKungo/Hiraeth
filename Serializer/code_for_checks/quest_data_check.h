@@ -12,8 +12,8 @@ namespace Checks
 		{
 			SRL::QuestData quest{"first", "I need you to kill all the fags", 1,
 				{
-					{SRL::QuestProps::KillAmount, SRL::QuestDouble{0, 20}},
-					{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 10}},
+					{SRL::QuestProps::KillAmount, SRL::QuestDouble{0, 2}},
+					{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 2}},
 					{SRL::QuestProps::GatherAmount, SRL::QuestDouble{0, 10}},
 					{SRL::QuestProps::ExpReward, 5000},
 				}

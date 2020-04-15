@@ -10,7 +10,7 @@
                     "index": 2,
                     "data": {
                         "type": 0,
-                        "amount": 20
+                        "amount": 2
                     }
                 }
             },
@@ -20,7 +20,7 @@
                     "index": 2,
                     "data": {
                         "type": 1,
-                        "amount": 10
+                        "amount": 2
                     }
                 }
             },

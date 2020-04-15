@@ -239,13 +239,12 @@ namespace hiraeth {
 				auto quest_data = SRL::deserial<SRL::QuestData>(DF_QUEST, quest_id);
 
 				for (auto prop : quest_data.quest_properties)
-				{
 					if (prop.key == SRL::KillAmount)
 					{
 						auto quest_double = std::get<SRL::QuestDouble>(prop.value);
-						m_PlayersState[client_id].active_kill_quests[quest_id][quest_double.type] = KillStruct{ 0, quest_double.amount };
+						m_PlayersState[client_id].active_kill_quests[quest_id][quest_double.type] = KillStruct{quest_double};
+						//m_PlayersState[client_id].active_kill_quests[quest_id][quest_double.type] = KillStruct{0,0};
 					}
-				}
 				//if (m_PlayerQuestData.find(client_id) == m_PlayerQuestData.end())
 				//	m_PlayerQuestData[client_id] = std::map<unsigned int, unsigned int>();
 				//if (m_PlayerQuestData[client_id].find(npc_index) == m_PlayerQuestData[client_id].end())
@@ -378,22 +377,40 @@ namespace hiraeth {
 				createMessageThread(MSG_INR_ROUTINE_UPDATE, 1000);
 			}
 
-			void UpdateQuestOnKill(unsigned int client_id, unsigned int mob_id)
+			bool UpdateQuestOnKill(unsigned int client_id, unsigned int mob_id)
 			{
-					for (auto & [quest_id, quest_props] : m_PlayersState[client_id].active_kill_quests)
-					{
-						for (auto& [quest_mob_id, kill_struct] : quest_props)
+				for (auto& [quest_id, quest_props] : m_PlayersState[client_id].active_kill_quests)
+					for (auto& [quest_mob_id, kill_struct] : quest_props)
+						if (quest_mob_id == mob_id)
 						{
-							if (quest_mob_id == mob_id)
+							if (!kill_struct.checkIfAccomplished())
 							{
 								kill_struct.kill_amount++;
 								m_DbClient->setByteArray(client_id, PLAYER_STATE, m_PlayersState[client_id]);
-								return;
+								if (checkIfQuestDone(client_id, quest_id))
+									setQuestAsFinished();
+								return true;
 							}
 						}
-					}
+				return false;
 			}
 
+			bool checkIfQuestDone(unsigned int client_id, unsigned int quest_id)
+			{
+				auto quest_data = m_PlayersState[client_id].active_kill_quests[quest_id];
+				for (const auto & [mob_id, goal] : quest_data)
+				{
+					if (!goal.checkIfAccomplished())
+						return false;
+				}
+				return true;
+			}
+
+			void setQuestAsFinished()
+			{
+				m_PlayersState[0].active_kill_quests[0][0].target_amount = 3;
+			}
+			
 			//void sendKeepAliveAnswer(Address sender)
 			//{
 			//	printf("ip is : %d %s %s and port is : %d\n", sender.GetAddress(),
