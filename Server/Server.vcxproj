@@ -149,6 +149,7 @@
     <ClCompile Include="address.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
+    <ClCompile Include="server_msgs_handling.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="utills\static_timer.cpp" />
     <ClCompile Include="utills\timer.cpp" />

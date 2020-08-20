@@ -20,7 +20,9 @@ namespace hiraeth {
 		
 		bool hasExpired() const
 		{
-			return (StaticTimer::timer.elapsed() - m_Timer > 0.0f);
+			auto dd = StaticTimer::timer.elapsed();
+			return (dd - m_Timer > 0.0f);
+			//return (StaticTimer::timer.elapsed() - m_Timer > 0.0f);
 		}
 
 		void reSet(float time_to_wait)

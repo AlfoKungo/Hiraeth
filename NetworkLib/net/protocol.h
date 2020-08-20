@@ -29,22 +29,11 @@ namespace hiraeth {
 			MSG_CTS_WEAR_EQUIP = -0x17,
 			MSG_CTS_USE_ITEM = -0x18,
 			MSG_CTS_INVENTORY_ACTION = -0x19,
-			MSG_CTS_PLAYER_SAY = -0x20;
-		//enum MSG_CTS {
-		//	MSG_CTS_ACK = 0x00,
-		//	MSG_CTS_OPEN_CONNECTION,
-		//	MSG_CTS_CLOSE_CONNECTION,
-		//	MSG_CTS_LOCATION_UPDATE,
-		//	MSG_CTS_KA,
-		//	MSG_CTS_HIT_MOB,
-		//	MSG_CTS_KILL_MOB,
-		//	MSG_CTS_NPC_CLICK,
-		//	MSG_CTS_DIALOG_NEXT,
-		//	MSG_CTS_ACCEPT_QUEST,
-		//	MSG_CTS_CHAR_GOT_HIT,
-		//	MSG_CTS_CHAR_USE_SKILL_E,
-		//	MSG_CTS_CHAR_USE_SKILL_A,
-		//};
+			MSG_CTS_PLAYER_SAY = -0x20,
+			MSG_CTS_FINISH_QUEST = -0x21,
+			MSG_CTS_PARTY_REQUEST = -0x22,
+			MSG_CTS_ACCEPT_PARTY = -0x23,
+			MSG_CTS_DECLINE_PARTY = -0x24;
 
 		PROTOCOL_CODE
 			MSG_STC_ACK = 0x40,
@@ -70,25 +59,11 @@ namespace hiraeth {
 			MSG_STC_ADD_ITEM_TO_INVENTORY = 0x54,
 			MSG_STC_INCREASE_SKILL = 0x55,
 			MSG_STC_PLAYER_SAY = 0x56,
-			MSG_STC_SET_QUEST_IP = 0x57; // IP = In progress
-		//enum MSG_STC {
-		//	MSG_STC_ACK = 0x60,
-		//	MSG_STC_ESTABLISH_CONNECTION,
-		//	MSG_STC_ADD_PLAYER,
-		//	MSG_STC_PLAYERS_LOCATIONS,
-		//	MSG_STC_PLAYERS_LIST,
-		//	MSG_STC_MOB_HIT,
-		//	MSG_STC_MOB_DIED,
-		//	MSG_STC_NPC_CLICK_ANSWER,
-		//	MSG_STC_NPC_QUEST_ACCEPT,
-		//	MSG_STC_MOB_DATA,
-		//	MSG_STC_MOB_UPDATE,
-		//	MSG_STC_START_DIALOG,
-		//	MSG_STC_DIALOG_NEXT_ANSWER,
-		//	MSG_STC_ACCEPT_QUEST_ACK,
-		//	MSC_STC_CHAR_USE_SKILL_E,
-		//	MSC_STC_CHAR_USE_SKILL_A,
-		//};
+			MSG_STC_SET_QUEST_IP = 0x57, // IP = In progress
+			MSG_STC_FINISH_QUEST = 0x58,
+			MSG_STC_PARTY_REQUEST = 0x59,
+			MSG_STC_UPDATE_PARTY_STATE = 0x60,
+			MSG_STC_RECEIVED_EXP = 0x61;
 
 		PROTOCOL_CODE
 			MSG_INR_UPDATE_MOB_CMD = 0x71,
@@ -104,6 +79,7 @@ namespace hiraeth {
 			ETC_ITEM = 3,
 			CASH_ITEM = 4;
 		using BufferType = char;
+		const int BufferSize = 512;
 
 		enum Direction {
 			Right = 1,
@@ -196,12 +172,8 @@ namespace hiraeth {
 		struct KillStruct
 		{
 			//unsigned int mob_type;
-			unsigned int kill_amount = 0;
-			unsigned int target_amount;
-
-			//KillStruct(unsigned int kill_amount, unsigned int target_amount)
-			//	: kill_amount(kill_amount), target_amount(target_amount)
-			//{}
+			unsigned int kill_amount{ 0 };
+			unsigned int target_amount{};
 			KillStruct() = default;
 			KillStruct(SRL::QuestDouble qd)
 			{
@@ -213,7 +185,7 @@ namespace hiraeth {
 			}
 			template<class A> void serialize(A& ar) {
 				//ar(CEREAL_NVP(mob_type), CEREAL_NVP(kill_amount), 
-				ar(CEREAL_NVP(kill_amount), 
+				ar(CEREAL_NVP(kill_amount),
 					CEREAL_NVP(target_amount));
 			}
 		};
@@ -222,10 +194,44 @@ namespace hiraeth {
 		{
 			using MobId = unsigned int;
 			std::map<unsigned int, std::map<MobId, KillStruct>> active_kill_quests;
+			std::map<unsigned int, unsigned int> npc_dialog_id;
 			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(active_kill_quests));
+				ar(CEREAL_NVP(active_kill_quests), CEREAL_NVP(npc_dialog_id));
 			}
 		};
+
+		struct PlayerMsg
+		{
+			//unsigned int msg_id;
+			//BufferType msg_buffer[BufferSize];
+			BufferType* msg_buffer;
+			int buffer_size{};
+			~PlayerMsg()
+			{
+				delete[] msg_buffer;
+				//free(msg_buffer);
+			}
+		};
+
+		struct PlayerMsgState 
+		{
+			unsigned int crnt_id;
+			//std::vector<PlayerMsg> player_msgs;
+			std::map<unsigned int, PlayerMsg> player_msgs;
+			unsigned int get_ack_id()
+			{
+				return crnt_id++;
+			}
+			void add_new_msg(BufferType * buffer, int buffer_size, unsigned int ack_id)
+			{
+				player_msgs.insert({ ack_id, PlayerMsg{{}, buffer_size } });
+				//player_msgs[ack_id].msg_buffer = (BufferType*)malloc(buffer_size);
+				player_msgs[ack_id].msg_buffer = new BufferType[BufferSize];
+				memcpy(player_msgs[ack_id].msg_buffer, buffer, buffer_size);
+				//player_msgs[ack_id].msg_buffer
+			}
+		};
+
 		
 		struct PlayerData
 		{
@@ -270,6 +276,13 @@ namespace hiraeth {
 		//		ar(CEREAL_NVP(damage), CEREAL_NVP(monster_id), CEREAL_NVP(attack_id), CEREAL_NVP(dir));
 		//	}
 		//};
+		struct msgStcSetQuestIp
+		{
+			unsigned int ack_id{}, quest_id{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(ack_id), CEREAL_NVP(quest_id));
+			}
+		};
 		struct MonsterHit
 		{
 			float damage{};
@@ -314,7 +327,23 @@ namespace hiraeth {
 				ar(CEREAL_NVP(char_id), CEREAL_NVP(say_msg));
 			}
 		};
-
+		struct FinishQuestMsg
+		{
+			unsigned int quest_id{};
+			unsigned int exp{};
+			unsigned int money{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(exp), CEREAL_NVP(money));
+			}
+		};
+		struct PartyUpdateMsg
+		{
+			std::vector<std::tuple<unsigned int, std::string>> party_members;
+			unsigned int ack;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(party_members), CEREAL_NVP(ack));
+			}
+		};
 
 	}
 }

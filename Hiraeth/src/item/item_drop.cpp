@@ -30,7 +30,8 @@ namespace hiraeth {
 				if (isReachedFloor(maths::vec2(0, 10), m_Force))
 				{
 					m_State = OnFloor;
-					m_Timer.reSet(EXPIRING_TIME + 10.0f);
+					if (!m_IsExpiring)
+						m_Timer.reSet(EXPIRING_TIME + 10.0f);
 				}
 				break;
 			case OnFloor:

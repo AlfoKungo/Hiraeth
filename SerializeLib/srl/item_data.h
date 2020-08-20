@@ -3,6 +3,7 @@
 #include "texture_data.h"
 #include <string>
 #include <variant>
+#include <variant>
 #include "cereal/types/variant.hpp"
 #include "cereal/types/map.hpp"
 #include "types.h"

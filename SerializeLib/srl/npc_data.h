@@ -8,12 +8,14 @@
 
 namespace SRL {
 
-#define DIALOG_TYPE const char
-	DIALOG_TYPE
-		RESPONSE_TYPE_NEXT = 0,
-		RESPONSE_TYPE_ACCEPT = 1,
-		RESPONSE_TYPE_CANCEL = 2,
-		RESPONSE_TYPE_OK = 3;
+//#define DIALOG_TYPE const char
+	using DIALOG_BUTTON_TYPE=char;
+	const DIALOG_BUTTON_TYPE
+		RT_NEXT = 0,
+		RT_ACCEPT = 1,
+		RT_CANCEL = 2,
+		RT_OK = 3,
+		RT_RECEIVE_REWARD = 4;
 
 	enum DialogType
 	{
@@ -23,7 +25,7 @@ namespace SRL {
 	struct DialogStruct
 	{
 		std::string text;
-		std::vector<char> buttons;
+		std::vector<DIALOG_BUTTON_TYPE> buttons;
 		//std::map<DialogType, std::variant<int>> props;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(text), CEREAL_NVP(buttons));

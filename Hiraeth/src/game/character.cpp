@@ -11,8 +11,7 @@ namespace hiraeth {
 		Character::Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer* map_layer,
 			ui::UiEquip* ui_equip, ui::UiManager* ui_manager,
 			item::ItemManager* item_manager, skills::SkillManager* skill_manager,
-			CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters,
-			network::ClientHandler* client_handler)
+			CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters)
 			: Creature(maths::Rectangle(pos, maths::vec2(32, 45)), map_layer, character_stats, true),
 			m_Kb(kb),
 			m_ItemManager(item_manager),
@@ -20,8 +19,8 @@ namespace hiraeth {
 			m_UiManager(ui_manager),
 			m_Monsters(monsters),
 			m_SkillManager(skill_manager),
-			m_CharacterStats(character_stats),
-			m_ClientHandler(client_handler)
+			m_CharacterStats(character_stats)
+			//m_ClientHandler(client_handler)
 			//m_Animations(m_TransformationMatrix)
 		{
 			FillCharacterTextureData(m_StatesRenderables);
@@ -107,7 +106,8 @@ namespace hiraeth {
 							getHit(Right, monster->getDamage());
 						else
 							getHit(Left, monster->getDamage());
-						m_ClientHandler->sendCharGotHit(m_CharacterStats->getStatsStruct_()->Hp);
+						//m_ClientHandler->sendCharGotHit(m_CharacterStats->getStatsStruct_()->Hp);
+						NetworkManager::Instance()->sendCharGotHit(m_CharacterStats->getStatsStruct_()->Hp);
 						return;
 					}
 				}
@@ -208,7 +208,7 @@ namespace hiraeth {
 					//monster->getHit(m_Direction, damage);
 					attackMonsters(std::vector<Monster*>{monster}, std::vector<Damage>{damage});
 					//m_ClientHandler->sendAttackPacket(network::MonsterDamage{float(damage.RawDamage), 
-					m_ClientHandler->sendAttackPacket(network::MonsterHit{ float(damage.RawDamage),
+					NetworkManager::Instance()->sendAttackPacket(network::MonsterHit{ float(damage.RawDamage),
 						monster->getId(), new_dir });
 					//monster->getId(), 0, static_cast<network::Direction>(m_Direction) });
 				// send the information to the server
@@ -244,9 +244,9 @@ namespace hiraeth {
 		//	}
 		//}
 
-		void Character::attackMonster(Creature* attacked, Damage d)
+		void Character::attackMonster(Creature* attacked, Damage damage)
 		{
-			attacked->getHit(m_Direction, d);
+			attacked->getHit(m_Direction, damage);
 			auto attack_modifiers = m_CharacterStats->getAttackModifiers();
 			for (const auto& [id, skill_mods] : attack_modifiers)
 				for (const auto& mod : skill_mods)
@@ -254,7 +254,7 @@ namespace hiraeth {
 					switch (mod.first)
 					{
 					case SRL::lifesteal:
-						m_Stats->recoverHp(d.RawDamage * (float(mod.second) / 100.0f));
+						m_Stats->recoverHp(damage.RawDamage * (float(mod.second) / 100.0f));
 					default:
 						break;
 					}
@@ -322,7 +322,7 @@ namespace hiraeth {
 			if (item != nullptr)
 			{
 				//auto item_loc = m_UiManager->getUiInventory()->findEmptyPosition(0);
-				m_ClientHandler->sendPickItem(item->getId());
+				NetworkManager::Instance()->sendPickItem(item->getId());
 				item->pickUp(&getBounds());
 			}
 		}
@@ -368,7 +368,7 @@ namespace hiraeth {
 					return;
 			}
 
-			m_ClientHandler->sendCharUseSkillE(skill_id, m_CharacterStats->getStatsStruct_()->Mp);
+			NetworkManager::Instance()->sendCharUseSkillE(skill_id, m_CharacterStats->getStatsStruct_()->Mp);
 
 			if (skill_properties->find(SRL::SkillDataType::timeOut) != skill_properties->end())
 				m_SkillsTimeouts[skill_id] = ATimer{ float(std::get<int>(skill_properties->at(SRL::SkillDataType::timeOut))) };
@@ -422,14 +422,14 @@ namespace hiraeth {
 						change_stance_to_attack();
 						auto monsters_hit = activateProjSkill(element.second, (*skill_animation_data)[SRL::ballAnimation],
 							getInt(skill_properties->at(SRL::proj_range), skill_lvl), skill_info->name);
-						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
+						NetworkManager::Instance()->sendCharUseSkillA(skill_id, monsters_hit);
 					}
 					else
 					{
 						change_stance_to_attack();
 						auto monsters_hit = activateAttackSkill(element.second,
 							200, skill_info->name);
-						m_ClientHandler->sendCharUseSkillA(skill_id, monsters_hit);
+						NetworkManager::Instance()->sendCharUseSkillA(skill_id, monsters_hit);
 						for (auto mob : monsters_hit)
 						{
 							//m_Monsters[mob.monster_id].attack;

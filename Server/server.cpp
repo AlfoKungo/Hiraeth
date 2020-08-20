@@ -155,7 +155,7 @@ namespace hiraeth {
 					lock.unlock();
 
 					memcpy(m_Buffer, data, bytes_read);
-					m_Size = bytes_read;
+					m_RecvSize = bytes_read;
 					delete[] data;
 					if (bytes_read > 0)
 					{
@@ -216,37 +216,6 @@ namespace hiraeth {
 			//	m_MobManager.recalculateAllMobs();
 			//	sendMobsData(sender);
 			//	break;
-			//case MSG_CTS_CLOSE_CONNECTION:
-			//	closeConnection(m_Buffer);
-			//	break;
-			//case MSG_CTS_LOCATION_UPDATE:
-			//	receiveLocation(m_Buffer);
-			//	sendUpdateLocationToAll(sender);
-			//	break;
-			//case MSG_CTS_KA:
-			//	sendUpdateLocationToAll(sender);
-			//	break;
-			//case MSG_CTS_HIT_MOB:
-			//	//sendUpdateLocationToAll(sender);
-			//	break;
-			//case char(MSG_INR_UPDATE_MOB_CMD) :
-			//	//m_MobManager.setNewMoveCommand(0, MobMoveCommand{ Left, ATimer{15.0f}, 15 });
-			//	//sendMobsUpdate(0, MobMoveCommand{ Left, ATimer{5.0f}, 5 });
-			//	//sendMobsUpdate(1, MobMoveCommand{ Right, ATimer{5.0f}, 5 });
-			//	//createMessageThread(MSG_INR_MOB_UPDATE, 1000);
-			//	break;
-			//case char(MSG_INR_MOB_HIT) :
-			//	sendMobGotHit(0, Left);
-			//	//m_MobManager.calculateLocationNow(0);
-			//	break;
-			//	//case char(MSG_INR_FIND_MOB_POS):
-			//	//	sendMobsUpdate(0, MobMoveCommand{Stand, ATimer{15.0f}, 15});
-			//	//	//m_MobManager.calculateLocationNow(0);
-			//	//	break;
-			//case char(MSG_INR_MOB_UPDATE) :
-			//	updateMobManager();
-			//	createMessageThread(MSG_INR_MOB_UPDATE, 1000);
-			//	break;
 			//default:
 			//	break;
 			//}
@@ -268,7 +237,7 @@ namespace hiraeth {
 			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,20}, 
 			//	{0, 1}, {1,1}, {2,1}, {5,1},
 			//	{6,1}, {7,1}, {8,1}, {9,1}});
-			//m_DbClient->setByteArray(m_NumConnectedClients, "player_state", decltype(PlayerData::player_hold_state) { });
+			m_DbClient->setByteArray(m_NumConnectedClients, "player_state", decltype(PlayerData::player_hold_state) { });
 			m_DbClient->setByteArray(m_NumConnectedClients, "quests_in_prog", decltype(PlayerData::quests_in_progress) { });
 			m_DbClient->setByteArray(m_NumConnectedClients, "quests_done", decltype(PlayerData::quests_done) { });
 			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) { {1, 1}});
@@ -284,6 +253,8 @@ namespace hiraeth {
 			//	std::map<SRL::EquipItemDataType, int> { {SRL::StrInc, 5}, {SRL::IntInc, 3}}, "equips");
 			const auto player_data = m_DbClient->getPlayerDataById(char_id);
 			m_PlayersState[char_id] = player_data.player_hold_state;
+			m_PlayersStats[char_id] = player_data.player_stats;
+			m_PlayersMsgs[char_id] = PlayerMsgState{};
 			//auto player_data = m_DbClient->getPlayerDataById(char_id);
 
 			//auto player_data = PlayerData{"shd", 10, 1, 0, 300, 300, {}, {}};

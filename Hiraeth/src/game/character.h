@@ -1,7 +1,5 @@
 #pragma once
 
-#include "network/client_handler.h"
-
 #include <memory>
 #include "game/creature.h"
 #include "keyboard/keyboard_event.h"
@@ -12,6 +10,7 @@
 #include "graphics/layers/layer.h"
 #include "item/item_manager.h"
 #include "skills/skill_manager.h"
+#include "UI/ui_manager.h"
 #include "keyboard/key.h"
 #include "utils/calculator.hpp"
 #include "basic/char_handler.h"
@@ -56,14 +55,13 @@ namespace hiraeth {
 
 			bool m_IsStuck{ false };
 		public:
-			network::ClientHandler* m_ClientHandler;
+			//network::ClientHandler* m_ClientHandler;
 
 		public:
 			Character(maths::vec2 pos, input::Keyboard* kb, map::MapLayer* map_layer,
 				ui::UiEquip* ui_equip,ui::UiManager * ui_manager,
 				item::ItemManager* item_manager, skills::SkillManager* skill_manager,
-				CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters,
-				network::ClientHandler* client_handler);
+				CharacterStats* character_stats, std::map<unsigned int, Monster*>* monsters);
 			~Character();
 
 			void update() override;

@@ -54,6 +54,7 @@ namespace hiraeth {
 			void setQuestAsActive(unsigned int quest_id);
 			void setQuestsTab(const std::vector<unsigned>& quests_list, unsigned quest_tab);
 			void setQuestsInProgress(const std::vector<SRL::QuestDBStruct>& quests_list, unsigned quest_tab);
+			void setQuestAsDone(unsigned int quest_id);
 			//void setQuestsAvailable(std::vector<unsigned int> quests_avail);
 			//void setQuestsInProgress(std::vector<unsigned int> quests_in_progress);
 			//void setQuestsDone(std::vector<unsigned int> quests_done);

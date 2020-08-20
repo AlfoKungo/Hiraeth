@@ -196,6 +196,7 @@ namespace hiraeth {
 						std::make_unique<skills::TargetedProjectile>(getBounds().GetMiddle() - maths::vec2{ 20, 0 },
 							static_cast<Direction>(monster_hit.dir), skill_name, this, hit_monster, 
 							Damage{unsigned int( monster_hit.damage), 90 }, projectile_animation_data, hit_animation_data, PREHIT_DELAY));
+					hit_monster->getHit(static_cast<game::Direction>(monster_hit.dir), { unsigned int(monster_hit.damage), 100 });
 				}
 				
 			}

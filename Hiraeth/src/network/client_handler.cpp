@@ -78,6 +78,10 @@ namespace hiraeth {
 			bindFunctionToChar(MSG_STC_INCREASE_SKILL, &ClientHandler::recvIncreaseSkill);
 			bindFunctionToChar(MSG_STC_PLAYER_SAY, &ClientHandler::recvPlayerSay);
 			bindFunctionToChar(MSG_STC_SET_QUEST_IP, &ClientHandler::recvSetQuestAsInProgress);
+			bindFunctionToChar(MSG_STC_FINISH_QUEST, &ClientHandler::recvFinishQuest);
+			bindFunctionToChar(MSG_STC_PARTY_REQUEST, &ClientHandler::recvPartyRequest);
+			bindFunctionToChar(MSG_STC_UPDATE_PARTY_STATE, &ClientHandler::recvUpdatePartyState);
+			bindFunctionToChar(MSG_STC_RECEIVED_EXP, &ClientHandler::recvReceivedExp);
 
 			//EventManager *m_EventManager = EventManager::Instance();
 			//m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
@@ -365,8 +369,41 @@ namespace hiraeth {
 
 		void ClientHandler::recvSetQuestAsInProgress()
 		{
-			const auto quest_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
-			m_UiManager->getUiQuests()->setQuestAsActive(quest_id);
+			const auto msg_data = dsrl_type<msgStcSetQuestIp>(m_RcvBuffer + 1);
+			m_UiManager->getUiQuests()->setQuestAsActive(msg_data.quest_id);
+			sendAck(msg_data.ack_id);
+		}
+
+		void ClientHandler::recvFinishQuest()
+		{
+			const auto fq_msg = dsrl_dynamic_type<FinishQuestMsg>(m_RcvBuffer + 1);
+			m_UiManager->getUiQuests()->setQuestAsDone(fq_msg.quest_id);
+		}
+
+		void ClientHandler::recvPartyRequest()
+		{
+			const auto char_requesting = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_ACCEPT_PARTY, m_Id, char_requesting);
+			Send();
+		}
+
+		void ClientHandler::recvUpdatePartyState()
+		{
+			const auto msg = dsrl_dynamic_type<PartyUpdateMsg>(m_RcvBuffer + 1);
+			auto ui_party = m_UiManager->getUiParty();
+			ui_party->set_party(msg.party_members);
+		}
+
+		void ClientHandler::recvReceivedExp()
+		{
+			const auto exp_amount = dsrl_type<unsigned int>(m_RcvBuffer + 1);
+			m_UiManager->getMainUi()->getCharacterStats()->increaseExp(exp_amount);
+		}
+
+		void ClientHandler::sendAck(unsigned int ack_id)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_ACK, m_Id, ack_id);
+			Send();
 		}
 
 		void ClientHandler::sendAttackPacket(MonsterHit monster_damage)
@@ -394,6 +431,12 @@ namespace hiraeth {
 		void ClientHandler::sendQuestAccepted(unsigned int npc_id, unsigned int quest_id)
 		{
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_ACCEPT_QUEST, m_Id, npc_id, quest_id);
+			Send();
+		}
+
+		void ClientHandler::sendReceiveReward(unsigned npc_id, unsigned quest_id)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_FINISH_QUEST, m_Id, npc_id, quest_id);
 			Send();
 		}
 
@@ -450,6 +493,11 @@ namespace hiraeth {
 			//m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PLAYER_MSG, m_Id, 
 			//	msg);
 			m_SendSize = create_client_packet_with_buffer(m_SendBuffer, MSG_CTS_PLAYER_SAY, m_Id, *data, size);
+			Send();
+		}
+		void ClientHandler::sendRequestParty(unsigned int char_id)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PARTY_REQUEST, m_Id, char_id);
 			Send();
 		}
 	}

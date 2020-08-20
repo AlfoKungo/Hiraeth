@@ -34,7 +34,8 @@ namespace hiraeth {
 			m_Layer.add_ref(m_UiInventory);
 			kb->registerToKey(GLFW_KEY_I, inventory, this);
 
-			m_Layer.add_ref(new UiStats(maths::vec2(0, 0), stats, character_stats));
+			m_UiStats = new UiStats(maths::vec2(0, 0), stats, character_stats);
+			m_Layer.add_ref(m_UiStats);
 			kb->registerToKey(GLFW_KEY_S, stats, this);
 
 			m_UiKeyConfig = new UiKeyConfig(maths::vec2(-700, 0), key_config, kb);
@@ -52,6 +53,10 @@ namespace hiraeth {
 			m_UiEquip = new UiEquip(maths::vec2(500, 0), equip, character_stats);
 			m_Layer.add_ref(m_UiEquip);
 			kb->registerToKey(GLFW_KEY_E, equip, this);
+
+			m_UiParty = new UiParty(maths::vec2(-300, -100), party);
+			m_Layer.add_ref(m_UiParty);
+			kb->registerToKey(GLFW_KEY_P, party, this);
 		}
 
 		bool UiManager::leftButtonClicked(float mx, float my)

@@ -11,6 +11,7 @@
 #include "ui_equip.h"
 #include "main_ui.h"
 #include "ui_keyconfig.h"
+#include "ui_party.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "game/character_stats.h"
@@ -27,10 +28,12 @@ namespace hiraeth {
 			input::Keyboard* m_Kb;
 			MainUi m_MainUi;
 			UiInventory * m_UiInventory;
+			UiStats * m_UiStats;
 			UiSkills * m_UiSkills;
 			UiEquip * m_UiEquip;
 			UiQuests * m_UiQuests;
 			UiKeyConfig * m_UiKeyConfig;
+			UiParty* m_UiParty;
 			struct MouseAction { bool is_occupied; UiWindow * rel_win; }; // not yet implemented - supposed to be used for data transfer between windows.
 		public:
 			UiManager(input::Keyboard* kb);
@@ -46,9 +49,11 @@ namespace hiraeth {
 			void ButtonReleased(input::Key key) override;
 			MainUi * getMainUi() { return &m_MainUi; }
 			UiInventory * getUiInventory() { return m_UiInventory; }
+			UiStats * getUiStats() { return m_UiStats; }
 			UiSkills * getUiSkills() { return m_UiSkills; }
 			UiEquip * getUiEquip() { return m_UiEquip; }
 			UiQuests * getUiQuests() { return m_UiQuests; }
+			UiParty * getUiParty() { return m_UiParty; }
 		private:
 			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
 		};

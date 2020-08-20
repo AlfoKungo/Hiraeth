@@ -25,7 +25,7 @@ namespace hiraeth {
 			const char* get_name_by_index(unsigned int tab_index) const { return TABS_MAP.at(tab_index); }
 			//int nFields{ 0 };
 			PGconn *m_Conn;
-			PGresult   *m_Res;
+			PGresult *m_Res;
 		public:
 			DbClient()
 			{

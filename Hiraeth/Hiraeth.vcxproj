@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)Dependencies\FreeType\include;$(SolutionDir)Dependencies\Cereal\include;$(SolutionDir)Dependencies\FreeImage\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(ProjectDir)\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2019_64;$(SolutionDir)Dependencies\GLEW\lib</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2019_64;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeImage\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2019_64;$(SolutionDir)Dependencies\GLEW\lib</LibraryPath>
@@ -226,6 +226,7 @@
     <ClCompile Include="src\UI\ui_inventory.cpp" />
     <ClCompile Include="src\UI\ui_keyconfig.cpp" />
     <ClCompile Include="src\UI\ui_manager.cpp" />
+    <ClCompile Include="src\UI\ui_party.cpp" />
     <ClCompile Include="src\UI\ui_quests.cpp" />
     <ClCompile Include="src\UI\ui_skills.cpp" />
     <ClCompile Include="src\UI\ui_stats.cpp" />
@@ -353,6 +354,7 @@
     <ClInclude Include="src\UI\ui_keyconfig.h" />
     <ClInclude Include="src\UI\ui_keyconfig_icon.h" />
     <ClInclude Include="src\UI\ui_manager.h" />
+    <ClInclude Include="src\UI\ui_party.h" />
     <ClInclude Include="src\UI\ui_quests.h" />
     <ClInclude Include="src\UI\ui_skills.h" />
     <ClInclude Include="src\UI\ui_stats.h" />

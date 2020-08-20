@@ -50,6 +50,7 @@ namespace hiraeth {
 				addIcon(GLFW_KEY_K, "KeyConfig.icon.3.png");
 				addIcon(GLFW_KEY_Q, "KeyConfig.icon.8.png");
 				addIcon(GLFW_KEY_Z, "KeyConfig.icon.50.png");
+				addIcon(GLFW_KEY_P, "KeyConfig.icon.19.png");
 			}
 			
 			void addIcon(input::KeyCode key_code, const std::string& icon_tex_name)

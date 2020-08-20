@@ -51,7 +51,7 @@ const int MONSTER_DATA_ADDRESS_BEGIN = 0;
 const int MONSTER_TEXTURES_ADDRESS_BEGIN = (MONSTER_AMOUNT * sizeof(Address));
 const int MONSTER_DATA_DATA_BEGIN = (MONSTER_ADDRESSES_AMOUNT * sizeof(Address));
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 
 
@@ -234,9 +234,18 @@ void serialize_generic(const std::string SRL_PATH, F fun, int DataBegin, int Add
 	}
 }
 
+bool copyFile(const char* SRC, const char* DEST)
+{
+	std::ifstream src(SRC, std::ios::binary);
+	std::ofstream dest(DEST, std::ios::binary);
+	dest << src.rdbuf();
+	return src && dest;
+}
+
+
 int main()
 {
-	const std::experimental::filesystem::path pathToDelete("../Hiraeth/serialized");
+	const std::filesystem::path pathToDelete("../Hiraeth/serialized");
 	remove_all(pathToDelete);
 	create_directories(pathToDelete);
 
@@ -274,6 +283,15 @@ int main()
 	// Serialize Quest Data
 	Checks::create_quest_data();
 	serialize_generic<SRL::QuestData>("quest", just_data<SRL::QuestData>);
+
+	std::string path_from = "../Hiraeth/serialized/";
+	fs::path targetParent = "../Server/serialized/";
+	for (const auto& entry : fs::directory_iterator(path_from))
+	{
+		fs::path sourceFile = entry.path();
+		auto target = targetParent / sourceFile.filename(); // sourceFile.filename() returns "sourceFile.ext".
+		fs::copy_file(sourceFile, target, fs::copy_options::overwrite_existing);
+	}
 
 	std::cout << "finished";
 	//std::cin.get();

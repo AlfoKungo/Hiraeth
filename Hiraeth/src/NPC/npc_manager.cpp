@@ -11,8 +11,7 @@ namespace hiraeth
 			m_Npcs(&m_Shader, true),
 			m_Kb(kb),
 			m_DialogManager{ character},
-			m_UiQuests(ui_quests),
-			m_ClientHandler(character->m_ClientHandler)
+			m_UiQuests(ui_quests)
 		{
 			EventManager* m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &NpcManager::mapChanged);
@@ -44,7 +43,7 @@ namespace hiraeth
 
 		void NpcManager::sendStartDialog(unsigned npc_index)
 		{
-			m_ClientHandler->sendNpcClick(npc_index);
+			NetworkManager::Instance()->sendNpcClick(npc_index);
 		}
 
 		bool NpcManager::leftButtonClicked(float mx, float my)

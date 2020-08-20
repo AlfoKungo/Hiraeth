@@ -1,3 +1,4 @@
+
 #include "network/client_handler.h"
 #include "game/character.h"
 #include "utils/static_timer.h"
@@ -79,20 +80,22 @@ int main()
 
 
 #else
-
 int main()
 {
 
+	
 	using namespace hiraeth;
 	using namespace maths;
 	using namespace graphics;
 	using namespace map;
 	using namespace view;
+	
 #ifdef EDITOR
 	editor::Editor editor;
 	//editor.MobEditor();
 	editor.MapEditor();
 #endif
+	
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);
 
@@ -112,11 +115,11 @@ int main()
 
 
 	game::MonsterManager monsterManager(map.getMapLayer());
-	game::NetCharManager netCharManager{ map.getMapLayer(), &skillManager, monsterManager.getMonsters() };
+	game::NetCharManager netCharManager{ map.getMapLayer(), &keyboard, &skillManager, monsterManager.getMonsters() };
 
 	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, &itemManager, &skillManager }; // itemManager, 
 	NetworkManager::setHandler(&clientHandler);
-	
+
 	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats,
 		clientHandler.getPlayerData().stats_alloc);
 	//uiManager.getUiSkills()->setClientHandler(&clientHandler);
@@ -130,16 +133,18 @@ int main()
 	//uiManager.getUiQuests()->setQuestsInProgress(clientHandler.getPlayerData().quests_in_progress, SRL::QuestTab::InProgress);
 	uiManager.getUiQuests()->setQuestsTab(clientHandler.getPlayerData().quests_done, SRL::QuestTab::Done);
 	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
+
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
-	game::Character Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), 
+	game::Character Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(),
 		uiManager.getUiEquip(), &uiManager, &itemManager,
-		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),
-		&clientHandler);
+		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters());
+		//&clientHandler);
 	CharManager::setChar(&Char);
 	m_CrLayer.add_ref(&Char);
 	view::Camera::init(&Char);
 
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &Char, uiManager.getUiQuests());
+
 
 	unsigned int frames = 0;
 	while (!window.closed())
@@ -163,7 +168,7 @@ int main()
 		uiManager.update();
 		clientHandler.Update(network::PlayerStateUpdateMsg{ Char.getPosition(), Char.getForce() , Char.getDirection()});
 		netCharManager.update();
-
+	
 
 		//draw
 		map.draw();
@@ -185,6 +190,7 @@ int main()
 		}
 
 	}
+	
 	return 0;
 }
 #endif

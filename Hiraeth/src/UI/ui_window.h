@@ -21,6 +21,7 @@ namespace hiraeth {
 			quests,
 			equip,
 			inventory,
+			party,
 			key_config,
 		};
 		class UiWindow : public Drawable, public Updatable

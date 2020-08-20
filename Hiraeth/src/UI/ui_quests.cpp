@@ -142,6 +142,10 @@ namespace hiraeth {
 			}
 		}
 
+		void UiQuests::setQuestAsDone(unsigned quest_id)
+		{
+		}
+
 		void UiQuests::addHuntGoalLabel(SRL::QuestDouble quest_double)
 		{
 			auto [mob, amount] = quest_double;

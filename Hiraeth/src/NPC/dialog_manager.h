@@ -63,7 +63,6 @@ namespace hiraeth {
 			DialogTree m_DialogTree;
 			game::Character* m_Character;
 			//ui::UiQuests* m_UiQuests;
-			network::ClientHandler* m_ClientHandler;
 			maths::Rectangle m_Rec{ -140,80,280,80 };
 			unsigned int m_CurrentNpc{0}, m_CurrentDialog{0};
 			//unsigned int m_CurrentDialog{0};
@@ -72,9 +71,8 @@ namespace hiraeth {
 				: m_TextBoxes(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false),
 			//m_InText{nullptr},
 				m_InText{ "arial", 16, "", { -130, 130 }, 0xffffffff, graphics::Label::Alignment::LEFT },
-			m_Character(character),
+			m_Character(character)
 			//m_UiQuests(ui_quests),
-			m_ClientHandler(character->m_ClientHandler)
 			{
 				//m_InText = new graphics::Label{ "arial", 16, "", { -130, 130 }, 0xffffffff, graphics::Label::Alignment::LEFT };
 				//m_TextBoxes.add(m_InText);
@@ -116,17 +114,20 @@ namespace hiraeth {
 				{
 					switch (button_type)
 					{
-					case SRL::RESPONSE_TYPE_NEXT:
+					case SRL::RT_NEXT:
 						m_Buttons.add(new ui::UiButtonBasic{ maths::vec2{100,100},"Dialog","BtOK",std::bind(&DialogManager::nextClicked, this) });
 						break;
-					case SRL::RESPONSE_TYPE_ACCEPT:
+					case SRL::RT_ACCEPT:
 						m_Buttons.add(new ui::UiButtonBasic{ maths::vec2{100,100},"Dialog","BtAccept",std::bind(&DialogManager::acceptQuest, this) });
 						break;
-					case SRL::RESPONSE_TYPE_CANCEL:
+					case SRL::RT_CANCEL:
 						m_Buttons.add(new ui::UiButtonBasic{ maths::vec2{20,100},"Dialog","BtCancel",std::bind(&DialogManager::nextClicked, this) });
 						break;
-					case SRL::RESPONSE_TYPE_OK:
+					case SRL::RT_OK:
 						m_Buttons.add(new ui::UiButtonBasic{ maths::vec2{100,100},"Dialog","BtOK",std::bind(&DialogManager::nextClicked, this) });
+						break;
+					case SRL::RT_RECEIVE_REWARD:
+						m_Buttons.add(new ui::UiButtonBasic{ maths::vec2{100,100},"Dialog","BtOK",std::bind(&DialogManager::receiveReward, this) });
 						break;
 					default:
 						break;
@@ -142,7 +143,13 @@ namespace hiraeth {
 			void acceptQuest()
 			{
 				nextDialog();
-				m_ClientHandler->sendQuestAccepted(m_CurrentNpc, m_CurrentDialog);
+				NetworkManager::Instance()->sendQuestAccepted(m_CurrentNpc, m_CurrentDialog);
+			}
+
+			void receiveReward()
+			{
+				nextDialog();
+				NetworkManager::Instance()->sendReceiveReward(m_CurrentNpc, m_CurrentDialog);
 			}
 			
 			void startDialog(unsigned int npc_id, unsigned int dialog_index)

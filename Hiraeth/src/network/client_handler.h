@@ -96,19 +96,26 @@ namespace hiraeth {
 			void recvIncreaseSkill();
 			void recvPlayerSay();
 			void recvSetQuestAsInProgress();
+			void recvFinishQuest();
+			void recvPartyRequest();
+			void recvUpdatePartyState();
+			void recvReceivedExp();
 		public:
-			void sendAttackPacket(MonsterHit monster_damage);
-			void sendNpcClick(unsigned int npc_id);
-			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id);
-			void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id);
-			void sendCharGotHit(unsigned int new_hp);
-			void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp);
-			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit);
-			void sendPickItem(unsigned int item_id);
+			void sendAck(unsigned int ack_id);
+			void sendAttackPacket(MonsterHit monster_damage) override;
+			void sendNpcClick(unsigned int npc_id) override;
+			void sendQuestProgress(unsigned int npc_id, unsigned int chat_id) override;
+			void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id) override;
+			void sendReceiveReward(unsigned int npc_id, unsigned int quest_id) override;
+			void sendCharGotHit(unsigned int new_hp) override;
+			void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp) override;
+			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit) override;
+			void sendPickItem(unsigned int item_id) override;
 			void sendIncreaseSkill(unsigned int skill_id) override;
 			void sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc) override;
 			void sendSwitchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index) override;
 			void sendChatMsg(std::string) override;
+			void sendRequestParty(unsigned int char_id) override;
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

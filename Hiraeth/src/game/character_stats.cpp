@@ -5,7 +5,7 @@ namespace hiraeth {
 		CharacterStats::CharacterStats()
 			:
 			//Stats(),
-			m_StatsStruct{ "Kanye", "Creative Genius", 43, 4039204, 2042185, 4, 45,
+			m_StatsStruct{ "Kanye", "Creative Genius", 43, 300, 0, 4, 45,
 							   "Good Music", 430, 430, 200, 180, 430, 200, BASE_HP_REG, BASE_MP_REG, 9999,
 				3, 4, 9, 9, 4, 5 },
 			m_DetailsStruct{ 40, 40, 40, 10, 10, 20, 20, 30, 30, 25, 13 }

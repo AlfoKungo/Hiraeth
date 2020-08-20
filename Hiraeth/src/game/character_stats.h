@@ -407,6 +407,10 @@ namespace hiraeth {
 			{
 				m_AddOnMap.at(stat_type) += value;
 			}
+			void increaseExp(unsigned int exp_amount)
+			{
+				m_StatsStruct.Exp += exp_amount;
+			}
 		};
 
 	}

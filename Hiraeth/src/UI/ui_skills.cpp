@@ -3,7 +3,6 @@
 #include "srl/monster_data.h"
 #include "basic/network_handler.h"
 
-//#include "network/client_handler.h"
 
 namespace hiraeth {
 	namespace ui {
