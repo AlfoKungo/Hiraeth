@@ -1,0 +1,15 @@
+movement - WASD
+Adding - z
+Selecting - x
+deleting - c
+mode tiles - 1
+mode footholds - 2
+mode portals - 3
+mode Npcs - 4
+mode Mobs - 5
+
+recalculate footholds position - f
+paste selection in current mouse pos - p
+save map to output\0.json
+
+shift + arrow keys - moving elements by 1 pixel

@@ -27,5 +27,8 @@
     <ClInclude Include="net\srl_funcs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="net\net_msgs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

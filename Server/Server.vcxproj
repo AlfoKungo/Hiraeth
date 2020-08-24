@@ -151,6 +151,7 @@
     <ClCompile Include="server.cpp" />
     <ClCompile Include="server_msgs_handling.cpp" />
     <ClCompile Include="socket.cpp" />
+    <ClCompile Include="socket_handler.cpp" />
     <ClCompile Include="utills\static_timer.cpp" />
     <ClCompile Include="utills\timer.cpp" />
   </ItemGroup>
@@ -158,9 +159,11 @@
     <ClInclude Include="address.h" />
     <ClInclude Include="db_client.h" />
     <ClInclude Include="handler.h" />
+    <ClInclude Include="map_holder.h" />
     <ClInclude Include="mob_manager.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="socket.h" />
+    <ClInclude Include="socket_handler.h" />
     <ClInclude Include="utills\a_timer.h" />
     <ClInclude Include="utills\static_timer.h" />
     <ClInclude Include="utills\timer.h" />

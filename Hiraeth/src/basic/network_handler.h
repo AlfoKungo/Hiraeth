@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "net/protocol.h"
+#include "net/net_msgs.h"
 #include "srl/equip_item_data.h"
 
 namespace hiraeth
@@ -25,6 +25,8 @@ namespace hiraeth
 		virtual void sendPickItem(unsigned int item_id) = 0;
 		virtual void sendCharUseSkillE(unsigned int skill_id, unsigned int new_mp) = 0;
 		virtual void sendCharUseSkillA(unsigned int skill_id, std::vector<network::MonsterHit> monsters_hit) = 0;
+		// by map
+		virtual void sendEnterPortal(unsigned int portal_id) = 0;
 		// by net_char_manager
 		virtual void sendRequestParty(unsigned int char_id) = 0;
 	};

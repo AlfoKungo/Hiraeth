@@ -130,6 +130,7 @@
     <ClInclude Include="net\protocol.h" />
     <ClInclude Include="net\server_funcs.h" />
     <ClInclude Include="net\srl_funcs.h" />
+    <ClInclude Include="net\net_msgs.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathLib\MathLib.vcxproj">

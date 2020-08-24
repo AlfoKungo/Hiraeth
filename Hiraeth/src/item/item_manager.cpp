@@ -152,6 +152,12 @@ namespace hiraeth {
 			m_DroppedItems.clear();
 		}
 
+		void ItemManager::clearItems()
+		{
+			m_DroppedItems.clear();
+			m_DroppedItemsMap.clear();
+		}
+
 		ItemDrop * ItemManager::getItem(maths::vec2 pos)
 		{
 			for (auto item : m_DroppedItems.m_Renderables)

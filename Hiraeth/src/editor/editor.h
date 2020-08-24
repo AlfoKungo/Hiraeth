@@ -92,7 +92,12 @@ namespace hiraeth {
 			{
 				float timer = 0;
 				unsigned int map_index = 0;
-				auto mapData = SRL::deserial<SRL::MapData>("map", map_index);
+				//auto mapData = SRL::deserial<SRL::MapData>("map", map_index);
+				SRL::MapData mapData{};
+				const std::string data_file = "map_input/0.json";
+				std::ifstream in(data_file, std::ios::in);
+				cereal::JSONInputArchive arin(in);
+				arin(mapData);
 
 				std::vector<map::Tile> m_Tiles;
 
@@ -109,7 +114,8 @@ namespace hiraeth {
 				MainLayer.add(new graphics::Sprite(maths::vec2(-900, -450), new graphics::Texture("bg.png", 0)));
 				//map::MapRenderer mr;
 				map::MapLayer ml{};
-				ml.reloadData(0);
+				ml.reloadData(mapData);
+
 				//game::Character m_Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(), &itemManager,
 				//	&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters(),
 				//	&clientHandler);

@@ -7,6 +7,7 @@
 #include "../graphics/window.h"
 #include "basic/EventManager.h"
 #include "graphics/label.h"
+#include "basic/network_handler.h"
 
 #include "portal.h"
 #include "../basic/updatable.h"

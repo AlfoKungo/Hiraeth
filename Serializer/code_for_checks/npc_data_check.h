@@ -13,7 +13,7 @@ namespace Checks
 			SRL::NpcInfo info{
 				"Chief Guatamala",
 				0,
-				0.0,
+				-100.0,
 				{"Hey, care for some CDs nigga?", "May I interest you in\nsome Kanye?"},
 			{
 				{0,

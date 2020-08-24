@@ -3,7 +3,7 @@
 #include "graphics/texture_manager.h"
 #include "graphics/sprite.h"
 #include "graphics/label.h"
-#include "net/protocol.h"
+#include "net/net_msgs.h"
 
 namespace hiraeth {
 	namespace ui {

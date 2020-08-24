@@ -4,15 +4,16 @@
 namespace hiraeth {
 	namespace network {
 
-		ClientHandler::ClientHandler(ui::UiManager * ui_manager, 
-			game::NetCharManager * net_char_manager, game::MonsterManager * monster_manager,
-			item::ItemManager * item_manager, skills::SkillManager * skill_manager)
+		ClientHandler::ClientHandler(ui::UiManager * ui_manager, game::NetCharManager * net_char_manager, 
+			game::MonsterManager * monster_manager,	item::ItemManager * item_manager, 
+			skills::SkillManager * skill_manager, map::MapLayer * map_layer)
 			: m_RcvBuffer{ 0 }, m_SendBuffer{ 0 },
-		m_UiManager(ui_manager),
+			m_UiManager(ui_manager),
 			m_NetCharManager(net_char_manager),
 			m_MonsterManager{ monster_manager },
 			m_ItemManager(item_manager),
-		m_SkillManager(skill_manager)
+			m_SkillManager(skill_manager),
+			m_MapLayer(map_layer)
 		{
 			WSADATA wsa;
 			if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -82,6 +83,9 @@ namespace hiraeth {
 			bindFunctionToChar(MSG_STC_PARTY_REQUEST, &ClientHandler::recvPartyRequest);
 			bindFunctionToChar(MSG_STC_UPDATE_PARTY_STATE, &ClientHandler::recvUpdatePartyState);
 			bindFunctionToChar(MSG_STC_RECEIVED_EXP, &ClientHandler::recvReceivedExp);
+			bindFunctionToChar(MSG_STC_ENTER_PORTAL, &ClientHandler::recvEnterPortal);
+			bindFunctionToChar(MSG_STC_CHANGE_MAP, &ClientHandler::recvChangeMap);
+			bindFunctionToChar(MSG_STC_PLAYER_LEFT, &ClientHandler::recvPlayerLeft);
 
 			//EventManager *m_EventManager = EventManager::Instance();
 			//m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
@@ -138,15 +142,11 @@ namespace hiraeth {
 
 		void ClientHandler::sendStateUpdate(PlayerStateUpdateMsg char_state)
 		{
-			char message[sizeof(char_state)];
-			memcpy(message, &char_state, sizeof(char_state));
-			Send(MSG_CTS_LOCATION_UPDATE, message, sizeof(message));
-			//m_SendSize = construct_client_packet(m_SendBuffer, MSG_CTS_LOCATION_UPDATE, m_Id, message, sizeof(message));
-			//if (sendto(m_Handle, m_SendBuffer, m_SendSize, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), slen) == SOCKET_ERROR)
-			//{
-			//	printf("sendto() failed with error code : %d\n", WSAGetLastError());
-			//	exit(EXIT_FAILURE);
-			//}
+			//char message[sizeof(char_state)];
+			//memcpy(message, &char_state, sizeof(char_state));
+			//Send(MSG_CTS_LOCATION_UPDATE, message, sizeof(message));
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_LOCATION_UPDATE, m_Id, char_state);
+			Send();
 		}
 
 		void ClientHandler::handleKeepAlive()
@@ -176,12 +176,15 @@ namespace hiraeth {
 			while (true)
 			{
 				int recv_len;
+
 				if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&m_SiOther), &slen)) == SOCKET_ERROR)
+				//if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&m_sSiOther), &sslen)) == SOCKET_ERROR)
+				//if ((recv_len = recvfrom(m_Handle, m_RcvBuffer, BUFLEN, 0, reinterpret_cast<struct sockaddr *>(&si_other), &sslen)) == SOCKET_ERROR)
 				{
 					if (WSAGetLastError() != 10035)
 					{
-						std::exit(EXIT_SUCCESS);
 						printf("recvfrom() failed with error code : %d\n", WSAGetLastError());
+						std::exit(EXIT_SUCCESS);
 					}
 				}
 				if (recv_len > 0)
@@ -190,53 +193,6 @@ namespace hiraeth {
 					{
 						(this->*m_DistTable[m_RcvBuffer[0]])();
 					}
-					//switch (m_RcvBuffer[0])
-					//{
-					//case MSG_STC_ADD_PLAYER:
-					//	addNewPlayerToMap();
-					//	break;
-					//case MSG_STC_PLAYERS_LOCATIONS:
-					//	updatePlayersLocation();
-					//	break;
-					//case MSG_STC_PLAYERS_LIST:
-					//	loadCurrentMapPlayers(m_RcvBuffer);
-					//	break;
-					//case MSG_STC_MOB_DATA:
-					//	loadMobsData();
-					//	break;
-					//case MSG_STC_MOB_UPDATE:
-					//	updateMobData();
-					//	break;
-					//case MSG_STC_MOB_HIT:
-					//	recvMobHit();
-					//	break;
-					//case MSG_STC_MOB_DIED:
-					//	recvMobDied();
-					//	break;
-					//case MSG_STC_START_DIALOG:
-					//	recvStartDialog();
-					//	break;
-					//case MSG_STC_CHAR_USE_SKILL_E:
-					//	recvPlayerUseSkillE();
-					//	break;
-					//case MSG_STC_CHAR_USE_SKILL_A:
-					//	recvPlayerUseSkillA();
-					//	break;
-					//case MSG_STC_PICK_ITEM:
-					//	recvPickItem();
-					//	break;
-					//case MSG_STC_DROP_ITEM:
-					//	recvDropItem();
-					//	break;
-					//case MSG_STC_DROPPED_ITEM:
-					//	recvDroppedItem();
-					//	break;
-					//case MSG_STC_EXPIRE_ITEM:
-					//	recvExpireItem();
-					//	break;
-					//default:
-					//	break;
-					//}
 				}
 				else
 					return;
@@ -400,6 +356,31 @@ namespace hiraeth {
 			m_UiManager->getMainUi()->getCharacterStats()->increaseExp(exp_amount);
 		}
 
+		void ClientHandler::recvEnterPortal()
+		{
+			const auto msg = dsrl_type<EnterPortalMsg>(m_RcvBuffer + 1);
+			m_MapLayer->reloadData(msg.next_map);
+			m_NetCharManager->clearChars();
+			m_MonsterManager->clearMonsters();
+			m_ItemManager->clearItems();
+
+		}
+
+		void ClientHandler::recvChangeMap()
+		{
+			const auto msg = dsrl_type<EnterPortalMsg>(m_RcvBuffer + 1);
+			m_MapLayer->reloadData(msg.next_map);
+			m_NetCharManager->clearChars();
+			m_MonsterManager->clearMonsters();
+			m_ItemManager->clearItems();
+		}
+
+		void ClientHandler::recvPlayerLeft()
+		{
+			const auto msg = dsrl_type<PlayerLeftMsg>(m_RcvBuffer + 1);
+			m_NetCharManager->deleteChar(msg.player_left_id);
+		}
+
 		void ClientHandler::sendAck(unsigned int ack_id)
 		{
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_ACK, m_Id, ack_id);
@@ -498,6 +479,11 @@ namespace hiraeth {
 		void ClientHandler::sendRequestParty(unsigned int char_id)
 		{
 			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_PARTY_REQUEST, m_Id, char_id);
+			Send();
+		}
+		void ClientHandler::sendEnterPortal(unsigned int portal_id)
+		{
+			m_SendSize = create_client_packet_with_data(m_SendBuffer, MSG_CTS_ENTER_PORTAL, m_Id, EnterPortalMsg{ portal_id });
 			Send();
 		}
 	}

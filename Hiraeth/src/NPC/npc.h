@@ -6,6 +6,7 @@
 #include "graphics/sprite.h"
 #include "graphics/box_textured_full.h"
 #include "graphics/text_box.h"
+#include <game\base_creature.h>
 
 namespace hiraeth {
 	namespace npc {
@@ -19,6 +20,7 @@ namespace hiraeth {
 			bool m_IsSay{ true };
 			unsigned int m_SayLineNum{0};
 			graphics::TextBox<graphics::BoxTexturedFull> m_SayBox;
+
 			//graphics::Label m_TalkLabel;
 			//bool m_IsTalking;
 		public:
@@ -29,7 +31,7 @@ namespace hiraeth {
 				m_Data(npc_data),
 				m_NpcIndex(npc_index),
 				m_SayLines(npc_data.info.say_lines),
-				m_SayBox{{20, 50}, "", 0xffeeeeee, "Assets/UI/ChatBox/pet.39"}
+				m_SayBox{ {}, "", 0xffeeeeee, "Assets/UI/ChatBox/pet.39" }
 				//m_TalkLabel{"arial", 16, "hey im your npc", { 40, -10 }, 0xff000000, graphics::Label::Alignment::LEFT},
 				//m_IsTalking{false}
 			{
@@ -50,7 +52,9 @@ namespace hiraeth {
 				BaseCreature::draw(renderer);
 				if (m_IsSay)
 				{
+					renderer->push(m_TransformationMatrix * maths::mat4::Translate(maths::vec3{ 20, 74 }));
 					m_SayBox.draw(renderer);
+					renderer->pop();
 				}
 			}
 

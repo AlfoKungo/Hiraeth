@@ -33,7 +33,9 @@ namespace hiraeth {
 			MSG_CTS_FINISH_QUEST = -0x21,
 			MSG_CTS_PARTY_REQUEST = -0x22,
 			MSG_CTS_ACCEPT_PARTY = -0x23,
-			MSG_CTS_DECLINE_PARTY = -0x24;
+			MSG_CTS_DECLINE_PARTY = -0x24,
+			MSG_CTS_ENTER_PORTAL = -0x25;
+
 
 		PROTOCOL_CODE
 			MSG_STC_ACK = 0x40,
@@ -63,7 +65,10 @@ namespace hiraeth {
 			MSG_STC_FINISH_QUEST = 0x58,
 			MSG_STC_PARTY_REQUEST = 0x59,
 			MSG_STC_UPDATE_PARTY_STATE = 0x60,
-			MSG_STC_RECEIVED_EXP = 0x61;
+			MSG_STC_RECEIVED_EXP = 0x61,
+			MSG_STC_ENTER_PORTAL = 0x62,
+			MSG_STC_CHANGE_MAP = 0x63,
+			MSG_STC_PLAYER_LEFT = 0x64;
 
 		PROTOCOL_CODE
 			MSG_INR_UPDATE_MOB_CMD = 0x71,
@@ -281,67 +286,6 @@ namespace hiraeth {
 			unsigned int ack_id{}, quest_id{};
 			template<class A> void serialize(A& ar) {
 				ar(CEREAL_NVP(ack_id), CEREAL_NVP(quest_id));
-			}
-		};
-		struct MonsterHit
-		{
-			float damage{};
-			unsigned int monster_id{};
-			Direction dir{};
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(damage), CEREAL_NVP(monster_id), CEREAL_NVP(dir));
-			}
-		};
-
-		struct AttackSkillMsg
-		{
-			unsigned int skill_id{};
-			std::vector<MonsterHit> monsters_hit;
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(skill_id), CEREAL_NVP(monsters_hit));
-			}
-		};
-
-		struct CharAttackSkillMsg
-		{
-			unsigned int char_id{};
-			AttackSkillMsg attack_msg;
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(char_id), CEREAL_NVP(attack_msg));
-			}
-		};
-
-		struct PickItemMsg
-		{
-			unsigned int char_id{};
-			unsigned int item_id{};
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(char_id), CEREAL_NVP(item_id));
-			}
-		};
-		struct PlayerSayMsg
-		{
-			unsigned int char_id{};
-			std::string say_msg{};
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(char_id), CEREAL_NVP(say_msg));
-			}
-		};
-		struct FinishQuestMsg
-		{
-			unsigned int quest_id{};
-			unsigned int exp{};
-			unsigned int money{};
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(exp), CEREAL_NVP(money));
-			}
-		};
-		struct PartyUpdateMsg
-		{
-			std::vector<std::tuple<unsigned int, std::string>> party_members;
-			unsigned int ack;
-			template<class A> void serialize(A& ar) {
-				ar(CEREAL_NVP(party_members), CEREAL_NVP(ack));
 			}
 		};
 

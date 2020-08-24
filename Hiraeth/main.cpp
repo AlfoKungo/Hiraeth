@@ -117,7 +117,8 @@ int main()
 	game::MonsterManager monsterManager(map.getMapLayer());
 	game::NetCharManager netCharManager{ map.getMapLayer(), &keyboard, &skillManager, monsterManager.getMonsters() };
 
-	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, &itemManager, &skillManager }; // itemManager, 
+	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, 
+		&itemManager, &skillManager, map.getMapLayer() }; // itemManager, 
 	NetworkManager::setHandler(&clientHandler);
 
 	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats,

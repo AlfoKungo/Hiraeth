@@ -17,6 +17,7 @@
 #include "net/srl_funcs.h"
 #include "UI/ui_manager.h"
 #include "basic/network_handler.h"
+#include "net/net_msgs.h"
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
  
@@ -34,9 +35,11 @@ namespace hiraeth {
 			SOCKET m_Handle;
 			unsigned int m_Id{0};
 			struct sockaddr_in m_SiOther {};
+			int slen = sizeof(m_SiOther), m_SendSize;
+			struct sockaddr_in m_sSiOther {};
+			int sslen = sizeof(m_SiOther);
 			//std::map<char, std::function<void()>> m_DistTable{};
 			std::map<char, void(ClientHandler::*)()> m_DistTable{};
-			int slen = sizeof(m_SiOther), m_SendSize;
 			//BufferType m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			char m_RcvBuffer[BUFLEN], m_SendBuffer[BUFLEN];
 			ATimer m_KATimer{ KA_TIMEOUT }, m_KALossTimer{ KA_LOSS_TIMEOUT };
@@ -47,13 +50,14 @@ namespace hiraeth {
 			game::MonsterManager * m_MonsterManager;
 			item::ItemManager * m_ItemManager;
 			skills::SkillManager * m_SkillManager;
+			map::MapLayer* m_MapLayer;
 			//std::map<unsigned int, maths::vec2> m_PlayerLocation;
 			RegularMapUpdate m_PlayersLocationStruct;
 			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 		public:
 			ClientHandler(ui::UiManager * ui_manager, game::NetCharManager * net_char_manager, 
-				game::MonsterManager * monster_manager,
-				item::ItemManager * item_manager, skills::SkillManager * skill_manager);
+				game::MonsterManager * monster_manager,	item::ItemManager * item_manager,
+				skills::SkillManager * skill_manager, map::MapLayer * map_layer);
 
 			~ClientHandler();
 			void closeConnection();
@@ -100,6 +104,9 @@ namespace hiraeth {
 			void recvPartyRequest();
 			void recvUpdatePartyState();
 			void recvReceivedExp();
+			void recvEnterPortal();
+			void recvChangeMap();
+			void recvPlayerLeft();
 		public:
 			void sendAck(unsigned int ack_id);
 			void sendAttackPacket(MonsterHit monster_damage) override;
@@ -116,6 +123,7 @@ namespace hiraeth {
 			void sendSwitchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index) override;
 			void sendChatMsg(std::string) override;
 			void sendRequestParty(unsigned int char_id) override;
+			void sendEnterPortal(unsigned int portal_id) override;
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

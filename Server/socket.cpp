@@ -3,6 +3,7 @@
 namespace hiraeth {
 	namespace network {
 
+
 		Socket::Socket()
 		{
 			WSADATA wsa;

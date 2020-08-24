@@ -45,6 +45,7 @@ namespace hiraeth
 			std::map<unsigned int, Monster*>* getMonsters() { return &m_Monsters; }
 			//void checkCollision();
 			void mapChanged();
+			void clearMonsters();
 		};
 	}
 }

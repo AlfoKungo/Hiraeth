@@ -63,6 +63,19 @@ namespace hiraeth {
 				m_CharsMap.insert(std::make_pair(char_id, temp));
 			}
 
+			void clearChars()
+			{
+				m_Chars.clear();
+				m_CharsMap.clear();
+			}
+
+			void deleteChar(unsigned int player_id)
+			{
+				m_Chars.m_Renderables.erase(std::remove(m_Chars.m_Renderables.begin(), 
+					m_Chars.m_Renderables.end(), m_CharsMap[player_id]), m_Chars.m_Renderables.end());
+				m_CharsMap.erase(player_id);
+			}
+
 			void updateCharsState(unsigned int char_id, network::PlayerStateUpdateMsg char_state)
 			{
 				if (m_CharsMap.find(char_id) == m_CharsMap.end())

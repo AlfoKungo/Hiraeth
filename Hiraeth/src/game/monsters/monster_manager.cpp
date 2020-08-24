@@ -10,7 +10,7 @@ namespace hiraeth {
 			//m_ItemManager(item_manager)
 			//m_Char(character)
 		{
-			EventManager *m_EventManager = EventManager::Instance();
+			EventManager* m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &MonsterManager::mapChanged);
 			m_EventManager->createEvent<unsigned int>(MonsterDied);
 			mapChanged();
@@ -36,7 +36,7 @@ namespace hiraeth {
 					m_Monsters.erase((*monster)->getId());
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
-					EventManager *m_EventManager = EventManager::Instance();
+					EventManager* m_EventManager = EventManager::Instance();
 					m_EventManager->execute<unsigned int>(MonsterDied, monster_id);
 					//++monster;
 				}
@@ -60,7 +60,7 @@ namespace hiraeth {
 			{
 				auto x_start = m_MapLayer->m_MapData.Summons[monster_id].XBegin, x_end = m_MapLayer->m_MapData.Summons[monster_id].XEnd;
 				const auto new_monster = new Monster{ monster_state.monster_type, monster_state.pos, m_MapLayer, monster_id ,
-				x_start, x_end};
+				x_start, x_end };
 				m_Monsters[monster_id] = new_monster;
 				m_Layer.add(new_monster);
 			}
@@ -75,7 +75,7 @@ namespace hiraeth {
 			{
 				addMonster(monster_id, monster_state);
 			}
-			std::cout << "id is "<< monster_id << " org pos is " << m_Monsters[monster_id]->getPosition() << " new_pos is " << monster_state.pos << std::endl;
+			std::cout << "id is " << monster_id << " org pos is " << m_Monsters[monster_id]->getPosition() << " new_pos is " << monster_state.pos << std::endl;
 			//m_Monsters[monster_id]->setPosition(monster_state.pos);
 			m_Monsters[monster_id]->setPosition(maths::vec2{ monster_state.pos.x ,m_Monsters[monster_id]->getPosition().y });
 			m_Monsters[monster_id]->setControls(0, monster_state.dir == network::Left);
@@ -95,7 +95,7 @@ namespace hiraeth {
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
 					m_Monsters.erase(monster_id);
-					EventManager *m_EventManager = EventManager::Instance();
+					EventManager* m_EventManager = EventManager::Instance();
 					m_EventManager->execute<unsigned int>(MonsterDied, monster_id);
 				}
 				else
@@ -128,14 +128,20 @@ namespace hiraeth {
 			 * add rereading of data from server.
 			 */
 
-			//clear summon queue
-			//while (!m_SummonQueue.empty())
-			//	m_SummonQueue.pop();
-			//m_Layer.clear();
-			//MonsterDataManager::ReloadData(m_MapLayer->getSummons());
-			////reload new summons
-			//for (auto summon : (m_MapLayer->getSummons()))
-			//	m_SummonQueue.push(Summoner{ summon, StaticTimer::timer.elapsed() + 2.0f});
+			 //clear summon queue
+			 //while (!m_SummonQueue.empty())
+			 //	m_SummonQueue.pop();
+			 //m_Layer.clear();
+			 //MonsterDataManager::ReloadData(m_MapLayer->getSummons());
+			 ////reload new summons
+			 //for (auto summon : (m_MapLayer->getSummons()))
+			 //	m_SummonQueue.push(Summoner{ summon, StaticTimer::timer.elapsed() + 2.0f});
+		}
+
+		void MonsterManager::clearMonsters()
+		{
+			m_Layer.clear();
+			m_Monsters.clear();
 		}
 	}
 }

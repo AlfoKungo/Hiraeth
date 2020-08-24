@@ -63,7 +63,8 @@ namespace hiraeth {
 			if (up == control)
 				for (auto& portal : m_PtLayer.m_Renderables)
 					if (portal->getBounds().GetMinimumBound().Distance(char_pos) <= 100)
-						change_map(portal->getNextMap());
+						NetworkManager::Instance()->sendEnterPortal(portal->getNextMap());
+						//change_map(portal->getNextMap());
 		}
 
 		void Map::deserialize_map_data(unsigned int map_index)

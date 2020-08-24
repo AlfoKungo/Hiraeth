@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "net/protocol.h"
+#include "net/net_msgs.h"
 #include <cereal/types/memory.hpp>
 #include "srl/map_data.h"
 #include "srl/monster_data.h"

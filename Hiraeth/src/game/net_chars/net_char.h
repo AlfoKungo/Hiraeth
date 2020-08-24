@@ -5,7 +5,7 @@
 #include "character/character_arm.h"
 #include "game/character_stats.h"
 #include "skills/skill_manager.h"
-#include "net/protocol.h"
+#include "net/net_msgs.h"
 #include "game/monsters/monster.h"
 
 namespace hiraeth {

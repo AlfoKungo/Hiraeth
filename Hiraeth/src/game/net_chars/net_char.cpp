@@ -84,25 +84,6 @@ namespace hiraeth {
 			}
 		}
 
-		//void NetChar::registerKeys()
-		//{
-		//	//m_Kb->registerToKey(GLFW_KEY_UP, up, this);
-		//	m_Kb->registerToKey(GLFW_KEY_DOWN, down, this);
-		//	m_Kb->registerToKey(GLFW_KEY_LEFT, left, this);
-		//	m_Kb->registerToKey(GLFW_KEY_RIGHT, right, this);
-		//	m_Kb->registerToKey(GLFW_KEY_SPACE, jump, this);
-		//	m_Kb->registerToKey(GLFW_KEY_LEFT_CONTROL, attack, this);
-		//	m_Kb->registerToKey(GLFW_KEY_Z, pick_up, this);
-		//	std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N };
-		//	std::vector<unsigned int> available_skills = m_SkillManager->get_available_skills();
-		//	for (int i = 0; i < available_skills.size(); ++i)
-		//	{
-		//		m_SkillKeysMap[i] = available_skills[i];
-		//		m_SkillManager->m_UiSkills->transferSkillToKeyConfig(skill_keys[i], 
-		//			(controls_size)+i, available_skills[i], this);
-		//	}
-		//}
-
 		void NetChar::carryOutAttack()
 		{
 			//maths::Rectangle attack_rec = getBounds();

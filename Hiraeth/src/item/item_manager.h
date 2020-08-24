@@ -41,6 +41,7 @@ namespace hiraeth {
 			void addItemToInv(unsigned int item_kind, unsigned int item_loc, unsigned int item_id); 
 			void startExpiring(unsigned int item_id);
 			void mapChanged();
+			void clearItems();
 			ItemDrop * getItem(maths::vec2 pos);
 			//Item * getItem(unsigned int item_id) { return m_DroppedItemsMap[item_id]; }
 			ItemDrop * getItem(unsigned int item_id) { return m_DroppedItemsMap[item_id]; }

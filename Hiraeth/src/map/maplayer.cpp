@@ -45,5 +45,22 @@ namespace hiraeth {
 
 			m_Renderer.changeTexture(m_MapData.TileTexture);
 		}
+
+		void MapLayer::reloadData(SRL::MapData map_data)
+		{
+			m_MapData = map_data;
+
+			m_Tiles.clear();
+			for (auto& tile_data : m_MapData.Tiles)
+				m_Tiles.emplace_back(tile_data);
+
+			m_FootHolds.clear();
+			for (auto& foothold_data : m_MapData.FootHolds)
+				m_FootHolds.emplace_back(foothold_data);
+
+			m_Renderer.changeTexture(m_MapData.TileTexture);
+		}
+
+
 	}
 }
