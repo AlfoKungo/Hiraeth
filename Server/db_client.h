@@ -272,44 +272,73 @@ namespace hiraeth {
 				return item_loc;
 			}
 
-			unsigned int addEquipInv(unsigned int player_id, unsigned int equip_loc)
+			unsigned int addEquipInv(unsigned int player_id, SRL::EquipDbStruct equip_info)
 			{
 				auto inv_equip = getDynamicType<decltype(PlayerData::inv_equip)>(player_id, INV_EQUIP);
 				const auto item_loc = findAvailableLoc(inv_equip);
 				//inv_equip[item_loc] = equip_loc;
-				inv_equip[item_loc] = equip_loc;
+				inv_equip[item_loc] = equip_info;
 				setByteArray(player_id, INV_EQUIP, inv_equip);
 				return item_loc;
 			}
 
-			void wearEquip(unsigned int player_id,SRL::EquipItemType equip_type, unsigned int equip_loc)
+			decltype(PlayerData::equips_char) wearEquip(unsigned int player_id, SRL::EquipItemType equip_type, unsigned int equip_loc)
 			{
 				auto equips_inv = getDynamicType<decltype(PlayerData::inv_equip)>(player_id, INV_EQUIP);
 				auto equips_char = getDynamicType<decltype(PlayerData::equips_char)>(player_id, EQUIP_CHAR);
-				unsigned int old_equip = 0;
+				SRL::EquipDbStruct old_equip{};
 				bool is_old_equip{ false };
 				if (equips_char.find(equip_type) != equips_char.end())
 				{
 					old_equip = equips_char[equip_type];
 					is_old_equip = true;
 				}
-				equips_char[equip_type] = equips_inv[equip_loc];
+				if (equips_inv.find(equip_loc) != equips_inv.end())
+					equips_char[equip_type] = equips_inv[equip_loc];
+				else
+					equips_char.erase(equip_type);
 				equips_inv.erase(equip_loc);
 				if (is_old_equip)
 					equips_inv[equip_loc] = old_equip;
 				setByteArray(player_id, INV_EQUIP, equips_inv);
 				setByteArray(player_id, EQUIP_CHAR, equips_char);
+				return equips_char;
 			}
 
 			void switchInventoryItems(unsigned int player_id, unsigned int item_loc1, 
 				unsigned int item_loc2, unsigned int tab_index)
 			{
-				if (tab_index == EQUIP_ITEM)
+				//if (tab_index == EQUIP_ITEM)
+				//	switchInventoryItems<decltype(PlayerData::inv_equip)>(player_id, item_loc1,
+				//		item_loc2, tab_index);
+				//else
+				//	switchInventoryItems<decltype(PlayerData::inv_use)>(player_id, item_loc1,
+				//		item_loc2, tab_index);
+				switch (tab_index)
+				{
+				case EQUIP_ITEM:
 					switchInventoryItems<decltype(PlayerData::inv_equip)>(player_id, item_loc1,
 						item_loc2, tab_index);
-				else
+					break;
+				case USE_ITEM:
 					switchInventoryItems<decltype(PlayerData::inv_use)>(player_id, item_loc1,
 						item_loc2, tab_index);
+					break;
+				case SETUP_ITEM:
+					switchInventoryItems<decltype(PlayerData::inv_setup)>(player_id, item_loc1,
+						item_loc2, tab_index);
+					break;
+				case ETC_ITEM:
+					switchInventoryItems<decltype(PlayerData::inv_etc)>(player_id, item_loc1,
+						item_loc2, tab_index);
+					break;
+				case CASH_ITEM:
+					switchInventoryItems<decltype(PlayerData::inv_cash)>(player_id, item_loc1,
+						item_loc2, tab_index);
+					break;
+				default:break;
+
+				}
 			}
 
 			template <class T>
@@ -331,6 +360,53 @@ namespace hiraeth {
 					inv.insert(move(nh));
 				}
 				setByteArray(player_id, tab_name, inv);
+			}
+
+			//template <class T>
+			//T deleteInventoryItem(unsigned int player_id, 
+			//	unsigned int item_loc, unsigned int tab_index)
+			//{
+			//	switch (tab_index)
+			//	{
+			//	case EQUIP_ITEM:
+			//		deleteInventoryItem<decltype(PlayerData::inv_equip)>(player_id, item_loc, tab_index);
+			//		break;
+			//	case USE_ITEM:
+			//		deleteInventoryItem<decltype(PlayerData::inv_use)>(player_id, item_loc, tab_index);
+			//		break;
+			//	case SETUP_ITEM:
+			//		deleteInventoryItem<decltype(PlayerData::inv_setup)>(player_id, item_loc, tab_index);
+			//		break;
+			//	case ETC_ITEM:
+			//		deleteInventoryItem<decltype(PlayerData::inv_etc)>(player_id, item_loc, tab_index);
+			//		break;
+			//	case CASH_ITEM:
+			//		deleteInventoryItem<decltype(PlayerData::inv_cash)>(player_id, item_loc, tab_index);
+			//		break;
+			//	default:break;
+
+			//	}
+			//}
+
+			//template <class T>
+			//void deleteInventoryItem(unsigned int player_id, unsigned int item_loc, unsigned int tab_index)
+			//{
+			//	const char* tab_name = get_name_by_index(tab_index);
+			//	auto inv = getDynamicType<T>(player_id, tab_name);
+			//	inv.erase(item_loc);
+			//	setByteArray(player_id, tab_name, inv);
+			//}
+
+			template <class T>
+			T deleteInventoryItem(unsigned int player_id, unsigned int item_loc, unsigned int tab_index)
+			{
+				const char* tab_name = get_name_by_index(tab_index);
+				auto inv = getDynamicType<std::map<unsigned int, T>>(player_id, tab_name);
+				auto item = inv[item_loc];
+				inv.erase(item_loc);
+				setByteArray(player_id, tab_name, inv);
+				return item;
+				//return T{};
 			}
 
 			void increaseSkillPoints(unsigned int player_id, unsigned int skill_id)

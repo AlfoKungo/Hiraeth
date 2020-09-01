@@ -7,9 +7,20 @@
 #include "sprite_data.h"
 #include "animation_data.h"
 #include <cereal/cereal.hpp>
+#include <variant>
+#include <cereal/types/variant.hpp>
 
 namespace SRL {
 	
+
+	enum BehaveEnum
+	{
+		Behave_walk,
+		Behave_stop,
+		Behave_jump,
+		Behave_chase_player,
+		Behave_skill_a,
+	};
 
 	struct MonsterStatsStruct
 	{
@@ -36,8 +47,10 @@ namespace SRL {
 	{
 		MonsterStatsStruct StatsStruct;
 		unsigned int TextureIndex{};
+		std::map<BehaveEnum, std::variant<unsigned int>> BehaveMap{};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(StatsStruct), CEREAL_NVP(TextureIndex));
+			ar(CEREAL_NVP(StatsStruct), CEREAL_NVP(TextureIndex),
+				CEREAL_NVP(BehaveMap));
 		}
 	};
 

@@ -10,7 +10,7 @@ namespace hiraeth
 	public:
 		virtual ~NetworkHandler() = default;
 		virtual void sendIncreaseSkill(unsigned skill_id) = 0;
-		virtual void sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc) = 0;
+		virtual void sendWearItem(SRL::EquipItemType item_type, unsigned int item_loc) = 0;
 		virtual void sendSwitchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index) = 0;
 		virtual void sendChatMsg(std::string msg) = 0;
 		virtual void sendQuestProgress(unsigned int npc_id, unsigned int chat_id) = 0;
@@ -29,6 +29,10 @@ namespace hiraeth
 		virtual void sendEnterPortal(unsigned int portal_id) = 0;
 		// by net_char_manager
 		virtual void sendRequestParty(unsigned int char_id) = 0;
+		virtual void sendRequestTrade(unsigned int char_id) = 0;
+		virtual void sendRequestInfo(unsigned int char_id) = 0;
+		// by ui_inventory
+		virtual void sendDropItem(unsigned int item_id, unsigned int tab_index) = 0;
 	};
 	
 	class NetworkManager

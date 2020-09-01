@@ -258,7 +258,7 @@ int main()
 		END_OF_FILE, TILES_ADDRESSES_BEGIN);
 
 	// Serialize Monster Data
-	//Checks::create_monster_data();
+	SRL::Checks::create_monster_data();
 	serialize_generic<SRL::MonsterData>("monster/monster_data", just_data<SRL::MonsterData>,
 		MONSTER_DATA_DATA_BEGIN, MONSTER_DATA_ADDRESS_BEGIN);
 	serialize_generic<SRL::MonsterTexturesData>("monster/textures", monster_data<SRL::MonsterTexturesData>,
@@ -285,11 +285,19 @@ int main()
 	serialize_generic<SRL::QuestData>("quest", just_data<SRL::QuestData>);
 
 	std::string path_from = "../Hiraeth/serialized/";
-	fs::path targetParent = "../Server/serialized/";
+	fs::path server_path = "../Server/serialized/";
+	fs::path debug_path = "../x64/debug/serialized/";
+	//fs::path targetParent = "../Server/serialized/";
 	for (const auto& entry : fs::directory_iterator(path_from))
 	{
 		fs::path sourceFile = entry.path();
-		auto target = targetParent / sourceFile.filename(); // sourceFile.filename() returns "sourceFile.ext".
+		auto target = server_path / sourceFile.filename(); // sourceFile.filename() returns "sourceFile.ext".
+		fs::copy_file(sourceFile, target, fs::copy_options::overwrite_existing);
+	}
+	for (const auto& entry : fs::directory_iterator(path_from))
+	{
+		fs::path sourceFile = entry.path();
+		auto target = debug_path / sourceFile.filename(); // sourceFile.filename() returns "sourceFile.ext".
 		fs::copy_file(sourceFile, target, fs::copy_options::overwrite_existing);
 	}
 

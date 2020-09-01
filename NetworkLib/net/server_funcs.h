@@ -22,5 +22,11 @@ namespace hiraeth {
 			auto message_len = srl_types(buffer + 1, dts...);
 			return 1 + message_len;
 		}
+
+		//template<typename ... Ts>
+		//inline int construct_server_packet(BufferType * buffer, MsgEnum cmnd, Ts&&... dts)
+		//{
+		//	return construct_server_packet(buffer, (unsigned char)cmnd, dts...);
+		//}
 	}
 }

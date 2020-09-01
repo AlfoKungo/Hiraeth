@@ -73,6 +73,7 @@ namespace hiraeth {
 			void ButtonUpdate(input::Key control, bool state);
 
 			void registerKeys();
+			void loadSkillsToKeys();
 			//void setMonsters(std::vector<Monster*>* monsters_layer) { m_MonstersLayer = monsters_layer; }
 			void carryOutAttack() override;
 			void setStuck(bool stuck_state);

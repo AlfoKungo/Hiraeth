@@ -7,6 +7,7 @@
 #include "skills/skill_manager.h"
 #include "net/net_msgs.h"
 #include "game/monsters/monster.h"
+#include "item/item_data_manager.h"
 
 namespace hiraeth {
 	namespace game {
@@ -80,6 +81,20 @@ namespace hiraeth {
 			void ButtonUpdate(input::Key key, bool state);
 			void carryOutAttack() override;
 			void setStuck(bool stuck_state);
+			void wearItem(unsigned int item_id)
+			{
+				auto equip = item::ItemDataManager::GetEquip(item_id);
+				auto& texs = equip.textures;
+				const auto& equip_tex_data = texs[SRL::as_Default];
+				auto item_type = equip.info.equip_item_type;
+
+				if (m_Equips.find(item_type) != m_Equips.end())
+					m_Equips.erase(item_type);
+				m_Equips.emplace(std::make_pair(item_type, graphics::Sprite{ {5, 40},equip_tex_data.org,
+					graphics::TextureManager::Load(equip.info.item_info.item_name + "_def", equip_tex_data.tex_data) }));
+
+			}
+			void clearEquips() { m_Equips.clear(); }
 			//CharacterStats* getCharacterStats() const;
 			//void cause_damage(Damage damage) override { m_Stats->causeDamage(damage); }
 			void pickItemUp(unsigned int item_id);

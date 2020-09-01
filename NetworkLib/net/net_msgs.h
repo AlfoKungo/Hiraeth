@@ -3,6 +3,25 @@
 
 namespace hiraeth {
 	namespace network {
+
+		struct MsgStcNewPlayerInMap
+		{
+			unsigned int player_id{};
+			//decltype(PlayerData::equips_char) player_equips;
+			std::map<SRL::EquipItemType, unsigned int> player_equips;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(player_id), CEREAL_NVP(player_equips));
+			}
+		};
+		struct MsgStcUpdateNetCharEquips
+		{
+			unsigned int player_id{};
+			//decltype(PlayerData::equips_char) player_equips;
+			std::map<SRL::EquipItemType, unsigned int> player_equips;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(player_id), CEREAL_NVP(player_equips));
+			}
+		};
 		struct MonsterHit
 		{
 			float damage{};
@@ -30,6 +49,38 @@ namespace hiraeth {
 			}
 		};
 
+		struct AddItemMsg
+		{
+			unsigned int item_kind{}, item_loc{}, item_id{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(item_kind), CEREAL_NVP(item_loc), CEREAL_NVP(item_id));
+			}
+		};
+		struct AddEquipItemMsg
+		{
+			unsigned int item_loc{}, item_id{};
+			SRL::EquipDbStruct item_info;
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(item_id), CEREAL_NVP(item_loc), CEREAL_NVP(item_info));
+			}
+		};
+		struct MsgCtsDropItem
+		{
+			unsigned int item_kind{}, item_type_id{} ,item_id{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(item_kind), CEREAL_NVP(item_type_id), 
+					CEREAL_NVP(item_id));
+			}
+		};
+		struct MsgStcDropItem
+		{
+			unsigned int item_kind{}, item_type_id{} ,item_id{};
+			maths::vec2 pos{};
+			template<class A> void serialize(A& ar) {
+				ar(CEREAL_NVP(item_kind), CEREAL_NVP(item_type_id),
+					CEREAL_NVP(item_id), CEREAL_NVP(pos));
+			}
+		};
 		struct PickItemMsg
 		{
 			unsigned int char_id{};

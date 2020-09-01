@@ -43,7 +43,7 @@ namespace hiraeth {
 			//Item(maths::vec2 pos, SRL::ItemData item_data, const std::vector<physics::FootHold>& foot_holds);
 			ItemDrop(maths::vec2 pos, unsigned int item_type_id, const std::string& item_name,
 				SRL::TextureData item_texture_data,  const std::vector<physics::FootHold>& foot_holds,
-				unsigned int item_id);
+				unsigned int item_id, float x_force);
 
 			void update() override;
 			bool isReachedFloor(maths::vec2 org, maths::vec2 force);

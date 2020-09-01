@@ -47,7 +47,7 @@ namespace hiraeth {
 
 
 			// gets
-			inline const maths::vec2& getPosition() const { return m_Bounds.position; }
+			inline virtual const maths::vec2& getPosition() const { return m_Bounds.position; }
 			virtual maths::vec2 getSize() const { return m_Bounds.size; }
 			inline const maths::Rectangle& getBounds() const { return m_Bounds; }
 			//inline maths::Rectangle& getBounds() { return m_Bounds; }

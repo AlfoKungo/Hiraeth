@@ -11,6 +11,7 @@
 #include "equip_item.h"
 #include "UI/ui_equip.h"
 #include "net/protocol.h"
+#include "basic/char_handler.h"
 
 namespace hiraeth {
 	namespace item {
@@ -37,8 +38,10 @@ namespace hiraeth {
 			void setInvUse(decltype(network::PlayerData::inv_use) items);
 			void setEquipsChar(decltype(network::PlayerData::equips_char) equips);
 			//void dropItem(maths::vec2 pos, unsigned int item_id);
-			void dropItem(unsigned int item_id, unsigned int item_type_id, unsigned int item_kind, maths::vec2 pos);
+			void dropItem(unsigned int item_id, unsigned int item_type_id, 
+				unsigned int item_kind, maths::vec2 pos, float x_force);
 			void addItemToInv(unsigned int item_kind, unsigned int item_loc, unsigned int item_id); 
+			void addEquipItemToInv(SRL::EquipDbStruct item_info, unsigned int item_loc, unsigned int item_id); 
 			void startExpiring(unsigned int item_id);
 			void mapChanged();
 			void clearItems();

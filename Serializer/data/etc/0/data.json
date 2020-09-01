@@ -1,0 +1,18 @@
+{
+    "info": {
+        "item_properties": [
+            {
+                "key": 3,
+                "value": {
+                    "index": 0,
+                    "data": 15
+                }
+            }
+        ],
+        "basic_item_info": {
+            "item_name": "Slimer",
+            "type": 1,
+            "item_description": "Gives Magic Damage"
+        }
+    }
+}

@@ -33,7 +33,7 @@ namespace hiraeth {
 				m_SayLines(npc_data.info.say_lines),
 				m_SayBox{ {}, "", 0xffeeeeee, "Assets/UI/ChatBox/pet.39" }
 				//m_TalkLabel{"arial", 16, "hey im your npc", { 40, -10 }, 0xff000000, graphics::Label::Alignment::LEFT},
-				//m_IsTalking{false}
+				//m_IsTalking{false} 
 			{
 				m_StatesRenderables[game::StcStand].push_back(std::make_unique<graphics::SpritedRenderable>(
 					maths::vec2(), m_Data.npc_frames_amount, 0.6f, false,

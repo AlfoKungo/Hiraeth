@@ -113,27 +113,9 @@ int main()
 	item::ItemManager itemManager{ map.getMapLayer()->getFootHolds(), uiManager.getUiInventory(), uiManager.getUiEquip() };
 	skills::SkillManager skillManager{ uiManager.getUiSkills(), uiManager.getMainUi()->getCharacterStats() };
 
-
 	game::MonsterManager monsterManager(map.getMapLayer());
-	game::NetCharManager netCharManager{ map.getMapLayer(), &keyboard, &skillManager, monsterManager.getMonsters() };
 
-	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, 
-		&itemManager, &skillManager, map.getMapLayer() }; // itemManager, 
-	NetworkManager::setHandler(&clientHandler);
-
-	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats,
-		clientHandler.getPlayerData().stats_alloc);
 	//uiManager.getUiSkills()->setClientHandler(&clientHandler);
-	itemManager.setInvEquip(clientHandler.getPlayerData().inv_equip);
-	itemManager.setInvUse(clientHandler.getPlayerData().inv_use);
-	itemManager.setEquipsChar(clientHandler.getPlayerData().equips_char);
-	std::vector<unsigned int> aval{ 0,1,2 };
-	uiManager.getUiQuests()->setQuestsTab(aval, SRL::QuestTab::Available);
-	for (auto [active_quest_id, quest_stage] : clientHandler.getPlayerData().quests_in_progress)
-		uiManager.getUiQuests()->setQuestAsActive(active_quest_id);
-	//uiManager.getUiQuests()->setQuestsInProgress(clientHandler.getPlayerData().quests_in_progress, SRL::QuestTab::InProgress);
-	uiManager.getUiQuests()->setQuestsTab(clientHandler.getPlayerData().quests_done, SRL::QuestTab::Done);
-	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
 
 	graphics::Layer<game::Character> m_CrLayer(new Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), true);
 	game::Character Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(),
@@ -145,7 +127,25 @@ int main()
 	view::Camera::init(&Char);
 
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &Char, uiManager.getUiQuests());
+	game::NetCharManager netCharManager{ map.getMapLayer(), &keyboard, &skillManager, monsterManager.getMonsters() };
 
+	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, 
+		&itemManager, &skillManager, &map, &npcManager}; // itemManager, 
+	NetworkManager::setHandler(&clientHandler);
+
+	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats,
+		clientHandler.getPlayerData().stats_alloc);
+	itemManager.setInvEquip(clientHandler.getPlayerData().inv_equip);
+	itemManager.setInvUse(clientHandler.getPlayerData().inv_use);
+	itemManager.setEquipsChar(clientHandler.getPlayerData().equips_char);
+	std::vector<unsigned int> aval{ 0,1,2 };
+	uiManager.getUiQuests()->setQuestsTab(aval, SRL::QuestTab::Available);
+	for (auto [active_quest_id, quest_stage] : clientHandler.getPlayerData().quests_in_progress)
+		uiManager.getUiQuests()->setQuestAsActive(active_quest_id);
+	//uiManager.getUiQuests()->setQuestsInProgress(clientHandler.getPlayerData().quests_in_progress, SRL::QuestTab::InProgress);
+	uiManager.getUiQuests()->setQuestsTab(clientHandler.getPlayerData().quests_done, SRL::QuestTab::Done);
+	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
+	Char.loadSkillsToKeys();
 
 	unsigned int frames = 0;
 	while (!window.closed())

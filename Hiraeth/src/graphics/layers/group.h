@@ -9,6 +9,7 @@ namespace hiraeth {
 		{
 		private:
 			maths::mat4 m_TransformationMatrix;
+			maths::vec2 m_Pos{ 0,0 };
 		public:
 			std::vector<std::unique_ptr<Renderable>> m_Renderables;
 			std::vector<Renderable*> m_RefRenderables;
@@ -24,6 +25,11 @@ namespace hiraeth {
 
 			void draw(Renderer* renderer) const override;
 			void translate(const maths::vec3& pos);
+			void setPosition(const maths::vec2& new_pos) override
+			{
+				translate(new_pos - m_Pos);
+			}
+			inline const maths::vec2& getPosition() const override { return m_Pos; }
 			void update() override;
 			maths::mat4 getTransform() const { return m_TransformationMatrix; }
 			void clear();

@@ -53,6 +53,15 @@ namespace SRL {
 		eReqMed,
 		eReqJob,
 	};
+	struct EquipReqsStruct
+	{
+		unsigned int Lvl{}, Str{}, Int{}, Dex{}, Wit{}, Med{};
+		unsigned char Job{};
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(Lvl), CEREAL_NVP(Str), CEREAL_NVP(Int), CEREAL_NVP(Dex),
+				CEREAL_NVP(Wit), CEREAL_NVP(Med), CEREAL_NVP(Job));
+		}
+	};
 	
 	using EquipPropertiesMap = std::map<EquipItemDataType, std::variant<int, std::string>>;
 	using EquipPropertiesMapPair = std::pair<EquipItemDataType, std::variant<int, std::string>>;
@@ -64,14 +73,25 @@ namespace SRL {
 			ar(CEREAL_NVP(reqs_map));
 		}
 	};
+	struct EquipDbStruct
+	{
+		unsigned int equip_id;
+		EquipPropertiesMap equip_item_properties;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(equip_id), CEREAL_NVP(equip_item_properties));
+		}
+
+	};
 	struct EquipItemInfo
 	{
-		EquipPropertiesMap equip_item_properties;
+		//EquipPropertiesMap equip_item_properties;
 		BasicItemInfo item_info;
 		EquipItemType equip_item_type;
-		std::map<EquipReqEnum, int> reqs_map;
+		//std::map<EquipReqEnum, int> reqs_map;
+		EquipReqsStruct reqs;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(equip_item_properties), CEREAL_NVP(item_info), CEREAL_NVP(equip_item_type));
+			//ar(CEREAL_NVP(equip_item_properties), CEREAL_NVP(item_info), CEREAL_NVP(equip_item_type));
+			ar(CEREAL_NVP(item_info), CEREAL_NVP(equip_item_type), CEREAL_NVP(reqs));
 		}
 	};
 

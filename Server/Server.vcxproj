@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="address.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="map_holder.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="server_msgs_handling.cpp" />
     <ClCompile Include="socket.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="address.h" />
     <ClInclude Include="db_client.h" />
     <ClInclude Include="handler.h" />
+    <ClInclude Include="item_funcs.h" />
     <ClInclude Include="map_holder.h" />
     <ClInclude Include="mob_manager.h" />
     <ClInclude Include="server.h" />

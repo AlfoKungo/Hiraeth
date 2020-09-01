@@ -33,7 +33,7 @@ namespace hiraeth {
 			MapLayer m_MapLayer;
 
 			int m_MapIndex;
-			bool m_ChangeMapFlag;
+			//bool m_ChangeMapFlag;
 
 
 			graphics::Window* m_Wnd;

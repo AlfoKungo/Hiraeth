@@ -1,33 +1,19 @@
 {
     "info": {
-        "equip_item_properties": [
-            {
-                "key": 5,
-                "value": {
-                    "index": 0,
-                    "data": 25
-                }
-            },
-            {
-                "key": 6,
-                "value": {
-                    "index": 0,
-                    "data": 15
-                }
-            },
-            {
-                "key": 7,
-                "value": {
-                    "index": 0,
-                    "data": 15
-                }
-            }
-        ],
         "item_info": {
             "item_name": "Dagger",
             "type": 0,
             "item_description": "Gives Attack Damage"
         },
-        "equip_item_type": 0
+        "equip_item_type": 0,
+        "reqs": {
+            "Lvl": 5,
+            "Str": 0,
+            "Int": 10,
+            "Dex": 0,
+            "Wit": 0,
+            "Med": 0,
+            "Job": 0
+        }
     }
 }

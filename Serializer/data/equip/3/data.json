@@ -1,19 +1,19 @@
 {
     "info": {
-        "equip_item_properties": [
-            {
-                "key": 8,
-                "value": {
-                    "index": 0,
-                    "data": 15
-                }
-            }
-        ],
         "item_info": {
             "item_name": "Robe",
             "type": 0,
             "item_description": "Gives Extra SWAGGG"
         },
-        "equip_item_type": 4
+        "equip_item_type": 4,
+        "reqs": {
+            "Lvl": 0,
+            "Str": 0,
+            "Int": 0,
+            "Dex": 0,
+            "Wit": 0,
+            "Med": 0,
+            "Job": 0
+        }
     }
 }

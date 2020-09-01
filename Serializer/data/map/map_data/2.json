@@ -3,7 +3,7 @@
         "Portals": [],
         "Summons": [
             {
-                "monster_type": 1,
+                "monster_type": 2,
                 "position": {
                     "x": -200.0,
                     "y": -90.0
@@ -12,7 +12,7 @@
                 "XEnd": 800.0
             },
 			            {
-                "monster_type": 1,
+                "monster_type": 2,
                 "position": {
                     "x": -450.0,
                     "y": -90.0
@@ -21,7 +21,7 @@
                 "XEnd": 800.0
             },
             {
-                "monster_type": 2,
+                "monster_type": 3,
                 "position": {
                     "x": 200.0,
                     "y": -90.0
@@ -31,7 +31,7 @@
             }
         ],
         "Npcs": [
-		2
+		3
         ],
         "Tiles": [
             {

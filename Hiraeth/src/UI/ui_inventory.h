@@ -12,6 +12,7 @@
 
 namespace hiraeth {
 	namespace ui {
+		const float WIDTH{ 172.0f }, HEIGHT{ 335.0f };
 		class UiInventory : public UiWindow
 		{
 		private:
@@ -30,6 +31,7 @@ namespace hiraeth {
 			void mouse_left_released(maths::vec2 mousePos) override;
 			void mouse_moved(float mx, float my, maths::vec2 mousePos) override;
 			void mouse_right_clicked(maths::vec2 mousePos) override;
+			bool isWindowContains(maths::vec2 pos) const override;
 			unsigned int addItem(item::ItemHold * new_item);
 			//void addItem(item::Item * new_item, unsigned int pos_index);
 			void addItem(unsigned int pos_index, item::ItemHold * new_item);

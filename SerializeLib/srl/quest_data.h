@@ -6,6 +6,7 @@
 #include "vector"
 #include "cereal/cereal.hpp"
 #include "cereal/types/concepts/pair_associative_container.hpp"
+#include "equip_item_data.h"
 
 namespace SRL {
 
@@ -34,6 +35,11 @@ namespace SRL {
 		}
 	};
 
+	struct ItemRewardStruct
+	{
+
+	};
+
 	enum QuestProps {
 		// tasks - QuestDouble
 		KillAmount = 0,
@@ -41,15 +47,17 @@ namespace SRL {
 		// talk for completion - int
 		TalkTo = 2,
 		// rewards - int
-		ExpReward = 3,
-		MoneyReward = 4, // Wel / Lira
-		AchievementReward = 5,
+		ExpReward = 3, // int
+		MoneyReward = 4, // Wel / Lira - int
+		AchievementReward = 5, // int
+		EquipReward = 6, // EquipDbStruct
+		ItemsReward = 7, 
 	};
 
 	struct QuestProperty
 	{
 		QuestProps key{};
-		std::variant<int, std::string, QuestDouble>  value;
+		std::variant<int, std::string, QuestDouble, EquipDbStruct> value;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(key), CEREAL_NVP(value));
 		}

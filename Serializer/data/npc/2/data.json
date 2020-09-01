@@ -1,11 +1,11 @@
 {
     "info": {
-        "npc_name": "Ruby PQ",
+        "npc_name": "Lavie",
         "npc_foothold": 0,
         "npc_x_value": 0.0,
         "say_lines": [
-            "Hey, care for some CDs nigga?",
-            "May I interest you in\nsome Kanye?"
+            "It's sunny today isn't it",
+            "Summer madness"
         ],
         "dialog_tree": [
             {

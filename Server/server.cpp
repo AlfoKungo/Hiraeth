@@ -13,9 +13,10 @@ namespace hiraeth {
 		 */
 
 
+
 		void Server::main_60fps_loop()
 		{
-			SocketHandler::m_Socket.SetUnblocking();
+			m_Socket.SetUnblocking();
 			float dt = 0;
 			int fps_count = 0;
 			ATimer stimer{ 1.0f };
@@ -27,7 +28,7 @@ namespace hiraeth {
 				{
 					Address sender;
 					const int bytes_read =
-						SocketHandler::m_Socket.Receive(sender, SocketHandler::m_Buffer, sizeof(SocketHandler::m_Buffer));
+						m_Socket.Receive(sender, m_Buffer, sizeof(m_Buffer));
 					if (bytes_read > 0)
 						switchData(sender);
 					else
@@ -62,14 +63,14 @@ namespace hiraeth {
 				char data[1];
 				data[0] = MSG_INR_UPDATE_MOB_CMD;
 				Address address{ 127,0,0,1, 8888 };
-				SocketHandler::m_Socket.Send(address, data, 1);
+				m_Socket.Send(address, data, 1);
 				//delete[] data;
 				});
 				while (true)
 				{
 					Address sender;
 					const int bytes_read =
-						SocketHandler::m_Socket.Receive(sender, SocketHandler::m_Buffer, sizeof(SocketHandler::m_Buffer));
+						m_Socket.Receive(sender, m_Buffer, sizeof(m_Buffer));
 					if (bytes_read > 0)
 						switchData(sender);
 					else
@@ -101,7 +102,7 @@ namespace hiraeth {
 					m_DataQueue.pop();
 					lock.unlock();
 
-					memcpy(SocketHandler::m_Buffer, data, bytes_read);
+					memcpy(m_Buffer, data, bytes_read);
 					delete[] data;
 
 					switchData(sender);
@@ -156,7 +157,7 @@ namespace hiraeth {
 					m_DataQueue.pop();
 					lock.unlock();
 
-					memcpy(SocketHandler::m_Buffer, data, bytes_read);
+					memcpy(m_Buffer, data, bytes_read);
 					m_RecvSize = bytes_read;
 					delete[] data;
 					if (bytes_read > 0)
@@ -179,7 +180,7 @@ namespace hiraeth {
 				Address sender;
 				char * buffer = new char[256];
 				const int bytes_read =
-					SocketHandler::m_Socket.Receive(sender, buffer, 256);
+					m_Socket.Receive(sender, buffer, 256);
 				{
 					std::lock_guard<std::mutex> lock{ m_Mutex };
 					m_DataQueue.push(QueueData{ buffer, bytes_read, sender });
@@ -206,36 +207,25 @@ namespace hiraeth {
 
 		void Server::switchData(Address sender)
 		{
-			if (m_DistTable.find(SocketHandler::m_Buffer[0]) != m_DistTable.end())
+			if (m_DistTable.find(m_Buffer[0]) != m_DistTable.end())
 			{
-				m_DistTable[SocketHandler::m_Buffer[0]](sender);
+				m_DistTable[m_Buffer[0]](sender);
 				//(this->*m_DistTable2[m_Buffer[0]])(sender);
 			}
-			//switch (m_Buffer[0])
-			//{
-			//case MSG_CTS_OPEN_CONNECTION:
-			//	sendConnectionResponse(sender);
-			//	m_MobManager.recalculateAllMobs();
-			//	sendMobsData(sender);
-			//	break;
-			//default:
-			//	break;
-			//}
 		}
 
 		unsigned int Server::sendConnectionResponse(Address sender)
 		{
 			unsigned int map_id{ 0 };
-			auto name = dsrl_dynamic_type<std::string>(SocketHandler::m_Buffer + 1);
+			auto name = dsrl_dynamic_type<std::string>(m_Buffer + 1);
 			auto char_id = m_DbClient->getIdByAccountName(name);
 			if (m_NumConnectedClients > 0)
 				char_id = 2;
 			//const auto new_char_id = findFreeClientIndex();
 			const auto new_char_id = char_id;
-			m_MapHolder[map_id].sendNewPlayerInMap(new_char_id);
 			//sendNewPlayerInMap(new_char_id);
 			m_NumConnectedClients++;
-			SocketHandler::m_ClientAddress[new_char_id] = sender;
+			m_ClientAddress[new_char_id] = sender;
 			m_ClientsIds.push_back(new_char_id);
 			//m_ClientConnected[free_client_index] = true;
 			//m_DbClient->setByteArray(1, "skills_alloc", std::vector<SkillAlloc> {{666,20}, 
@@ -245,12 +235,24 @@ namespace hiraeth {
 			m_DbClient->setByteArray(m_NumConnectedClients, "quests_in_prog", decltype(PlayerData::quests_in_progress) { });
 			m_DbClient->setByteArray(m_NumConnectedClients, "quests_done", decltype(PlayerData::quests_done) { });
 			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) { {1, 1}});
+			//m_DbClient->setByteArray(char_id, "inv_equip", decltype(PlayerData::inv_equip) {
+			//	{0, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} }},
+			//	{ 1, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//	{ 2, SRL::EquipDbStruct{ 2, {{SRL::LukInc, 7}, {SRL::IntInc, 7}} } },
+			//	{ 3, SRL::EquipDbStruct{ 3, {{SRL::AttackPower, 11}, {SRL::StrInc, 3}} } },
+			//	{ 4, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 12}, {SRL::StrInc, 7}} } },
+			//	{ 5, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//	{ 6, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//	{ 7, SRL::EquipDbStruct{ 3, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//	{ 8, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//	{ 9, SRL::EquipDbStruct{ 2, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//	{ 10, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//});
 			//m_DbClient->setByteArray(1, "inv_use", decltype(PlayerData::inv_use) { });
 			//m_DbClient->setByteArray(1, "inv_setup", decltype(PlayerData::inv_setup) { });
 			//m_DbClient->setByteArray(1, "inv_etc", decltype(PlayerData::inv_etc) { });
 			//m_DbClient->setByteArray(1, "inv_cash", decltype(PlayerData::inv_cash) { });
-			//m_DbClient->setByteArray(1, "equips_char", decltype(PlayerData::equips_char) { });
-			//m_DbClient->setByteArray(1, "equips_char", std::map<SRL::EquipItemType, unsigned int> { });
+			//m_DbClient->setByteArray(char_id, "equips_char", decltype(PlayerData::equips_char) { });
 			//m_DbClient->setByteArray(1, "item_reqs", 
 			//	std::map<SRL::EquipReqEnum, int> { {SRL::eReqLvl, 5}, {SRL::eReqStr, 3}}, "equips");
 			//m_DbClient->setByteArray(1, "properties", 
@@ -259,7 +261,10 @@ namespace hiraeth {
 			m_PlayersState[char_id] = player_data.player_hold_state;
 			m_PlayersStats[char_id] = player_data.player_stats;
 			m_PlayersMsgs[char_id] = PlayerMsgState{};
-			m_PlayerToMapId[char_id] = 0;
+			m_PlayerToMapId[char_id] = map_id;
+			m_MapHolder[m_PlayerToMapId[char_id]].players_equips[char_id] = player_data.equips_char;
+
+						
 			//auto player_data = m_DbClient->getPlayerDataById(char_id);
 
 			//auto player_data = PlayerData{"shd", 10, 1, 0, 300, 300, {}, {}};
@@ -267,31 +272,36 @@ namespace hiraeth {
 			//player_data.skills_alloc = {0,0,0,1,1,1};
 			//m_DbClient->setStatsAlloc(new_char_id, player_data.stats_alloc);
 			//player_data.stat_allocation = m_DbClient->getStatsAlloc(new_char_id);
+			auto equip_items = player_data.inv_equip;
 			ConnectionEstablishMsg msg{new_char_id, 
 				player_data};
+			msg.player_data.inv_equip = {};
 			auto[data, size] = srl_dynamic_type(msg);
-			const auto buffer_size = construct_server_packet_with_buffer(SocketHandler::m_Buffer,
+			const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
 				MSG_STC_ESTABLISH_CONNECTION, *data, size);
 			printf("registered new address : %s , and port is : %d , and id is %d\n",
 				sender.GetAddressString().c_str(), sender.GetPort(), new_char_id);
-			SocketHandler::m_Socket.Send(sender, SocketHandler::m_Buffer, buffer_size);
+			m_Socket.Send(sender, m_Buffer, buffer_size);
+
+			m_MapHolder[map_id].sendNewPlayerInMap(new_char_id);
+			for (auto [item_loc, item] : equip_items)
+			{
+				auto [data, size] = srl_dynamic_type(AddEquipItemMsg{ item_loc, 0, item});
+					m_Size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_ADD_EQUIP_ITEM,
+						*data, size);
+					m_Socket.Send(sender, m_Buffer, m_Size);
+			}
 			//sendDropItem(ItemDropMsg{ 20, 1, USE_ITEM, maths::vec2{ 55, 15 } });
 			sendDroppedItems(map_id, sender);
 			return map_id;
 		}
-
-		//void sendNewPlayerInMap(unsigned int new_char_index)
-		//{
-		//	m_Size = construct_server_packet(m_Buffer, MSG_STC_ADD_PLAYER, new_char_index);
-		//	sendDataToAllClients(m_Size);
-		//}
 
 		void Server::closeConnection(BufferType* buffer)
 		{
 			const auto id = dsrl_type<unsigned int>(buffer + 1);
 			printf("unregistered id is %d\n", id);
 			m_NumConnectedClients--;
-			SocketHandler::m_ClientAddress[id] = Address{};
+			m_ClientAddress[id] = Address{};
 			//m_ClientConnected[id] = false;
 			m_ClientsIds.erase(std::remove(m_ClientsIds.begin(), m_ClientsIds.end(), id), m_ClientsIds.end());
 		}
@@ -304,39 +314,5 @@ namespace hiraeth {
 			m_MapHolder[m_PlayerToMapId[player_id]].players_state[player_id] = char_state;
 		}
 
-		//void Server::sendUpdateLocationToAll(Address sender)
-		//{
-		//	RegularMapUpdate map_update_data{ m_ClientsState };
-		//	const auto client_id = dsrl_type<unsigned int>(m_Buffer + 1);
-		//	map_update_data.m_PlayersLocation.erase(client_id); // erase this line to research delay
-		//	auto[data, size] = srl_dynamic_type(map_update_data);
-		//	const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
-		//		MSG_STC_PLAYERS_LOCATIONS, *data, size);
-		//	m_Socket.Send(sender, m_Buffer, buffer_size);
-		//}
-
-		//void Server::sendMobsData(Address sender)
-		//{
-		//	auto[data, size] = srl_dynamic_type(m_MobManager.m_Monsters);
-		//	const auto buffer_size = construct_server_packet_with_buffer(m_Buffer,
-		//		MSG_STC_MOB_DATA, *data, size);
-		//	m_Socket.Send(sender, m_Buffer, buffer_size);
-		//}
-
-		//void Server::sendMobsUpdate(unsigned int mob_id, MobMoveCommand mmc)
-		//{
-		//	printf("mob %d is commanded to %d for %f seconds\n", mob_id, mmc.dir, mmc.duration);
-		//	MonsterStateUpdate& state_data = m_MobManager.m_Monsters[mob_id];
-		//	m_MobManager.setNewMoveCommand(mob_id, mmc);
-		//	const auto size = construct_server_packet(m_Buffer, MSG_STC_MOB_UPDATE, mob_id, state_data);
-		//	sendDataToAllClients(size);
-		//}
-
-		//void Server::updateMobManager()
-		//{
-		//	auto mob_ids = m_MobManager.update();
-		//	for (const auto& id : mob_ids)
-		//		sendMobsUpdate(id, m_MobManager.m_MoveCmds[id]);
-		//}
 	}
 }

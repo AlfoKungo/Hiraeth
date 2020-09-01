@@ -45,16 +45,22 @@ namespace hiraeth {
 		void Map::update()
 		{
 			m_PtLayer.update();
-			if (m_ChangeMapFlag)
-			{
-				deserialize_map_data(m_MapIndex);
-			}
+			//if (m_ChangeMapFlag)
+			//{
+			//	deserialize_map_data(m_MapIndex);
+			//}
 		}
 
-		void Map::change_map(int new_index)
+		void Map::change_map(int map_index)
 		{
-			m_MapIndex = new_index;
-			m_ChangeMapFlag = true;
+			m_MapIndex = map_index;
+			//m_ChangeMapFlag = true;
+			m_MapLayer.reloadData(map_index);
+
+			m_PtLayer.clear();
+			for (auto& portal : m_MapLayer.m_MapData.Portals)
+				m_PtLayer.add(new Portal(portal));
+			//deserialize_map_data(new_index);
 		}
 
 		void Map::ButtonClicked(input::Key control)
@@ -76,7 +82,7 @@ namespace hiraeth {
 			for (auto& portal : m_MapLayer.m_MapData.Portals)
 				m_PtLayer.add(new Portal(portal));
 
-			m_ChangeMapFlag = false;
+			//m_ChangeMapFlag = false;
 
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->execute(MapChanged);

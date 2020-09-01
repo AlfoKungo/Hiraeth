@@ -88,10 +88,6 @@ namespace hiraeth {
 			{
 				if ((*monster)->getId() == monster_id)
 				{
-					//for (const auto& item_id : dropped_items)
-					//	m_ItemManager->dropItem(100, item_id, 0, (*monster)->getBounds().GetBottomMiddle()); // remove line
-						//m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), item_id);
-					//m_ItemManager->dropItem((*monster)->getBounds().GetBottomMiddle(), (unsigned int)(rand() % 2) + 3);
 					delete (*monster);
 					monster = m_Layer.m_Renderables.erase(monster);
 					m_Monsters.erase(monster_id);

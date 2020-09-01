@@ -41,6 +41,17 @@ namespace hiraeth
 				m_Npcs.add(new npc::Npc{ npc_index, m_MapLayer, m_Kb });
 		}
 
+		void NpcManager::clearNpcs()
+		{
+			m_Npcs.clear();
+		}
+
+		void NpcManager::loadNpcs()
+		{
+			for (auto npc_index : (m_MapLayer->getNpcs()))
+				m_Npcs.add(new npc::Npc{ npc_index, m_MapLayer, m_Kb });
+		}
+
 		void NpcManager::sendStartDialog(unsigned npc_index)
 		{
 			NetworkManager::Instance()->sendNpcClick(npc_index);

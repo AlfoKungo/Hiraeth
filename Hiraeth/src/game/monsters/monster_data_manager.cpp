@@ -22,7 +22,7 @@ namespace hiraeth {
 
 			SRL::MonsterData MonsterDataManager::deserialize_monster_data(unsigned int monster_index)
 			{
-				return SRL::deserial<SRL::MonsterData>("monster", monster_index - 1);
+				return SRL::deserial<SRL::MonsterData>("monster", monster_index);
 			}
 	}
 }

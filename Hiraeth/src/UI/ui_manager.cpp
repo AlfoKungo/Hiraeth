@@ -100,10 +100,11 @@ namespace hiraeth {
 					auto equip_to_move_to_inventory = m_UiEquip->unEquip((*result_window)->getRelativeLocation(mx, my));
 					if (equip_to_move_to_inventory != nullptr)
 					{
-						m_UiInventory->addItem(equip_to_move_to_inventory);
+						auto pos_index = m_UiInventory->addItem(equip_to_move_to_inventory);
 						//EventManager *m_EventManager = EventManager::Instance();
 						//m_EventManager->execute<SRL::EquipItemType>(ItemUnWore, equip_to_move_to_inventory->getItemType());
 						CharManager::Instance()->unWearItem(equip_to_move_to_inventory->getItemType());
+						NetworkManager::Instance()->sendWearItem(equip_to_move_to_inventory->getItemType(), pos_index);
 					}
 					std::rotate(m_Windows.begin(), result_window, result_window + 1);
 					break;
@@ -119,7 +120,7 @@ namespace hiraeth {
 						//EventManager *m_EventManager = EventManager::Instance();
 						//m_EventManager->execute<SRL::EquipItemType>(ItemWore, equip_to_wear->getItemType());
 						CharManager::Instance()->wearItem(equip_to_wear->getItemType());
-						NetworkManager::Instance()->sendItemWore(equip_to_wear->getItemType(), index);
+						NetworkManager::Instance()->sendWearItem(equip_to_wear->getItemType(), index);
 						if (equip_to_return_to_inventory != nullptr)
 							//m_UiInventory->addItem(equip_to_return_to_inventory, old_item_pos);
 							m_UiInventory->addItem(index,equip_to_return_to_inventory );

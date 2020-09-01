@@ -64,6 +64,7 @@ namespace hiraeth {
 		void Group::translate(const maths::vec3& pos)
 		{
 			m_TransformationMatrix *= maths::mat4::Translate(pos);
+			m_Pos += pos;
 		}
 
 		void Group::update()

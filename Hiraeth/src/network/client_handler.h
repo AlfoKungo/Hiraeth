@@ -18,6 +18,8 @@
 #include "UI/ui_manager.h"
 #include "basic/network_handler.h"
 #include "net/net_msgs.h"
+#include "NPC/npc_manager.h"
+#include "map/map.h"
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
  
@@ -51,13 +53,16 @@ namespace hiraeth {
 			item::ItemManager * m_ItemManager;
 			skills::SkillManager * m_SkillManager;
 			map::MapLayer* m_MapLayer;
+			map::Map* m_Map;
+			game::NpcManager* m_NpcManager;
 			//std::map<unsigned int, maths::vec2> m_PlayerLocation;
 			RegularMapUpdate m_PlayersLocationStruct;
 			std::map<unsigned int, MonsterStateUpdate> m_Monsters;
 		public:
 			ClientHandler(ui::UiManager * ui_manager, game::NetCharManager * net_char_manager, 
 				game::MonsterManager * monster_manager,	item::ItemManager * item_manager,
-				skills::SkillManager * skill_manager, map::MapLayer * map_layer);
+				skills::SkillManager * skill_manager, map::Map * map,
+			game::NpcManager* npc_manager);
 
 			~ClientHandler();
 			void closeConnection();
@@ -82,6 +87,7 @@ namespace hiraeth {
 
 			//void addNewPlayerToMap(BufferType * buffer);
 			void addNewPlayerToMap();
+			void updateNetCharEquips();
 			void updatePlayersLocation();
 			void loadMobsData();
 			void updateMobData();
@@ -97,6 +103,7 @@ namespace hiraeth {
 			void recvDroppedItem();
 			void recvExpireItem();
 			void recvAddItem();
+			void recvAddEquipItem();
 			void recvIncreaseSkill();
 			void recvPlayerSay();
 			void recvSetQuestAsInProgress();
@@ -106,6 +113,7 @@ namespace hiraeth {
 			void recvReceivedExp();
 			void recvEnterPortal();
 			void recvChangeMap();
+			void change_map(unsigned int map_id);
 			void recvPlayerLeft();
 		public:
 			void sendAck(unsigned int ack_id);
@@ -119,11 +127,14 @@ namespace hiraeth {
 			void sendCharUseSkillA(unsigned int skill_id, std::vector<MonsterHit> monsters_hit) override;
 			void sendPickItem(unsigned int item_id) override;
 			void sendIncreaseSkill(unsigned int skill_id) override;
-			void sendItemWore(SRL::EquipItemType item_type, unsigned int item_loc) override;
+			void sendWearItem(SRL::EquipItemType item_type, unsigned int item_loc) override;
 			void sendSwitchInventoryItems(unsigned int item_loc1, unsigned int item_loc2, unsigned int tab_index) override;
 			void sendChatMsg(std::string) override;
-			void sendRequestParty(unsigned int char_id) override;
 			void sendEnterPortal(unsigned int portal_id) override;
+			void sendRequestParty(unsigned int char_id) override;
+			void sendRequestTrade(unsigned int char_id) override;
+			void sendRequestInfo(unsigned int char_id) override;
+			void sendDropItem(unsigned int item_id, unsigned int tab_index) override;
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

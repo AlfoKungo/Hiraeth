@@ -31,6 +31,8 @@ namespace hiraeth
 			void update() override;
 			void mapChanged();
 			void sendStartDialog(unsigned int npc_index);
+			void clearNpcs();
+			void loadNpcs();
 
 
 			// MOUSE EVENT FUNCTIONS

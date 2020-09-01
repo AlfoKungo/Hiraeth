@@ -3,12 +3,13 @@
 namespace hiraeth {
 	namespace item {
 
-		ItemDrop::ItemDrop(maths::vec2 pos, unsigned int item_type_id, const std::string& item_name, 
-			SRL::TextureData item_texture_data, 
-			const std::vector<physics::FootHold>& foot_holds, unsigned int item_id)
+		ItemDrop::ItemDrop(maths::vec2 pos, unsigned int item_type_id, const std::string& item_name,
+			SRL::TextureData item_texture_data,
+			const std::vector<physics::FootHold>& foot_holds, unsigned int item_id,
+			float x_force)
 			: Sprite(pos, graphics::TextureManager::Load(item_name, item_texture_data)),
 			m_State(InAir),
-			m_Force(0, 7),
+			m_Force(x_force, 7),
 			m_FootHolds(foot_holds),
 			m_Id(item_id),
 			//m_TypeId(item_id),

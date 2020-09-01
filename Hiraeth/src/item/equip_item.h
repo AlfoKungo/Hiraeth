@@ -15,11 +15,13 @@ namespace hiraeth {
 		public:
 			SRL::EquipTexturesMap m_Textures;
 
-			EquipItem(unsigned int equip_id, SRL::EquipItemData item_data)
+			//EquipItem(unsigned int equip_id, SRL::EquipItemData item_data)
+			EquipItem(SRL::EquipDbStruct equip_info, SRL::EquipItemData item_data)
 				//const std::vector<physics::FootHold>& foot_holds, unsigned int item_id)
-				: ItemHold(equip_id, item_data.info.item_info, item_data.icon_texture),
+				: ItemHold(equip_info.equip_id, item_data.info.item_info, item_data.icon_texture),
 			//m_EquipId(equip_id),
-				m_EquipPropertiesMap(item_data.info.equip_item_properties),
+				//m_EquipPropertiesMap(item_data.info.equip_item_properties),
+				m_EquipPropertiesMap(equip_info.equip_item_properties),
 				m_EquipType(item_data.info.equip_item_type),
 				m_Textures(item_data.textures)
 			{

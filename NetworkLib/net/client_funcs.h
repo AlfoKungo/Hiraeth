@@ -37,10 +37,10 @@ namespace hiraeth {
 		//	return 5 + message_len;
 		//}
 		template<typename ... Ts>
-		inline int create_client_packet_with_data(BufferType * buffer,
+		inline int create_client_packet_with_data(BufferType * buffer, unsigned char msg_id,
 			Ts&&... dts)
 		{
-			return srl_types(buffer, dts...);
+			return srl_types(buffer, msg_id, dts...);
 		}
 	}
 }

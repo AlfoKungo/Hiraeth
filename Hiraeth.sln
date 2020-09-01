@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hiraeth", "Hiraeth\Hiraeth.vcxproj", "{055CEB59-757B-4F3F-B1A0-1D208452E355}"
 EndProject
@@ -76,7 +76,6 @@ Global
 		{B42BA771-4537-4157-968D-34839EE4AF22}.Release|x86.ActiveCfg = Release|Win32
 		{B42BA771-4537-4157-968D-34839EE4AF22}.Release|x86.Build.0 = Release|Win32
 		{90FF36FD-FAF0-48E1-AF14-471222255CF2}.Debug|x64.ActiveCfg = Debug|x64
-		{90FF36FD-FAF0-48E1-AF14-471222255CF2}.Debug|x64.Build.0 = Debug|x64
 		{90FF36FD-FAF0-48E1-AF14-471222255CF2}.Debug|x86.ActiveCfg = Debug|Win32
 		{90FF36FD-FAF0-48E1-AF14-471222255CF2}.Debug|x86.Build.0 = Debug|Win32
 		{90FF36FD-FAF0-48E1-AF14-471222255CF2}.Release|x64.ActiveCfg = Release|x64

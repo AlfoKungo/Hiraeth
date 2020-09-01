@@ -14,12 +14,6 @@ namespace hiraeth {
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(MapChanged, this, &ItemManager::mapChanged);
 
-			//for (int i = 0; i < 12; ++i)
-			//	dropItem(i, (i % 9) % 5, i / 5, maths::vec2((i - 6) * 80, 0));
-				//dropItem(maths::vec2((i - 6) * 80, 0), i % 9);
-			//dropItem(maths::vec2(0), 0);
-			//dropItem(maths::vec2(-200, 0), 1);
-			//dropItem(maths::vec2(200, 0), 2);
 		}
 
 		void ItemManager::draw() const
@@ -60,10 +54,10 @@ namespace hiraeth {
 
 		void ItemManager::setInvEquip(decltype(network::PlayerData::inv_equip) equips)
 		{
-			for (auto [equip_loc, equip_id] : equips)
+			for (auto [equip_loc, equip_info] : equips)
 			{
-				ItemHold* item = new EquipItem( equip_id, 
-					ItemDataManager::GetEquip(equip_id));
+				ItemHold* item = new EquipItem( equip_info, 
+					ItemDataManager::GetEquip(equip_info.equip_id));
 				//m_InventoryItems.push_back(item);
 				m_Inventory->addItem(equip_loc, item);
 			}
@@ -83,21 +77,23 @@ namespace hiraeth {
 
 		void ItemManager::setEquipsChar(decltype(network::PlayerData::equips_char) equips)
 		{
-			for (auto [equip_type, equip_id] : equips)
+			for (auto [equip_type, equip_info] : equips)
 			{
-				EquipItem* item = new EquipItem(equip_id, ItemDataManager::GetEquip(equip_id));
+				EquipItem* item = new EquipItem(equip_info, ItemDataManager::GetEquip(equip_info.equip_id));
 				m_Equip->addEquip(item);
+				CharManager::Instance()->wearItem(equip_type);
 			}
 		}
 
 		void ItemManager::dropItem(unsigned int item_id, unsigned int item_type_id,
-			unsigned int item_kind, maths::vec2 pos)
+			unsigned int item_kind, maths::vec2 pos, float x_force)
 		{
 			if (item_kind == network::USE_ITEM)
 			{
 				const auto item_data = ItemDataManager::Get(item_type_id);
 				ItemDrop* temp = new ItemDrop(pos, item_type_id,
-					item_data.info.basic_item_info.item_name, item_data.texture_data, m_FootHolds, item_id);
+					item_data.info.basic_item_info.item_name, item_data.texture_data, m_FootHolds, 
+					item_id, x_force);
 				m_DroppedItems.add(temp);
 				m_DroppedItemsMap.insert(std::make_pair(item_id, temp));
 			}
@@ -106,7 +102,8 @@ namespace hiraeth {
 				//Item* temp = new EquipItem(pos, ItemDataManager::GetEquip(item_type_id - 5), m_FootHolds, item_id);
 				const auto item_data = ItemDataManager::GetEquip(item_type_id );
 				ItemDrop* temp = new ItemDrop(pos, item_type_id,
-					item_data.info.item_info.item_name, item_data.icon_texture, m_FootHolds, item_id);
+					item_data.info.item_info.item_name, item_data.icon_texture, m_FootHolds, 
+					item_id, x_force);
 				m_DroppedItems.add(temp);
 				m_DroppedItemsMap.insert(std::make_pair(item_id, temp));
 			}
@@ -114,20 +111,28 @@ namespace hiraeth {
 
 		void ItemManager::addItemToInv(unsigned int item_kind, unsigned int item_loc, unsigned int item_id)
 		{
-			if (item_kind == network::EQUIP_ITEM)
-			{
-				ItemHold* item = new EquipItem(item_id,
-					ItemDataManager::GetEquip(item_id));
-				//m_InventoryItems.push_back(item);
-				m_Inventory->addItem(item_loc, item);
-			}
-			else if (item_kind == network::USE_ITEM)
-			{
+			//if (item_kind == network::EQUIP_ITEM)
+			//{
+			//	ItemHold* item = new EquipItem(SRL::EquipDbStruct{ item_id, {} },
+			//		ItemDataManager::GetEquip(item_id));
+			//	//m_InventoryItems.push_back(item);
+			//	m_Inventory->addItem(item_loc, item);
+			//}
+			//else if (item_kind == network::USE_ITEM)
+			//{
 				ItemHold* item = new UseItem(item_id,
 					ItemDataManager::Get(item_id), 1);
 				//m_InventoryItems.push_back(item);
 				m_Inventory->addItem(item_loc, item);
-			}
+			//}
+		}
+		void ItemManager::addEquipItemToInv(SRL::EquipDbStruct item_info, unsigned int item_loc, unsigned int item_id)
+		{
+			ItemHold* item = new EquipItem(item_info,
+				//ItemDataManager::GetEquip(item_id));
+				ItemDataManager::GetEquip(item_info.equip_id));
+			//m_InventoryItems.push_back(item);
+			m_Inventory->addItem(item_loc, item);
 		}
 
 		void ItemManager::startExpiring(unsigned int item_id)

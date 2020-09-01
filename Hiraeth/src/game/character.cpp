@@ -177,6 +177,18 @@ namespace hiraeth {
 			m_Kb->registerToKey(GLFW_KEY_SPACE, jump, this);
 			m_Kb->registerToKey(GLFW_KEY_LEFT_CONTROL, attack, this);
 			m_Kb->registerToKey(GLFW_KEY_Z, pick_up, this);
+			//std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N,
+			//	GLFW_KEY_T, GLFW_KEY_Y };
+			//std::vector<unsigned int> available_skills = m_SkillManager->get_available_active_skills();
+			//for (int i = 0; i < available_skills.size(); ++i)
+			//{
+			//	m_SkillKeysMap[i] = available_skills[i];
+			//	m_SkillManager->m_UiSkills->transferSkillToKeyConfig(skill_keys[i],
+			//		(controls_size)+i, available_skills[i], this);
+			//}
+		}
+		void Character::loadSkillsToKeys()
+		{
 			std::vector<unsigned int> skill_keys{ GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_X, GLFW_KEY_B, GLFW_KEY_N,
 				GLFW_KEY_T, GLFW_KEY_Y };
 			std::vector<unsigned int> available_skills = m_SkillManager->get_available_active_skills();

@@ -5,7 +5,7 @@
 namespace hiraeth {
 	namespace ui {
 		UiInventory::UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats)
-			: UiWindow(maths::Rectangle(pos.x, pos.y, 172, 335), control_key),
+			: UiWindow(maths::Rectangle(pos.x, pos.y, WIDTH, HEIGHT), control_key),
 			//m_Tabs(new UiTabs<item::Item>()),
 			m_Tabs(new UiTabs<UiTabInventory>()),
 			m_CharacterStats(character_stats),
@@ -58,40 +58,58 @@ namespace hiraeth {
 		{
 			if (m_HoldItem.second != nullptr)
 			{
-				m_IsHolding = false;
-				auto tab = m_Tabs->getCurrentTabGroup();
-				auto& rends = tab->m_MtGroup->m_Renderables;
-				auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
-				if (new_pos_index != m_HoldItem.first)
+				//if (UiWindow::isWindowContains(mousePos))
+				if (maths::Rectangle{ {0},{float(WIDTH), float(HEIGHT)} }.Contains(mousePos))
 				{
-					auto item2 = rends.find(new_pos_index);
-					//if ((item1 != rends.end()) && (item2 != rends.end()))
-					if (item2 != rends.end())
+					m_IsHolding = false;
+					auto tab = m_Tabs->getCurrentTabGroup();
+					auto& rends = tab->m_MtGroup->m_Renderables;
+					auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
+					if (new_pos_index != m_HoldItem.first)
 					{
-						auto item1 = rends.find(m_HoldItem.first);
-						std::swap(item1->second, item2->second);
-						item1->second->setPosition(UiTabInventory::getPosByLocIndex(m_HoldItem.first));
-						item2->second->setPosition(UiTabInventory::getPosByLocIndex(new_pos_index));
+						auto item2 = rends.find(new_pos_index);
+						//if ((item1 != rends.end()) && (item2 != rends.end()))
+						if (item2 != rends.end())
+						{
+							auto item1 = rends.find(m_HoldItem.first);
+							std::swap(item1->second, item2->second);
+							item1->second->setPosition(UiTabInventory::getPosByLocIndex(m_HoldItem.first));
+							item2->second->setPosition(UiTabInventory::getPosByLocIndex(new_pos_index));
+						}
+						else
+						{
+							tab->changeItemPos(m_HoldItem.first, new_pos_index);
+						}
+						NetworkManager::Instance()->sendSwitchInventoryItems(m_HoldItem.first,
+							new_pos_index, m_Tabs->getTabIndex());
+						//EventManager* m_EventManager = EventManager::Instance();
+						//m_EventManager->execute(SwitchInventoryItems, m_HoldItem.first, new_pos_index, m_Tabs->getTabIndex());
 					}
 					else
 					{
-						tab->changeItemPos(m_HoldItem.first, new_pos_index);
+						m_HoldItem.second->setPosition(tab->getPosByLocIndex(new_pos_index));
 					}
-					NetworkManager::Instance()->sendSwitchInventoryItems(m_HoldItem.first,
-						new_pos_index, m_Tabs->getTabIndex());
-					//EventManager* m_EventManager = EventManager::Instance();
-					//m_EventManager->execute(SwitchInventoryItems, m_HoldItem.first, new_pos_index, m_Tabs->getTabIndex());
+					m_HoldItem = std::make_pair(0, nullptr);
 				}
 				else
 				{
-					m_HoldItem.second->setPosition(tab->getPosByLocIndex(new_pos_index));
+					m_IsHolding = false;
+					auto tab = m_Tabs->getCurrentTabGroup();
+					auto& rends = tab->m_MtGroup->m_Renderables;
+					rends.erase(m_HoldItem.first);
+					NetworkManager::Instance()->sendDropItem(m_HoldItem.first, m_Tabs->getTabIndex());
+					m_HoldItem = std::make_pair(0, nullptr);
 				}
-				m_HoldItem = std::make_pair(0, nullptr);
 			}
 		}
 
 		void UiInventory::mouse_right_clicked(maths::vec2 mousePos)
 		{
+		}
+
+		bool UiInventory::isWindowContains(maths::vec2 pos) const
+		{
+			return UiWindow::isWindowContains(pos) || (m_HoldItem.second != nullptr);
 		}
 
 		void UiInventory::mouse_moved(float mx, float my, maths::vec2 mousePos)
