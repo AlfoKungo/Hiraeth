@@ -1,6 +1,14 @@
 {
     "value0": {
-        "Portals": [],
+        "Portals": [
+		    {
+                "position": {
+                    "x": 600.0,
+                    "y": -100.0
+                },
+                "next_map": 0
+            }
+		],
         "Summons": [
             {
                 "monster_type": 0,

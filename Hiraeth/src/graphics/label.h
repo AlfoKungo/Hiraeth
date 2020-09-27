@@ -29,6 +29,7 @@ namespace hiraeth
 			void draw(Renderer* renderer) const override;
 			void setText(const std::string& new_text);
 			void setText(unsigned int new_text) { setText(std::to_string(new_text)); }
+			void setSize(unsigned int new_size);
 			std::string getText() const;
 			void addLine(const std::string& new_line_text);
 			maths::vec2 getSize() const override;

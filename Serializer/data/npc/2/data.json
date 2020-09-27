@@ -7,64 +7,33 @@
             "It's sunny today isn't it",
             "Summer madness"
         ],
-        "dialog_tree": [
-            {
-                "key": 0,
-                "value": [
+        "dialog_tree": [],
+        "usage_data": {
+            "index": 2,
+            "data": {
+                "sell_items": [
                     {
-                        "text": "They tryna find TuPaC",
-                        "buttons": [
-                            0
-                        ]
+                        "item_type": 0,
+                        "item_id": 0,
+                        "price": 100
                     },
                     {
-                        "text": "Don't let them find tupac",
-                        "buttons": [
-                            0
-                        ]
+                        "item_type": 0,
+                        "item_id": 1,
+                        "price": 250
                     },
                     {
-                        "text": "La da da da",
-                        "buttons": [
-                            2,
-                            1
-                        ]
-                    }
-                ]
-            },
-            {
-                "key": 1,
-                "value": [
+                        "item_type": 1,
+                        "item_id": 1,
+                        "price": 150
+                    },
                     {
-                        "text": "I'm waiting for it you bitch ass nigga",
-                        "buttons": [
-                            0
-                        ]
-                    }
-                ]
-            },
-            {
-                "key": 2,
-                "value": [
-                    {
-                        "text": "Aight you cool\n there's you money",
-                        "buttons": [
-                            4
-                        ]
-                    }
-                ]
-            },
-            {
-                "key": 3,
-                "value": [
-                    {
-                        "text": "Aight you cool\n there's you money",
-                        "buttons": [
-                            0
-                        ]
+                        "item_type": 1,
+                        "item_id": 2,
+                        "price": 400
                     }
                 ]
             }
-        ]
+        }
     }
 }

@@ -142,6 +142,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="srl\all_srl.h" />
     <ClInclude Include="srl\animation_data.h" />
     <ClInclude Include="srl\deserial.h" />
     <ClInclude Include="srl\equip_item_data.h" />

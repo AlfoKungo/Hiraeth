@@ -230,6 +230,7 @@
     <ClCompile Include="src\UI\ui_quests.cpp" />
     <ClCompile Include="src\UI\ui_skills.cpp" />
     <ClCompile Include="src\UI\ui_stats.cpp" />
+    <ClCompile Include="src\UI\ui_trade.cpp" />
     <ClCompile Include="src\UI\ui_window.cpp" />
     <ClCompile Include="src\utils\static_timer.cpp" />
     <ClCompile Include="src\utils\timer.cpp" />
@@ -331,6 +332,7 @@
     <ClInclude Include="src\NPC\dialog_manager.h" />
     <ClInclude Include="src\NPC\npc.h" />
     <ClInclude Include="src\NPC\npc_manager.h" />
+    <ClInclude Include="src\NPC\text_button.h" />
     <ClInclude Include="src\physics\collisionable.h" />
     <ClInclude Include="src\physics\foothold.h" />
     <ClInclude Include="src\quest\quest_label.h" />
@@ -356,8 +358,10 @@
     <ClInclude Include="src\UI\ui_manager.h" />
     <ClInclude Include="src\UI\ui_party.h" />
     <ClInclude Include="src\UI\ui_quests.h" />
+    <ClInclude Include="src\UI\ui_shop.h" />
     <ClInclude Include="src\UI\ui_skills.h" />
     <ClInclude Include="src\UI\ui_stats.h" />
+    <ClInclude Include="src\UI\ui_trade.h" />
     <ClInclude Include="src\UI\ui_window.h" />
     <ClInclude Include="src\utils\calculator.hpp" />
     <ClInclude Include="src\utils\fileutils.h" />

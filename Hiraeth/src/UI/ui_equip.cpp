@@ -29,8 +29,8 @@ namespace hiraeth {
 
 		void UiEquip::mouse_moved(float mx, float my, maths::vec2 mousePos)
 		{
-			for (auto& [key, item] : m_Equips)
-				item->setDrawDetails(false);
+			//for (auto& [key, item] : m_Equips)
+			//	item->setDrawDetails(false);
 			auto result_item = std::find_if(std::begin(m_ItemsPositions),
 				std::end(m_ItemsPositions), [&](auto const& element)
 			{ return maths::Rectangle{ element.second, maths::vec2{32} }.Contains(mousePos); });

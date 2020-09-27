@@ -83,6 +83,8 @@ namespace hiraeth {
 			void wearItem(SRL::EquipItemType item_type) override;
 			void unWearItem(SRL::EquipItemType item_type) override;
 			void writeSay(std::string say_msg) override;
+			std::map<SRL::EquipItemType, graphics::Sprite>* getEquips() { return &m_Equips; }
+			
 			//void updateComplexSkills();
 			//CharacterStats* getCharacterStats() const;
 		private:

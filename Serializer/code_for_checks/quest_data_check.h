@@ -13,8 +13,8 @@ namespace Checks
 			SRL::QuestData quest{"first", "I need you to kill all the fags", 1,
 				{
 					{SRL::QuestProps::KillAmount, SRL::QuestDouble{0, 1}},
-					{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 1}},
-					{SRL::QuestProps::GatherAmount, SRL::QuestDouble{0, 10}},
+					//{SRL::QuestProps::KillAmount, SRL::QuestDouble{1, 1}},
+					//{SRL::QuestProps::GatherAmount, SRL::QuestDouble{0, 10}},
 					{SRL::QuestProps::ExpReward, 5000},
 				}
 			};

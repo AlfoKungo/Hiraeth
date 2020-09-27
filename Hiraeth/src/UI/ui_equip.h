@@ -62,7 +62,7 @@ namespace hiraeth {
 				}
 				return return_item;
 			}
-			std::map<SRL::EquipItemType, item::EquipItem*>& getEquips(){ return m_Equips; }
+			std::map<SRL::EquipItemType, item::EquipItem*>* getEquips(){ return &m_Equips; }
 		};
 
 	}

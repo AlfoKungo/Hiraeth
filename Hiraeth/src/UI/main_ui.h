@@ -50,10 +50,10 @@ namespace hiraeth {
 				m_StatsStruct->Hp = player_data.hp;
 				m_StatsStruct->Mp = player_data.mp;
 				m_StatsStruct->Exp = player_data.exp;
-				m_StatsStruct->Str = 4 + stats_alloc[0];
-				m_StatsStruct->Dex = 4 + stats_alloc[1];
-				m_StatsStruct->Int = 4 + stats_alloc[2];
-				m_StatsStruct->Wit = 4 + stats_alloc[3];
+				m_StatsStruct->Str = stats_alloc[0];
+				m_StatsStruct->Dex = stats_alloc[1];
+				m_StatsStruct->Int = stats_alloc[2];
+				m_StatsStruct->Wit = stats_alloc[3];
 				StatsUpdated();
 				m_Kb->registerToKey(GLFW_KEY_ENTER, this);
 			EventManager *m_EventManager = EventManager::Instance();

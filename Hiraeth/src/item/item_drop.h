@@ -18,7 +18,7 @@ namespace hiraeth {
 		class ItemDrop : public graphics::Sprite
 		{
 		public:
-			enum ItemState {
+			enum class ItemState {
 				InAir,
 				OnFloor,
 				PickedUp,
@@ -55,8 +55,8 @@ namespace hiraeth {
 			}
 			bool hasBeenTaken();
 			void pickUp(const maths::Rectangle * char_rec);
-			bool isAbleToPickUp() const { return m_State == OnFloor && !m_IsExpiring; }
-			bool isPickedUp() const { return (m_State == PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
+			bool isAbleToPickUp() const { return m_State == ItemState::OnFloor && !m_IsExpiring; }
+			bool isPickedUp() const { return (m_State == ItemState::PickedUp) && (m_Timer.timeRemain() > PICK_UP_TIME - 0.1f); }
 			unsigned int getId() const { return m_Id; }
 			//SRL::ItemPropertiesMap * getItemProperties() { return &m_ItemInfo.item_properties; }
 		};

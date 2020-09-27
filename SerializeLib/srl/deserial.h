@@ -6,6 +6,7 @@
 inline const char * DF_QUEST = "quest";
 inline const char * DF_MAP = "map";
 inline const char * DF_MONSTER = "monster";
+inline const char * DF_NPC = "npc";
 
 namespace SRL {
 	template <class Rtype>

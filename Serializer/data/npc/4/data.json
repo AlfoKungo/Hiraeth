@@ -1,0 +1,146 @@
+{
+    "info": {
+        "npc_name": "Taxi Driver",
+        "npc_foothold": 0,
+        "npc_x_value": 200.0,
+        "say_lines": [
+            "Can take you anywhere",
+            "just say it"
+        ],
+        "dialog_tree": [
+            {
+                "key": 0,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "Got Anywhere you wanna go?",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        },
+                        {
+                            "text": "I got the cheapestest prices",
+                            "buttons": [
+                                {
+                                    "button": 2,
+                                    "action": {
+                                        "index": 3,
+                                        "data": {
+                                            "next_map": 3
+                                        }
+                                    }
+                                }
+                            ],
+                            "text_buttons": [
+                                {
+                                    "text": "Helenia for 50 bucks",
+                                    "action": {
+                                        "index": 3,
+                                        "data": {
+                                            "next_map": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "text": "Tamopolis for 55 bucks",
+                                    "action": {
+                                        "index": 3,
+                                        "data": {
+                                            "next_map": 2
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "reqs": []
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "send my regards to Gil, aight?",
+                            "buttons": [
+                                {
+                                    "button": 3,
+                                    "action": {
+                                        "index": 4,
+                                        "data": {
+                                            "next_map": 1,
+                                            "is_to_include_party": false
+                                        }
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": [
+                        {
+                            "index": 4,
+                            "data": {}
+                        }
+                    ]
+                }
+            },
+            {
+                "key": 2,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "Tell Malcolm I'll come over next time",
+                            "buttons": [
+                                {
+                                    "button": 3,
+                                    "action": {
+                                        "index": 4,
+                                        "data": {
+                                            "next_map": 2,
+                                            "is_to_include_party": false
+                                        }
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "See ya around than,\nhave fun",
+                            "buttons": [
+                                {
+                                    "button": 3,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            }
+        ],
+        "usage_data": {
+            "index": 0,
+            "data": {}
+        }
+    }
+}

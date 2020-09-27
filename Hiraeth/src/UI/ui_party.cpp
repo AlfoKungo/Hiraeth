@@ -2,8 +2,8 @@
 
 namespace hiraeth {
 	namespace ui {
-		UiParty::UiParty(maths::vec2 pos, UiKey control_key)
-			: UiWindow(maths::Rectangle{ pos, {640, 470} }, control_key),
+		UiParty::UiParty(maths::vec2 pos)
+			: UiWindow(maths::Rectangle{ pos, {640, 470} }, party),
 			m_PartyMemebersLabel{ "arial", 26, "nigges", {20,400}, 0xff000000, graphics::Label::Alignment::LEFT }
 		{
 

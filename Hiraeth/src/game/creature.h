@@ -40,6 +40,7 @@ namespace hiraeth
 
 			maths::vec2 m_HitBox;
 			graphics::Sprite m_HitSprite;
+		public:
 
 			std::map<SRL::EquipItemType,  graphics::Sprite> m_Equips;
 

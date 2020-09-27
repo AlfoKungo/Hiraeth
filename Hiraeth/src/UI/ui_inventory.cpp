@@ -4,14 +4,13 @@
 
 namespace hiraeth {
 	namespace ui {
-		UiInventory::UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats *character_stats)
-			: UiWindow(maths::Rectangle(pos.x, pos.y, WIDTH, HEIGHT), control_key),
+		UiInventory::UiInventory(maths::vec2 pos, UiKey control_key, game::CharacterStats* character_stats)
+			: UiWindow(maths::Rectangle(pos.x, pos.y, UI_INVENTORY_WIDTH, UI_INVENTORY_HEIGHT), control_key),
 			//m_Tabs(new UiTabs<item::Item>()),
 			m_Tabs(new UiTabs<UiTabInventory>()),
 			m_CharacterStats(character_stats),
 			m_HoldItem(0, nullptr)
 		{
-
 			m_BackgroundGroup->add(new graphics::Sprite(maths::vec2(0, 0), graphics::TextureManager::Load("Assets/UI/Inventory/Item.backgrnd.png")));
 			m_BackgroundGroup->add(new graphics::Sprite(maths::vec2(6, 5), graphics::TextureManager::Load("Assets/UI/Inventory/Item.backgrnd2.png")));
 			m_BackgroundGroup->add(new graphics::Sprite(maths::vec2(7, 32), graphics::TextureManager::Load("Assets/UI/Inventory/Item.backgrnd3.png")));
@@ -44,7 +43,7 @@ namespace hiraeth {
 				//auto tab = m_Tabs->getCurrentTabGroup();
 				//const auto new_pos_index = tab->getPosIndexByMousePos(mousePos);
 				//auto item = rends->find(new_pos_index);
-			auto item = getItemPair(mousePos);
+				auto item = getItemPair(mousePos);
 				if (item != rends->end())
 				{
 					item->second->setDrawDetails(false);
@@ -59,7 +58,9 @@ namespace hiraeth {
 			if (m_HoldItem.second != nullptr)
 			{
 				//if (UiWindow::isWindowContains(mousePos))
-				if (maths::Rectangle{ {0},{float(WIDTH), float(HEIGHT)} }.Contains(mousePos))
+				maths::vec2 std_pos = mousePos + m_Group.m_Pos;
+				//maths::vec2 std_pos = mousePos + maths::vec2{ m_Group.getTransform().GetPosition() };
+				if (maths::Rectangle{ {0},{float(UI_INVENTORY_WIDTH), float(UI_INVENTORY_HEIGHT)} }.Contains(mousePos))
 				{
 					m_IsHolding = false;
 					auto tab = m_Tabs->getCurrentTabGroup();
@@ -91,13 +92,29 @@ namespace hiraeth {
 					}
 					m_HoldItem = std::make_pair(0, nullptr);
 				}
+				else if (*m_IsTradeAble && maths::Rectangle{ *m_UiTradePos, {270.0f, 472.0f} }.Contains(std_pos) ||
+					*m_IsTradeAble && maths::Rectangle{ *m_UiTradePos + maths::vec2{0,170} , {270.0f, 302.0f} }.Contains(std_pos)) // UiTrade width and height
+				{
+					if (*m_IsTradeAble && maths::Rectangle{ *m_UiTradePos + maths::vec2{148, 214}, {112, 102} }.Contains(std_pos))
+					{
+						maths::vec2 box_rltv_pos = std_pos - (*m_UiTradePos + maths::vec2{ 148, 214 });
+						unsigned int row = (box_rltv_pos.x) / 37;
+						unsigned int line = (box_rltv_pos.y) / 34;
+						NetworkManager::Instance()->sendAddItemToTradeBox(m_Tabs->getTabIndex(), m_HoldItem.first, row + line * 3);
+						auto tab = m_Tabs->getCurrentTabGroup();
+						auto& rends = tab->m_MtGroup->m_Renderables;
+						rends.erase(m_HoldItem.first);
+						m_IsHolding = false;
+						m_HoldItem = std::make_pair(0, nullptr);
+					}
+				}
 				else
 				{
-					m_IsHolding = false;
 					auto tab = m_Tabs->getCurrentTabGroup();
 					auto& rends = tab->m_MtGroup->m_Renderables;
 					rends.erase(m_HoldItem.first);
 					NetworkManager::Instance()->sendDropItem(m_HoldItem.first, m_Tabs->getTabIndex());
+					m_IsHolding = false;
 					m_HoldItem = std::make_pair(0, nullptr);
 				}
 			}
@@ -121,7 +138,7 @@ namespace hiraeth {
 			else
 			{
 				auto tab_rends = &m_Tabs->getCurrentTabGroup()->m_MtGroup->m_Renderables;
-				for (auto & item : *tab_rends)
+				for (auto& item : *tab_rends)
 					item.second->setDrawDetails(false);
 				auto pos_index = m_Tabs->getCurrentTabGroup()->getPosIndexByMousePos(mousePos);
 				auto item = tab_rends->find(pos_index);
@@ -173,7 +190,7 @@ namespace hiraeth {
 						rends->erase(item);
 				}
 			}
-			
+
 			//auto result_item = std::find_if(std::begin(*tab_rends),
 			//	std::end(*tab_rends), [&](auto const& inv_item)
 			//{
@@ -210,11 +227,11 @@ namespace hiraeth {
 			return std::make_pair(0, nullptr);
 		}
 
-		unsigned int UiInventory::findEmptyPosition(unsigned int tab_type)
-		{
-			auto containing_tab = m_Tabs->getTabByIndex(tab_type);
-			return containing_tab->findAvailableLoc();
-		}
+		//unsigned int UiInventory::findEmptyPosition(unsigned int tab_type)
+		//{
+		//	auto containing_tab = m_Tabs->getTabByIndex(tab_type);
+		//	return containing_tab->findAvailableLoc();
+		//}
 
 		std::map<unsigned, std::unique_ptr<item::ItemHold>>::iterator UiInventory::getItemPair(maths::vec2 mouse_pos)
 		{
@@ -236,7 +253,6 @@ namespace hiraeth {
 			default:
 				return std::make_pair(0, nullptr);
 			}
-
 		}
 	}
 }

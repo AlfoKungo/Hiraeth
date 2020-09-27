@@ -43,6 +43,12 @@ namespace hiraeth
 			updateBounds();
 		}
 
+		void Label::setSize(unsigned int new_size)
+		{
+			m_Font = FontManager::get(m_Font->getName(), new_size);
+			updateBounds();
+		}
+
 		std::string Label::getText() const
 		{
 			return m_Text;

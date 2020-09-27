@@ -163,6 +163,7 @@
     <ClInclude Include="item_funcs.h" />
     <ClInclude Include="map_holder.h" />
     <ClInclude Include="mob_manager.h" />
+    <ClInclude Include="npc_logic.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="socket_handler.h" />

@@ -17,8 +17,10 @@ namespace hiraeth
 		// by npc manager
 		virtual void sendNpcClick(unsigned int npc_id) = 0;
 		// by dialog manager
-		virtual void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id) = 0;
+		//virtual void sendQuestAccepted(unsigned int npc_id, unsigned int quest_id) = 0;
 		virtual void sendReceiveReward(unsigned int npc_id, unsigned int quest_id) = 0;
+		virtual void sendDialogButtonClicked(unsigned int npc_id, 
+			unsigned int dialog_id, unsigned int sub_dialog_id, unsigned int button_clicked) = 0;
 		// by character
 		virtual void sendCharGotHit(unsigned int new_hp) = 0;
 		virtual void sendAttackPacket(network::MonsterHit mh) = 0;
@@ -33,6 +35,12 @@ namespace hiraeth
 		virtual void sendRequestInfo(unsigned int char_id) = 0;
 		// by ui_inventory
 		virtual void sendDropItem(unsigned int item_id, unsigned int tab_index) = 0;
+		virtual void sendAddItemToTradeBox(unsigned int tab_index, unsigned int inventory_index, unsigned int trade_index) = 0;
+		// by ui_trade
+		virtual void sendAcceptTrade() = 0;
+		virtual void sendCancelTrade() = 0;
+		// by ui_shop
+		virtual void sendShopBuyItem(unsigned int item_number) = 0;
 	};
 	
 	class NetworkManager

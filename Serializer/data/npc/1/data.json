@@ -2,7 +2,7 @@
     "info": {
         "npc_name": "Ruby PQ",
         "npc_foothold": 0,
-        "npc_x_value": 0.0,
+        "npc_x_value": -100.0,
         "say_lines": [
             "I got an interesting offer for you",
             "This mission is not an easy one"
@@ -10,61 +10,130 @@
         "dialog_tree": [
             {
                 "key": 0,
-                "value": [
-                    {
-                        "text": "They tryna find TuPaC",
-                        "buttons": [
-                            0
-                        ]
-                    },
-                    {
-                        "text": "Don't let them find tupac",
-                        "buttons": [
-                            0
-                        ]
-                    },
-                    {
-                        "text": "La da da da",
-                        "buttons": [
-                            2,
-                            1
-                        ]
-                    }
-                ]
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "They tryna find TuPaC",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        },
+                        {
+                            "text": "Don't let them find tupac",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        },
+                        {
+                            "text": "La da da da",
+                            "buttons": [
+                                {
+                                    "button": 2,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                },
+                                {
+                                    "button": 1,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
             },
             {
                 "key": 1,
-                "value": [
-                    {
-                        "text": "I'm waiting for it you bitch ass nigga",
-                        "buttons": [
-                            0
-                        ]
-                    }
-                ]
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "I'm waiting for it you bitch ass nigga",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
             },
             {
                 "key": 2,
-                "value": [
-                    {
-                        "text": "Aight you cool\n there's you money",
-                        "buttons": [
-                            4
-                        ]
-                    }
-                ]
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "Aight you cool\nthere's you money",
+                            "buttons": [
+                                {
+                                    "button": 4,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
             },
             {
                 "key": 3,
-                "value": [
-                    {
-                        "text": "Aight you cool\n there's you money",
-                        "buttons": [
-                            0
-                        ]
-                    }
-                ]
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "Aight you cool\nthere's you money",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
             }
-        ]
+        ],
+        "usage_data": {
+            "index": 1,
+            "data": {
+                "party_members_amount": 2,
+                "lvl_req_min": 2,
+                "lvl_req_max": 10,
+                "pq_map_id": 2
+            }
+        }
     }
 }

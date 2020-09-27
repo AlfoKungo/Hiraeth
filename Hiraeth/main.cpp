@@ -147,6 +147,8 @@ int main()
 	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
 	Char.loadSkillsToKeys();
 
+	//uiManager.getUiTrade()->openTrade(CharManager::Instance()->getEquips(), nullptr);
+
 	unsigned int frames = 0;
 	while (!window.closed())
 	{
@@ -173,15 +175,19 @@ int main()
 
 		//draw
 		map.draw();
+		npcManager.draw();
 		monsterManager.draw();
 		skillManager.draw();
 		netCharManager.draw();
-		npcManager.draw();
 		m_CrLayer.render();
 		itemManager.draw();
 		uiManager.draw();
 
+
 		window.update();
+		//std::thread first(&Window::update,window);
+		//first.join();
+
 		++frames;
 		if (StaticTimer::timer.elapsed() - timer > 1.0f)
 		{

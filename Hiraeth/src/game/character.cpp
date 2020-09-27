@@ -30,7 +30,7 @@ namespace hiraeth {
 			m_HitSprite = graphics::Sprite{ maths::vec2(0, 0), getBounds().width,
 				getBounds().height, 0x60ff4500 };
 
-			for (auto [key, d] : ui_equip->getEquips())
+			for (auto [key, d] : *ui_equip->getEquips())
 				Character::wearItem(key);
 			
 			registerKeys();

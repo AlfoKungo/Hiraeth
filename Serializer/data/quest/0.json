@@ -15,26 +15,6 @@
                 }
             },
             {
-                "key": 0,
-                "value": {
-                    "index": 2,
-                    "data": {
-                        "type": 1,
-                        "amount": 1
-                    }
-                }
-            },
-            {
-                "key": 1,
-                "value": {
-                    "index": 2,
-                    "data": {
-                        "type": 0,
-                        "amount": 10
-                    }
-                }
-            },
-            {
                 "key": 3,
                 "value": {
                     "index": 0,

@@ -9,8 +9,9 @@ namespace hiraeth {
 		{
 		private:
 			maths::mat4 m_TransformationMatrix;
-			maths::vec2 m_Pos{ 0,0 };
 		public:
+			maths::vec2 m_Pos{ 0,0 };
+
 			std::vector<std::unique_ptr<Renderable>> m_Renderables;
 			std::vector<Renderable*> m_RefRenderables;
 			Group(maths::mat4 transform);

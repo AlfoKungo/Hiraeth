@@ -54,9 +54,19 @@ namespace hiraeth {
 			m_Layer.add_ref(m_UiEquip);
 			kb->registerToKey(GLFW_KEY_E, equip, this);
 
-			m_UiParty = new UiParty(maths::vec2(-300, -100), party);
+			m_UiParty = new UiParty(maths::vec2(-300, -100));
 			m_Layer.add_ref(m_UiParty);
 			kb->registerToKey(GLFW_KEY_P, party, this);
+
+			m_UiTrade = new UiTrade(maths::vec2(-300, -100));
+			m_Layer.add_ref(m_UiTrade);
+			//m_UiTrade->setEquips(m_UiEquip->getEquips());
+
+			m_UiShop = new UiShop(maths::vec2(-300, -100));
+			m_Layer.add_ref(m_UiShop);
+
+			m_UiInventory->setTradeUi(&m_UiTrade->m_Group.m_Pos, &m_UiTrade->m_IsTrading);
+			//m_UiTrade->is_to_draw = true;
 		}
 
 		bool UiManager::leftButtonClicked(float mx, float my)
@@ -100,7 +110,8 @@ namespace hiraeth {
 					auto equip_to_move_to_inventory = m_UiEquip->unEquip((*result_window)->getRelativeLocation(mx, my));
 					if (equip_to_move_to_inventory != nullptr)
 					{
-						auto pos_index = m_UiInventory->addItem(equip_to_move_to_inventory);
+						auto pos_index = m_UiInventory->addItem(equip_to_move_to_inventory); 
+						// delete this and move this to be a network interaction
 						//EventManager *m_EventManager = EventManager::Instance();
 						//m_EventManager->execute<SRL::EquipItemType>(ItemUnWore, equip_to_move_to_inventory->getItemType());
 						CharManager::Instance()->unWearItem(equip_to_move_to_inventory->getItemType());
@@ -168,6 +179,8 @@ namespace hiraeth {
 			if (escape == key)
 			{
 				auto window = m_Windows.begin();
+				if (*window == m_UiTrade)
+					return;
 				(*window)->is_to_draw = false;
 				(*window)->is_to_update = false;
 

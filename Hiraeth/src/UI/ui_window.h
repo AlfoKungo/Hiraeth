@@ -23,13 +23,14 @@ namespace hiraeth {
 			inventory,
 			party,
 			key_config,
+			none,
 		};
 		class UiWindow : public Drawable, public Updatable
 		{
 		public:
 			UiKey m_ControlKey;
-		protected:
 			graphics::Group m_Group;
+		protected:
 			maths::vec2 m_WindowSize;
 			bool m_IsAttached, m_IsHolding;
 			graphics::Group * m_ForegroundGroup;
@@ -38,6 +39,7 @@ namespace hiraeth {
 		public:
 			UiWindow(maths::Rectangle rec, UiKey control_key);
 
+			void setActivityState(bool);
 			void controlKeyClicked();
 
 			void move(float mx, float my);
@@ -70,10 +72,10 @@ namespace hiraeth {
 		//protected:
 			maths::vec2 getRelativeLocation(maths::vec2 mouse_pos) const;
 			maths::vec2 getRelativeLocation(float mx, float my) const;
-		protected:
+		//protected:
 			void add_button(UiButton * new_button);
+			virtual maths::Rectangle getTitlebar() const;
 		private:
-			maths::Rectangle getTitlebar() const;
 		};
 
 	}

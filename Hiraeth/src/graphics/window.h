@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "keyboard/keyboard.h"
+#include <thread>
 
 namespace hiraeth {
 	namespace graphics {
@@ -18,6 +19,13 @@ namespace hiraeth {
 			GLFWwindow *m_Window;
 			input::Keyboard *m_Keyboard;
 			bool m_Closed;
+			//std::thread m_PollEvents{ [&]() {
+			//	while (true) {
+			//	glfwPollEvents();
+			//	//std::cout << "im polling\n";
+			//	//std::this_thread::sleep_for(std::chrono::milliseconds(66));
+			//	}
+			//} };
 
 
 		public:

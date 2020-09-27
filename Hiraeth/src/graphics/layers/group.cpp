@@ -10,7 +10,8 @@ namespace hiraeth {
 		}
 
 		Group::Group(const maths::vec2& transform)
-			: m_TransformationMatrix((*new maths::mat4(maths::mat4::Translate(transform))))
+			: m_TransformationMatrix((*new maths::mat4(maths::mat4::Translate(transform)))),
+			m_Pos(transform)
 		{
 
 		}

@@ -77,6 +77,8 @@ namespace hiraeth {
 
 		void Window::update() 
 		{
+			//if (m_PollEvents.joinable())
+			//	m_PollEvents.join();
 			GLenum error = glGetError();
 			if (error != GL_NO_ERROR)
 				std::cout << "OpenGL Error: " << error << std::endl;

@@ -235,18 +235,13 @@ namespace hiraeth {
 			m_DbClient->setByteArray(m_NumConnectedClients, "quests_in_prog", decltype(PlayerData::quests_in_progress) { });
 			m_DbClient->setByteArray(m_NumConnectedClients, "quests_done", decltype(PlayerData::quests_done) { });
 			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) { {1, 1}});
-			//m_DbClient->setByteArray(char_id, "inv_equip", decltype(PlayerData::inv_equip) {
-			//	{0, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} }},
-			//	{ 1, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
-			//	{ 2, SRL::EquipDbStruct{ 2, {{SRL::LukInc, 7}, {SRL::IntInc, 7}} } },
-			//	{ 3, SRL::EquipDbStruct{ 3, {{SRL::AttackPower, 11}, {SRL::StrInc, 3}} } },
-			//	{ 4, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 12}, {SRL::StrInc, 7}} } },
-			//	{ 5, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
-			//	{ 6, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
-			//	{ 7, SRL::EquipDbStruct{ 3, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
-			//	{ 8, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
-			//	{ 9, SRL::EquipDbStruct{ 2, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
-			//	{ 10, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 10}, {SRL::StrInc, 5}} } },
+			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) {
+			//	{0, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 1}, {SRL::StrInc, 2}} }},
+			//	{ 1, SRL::EquipDbStruct{ 2, {{SRL::AttackPower, 3}, {SRL::StrInc, 4}} } },
+			//});
+			//m_DbClient->setByteArray(2, "inv_equip", decltype(PlayerData::inv_equip) {
+			//	{0, SRL::EquipDbStruct{ 3, {{SRL::AttackPower, 5}, {SRL::StrInc, 6}} }},
+			//	{ 1, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 7}, {SRL::StrInc, 8}} } },
 			//});
 			//m_DbClient->setByteArray(1, "inv_use", decltype(PlayerData::inv_use) { });
 			//m_DbClient->setByteArray(1, "inv_setup", decltype(PlayerData::inv_setup) { });

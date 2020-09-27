@@ -77,7 +77,7 @@ namespace hiraeth {
 			unsigned int min, max;
 		};
 		static std::map<unsigned int, std::vector<RandomStruct>> RandomStatsForEquips{
-		{0, {{SRL::EquipItemDataType::AttackPower, 10, 20}, {SRL::EquipItemDataType::StrInc, 7,10} }},
+		{0, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
 		{1, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
 		{2, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
 		{3, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},

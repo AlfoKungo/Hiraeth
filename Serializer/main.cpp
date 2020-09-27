@@ -273,7 +273,7 @@ int main()
 	serialize_generic<SRL::EquipItemData>("equip", equip_data<SRL::EquipItemData>);
 
 	// Serialize NPC Data
-	Checks::create_npc_data();
+	SRL::Checks::create_npc_data();
 	serialize_generic<SRL::NpcData>("npc", tex_n_data<SRL::NpcData>);
 
 	// Serialize Skills Data

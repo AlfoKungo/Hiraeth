@@ -8,7 +8,7 @@ namespace hiraeth {
 			const std::vector<physics::FootHold>& foot_holds, unsigned int item_id,
 			float x_force)
 			: Sprite(pos, graphics::TextureManager::Load(item_name, item_texture_data)),
-			m_State(InAir),
+			m_State(ItemState::InAir),
 			m_Force(x_force, 7),
 			m_FootHolds(foot_holds),
 			m_Id(item_id),
@@ -25,20 +25,20 @@ namespace hiraeth {
 		{
 			switch (m_State)
 			{
-			case InAir:
+			case ItemState::InAir:
 				m_Force.y -= 0.6f;
 				m_Bounds.position += m_Force;
 				if (isReachedFloor(maths::vec2(0, 10), m_Force))
 				{
-					m_State = OnFloor;
+					m_State = ItemState::OnFloor;
 					if (!m_IsExpiring)
 						m_Timer.reSet(EXPIRING_TIME + 10.0f);
 				}
 				break;
-			case OnFloor:
+			case ItemState::OnFloor:
 				m_Bounds.position.y = m_OsciliateYPos + sin(m_Timer.timeRemain() * 3.5f) * 3;
 				break;
-			case PickedUp:
+			case ItemState::PickedUp:
 				float time_remains= m_Timer.timeRemain();
 				if (time_remains < 0.0f)
 					time_remains = 0.0f;
@@ -87,12 +87,12 @@ namespace hiraeth {
 		{
 			//if ((m_State == OnFloor) && m_Timer.timeRemain() < EXPIRE_FADE_TIME)
 			//	m_IsExpiring = true;
-			return ((m_State == OnFloor) && m_Timer.hasExpired());
+			return ((m_State == ItemState::OnFloor) && m_Timer.hasExpired());
 		}
 
 		bool ItemDrop::hasBeenTaken()
 		{
-			if ((m_State == PickedUp)) {
+			if ((m_State == ItemState::PickedUp)) {
 				if ((m_Force.y < 0 || m_Force.y < 0.1)) {
 					if ((abs((m_CharRec->y + 15) - m_Bounds.y) < 3.0f))
 					{
@@ -108,7 +108,7 @@ namespace hiraeth {
 		void ItemDrop::pickUp(const maths::Rectangle * char_rec)
 		{
 			m_CharRec = char_rec;
-			m_State = PickedUp;
+			m_State = ItemState::PickedUp;
 			m_Force = maths::vec2(0, 17);
 			//m_Force = maths::vec2(0, 6.0f);
 			m_Timer.reSet(PICK_UP_TIME);

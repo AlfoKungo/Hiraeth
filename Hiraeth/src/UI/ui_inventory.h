@@ -12,7 +12,8 @@
 
 namespace hiraeth {
 	namespace ui {
-		const float WIDTH{ 172.0f }, HEIGHT{ 335.0f };
+		//const float WIDTH{ 172.0f }, HEIGHT{ 335.0f };
+		const float UI_INVENTORY_WIDTH{ 172.0f }, UI_INVENTORY_HEIGHT{ 335.0f };
 		class UiInventory : public UiWindow
 		{
 		private:
@@ -22,6 +23,11 @@ namespace hiraeth {
 			//std::map<unsigned int, unsigned int> m_ItemsOrd;
 			std::pair<unsigned int, item::ItemHold*> m_HoldItem;
 			game::CharacterStats* m_CharacterStats;
+			maths::Rectangle* m_UiTradeRec;
+			maths::Rectangle* m_UiEquipRec;
+
+			maths::vec2 * m_UiTradePos;
+			bool * m_IsTradeAble;
 			//maths::vec2 m_OldItemPos;
 		public:
 
@@ -45,7 +51,13 @@ namespace hiraeth {
 			std::pair<unsigned int, item::EquipItem*> itemClickedOn(maths::vec2 mousePos);
 			//item::EquipItem* getEquipItem(maths::vec2 mousePos);
 			std::pair<unsigned int, item::EquipItem*> getEquipItem(maths::vec2 mousePos);
-			unsigned int findEmptyPosition(unsigned int tab_type);
+			//unsigned int findEmptyPosition(unsigned int tab_type);
+
+			void setTradeUi(maths::vec2* pos, bool* is_trading)
+			{
+				m_UiTradePos = pos;
+				m_IsTradeAble = is_trading;
+			}
 		private:
 			//std::pair<unsigned int, std::unique_ptr<item::Item>> getItemPair(maths::vec2 mouse_pos);
 			std::map<unsigned int, std::unique_ptr<item::ItemHold>>::iterator getItemPair(maths::vec2 mouse_pos);

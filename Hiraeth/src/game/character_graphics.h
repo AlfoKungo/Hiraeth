@@ -48,7 +48,7 @@ namespace hiraeth {
 
 		inline void FillCharacterTextureData(std::map<StanceState, std::vector<std::unique_ptr<graphics::Renderable>>>& stance_renderables)
 		{
-			for (const auto&[stance_state, body_map] : cg_data_map)
+			for (const auto& [stance_state, body_map] : cg_data_map)
 			{
 				const auto& stance_name = cg_stance_to_names.at(stance_state);
 				stance_renderables[stance_state].push_back(std::make_unique<character::CharacterBody>(
@@ -91,6 +91,20 @@ namespace hiraeth {
 			//	m_WeaponLocsMap[Jump]));
 			//m_StatesRenderables[Jump].push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0 }, 
 			//	data_map[Jump][CHead], graphics::TextureManager::Load("char_head_jump.png")));
+		}
+
+		inline void FillCharacterStandData(std::vector<std::unique_ptr<graphics::Renderable>>& stance_renderables)
+		{
+			auto stance_state = StcStand;
+			const auto & body_map = cg_data_map.at(stance_state);
+			const auto& stance_name = cg_stance_to_names.at(stance_state);
+			stance_renderables.push_back(std::make_unique<character::CharacterBody>(
+				body_map.at(CBody), graphics::TextureManager::Load("char_body_" + stance_name + ".png")));
+			stance_renderables.push_back(std::make_unique<character::CharacterArm>(
+				body_map.at(CArm), graphics::TextureManager::Load("char_hand_" + stance_name + ".png"),
+				cg_weapons_locs_map.at(stance_state)));
+			stance_renderables.push_back(std::make_unique<graphics::SpritedRenderable>(maths::vec2{ 0 },
+				body_map.at(CHead), graphics::TextureManager::Load("char_head_" + stance_name + ".png")));
 		}
 	}
 }

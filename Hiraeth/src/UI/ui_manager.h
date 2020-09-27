@@ -12,10 +12,12 @@
 #include "main_ui.h"
 #include "ui_keyconfig.h"
 #include "ui_party.h"
+#include "ui_trade.h"
 #include "keyboard/keyboard.h"
 #include "keyboard/keyboard_event.h"
 #include "game/character_stats.h"
 #include "item/item_manager.h"
+#include "UI/ui_shop.h"
 
 namespace hiraeth {
 	namespace ui {
@@ -34,6 +36,8 @@ namespace hiraeth {
 			UiQuests * m_UiQuests;
 			UiKeyConfig * m_UiKeyConfig;
 			UiParty* m_UiParty;
+			UiTrade * m_UiTrade;
+			UiShop * m_UiShop;
 			struct MouseAction { bool is_occupied; UiWindow * rel_win; }; // not yet implemented - supposed to be used for data transfer between windows.
 		public:
 			UiManager(input::Keyboard* kb);
@@ -54,6 +58,8 @@ namespace hiraeth {
 			UiEquip * getUiEquip() { return m_UiEquip; }
 			UiQuests * getUiQuests() { return m_UiQuests; }
 			UiParty * getUiParty() { return m_UiParty; }
+			UiTrade * getUiTrade() { return m_UiTrade; }
+			UiShop * getUiShop() { return m_UiShop; }
 		private:
 			void init_all_windows(input::Keyboard* kb, game::CharacterStats *character_stats);
 		};
