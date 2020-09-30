@@ -1,8 +1,5 @@
 workspace "Hiraeth"
 	architecture "x64"
-	
-workspace "Hiraeth"
-	architecture "x86_64"
 	startproject "Hiraeth"
 	
 	configurations
@@ -12,72 +9,36 @@ workspace "Hiraeth"
 		"Dist"
 	}
 	
+
+	
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["GLFW"] = "GladTest/vendor/GLFW/include"
-IncludeDir["Glad"] = "GladTest/vendor/Glad/include"
+IncludeDir["GLFW"] = "%{wks.location}/Dependencies/GLFW/include"
+IncludeDir["GLEW"] = "%{wks.location}/Dependencies/GLEW/include"
+IncludeDir["FreeType"] = "%{wks.location}/Dependencies/FreeType/include"
+IncludeDir["Cereal"] = "%{wks.location}/Dependencies/Cereal/include"
+IncludeDir["FreeImage"] = "%{wks.location}/Dependencies/FreeImage/include"
+IncludeDir["libpq"] = "%{wks.location}/Dependencies/libpq/include"
+IncludeDir["Boost"] = "%{wks.location}/Dependencies/Boost/include"
+IncludeDir["spdlog"] = "%{wks.location}/submodules/spdlog/include"
+IncludeDir["MathLib"] = "%{wks.location}/MathLib"
+IncludeDir["SerializeLib"] = "%{wks.location}/SerializeLib"
+IncludeDir["NetworkLib"] = "%{wks.location}/NetworkLib"
 
-include "GladTest/vendor/GLFW"
-include "GladTest/vendor/Glad"
+LibDir = {}
+LibDir["FreeImage"] = "%{wks.location}/Dependencies/FreeImage/lib"
+LibDir["FreeType"] = "%{wks.location}/Dependencies/FreeType/lib"
+LibDir["libpq"] = "%{wks.location}/Dependencies/libpq/lib"
+LibDir["GLFW"] = "%{wks.location}/Dependencies/GLFW/lib-vc2019_64"
+LibDir["GLEW"] = "%{wks.location}/Dependencies/GLEW/lib"
 
-	
-project "GladTest"
-	location "GladTest"
-	kind "ConsoleApp"
-	language "C++"
-	
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-	
-	files
-	{
-		"%{prj.name}/**.h",
-		"%{prj.name}/**.cpp"
-		
-		-- "%{prj.name}/src/**.h",
-		-- "%{prj.name}/src/**.cpp"
-	}
-	
-	includedirs
-	{
-		"%{prj.name}/src",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
-	}
-	
-	links
-	{
-		"GLFW",
-		"opengl32.lib",
-		"Glad",
-	--	"opengl32.lib"
-	}
-	
-	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
-		
-		defines
-		{
-			"HRTH_PLATFORM_WINDOWS",
-		}
-		
-	filter "configurations:Debug"
-		defines "HRTH_DEBUG"
-		symbols "On"
-		
-	filter "configurations:Release"
-		defines "HRTH_RELEASE"
-		symbols "On"
-		
-	filter "configurations:Dist"
-		defines "HRTH_DIST"
-		symbols "On"
-		
-	
-	-- include
-	-- {
-		-- "%{prj.name}/vendor/spdlog/include"
-	-- }
+include "MathLib"
+include "SerializeLib"
+include "NetworkLib"
+include "Hiraeth"
+include "Server"
+include "Serializer"
+
+-- include "GladTest/vendor/GLFW"
+-- include "GladTest/vendor/Glad"

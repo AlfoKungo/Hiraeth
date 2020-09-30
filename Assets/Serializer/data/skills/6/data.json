@@ -1,0 +1,44 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 16,
+                "value": {
+                    "index": 1,
+                    "data": "5*x"
+                }
+            },
+            {
+                "key": 40,
+                "value": {
+                    "index": 1,
+                    "data": "100 - x"
+                }
+            },
+            {
+                "key": 41,
+                "value": {
+                    "index": 1,
+                    "data": "x"
+                }
+            },
+            {
+                "key": 42,
+                "value": {
+                    "index": 1,
+                    "data": "x"
+                }
+            },
+            {
+                "key": 43,
+                "value": {
+                    "index": 1,
+                    "data": "x"
+                }
+            }
+        ],
+        "name": "State Enhancer",
+        "max_level": 10,
+        "skill_type": 6
+    }
+}

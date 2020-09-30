@@ -1,0 +1,47 @@
+{
+    "data": {
+        "StatsStruct": {
+            "Name": "Slime",
+            "Level": 5,
+            "Exp": 4444,
+            "MaxHp": 400,
+            "Hp": 400,
+            "MaxMp": 250,
+            "Mp": 250,
+            "Attack": 15,
+            "CritRate": 40,
+            "WeaponDef": 40,
+            "MagicDef": 40,
+            "WeaponAcc": 30,
+            "MagicAcc": 30,
+            "WeaponAvd": 20,
+            "MagicAvd": 20,
+            "Speed": 10.0,
+            "Jump": 100.0
+        },
+        "TextureIndex": 0,
+        "BehaveMap": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 0,
+                    "data": 0
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "index": 0,
+                    "data": 0
+                }
+            },
+            {
+                "key": 2,
+                "value": {
+                    "index": 0,
+                    "data": 0
+                }
+            }
+        ]
+    }
+}

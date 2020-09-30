@@ -1,0 +1,21 @@
+{
+    "info": {
+        "item_properties": [
+            {
+                "key": 7,
+                "value": {
+                    "index": 2,
+                    "data": {
+                        "value": 15,
+                        "duration": 30
+                    }
+                }
+            }
+        ],
+        "basic_item_info": {
+            "item_name": "Wing",
+            "type": 1,
+            "item_description": "Increase Speed for 30 seconds"
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 39,
+                "value": {
+                    "index": 1,
+                    "data": "20 + 2*x"
+                }
+            }
+        ],
+        "name": "Life Stealer",
+        "max_level": 10,
+        "skill_type": 6
+    }
+}

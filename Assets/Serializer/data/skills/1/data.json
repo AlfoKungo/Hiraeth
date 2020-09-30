@@ -1,0 +1,40 @@
+{
+    "info": {
+        "skill_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 0,
+                    "data": 10
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "index": 0,
+                    "data": 1000
+                }
+            },
+            {
+                "key": 5,
+                "value": {
+                    "index": 0,
+                    "data": 20
+                }
+            },
+            {
+                "key": 7,
+                "value": {
+                    "index": 2,
+                    "data": {
+                        "value": 5,
+                        "duration": 20
+                    }
+                }
+            }
+        ],
+        "name": "Haste",
+        "max_level": 3,
+        "skill_type": 3
+    }
+}

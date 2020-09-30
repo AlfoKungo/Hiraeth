@@ -1,0 +1,18 @@
+{
+    "info": {
+        "item_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 0,
+                    "data": 10
+                }
+            }
+        ],
+        "basic_item_info": {
+            "item_name": "Mushroomer",
+            "type": 1,
+            "item_description": "Gives Attack Damage"
+        }
+    }
+}

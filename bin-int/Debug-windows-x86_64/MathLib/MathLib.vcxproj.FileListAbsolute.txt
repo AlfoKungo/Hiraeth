@@ -1,0 +1,2 @@
+C:\Users\gal\source\repos\Hiraeth\bin\Debug-windows-x86_64\MathLib\MathLib.pdb
+C:\Users\gal\source\repos\Hiraeth\bin-int\Debug-windows-x86_64\MathLib\MathLib.pdb

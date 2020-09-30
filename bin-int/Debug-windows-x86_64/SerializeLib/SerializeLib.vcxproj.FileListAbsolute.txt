@@ -1,0 +1,2 @@
+C:\Users\gal\source\repos\Hiraeth\bin\Debug-windows-x86_64\SerializeLib\SerializeLib.pdb
+C:\Users\gal\source\repos\Hiraeth\bin-int\Debug-windows-x86_64\SerializeLib\SerializeLib.pdb

@@ -1,0 +1,134 @@
+{
+    "info": {
+        "npc_name": "Magic Luka",
+        "npc_foothold": 0,
+        "npc_x_value": 100.0,
+        "say_lines": [
+            "Too easy isn't it?",
+            "Oh yeah"
+        ],
+        "dialog_tree": [
+            {
+                "key": 0,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "They tryna find TuPaC",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        },
+                        {
+                            "text": "Don't let them find tupac",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        },
+                        {
+                            "text": "La da da da",
+                            "buttons": [
+                                {
+                                    "button": 2,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                },
+                                {
+                                    "button": 1,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "I'm waiting for it you bitch ass nigga",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            },
+            {
+                "key": 2,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "Aight you cool\nthere's you money",
+                            "buttons": [
+                                {
+                                    "button": 4,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "Aight you cool\nthere's you money",
+                            "buttons": [
+                                {
+                                    "button": 0,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            }
+        ],
+        "usage_data": {
+            "index": 0,
+            "data": {}
+        }
+    }
+}

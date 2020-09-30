@@ -1,0 +1,26 @@
+{
+    "quest": {
+        "name": "kanyethethird",
+		"description": "As Patrice said",
+        "req_lvl": 1,
+        "quest_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 2,
+                    "data": {
+                        "type": 1,
+                        "amount": 15
+                    }
+                }
+            },
+            {
+                "key": 4,
+                "value": {
+                    "index": 0,
+                    "data": 3000
+                }
+            }
+        ]
+    }
+}

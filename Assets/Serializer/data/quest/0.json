@@ -1,0 +1,26 @@
+{
+    "quest": {
+        "name": "first",
+        "description": "I need you to kill all the fags",
+        "req_lvl": 1,
+        "quest_properties": [
+            {
+                "key": 0,
+                "value": {
+                    "index": 2,
+                    "data": {
+                        "type": 0,
+                        "amount": 1
+                    }
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "index": 0,
+                    "data": 5000
+                }
+            }
+        ]
+    }
+}

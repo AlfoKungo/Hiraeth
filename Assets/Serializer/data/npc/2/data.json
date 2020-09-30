@@ -1,0 +1,39 @@
+{
+    "info": {
+        "npc_name": "Lavie",
+        "npc_foothold": 0,
+        "npc_x_value": 0.0,
+        "say_lines": [
+            "It's sunny today isn't it",
+            "Summer madness"
+        ],
+        "dialog_tree": [],
+        "usage_data": {
+            "index": 2,
+            "data": {
+                "sell_items": [
+                    {
+                        "item_type": 0,
+                        "item_id": 0,
+                        "price": 100
+                    },
+                    {
+                        "item_type": 0,
+                        "item_id": 1,
+                        "price": 250
+                    },
+                    {
+                        "item_type": 1,
+                        "item_id": 1,
+                        "price": 150
+                    },
+                    {
+                        "item_type": 1,
+                        "item_id": 2,
+                        "price": 400
+                    }
+                ]
+            }
+        }
+    }
+}

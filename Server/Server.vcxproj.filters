@@ -1,87 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="utills">
+      <UniqueIdentifier>{621E3921-4EC0-63F7-377B-774B23BCEA47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="socket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="address.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utills\static_timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utills\timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server_msgs_handling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="map_holder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="src\address.h" />
+    <ClInclude Include="src\db_client.h" />
+    <ClInclude Include="src\handler.h" />
+    <ClInclude Include="src\item_funcs.h" />
+    <ClInclude Include="src\map_holder.h" />
+    <ClInclude Include="src\mob_manager.h" />
+    <ClInclude Include="src\npc_logic.h" />
+    <ClInclude Include="src\server.h" />
+    <ClInclude Include="src\socket.h" />
+    <ClInclude Include="src\socket_handler.h" />
+    <ClInclude Include="src\utills\a_timer.h">
+      <Filter>utills</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utills\static_timer.h">
+      <Filter>utills</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utills\timer.h">
+      <Filter>utills</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="server.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="address.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="socket.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utills\a_timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utills\static_timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utills\timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mob_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="db_client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="socket_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="map_holder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="item_funcs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="npc_logic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="src\address.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\map_holder.cpp" />
+    <ClCompile Include="src\server.cpp" />
+    <ClCompile Include="src\server_msgs_handling.cpp" />
+    <ClCompile Include="src\socket.cpp" />
+    <ClCompile Include="src\socket_handler.cpp" />
+    <ClCompile Include="src\utills\static_timer.cpp">
+      <Filter>utills</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utills\timer.cpp">
+      <Filter>utills</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
