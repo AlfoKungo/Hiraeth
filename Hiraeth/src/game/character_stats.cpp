@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "character_stats.h"
 
 namespace hiraeth {

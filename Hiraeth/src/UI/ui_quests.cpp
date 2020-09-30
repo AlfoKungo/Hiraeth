@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "ui_quests.h"
 
 #include "basic/EventManager.h"

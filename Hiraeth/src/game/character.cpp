@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "character.h"
 #include <utility>
 #include "projectile.h"

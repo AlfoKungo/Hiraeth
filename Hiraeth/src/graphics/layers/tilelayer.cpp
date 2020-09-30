@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "tilelayer.h"
 
 namespace hiraeth {

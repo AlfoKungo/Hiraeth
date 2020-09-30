@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "timer.h"
 #include <algorithm>
 

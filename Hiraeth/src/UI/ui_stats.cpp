@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "ui_stats.h"
 
 namespace hiraeth {
@@ -7,7 +8,7 @@ namespace hiraeth {
 			game::CharacterStats *character_stats)
 			: UiWindow(maths::Rectangle(pos.x, pos.y, 212, 373), control_key),
 			m_StatsStruct(character_stats->getStatsStruct_()), m_DetailsStruct(character_stats->getDetailsStruct_()),
-		m_DetailsGroup{new graphics::Group{}}
+		m_DetailsGroup{new graphics::Group{}}  
 		{
 			EventManager *m_EventManager = EventManager::Instance();
 			m_EventManager->subscribe(StatsUpdate, this, &UiStats::StatsUpdated);

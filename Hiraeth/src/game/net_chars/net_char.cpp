@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "net_char.h"
 #include "game/character_graphics.h"
 

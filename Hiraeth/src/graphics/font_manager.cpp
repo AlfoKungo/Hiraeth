@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "font_manager.h"
 
 namespace hiraeth {

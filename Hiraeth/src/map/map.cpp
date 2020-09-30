@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "map.h"
 
 
@@ -5,14 +6,14 @@ namespace hiraeth {
 	namespace map {
 
 		Map::Map(int map_index, graphics::Window* wind)
-			:
+			: 
 			m_PtTex("portal_adv.png"),
 			m_PtShader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_BgShader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"),
 			m_PtLayer(&m_PtShader),
 			m_BgLayer(&m_BgShader),
 			m_MapLayer(),
-			m_MapIndex(map_index),
+			m_MapIndex(map_index), 
 			m_Wnd(wind)
 		{
 			graphics::Label* fps = new graphics::Label("arial", 50, "hiraeth", { 400, 0 }, 0xffff0000);

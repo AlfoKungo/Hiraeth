@@ -1,4 +1,4 @@
-
+#include "hrth_pch.h"
 #include "network/client_handler.h"
 #include "game/character.h"
 #include "utils/static_timer.h"
@@ -15,11 +15,10 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-
 //#include <ga.h>
 //#include <gau.h>
 
-#include <cstdio>
+#include <cstdio> 
 #include "skills/skill_manager.h"
 #include "game/net_chars/net_char_manager.h"
 #include "editor/editor.h"
@@ -31,75 +30,78 @@
 #if 0
 static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
 {
-    gc_int32* flag = (gc_int32*)(in_context);
-    *flag = 1;
-    ga_handle_destroy(in_handle);
+	gc_int32* flag = (gc_int32*)(in_context);
+	*flag = 1;
+	ga_handle_destroy(in_handle);
 }
 int main()
 {
-    gau_Manager* mgr;
-    ga_Mixer* mixer;
-    ga_Sound* sound;
-    ga_Handle* handle;
-    gau_SampleSourceLoop* loopSrc = 0;
-    gau_SampleSourceLoop** pLoopSrc = &loopSrc;
-    gc_int32 loop = 0;
-    gc_int32 quit = 0;
+	gau_Manager* mgr;
+	ga_Mixer* mixer;
+	ga_Sound* sound;
+	ga_Handle* handle;
+	gau_SampleSourceLoop* loopSrc = 0;
+	gau_SampleSourceLoop** pLoopSrc = &loopSrc;
+	gc_int32 loop = 0;
+	gc_int32 quit = 0;
 
-    /* Initialize library + manager */
-    gc_initialize(0);
-    mgr = gau_manager_create();
-    mixer = gau_manager_mixer(mgr);
+	/* Initialize library + manager */
+	gc_initialize(0);
+	mgr = gau_manager_create();
+	mixer = gau_manager_mixer(mgr);
 
-    /* Create and play shared sound */
-    if (!loop)
-        pLoopSrc = 0;
-    sound = gau_load_sound_file("All_Night.wav", "wav");
-    handle = gau_create_handle_sound(mixer, sound, &setFlagAndDestroyOnFinish, &quit, pLoopSrc);
-    ga_handle_play(handle);
+	/* Create and play shared sound */
+	if (!loop)
+		pLoopSrc = 0;
+	sound = gau_load_sound_file("All_Night.wav", "wav");
+	handle = gau_create_handle_sound(mixer, sound, &setFlagAndDestroyOnFinish, &quit, pLoopSrc);
+	ga_handle_play(handle);
 
-    /* Bounded mix/queue/dispatch loop */
-    while (!quit)
-    {
-        gau_manager_update(mgr);
-        printf("%d / %d\n", ga_handle_tell(handle, GA_TELL_PARAM_CURRENT), ga_handle_tell(handle, GA_TELL_PARAM_TOTAL));
-        gc_thread_sleep(1);
-    }
+	/* Bounded mix/queue/dispatch loop */
+	while (!quit)
+	{
+		gau_manager_update(mgr);
+		printf("%d / %d\n", ga_handle_tell(handle, GA_TELL_PARAM_CURRENT), ga_handle_tell(handle, GA_TELL_PARAM_TOTAL));
+		gc_thread_sleep(1);
+	}
 
-    /* Clean up sound */
-    ga_sound_release(sound);
+	/* Clean up sound */
+	ga_sound_release(sound);
 
-    /* Clean up library + manager */
-    gau_manager_destroy(mgr);
-    gc_shutdown();
+	/* Clean up library + manager */
+	gau_manager_destroy(mgr);
+	gc_shutdown();
 
-    return 0;
+	return 0;
 }
-
-
-
 
 #else
+
 int main()
 {
-
-	
 	using namespace hiraeth;
 	using namespace maths;
 	using namespace graphics;
 	using namespace map;
 	using namespace view;
-	
+
 #ifdef EDITOR
 	editor::Editor editor;
 	//editor.MobEditor();
 	editor.MapEditor();
 #endif
-	
+
 	input::Keyboard keyboard;
 	Window window("Hiraeth", 1600, 900, &keyboard);
 
 	//mat4 ortho = mat4::Orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+
+
+	//uiManager.getUiTrade()->openTrade(CharManager::Instance()->getEquips(), nullptr);
+
+	std::atomic_bool b;
+	unsigned int frames = 0;
+
 
 	StaticTimer::init();
 
@@ -121,7 +123,7 @@ int main()
 	game::Character Char(maths::vec2(0, 0), &keyboard, map.getMapLayer(),
 		uiManager.getUiEquip(), &uiManager, &itemManager,
 		&skillManager, uiManager.getMainUi()->getCharacterStats(), monsterManager.getMonsters());
-		//&clientHandler);
+	//&clientHandler);
 	CharManager::setChar(&Char);
 	m_CrLayer.add_ref(&Char);
 	view::Camera::init(&Char);
@@ -129,8 +131,8 @@ int main()
 	game::NpcManager npcManager(map.getMapLayer(), &keyboard, &Char, uiManager.getUiQuests());
 	game::NetCharManager netCharManager{ map.getMapLayer(), &keyboard, &skillManager, monsterManager.getMonsters() };
 
-	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager, 
-		&itemManager, &skillManager, &map, &npcManager}; // itemManager, 
+	network::ClientHandler clientHandler{ &uiManager, &netCharManager, &monsterManager,
+		&itemManager, &skillManager, &map, &npcManager }; // itemManager,
 	NetworkManager::setHandler(&clientHandler);
 
 	uiManager.getMainUi()->setCharacterStats(clientHandler.getPlayerData().player_stats,
@@ -147,9 +149,53 @@ int main()
 	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
 	Char.loadSkillsToKeys();
 
-	//uiManager.getUiTrade()->openTrade(CharManager::Instance()->getEquips(), nullptr);
+	std::thread nigga{ [&]() {
+	while (true)
+	{
+		//window.clear();
+		//double x, y;
+		//window.getKeyboard()->getMousePosition(x, y);
+		//auto mouse_pos = window.getKeyboard()->getMousePosition();
+		//std::string s = "my name is : " + std::to_string(Char.getBounds().x) + ", " +
+		//	std::to_string(Char.getBounds().y) + ", " + std::to_string(Char.getBounds().width) + ", " +
+		//	std::to_string(Char.getBounds().height) + "; " + std::to_string(mouse_pos.x) + "," + std::to_string(mouse_pos.y);
+		//window.setTitle(s.c_str());
+		//Camera::update();
+		//map.update();
+		//monsterManager.update();
+		//skillManager.update();
+		//npcManager.update();
+		//m_CrLayer.update();
+		//itemManager.update();
+		//uiManager.update();
+		//clientHandler.Update(network::PlayerStateUpdateMsg{ Char.getPosition(), Char.getForce() , Char.getDirection()});
+		//netCharManager.update();
 
-	unsigned int frames = 0;
+		////draw
+		//map.draw();
+		//npcManager.draw();
+		//monsterManager.draw();
+		//skillManager.draw();
+		//netCharManager.draw();
+		//m_CrLayer.render();
+		//itemManager.draw();
+		//uiManager.draw();
+		//window.update();
+
+		++frames;
+		if (StaticTimer::timer.elapsed() - timer > 1.0f)
+		{
+			timer += 1.0f;
+			//printf("%d fps, %f frame time\n", frames, 1.0 / frames);
+			frames = 0;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(16 ));
+		//using namespace std::literals;
+		//auto now = std::chrono::system_clock::now();
+		//std::this_thread::sleep_until(now + 1ms);
+   }
+   } };
+
 	while (!window.closed())
 	{
 		//update
@@ -157,8 +203,8 @@ int main()
 		double x, y;
 		window.getKeyboard()->getMousePosition(x, y);
 		auto mouse_pos = window.getKeyboard()->getMousePosition();
-		std::string s = "my name is : " + std::to_string(Char.getBounds().x) + ", "+ 
-			std::to_string(Char.getBounds().y) + ", " + std::to_string(Char.getBounds().width) + ", "  + 
+		std::string s = "my name is : " + std::to_string(Char.getBounds().x) + ", "+
+			std::to_string(Char.getBounds().y) + ", " + std::to_string(Char.getBounds().width) + ", "  +
 			std::to_string(Char.getBounds().height) + "; " + std::to_string(mouse_pos.x) + "," + std::to_string(mouse_pos.y);
 		window.setTitle(s.c_str());
 		Camera::update();
@@ -171,7 +217,6 @@ int main()
 		uiManager.update();
 		clientHandler.Update(network::PlayerStateUpdateMsg{ Char.getPosition(), Char.getForce() , Char.getDirection()});
 		netCharManager.update();
-	
 
 		//draw
 		map.draw();
@@ -183,21 +228,12 @@ int main()
 		itemManager.draw();
 		uiManager.draw();
 
-
-		window.update();
 		//std::thread first(&Window::update,window);
 		//first.join();
 
-		++frames;
-		if (StaticTimer::timer.elapsed() - timer > 1.0f)
-		{
-			timer += 1.0f;
-			printf("%d fps, %f frame time\n", frames, 1.0 / frames);
-			frames = 0;
-		}
-
+		window.update();
 	}
-	
+
 	return 0;
 }
 #endif

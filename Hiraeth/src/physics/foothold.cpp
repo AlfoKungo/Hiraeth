@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "foothold.h"
 
 namespace hiraeth {

@@ -1,4 +1,5 @@
-﻿//#include "character_body.h"
+﻿#include "hrth_pch.h"
+//#include "character_body.h"
 //
 //namespace hiraeth {
 //	namespace character {

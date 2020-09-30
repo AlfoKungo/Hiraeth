@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "ui_equip.h"
 
 namespace hiraeth {

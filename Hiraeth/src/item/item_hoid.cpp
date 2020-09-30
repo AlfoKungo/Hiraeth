@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "item_hold.h"
 
 namespace hiraeth {

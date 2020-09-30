@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "map_controller.h"
 
 namespace hiraeth {

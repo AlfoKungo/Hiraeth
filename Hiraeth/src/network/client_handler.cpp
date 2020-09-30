@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "client_handler.h"
 #include "basic/log.h"
 

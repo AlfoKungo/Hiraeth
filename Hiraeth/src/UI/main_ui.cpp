@@ -1,4 +1,5 @@
-﻿#include "main_ui.h"
+﻿#include "hrth_pch.h"
+#include "main_ui.h"
 #include <functional>
 
 namespace hiraeth {

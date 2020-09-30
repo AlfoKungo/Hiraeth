@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "sprited_renderable.h"
 #include "texture_manager.h"
 

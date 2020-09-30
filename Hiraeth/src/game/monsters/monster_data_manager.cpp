@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "monster_data_manager.h"
 
 namespace hiraeth {

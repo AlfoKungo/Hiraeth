@@ -92,8 +92,9 @@
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;$(SolutionDir)submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN64;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <ShowIncludes>false</ShowIncludes>
+      <PrecompiledHeaderFile>hrth_pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype271.lib;glfw3.lib;glew32s.lib;opengl32.lib;FreeImage.lib;OpenAL32.lib;gorillaD.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -111,6 +112,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)SerializeLib;$(SolutionDir)MathLib;$(SolutionDir)NetworkLib;$(SolutionDir)submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN64;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>hrth_pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype_64.lib;glfw3.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;;%(AdditionalDependencies)</AdditionalDependencies>
@@ -164,13 +167,39 @@
     <ClCompile Include="Debug\ext\freetype-gl\texture-font.c" />
     <ClCompile Include="Debug\ext\freetype-gl\utf8-utils.c" />
     <ClCompile Include="Debug\ext\freetype-gl\vector.c" />
-    <ClCompile Include="ext\freetype-gl\distance-field.c" />
-    <ClCompile Include="ext\freetype-gl\edtaa3func.c" />
-    <ClCompile Include="ext\freetype-gl\platform.c" />
-    <ClCompile Include="ext\freetype-gl\texture-atlas.c" />
-    <ClCompile Include="ext\freetype-gl\texture-font.c" />
-    <ClCompile Include="ext\freetype-gl\utf8-utils.c" />
-    <ClCompile Include="ext\freetype-gl\vector.c" />
+    <ClCompile Include="ext\freetype-gl\distance-field.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <FileType>CppCode</FileType>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\edtaa3func.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\platform.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\texture-atlas.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\texture-font.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\utf8-utils.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ext\freetype-gl\vector.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\basic\char_handler.cpp" />
     <ClCompile Include="src\basic\log.cpp" />
     <ClCompile Include="main.cpp" />
@@ -205,6 +234,10 @@
     <ClCompile Include="src\graphics\texture.cpp" />
     <ClCompile Include="src\graphics\texture_manager.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
+    <ClCompile Include="src\hrth_pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\item\item_data_manager.cpp" />
     <ClCompile Include="src\item\item_drop.cpp" />
     <ClCompile Include="src\item\item_hoid.cpp" />
@@ -312,6 +345,7 @@
     <ClInclude Include="src\graphics\texture_manager.h" />
     <ClInclude Include="src\graphics\text_box.h" />
     <ClInclude Include="src\graphics\window.h" />
+    <ClInclude Include="src\hrth_pch.h" />
     <ClInclude Include="src\item\equip_item.h" />
     <ClInclude Include="src\item\item_data_manager.h" />
     <ClInclude Include="src\item\item_drop.h" />

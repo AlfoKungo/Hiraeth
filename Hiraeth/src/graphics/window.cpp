@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "window.h"
 
 namespace hiraeth {
@@ -84,6 +85,7 @@ namespace hiraeth {
 				std::cout << "OpenGL Error: " << error << std::endl;
 
 			glfwPollEvents();
+			//glFlush();
 			glfwSwapBuffers(m_Window);
 		}
 

@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "maprenderer.h"
 #include "maprenderable.h"
 

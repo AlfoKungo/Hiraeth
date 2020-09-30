@@ -1,3 +1,4 @@
+#include "hrth_pch.h"
 #include "group.h"
 
 namespace hiraeth {
