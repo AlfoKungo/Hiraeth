@@ -32,6 +32,7 @@ project "Hiraeth"
 		"%{IncludeDir.FreeImage}",
 		"%{IncludeDir.GLEW}",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
 		-- "%{IncludeDir.Boost}",
 		-- "%{IncludeDir.libpq}",
 		"%{IncludeDir.SerializeLib}",
@@ -47,14 +48,16 @@ project "Hiraeth"
 		"D:/Program Files (x86)/Windows Kits/10/Lib/10.0.15063.0/ucrt/x64",
 		"%{LibDir.FreeImage}",
 		"%{LibDir.FreeType}",
-		"%{LibDir.GLFW}",
+		-- "%{LibDir.GLFW}",
 		"%{LibDir.GLEW}"
 	}
 
 	links
 	{
 		"freetype_64.lib",
-		"glfw3.lib",
+		-- "glfw3.lib",
+		"GLFW",
+		"Glad",
 		"glew64s.lib",
 		"opengl32.lib",
 		"FreeImage64.lib",

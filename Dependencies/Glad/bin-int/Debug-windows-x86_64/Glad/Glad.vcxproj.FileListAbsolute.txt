@@ -1,0 +1,2 @@
+C:\Users\gal\source\repos\Hiraeth\Dependencies\Glad\bin\Debug-windows-x86_64\Glad\Glad.pdb
+C:\Users\gal\source\repos\Hiraeth\Dependencies\Glad\bin-int\Debug-windows-x86_64\Glad\Glad.pdb

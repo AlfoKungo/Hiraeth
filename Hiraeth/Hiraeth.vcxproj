@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;GLEW_STATIC;WIN64;_LIB;_CRT_NONSTDC_NO_DEPRECATE;HRTH_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Dependencies\FreeType\include;..\Dependencies\Cereal\include;..\Dependencies\FreeImage\include;..\Dependencies\GLEW\include;..\Dependencies\GLFW\include;..\SerializeLib;..\MathLib;..\NetworkLib;..\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Dependencies\FreeType\include;..\Dependencies\Cereal\include;..\Dependencies\FreeImage\include;..\Dependencies\GLEW\include;..\Dependencies\GLFW\include;..\Dependencies\Glad\include;..\SerializeLib;..\MathLib;..\NetworkLib;..\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -88,8 +88,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freetype_64.lib;glfw3.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x64;D:\Program Files (x86)\Microsoft Visual Studio\VC\Tools\MSVC\14.13.26128\lib\onecore\x64;D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x64;..\Dependencies\FreeImage\lib;..\Dependencies\FreeType\lib;..\Dependencies\GLFW\lib-vc2019_64;..\Dependencies\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype_64.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x64;D:\Program Files (x86)\Microsoft Visual Studio\VC\Tools\MSVC\14.13.26128\lib\onecore\x64;D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x64;..\Dependencies\FreeImage\lib;..\Dependencies\FreeType\lib;..\Dependencies\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;GLEW_STATIC;WIN64;_LIB;_CRT_NONSTDC_NO_DEPRECATE;HRTH_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Dependencies\FreeType\include;..\Dependencies\Cereal\include;..\Dependencies\FreeImage\include;..\Dependencies\GLEW\include;..\Dependencies\GLFW\include;..\SerializeLib;..\MathLib;..\NetworkLib;..\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Dependencies\FreeType\include;..\Dependencies\Cereal\include;..\Dependencies\FreeImage\include;..\Dependencies\GLEW\include;..\Dependencies\GLFW\include;..\Dependencies\Glad\include;..\SerializeLib;..\MathLib;..\NetworkLib;..\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -110,8 +110,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>freetype_64.lib;glfw3.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x64;D:\Program Files (x86)\Microsoft Visual Studio\VC\Tools\MSVC\14.13.26128\lib\onecore\x64;D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x64;..\Dependencies\FreeImage\lib;..\Dependencies\FreeType\lib;..\Dependencies\GLFW\lib-vc2019_64;..\Dependencies\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype_64.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x64;D:\Program Files (x86)\Microsoft Visual Studio\VC\Tools\MSVC\14.13.26128\lib\onecore\x64;D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x64;..\Dependencies\FreeImage\lib;..\Dependencies\FreeType\lib;..\Dependencies\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -119,7 +119,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;GLEW_STATIC;WIN64;_LIB;_CRT_NONSTDC_NO_DEPRECATE;HRTH_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Dependencies\FreeType\include;..\Dependencies\Cereal\include;..\Dependencies\FreeImage\include;..\Dependencies\GLEW\include;..\Dependencies\GLFW\include;..\SerializeLib;..\MathLib;..\NetworkLib;..\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Dependencies\FreeType\include;..\Dependencies\Cereal\include;..\Dependencies\FreeImage\include;..\Dependencies\GLEW\include;..\Dependencies\GLFW\include;..\Dependencies\Glad\include;..\SerializeLib;..\MathLib;..\NetworkLib;..\submodules\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -132,8 +132,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>freetype_64.lib;glfw3.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x64;D:\Program Files (x86)\Microsoft Visual Studio\VC\Tools\MSVC\14.13.26128\lib\onecore\x64;D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x64;..\Dependencies\FreeImage\lib;..\Dependencies\FreeType\lib;..\Dependencies\GLFW\lib-vc2019_64;..\Dependencies\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype_64.lib;glew64s.lib;opengl32.lib;FreeImage64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\um\x64;D:\Program Files (x86)\Microsoft Visual Studio\VC\Tools\MSVC\14.13.26128\lib\onecore\x64;D:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x64;..\Dependencies\FreeImage\lib;..\Dependencies\FreeType\lib;..\Dependencies\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -334,6 +334,12 @@
     <ClCompile Include="src\view\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dependencies\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\MathLib\MathLib.vcxproj">
       <Project>{86BBB515-F29A-34B1-FBB2-BF8767119B12}</Project>
     </ProjectReference>
