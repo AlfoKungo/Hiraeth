@@ -41,9 +41,9 @@ namespace hiraeth {
 			MapHolder()
 				: mob_manager{0}
 			{	throw "Wrong Constructor called";	}
-			ItemDropData addDrop(unsigned int item_type_id, unsigned int item_kind, 
+			ItemDropData addDrop(unsigned int item_type_id, unsigned int item_tab, 
 				maths::vec2 pos);
-			//ItemDropData addEquipDrop(unsigned int item_type_id, unsigned int item_kind,
+			//ItemDropData addEquipDrop(unsigned int item_type_id, unsigned int item_tab,
 			//	maths::vec2 pos, SRL::EquipPropertiesMap equip_info);
 			ItemDropData addDrop(SRL::EquipDbStruct equip_info,
 				maths::vec2 pos);

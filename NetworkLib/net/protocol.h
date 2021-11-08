@@ -113,6 +113,7 @@ namespace hiraeth::network {
 		MSG_CTS_TRADE_ACCEPT,
 		MSG_CTS_TRADE_CANCEL,
 		MSG_CTS_ENTER_PORTAL,
+		MSG_CTS_SHOP_BUY_ITEM,
 
 		//{
 		//	MSG_STC_PICK_ITEMe = 0x51,
@@ -163,7 +164,7 @@ namespace hiraeth::network {
 		MSG_STC_CHANGE_MAP,
 		MSG_STC_PLAYER_LEFT,
 		MSG_STC_SHOP_OPEN,
-		MSG_STC_SHOP_BUY_ITEM,
+		MSG_STC_UPDATE_MONEY,
 
 		//PROTOCOL_CODE
 		MSG_INR_UPDATE_MOB_CMD,
@@ -233,11 +234,11 @@ namespace hiraeth::network {
 	};
 	struct ItemDropData
 	{
-		unsigned int item_id{}, item_type_id{}, item_kind{};
+		unsigned int item_id{}, item_type_id{}, item_tab{};
 		maths::vec2 location;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(item_id), CEREAL_NVP(item_type_id),
-				CEREAL_NVP(item_kind), CEREAL_NVP(location));
+				CEREAL_NVP(item_tab), CEREAL_NVP(location));
 		}
 	};
 	struct MonsterDiedMsg
@@ -342,6 +343,7 @@ namespace hiraeth::network {
 	struct PlayerData
 	{
 		PlayerStats player_stats{};
+		unsigned int money{};
 		std::vector<unsigned int> stats_alloc;
 		std::vector<SkillAlloc> skills_alloc;
 		//std::map<unsigned int, unsigned int> inv_equip;
@@ -355,7 +357,7 @@ namespace hiraeth::network {
 		std::vector<SRL::QuestDBStruct> quests_in_progress;
 		std::vector<unsigned int> quests_done;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(player_stats), CEREAL_NVP(stats_alloc),
+			ar(CEREAL_NVP(player_stats), CEREAL_NVP(money), CEREAL_NVP(stats_alloc),
 				CEREAL_NVP(skills_alloc), CEREAL_NVP(inv_equip),
 				CEREAL_NVP(inv_use), CEREAL_NVP(inv_setup),
 				CEREAL_NVP(inv_etc), CEREAL_NVP(inv_cash),

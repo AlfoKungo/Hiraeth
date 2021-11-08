@@ -3,7 +3,7 @@
 #include "maths/maths.h"
 
 namespace SRL {
-	
+
 	enum EquipItemType
 	{
 		Weapon,
@@ -41,7 +41,7 @@ namespace SRL {
 	enum AnimationState
 	{
 		as_Default,
-		
+
 	};
 
 	enum EquipReqEnum
@@ -62,7 +62,7 @@ namespace SRL {
 				CEREAL_NVP(Wit), CEREAL_NVP(Med), CEREAL_NVP(Job));
 		}
 	};
-	
+
 	using EquipPropertiesMap = std::map<EquipItemDataType, std::variant<int, std::string>>;
 	using EquipPropertiesMapPair = std::pair<EquipItemDataType, std::variant<int, std::string>>;
 
@@ -82,6 +82,14 @@ namespace SRL {
 		}
 
 	};
+	struct RandomStruct
+	{
+		SRL::EquipItemDataType stat_type;
+		unsigned int default, plus_minus;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(stat_type), CEREAL_NVP(default), CEREAL_NVP(plus_minus));
+		}
+	};
 	struct EquipItemInfo
 	{
 		//EquipPropertiesMap equip_item_properties;
@@ -89,9 +97,10 @@ namespace SRL {
 		EquipItemType equip_item_type;
 		//std::map<EquipReqEnum, int> reqs_map;
 		EquipReqsStruct reqs;
+		std::vector<RandomStruct> equip_props;
 		template<class A> void serialize(A& ar) {
 			//ar(CEREAL_NVP(equip_item_properties), CEREAL_NVP(item_info), CEREAL_NVP(equip_item_type));
-			ar(CEREAL_NVP(item_info), CEREAL_NVP(equip_item_type), CEREAL_NVP(reqs));
+			ar(CEREAL_NVP(item_info), CEREAL_NVP(equip_item_type), CEREAL_NVP(reqs), CEREAL_NVP(equip_props));
 		}
 	};
 
@@ -104,14 +113,14 @@ namespace SRL {
 		}
 	};
 
-	using EquipTexturesMap =std::map<AnimationState, EquipTextureData>;
+	using EquipTexturesMap = std::map<AnimationState, EquipTextureData>;
 
 	struct EquipItemData
 	{
 		EquipItemInfo info;
 		TextureData icon_texture;
 		EquipTexturesMap textures;
-		std::map<EquipItemDataType, int> props_map;
+		//std::map<EquipItemDataType, int> props_map;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(info), CEREAL_NVP(icon_texture), CEREAL_NVP(textures));
 			//CEREAL_NVP(reqs_map), CEREAL_NVP(props_map));

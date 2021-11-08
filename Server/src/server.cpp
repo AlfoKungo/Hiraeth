@@ -239,7 +239,7 @@ namespace hiraeth {
 			//	{0, SRL::EquipDbStruct{ 1, {{SRL::AttackPower, 1}, {SRL::StrInc, 2}} }},
 			//	{ 1, SRL::EquipDbStruct{ 2, {{SRL::AttackPower, 3}, {SRL::StrInc, 4}} } },
 			//});
-			//m_DbClient->setByteArray(2, "inv_equip", decltype(PlayerData::inv_equip) {
+			//m_DbClient->setByteArray(1, "inv_equip", decltype(PlayerData::inv_equip) {
 			//	{0, SRL::EquipDbStruct{ 3, {{SRL::AttackPower, 5}, {SRL::StrInc, 6}} }},
 			//	{ 1, SRL::EquipDbStruct{ 4, {{SRL::AttackPower, 7}, {SRL::StrInc, 8}} } },
 			//});

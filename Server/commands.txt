@@ -1,0 +1,5 @@
+username: postgres
+password: 12341234
+
+psql -U postgres
+\c test

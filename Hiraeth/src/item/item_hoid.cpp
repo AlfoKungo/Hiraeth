@@ -8,6 +8,7 @@ namespace hiraeth {
 			SRL::BasicItemInfo item_info, SRL::TextureData item_texture_data)
 			: Sprite(maths::vec2{0}, graphics::TextureManager::Load(item_info.item_name, item_texture_data)),
 			m_State(InAir),
+			m_ItemId{ item_type_id },
 			m_BasicItemInfo(item_info),
 			//m_Id(item_id),
 			//m_TypeId(item_id),

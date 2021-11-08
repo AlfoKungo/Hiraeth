@@ -8,6 +8,7 @@ namespace hiraeth {
 	namespace network {
 			inline const char* STATS_ALLOC = "stats_alloc";
 			inline const char* SKILLS_ALLOC = "skills_alloc";
+			inline const char* MONEY = "money";
 			inline const char* INV_EQUIP = "inv_equip";
 			inline const char* INV_USE = "inv_use";
 			inline const char* INV_SETUP = "inv_setup";
@@ -131,7 +132,8 @@ namespace hiraeth {
 					max_hp = getInt("max_hp"),
 					hp = getInt("hp"),
 					max_mp = getInt("max_mp"),
-					mp = getInt("mp");
+					mp = getInt("mp"),
+					money = getInt(MONEY);
 				std::string player_name{ getString("name") };
 				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>(STATS_ALLOC);
 				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>(SKILLS_ALLOC);
@@ -147,11 +149,37 @@ namespace hiraeth {
 
 				PQclear(m_Res);
 				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp,
-					hp, max_mp, mp}, stats_alloc, skills_alloc , inv_equip, inv_use,
+					hp, max_mp, mp}, money,stats_alloc, skills_alloc , inv_equip, inv_use,
 					inv_setup, inv_etc, inv_cash, equips_char, player_state, quests_in_progress, quests_done};
 				return player_data;
 			}
 
+			
+			unsigned int getInt(unsigned int player_id, const std::string& field)
+			{
+				const char *paramValues[1];
+				std::string id_string{ std::to_string(player_id) };
+				paramValues[0] = id_string.data();
+				std::string sCommand = "SELECT " + field + " FROM players WHERE id = $1";
+
+				m_Res = PQexecParams(m_Conn,
+					sCommand.c_str(),
+					1,       /* one param */
+					NULL,    /* let the backend deduce param type */
+					paramValues,
+					NULL,    /* don't need param lengths since text */
+					NULL,    /* default to all text params */
+					1);      /* ask for binary results */
+
+				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+				{
+					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+				auto dt = getInt(field.c_str());
+				PQclear(m_Res);
+				return dt;
+			}
 			template <class T>
 			T getDynamicType(unsigned int player_id, const std::string& field)
 			{
@@ -428,6 +456,15 @@ namespace hiraeth {
 				quests_in_progress.push_back({ quest_id, 0});
 				setByteArray(player_id, QUESTS_IN_PROGRESS, quests_in_progress);
 			}
+			
+			unsigned int reduceMoney(unsigned int player_id, unsigned int amount_to_reduce)
+			{
+				auto money = getInt(player_id, MONEY);
+				unsigned int new_money = money - amount_to_reduce;
+				setValue(player_id, MONEY, new_money);
+				return new_money;
+
+			}
 
 		private:
 
@@ -441,9 +478,9 @@ namespace hiraeth {
 			{
 				const int column = PQfnumber(m_Res, column_name);
 				char *name = PQgetvalue(m_Res, 0, column);
-				int blen = PQgetlength(m_Res, 0, column);
-				printf(" b = (%d bytes) ", blen);
-				std::cout << name;
+				//int blen = PQgetlength(m_Res, 0, column);
+				//printf(" b = (%d bytes) ", blen);
+				//std::cout << name;
 
 				return std::string{ name };
 			}

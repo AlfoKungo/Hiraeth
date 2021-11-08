@@ -36,7 +36,7 @@ LibDir["GLEW"] = "%{wks.location}/Dependencies/GLEW/lib"
 
 group "Dependencies"
 	include "Dependencies/GLFW"
-	include "Dependencies/Glad"
+	-- include "Dependencies/Glad"
 
 group ""
 	include "MathLib"

@@ -10,6 +10,7 @@ namespace hiraeth {
 		class UiShop : public UiWindow
 		{
 			//std::vector<std::unique_ptr<graphics::Renderable>> m_SellItems;
+			unsigned int m_NpcId{0};
 			std::map<unsigned int, item::ItemHold*> m_SellItems;
 		public:
 			UiShop(maths::vec2 pos)
@@ -38,8 +39,9 @@ namespace hiraeth {
 			virtual void mouse_right_clicked(maths::vec2 mousePos)
 			{
 				auto num = getPosIndexByMouseIndex(mousePos);
+				unsigned int item_id = m_SellItems[num]->getItemId();
 				if (num < m_SellItems.size())
-					NetworkManager::Instance()->sendShopBuyItem(num);
+					NetworkManager::Instance()->sendShopBuyItem(m_NpcId, num, item_id);
 			}
 			virtual void mouse_moved(float mx, float my, maths::vec2 mousePos) 
 			{
@@ -60,27 +62,26 @@ namespace hiraeth {
 					return 10;
 				return line;
 			}
-			void openShop(const std::vector<SRL::MerchantItemSellData>& sell_items)
+			void openShop(unsigned int npc_id, const std::vector<SRL::MerchantItemSellData>& sell_items)
 			{
+				m_NpcId = npc_id;
 				unsigned int i = 0;
 				for (const auto& item_info : sell_items)
 				{
+					ItemHold* item;
 					if (item_info.item_type == network::EQUIP_ITEM)
 					{
-						EquipItem* item = new EquipItem(SRL::EquipDbStruct{}, ItemDataManager::GetEquip(item_info.item_id));
-						item->setPosition(maths::vec2{ 11.0f, 346.0f - 40 * i });
-						m_SellItems.emplace(std::make_pair(i, item));
-						m_ForegroundGroup->add(item);
+						item = new EquipItem(item_info.item_id, ItemDataManager::GetEquip(item_info.item_id));
 					}
 					else
 						if (item_info.item_type == network::USE_ITEM)
 						{
-							ItemHold* item = new UseItem(item_info.item_id,
+							item = new UseItem(item_info.item_id,
 								ItemDataManager::Get(item_info.item_id), 1);
-							item->setPosition(maths::vec2{ 11.0f, 346.0f - 42 * i });
-							m_SellItems.emplace(std::make_pair(i, item));
-							m_ForegroundGroup->add(item);
 						}
+					item->setPosition(maths::vec2{ 11.0f, 346.0f - 42 * i });
+					m_SellItems.emplace(std::make_pair(i, item));
+					m_ForegroundGroup->add(item);
 
 					m_ForegroundGroup->add(new graphics::Label("arial", 14, std::to_string(item_info.price) + " niggas", maths::vec2{ 50.0f, 350.0f - 42 * i }, 0xff000000));
 					i++;

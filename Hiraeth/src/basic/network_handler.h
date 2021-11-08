@@ -40,7 +40,8 @@ namespace hiraeth
 		virtual void sendAcceptTrade() = 0;
 		virtual void sendCancelTrade() = 0;
 		// by ui_shop
-		virtual void sendShopBuyItem(unsigned int item_number) = 0;
+		virtual void sendShopBuyItem(unsigned int npc_id,
+		unsigned int item_number, unsigned int item_id) = 0;
 	};
 	
 	class NetworkManager

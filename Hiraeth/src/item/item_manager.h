@@ -39,8 +39,8 @@ namespace hiraeth {
 			void setEquipsChar(decltype(network::PlayerData::equips_char) equips);
 			//void dropItem(maths::vec2 pos, unsigned int item_id);
 			void dropItem(unsigned int item_id, unsigned int item_type_id, 
-				unsigned int item_kind, maths::vec2 pos, float x_force);
-			void addItemToInv(unsigned int item_kind, unsigned int item_loc, unsigned int item_id); 
+				unsigned int item_tab, maths::vec2 pos, float x_force);
+			void addItemToInv(unsigned int item_tab, unsigned int item_loc, unsigned int item_id); 
 			void addEquipItemToInv(SRL::EquipDbStruct item_info, unsigned int item_loc, unsigned int item_id); 
 			void startExpiring(unsigned int item_id);
 			void mapChanged();

@@ -25,7 +25,7 @@ namespace hiraeth {
 			SRL::BasicItemInfo m_BasicItemInfo;
 			//SRL::ItemType m_ItemType{SRL::ItemType::FaceAcc};
 			//unsigned int m_Id{};
-			unsigned int m_TypeId{};
+			unsigned int m_ItemId{};
 
 		protected:
 			//graphics::Group m_DetailsBox;
@@ -60,7 +60,7 @@ namespace hiraeth {
 			}
 			SRL::ItemTab getTabType() const { return m_BasicItemInfo.type; }
 			std::string getName() const { return m_BasicItemInfo.item_name; }
-			unsigned int getTypeId() const { return m_TypeId; }
+			unsigned int getItemId() const { return m_ItemId; }
 			//SRL::ItemPropertiesMap * getItemProperties() { return &m_ItemInfo.item_properties; }
 		};
 	}

@@ -87,9 +87,9 @@ namespace hiraeth {
 		}
 
 		void ItemManager::dropItem(unsigned int item_id, unsigned int item_type_id,
-			unsigned int item_kind, maths::vec2 pos, float x_force)
+			unsigned int item_tab, maths::vec2 pos, float x_force)
 		{
-			if (item_kind == network::USE_ITEM)
+			if (item_tab == network::USE_ITEM)
 			{
 				const auto item_data = ItemDataManager::Get(item_type_id);
 				ItemDrop* temp = new ItemDrop(pos, item_type_id,
@@ -110,16 +110,16 @@ namespace hiraeth {
 			}
 		}
 
-		void ItemManager::addItemToInv(unsigned int item_kind, unsigned int item_loc, unsigned int item_id)
+		void ItemManager::addItemToInv(unsigned int item_tab, unsigned int item_loc, unsigned int item_id)
 		{
-			//if (item_kind == network::EQUIP_ITEM)
+			//if (item_tab == network::EQUIP_ITEM)
 			//{
 			//	ItemHold* item = new EquipItem(SRL::EquipDbStruct{ item_id, {} },
 			//		ItemDataManager::GetEquip(item_id));
 			//	//m_InventoryItems.push_back(item);
 			//	m_Inventory->addItem(item_loc, item);
 			//}
-			//else if (item_kind == network::USE_ITEM)
+			//else if (item_tab == network::USE_ITEM)
 			//{
 				ItemHold* item = new UseItem(item_id,
 					ItemDataManager::Get(item_id), 1);

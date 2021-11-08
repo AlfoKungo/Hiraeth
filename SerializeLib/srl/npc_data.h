@@ -103,48 +103,6 @@ namespace SRL {
 			ar(CEREAL_NVP(text), CEREAL_NVP(buttons), CEREAL_NVP(text_buttons));
 		}
 	};
-
-	struct NpcUsageDialog
-	{
-		//unsigned int quest_id{}, lvl_required{}, prior_quest_required{};
-		template<class A> void serialize(A& ar) {
-			//ar(CEREAL_NVP(quest_id), CEREAL_NVP(lvl_required), CEREAL_NVP(prior_quest_required));
-		}
-	};
-	struct NpcUsagePq
-	{
-		unsigned int party_members_amount{}, lvl_req_min{}, lvl_req_max{}, pq_map_id{};
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(party_members_amount), CEREAL_NVP(lvl_req_min),
-				CEREAL_NVP(lvl_req_max), CEREAL_NVP(pq_map_id));
-		}
-	};
-	//struct NpcJobAdvancementDataStruct
-	//{
-	//	unsigned int lvl_req{}, job_assignment{};
-	//	template<class A> void serialize(A& ar) {
-	//		ar(CEREAL_NVP(lvl_req), CEREAL_NVP(job_assignment));
-	//	}
-	//};
-	struct MerchantItemSellData
-	{
-		unsigned int item_type{}, item_id{}, price{};
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_type), CEREAL_NVP(item_id), CEREAL_NVP(price));
-		}
-	};
-	struct NpcUsageMerchant
-	{
-		std::vector<MerchantItemSellData> sell_items;
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(sell_items));
-		}
-	};
-	using NpcTypeVariant = std::variant<
-		NpcUsageDialog, 
-		NpcUsagePq,
-		NpcUsageMerchant
-	>;
 	//enum NpcProp
 	//{
 	//	np_Quest, // struct that contains {lvl_required, prior_quests_required, quest_id}
@@ -196,6 +154,7 @@ namespace SRL {
 			CEREAL_NVP(min_lvl), CEREAL_NVP(max_lvl));
 		}
 	};
+
 	using ReqVariant = std::variant<
 		DR_Lvl,
 		DR_ActiveQuest,
@@ -204,6 +163,7 @@ namespace SRL {
 		DR_DontCont,
 		DR_Pq
 	>;
+
 	struct DialogNode
 	{
 		std::vector<DialogStruct> msgs;
@@ -213,18 +173,63 @@ namespace SRL {
 		}
 	};
 
+	struct NpcUsageDialog
+	{
+		std::map<unsigned int, DialogNode> dialog_tree;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(dialog_tree));
+		}
+	};
+	struct NpcUsagePq
+	{	
+
+		std::map<unsigned int, DialogNode> dialog_tree;
+		unsigned int party_members_amount{}, lvl_req_min{}, lvl_req_max{}, pq_map_id{};
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(dialog_tree), 
+				CEREAL_NVP(party_members_amount), CEREAL_NVP(lvl_req_min),
+				CEREAL_NVP(lvl_req_max), CEREAL_NVP(pq_map_id));
+		}
+	};
+	//struct NpcJobAdvancementDataStruct
+	//{
+	//	unsigned int lvl_req{}, job_assignment{};
+	//	template<class A> void serialize(A& ar) {
+	//		ar(CEREAL_NVP(lvl_req), CEREAL_NVP(job_assignment));
+	//	}
+	//};
+	struct MerchantItemSellData
+	{
+		unsigned int item_type{}, item_id{}, price{};
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(item_type), CEREAL_NVP(item_id), CEREAL_NVP(price));
+		}
+	};
+	struct NpcUsageMerchant
+	{
+		std::vector<MerchantItemSellData> sell_items;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(sell_items));
+		}
+	};
+
+	using NpcTypeVariant = std::variant<
+		NpcUsageDialog, 
+		NpcUsagePq,
+		NpcUsageMerchant
+	>;
+
 	struct NpcInfo
 	{
 		std::string npc_name;
 		unsigned int npc_foothold;
 		float npc_x_value;
 		std::vector<std::string> say_lines;
-		//std::vector<std::string> dialog_tree;
-		std::map<unsigned int, DialogNode> dialog_tree;
+		//std::map<unsigned int, DialogNode> dialog_tree;
 		NpcTypeVariant usage_data;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(npc_name), CEREAL_NVP(npc_foothold), CEREAL_NVP(npc_x_value),
-				CEREAL_NVP(say_lines), CEREAL_NVP(dialog_tree), CEREAL_NVP(usage_data));
+				CEREAL_NVP(say_lines), CEREAL_NVP(usage_data));
 		}
 	};
 

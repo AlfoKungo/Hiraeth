@@ -15,11 +15,14 @@ namespace hiraeth {
 		public:
 			SRL::EquipTexturesMap m_Textures;
 
-			//EquipItem(unsigned int equip_id, SRL::EquipItemData item_data)
+			EquipItem(unsigned int equip_id, SRL::EquipItemData item_data)
+				: EquipItem(SRL::EquipDbStruct{equip_id, createDefaultProperties(equip_id)}, item_data)
+			{
+
+			}
 			EquipItem(SRL::EquipDbStruct equip_info, SRL::EquipItemData item_data)
 				//const std::vector<physics::FootHold>& foot_holds, unsigned int item_id)
 				: ItemHold(equip_info.equip_id, item_data.info.item_info, item_data.icon_texture),
-			//m_EquipId(equip_id),
 				//m_EquipPropertiesMap(item_data.info.equip_item_properties),
 				m_EquipPropertiesMap(equip_info.equip_item_properties),
 				m_EquipType(item_data.info.equip_item_type),
@@ -64,7 +67,17 @@ namespace hiraeth {
 			SRL::EquipItemType getItemType() const { return m_EquipType; }
 			//const SRL::EquipPropertiesMap& getProperties() const { return m_EquipPropertiesMap; }
 			SRL::EquipPropertiesMap& getProperties() { return m_EquipPropertiesMap; }
-			//unsigned int getEquipId() { return m_EquipId; }
+			SRL::EquipPropertiesMap createDefaultProperties(unsigned int equip_id)
+			{
+				auto StatsForEquip = SRL::deserial<SRL::EquipItemData>(DF_EQUIP, equip_id).info.equip_props;
+				SRL::EquipPropertiesMap props{};
+				for (auto [stat_type, default, _plus_minus] : StatsForEquip)
+				{
+					auto val = default;
+					props.emplace(stat_type, val);
+				}
+				return props;
+			}
 
 		};
 	}

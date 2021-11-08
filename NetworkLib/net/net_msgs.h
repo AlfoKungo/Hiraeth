@@ -78,11 +78,18 @@ namespace hiraeth::network {
 		}
 	};
 
+	struct MsgStcUpateMoney
+	{
+		unsigned int new_money{};
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(new_money));
+		}
+	};
 	struct AddItemMsg
 	{
-		unsigned int item_kind{}, item_loc{}, item_id{};
+		unsigned int item_tab{}, item_loc{}, item_id{};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_kind), CEREAL_NVP(item_loc), CEREAL_NVP(item_id));
+			ar(CEREAL_NVP(item_tab), CEREAL_NVP(item_loc), CEREAL_NVP(item_id));
 		}
 	};
 	struct AddEquipItemMsg
@@ -95,18 +102,18 @@ namespace hiraeth::network {
 	};
 	struct MsgCtsDropItem
 	{
-		unsigned int item_kind{}, item_type_id{}, item_id{};
+		unsigned int item_tab{}, item_type_id{}, item_id{};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_kind), CEREAL_NVP(item_type_id),
+			ar(CEREAL_NVP(item_tab), CEREAL_NVP(item_type_id),
 				CEREAL_NVP(item_id));
 		}
 	};
 	struct MsgStcDropItem
 	{
-		unsigned int item_kind{}, item_type_id{}, item_id{};
+		unsigned int item_tab{}, item_type_id{}, item_id{};
 		maths::vec2 pos{};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_kind), CEREAL_NVP(item_type_id),
+			ar(CEREAL_NVP(item_tab), CEREAL_NVP(item_type_id),
 				CEREAL_NVP(item_id), CEREAL_NVP(pos));
 		}
 	};
@@ -222,16 +229,17 @@ namespace hiraeth::network {
 
 	struct MsgStcShopOpen
 	{
+		unsigned int npc_id;
 		std::vector<SRL::MerchantItemSellData> sell_items;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(sell_items));
+			ar(CEREAL_NVP(npc_id), CEREAL_NVP(sell_items));
 		}
 	};
 	struct MsgCtsShopBuyItem
 	{
-		unsigned int item_num;
+		unsigned int npc_id, item_num, item_id;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(item_num));
+			ar(CEREAL_NVP(npc_id), CEREAL_NVP(item_num), CEREAL_NVP(item_id));
 		}
 	};
 }

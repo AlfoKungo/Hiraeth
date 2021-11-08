@@ -144,6 +144,7 @@ namespace hiraeth {
 			void change_map(unsigned int map_id);
 			void recvPlayerLeft();
 			void recvShopOpen();
+			void recvUpdateMoney();
 		public:
 			void sendAck(unsigned int ack_id);
 			void sendAttackPacket(MonsterHit monster_damage) override;
@@ -169,7 +170,8 @@ namespace hiraeth {
 			void sendAddItemToTradeBox(unsigned int tab_index, unsigned int inventory_index, unsigned int trade_index) override;
 			void sendAcceptTrade() override;
 			void sendCancelTrade() override;
-			void sendShopBuyItem(unsigned int item_number) override;
+			void sendShopBuyItem(unsigned int npc_id,
+		unsigned int item_number, unsigned int item_id) override;
 			PlayerData getPlayerData() const { return m_PlayerData; }
 		};
 	}

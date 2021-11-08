@@ -15,9 +15,10 @@ namespace Checks
 				//	{SRL::EquipItemDataType::IntInc, 15},
 				//	{SRL::EquipItemDataType::LukInc, 15},
 				//},
-				{"Staff", SRL::Equip, "Gives Magic Damage"}, 
-				SRL::EquipItemType::Weapon, 
-				{5, 0, 10, 0,0,0,0}
+				{"Staff", SRL::Equip, "Gives Magic Damage"},
+				SRL::EquipItemType::Weapon,
+				{5, 0, 10, 0,0,0,0},
+				{{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }
 			};
 			std::ofstream data_file("data/" + SRL_TYPE + "/0/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
@@ -32,7 +33,8 @@ namespace Checks
 				//},
 				{"Dagger", SRL::Equip, "Gives Attack Damage"},
 				SRL::EquipItemType::Weapon,
-				{5, 0, 10, 0,0,0,0}
+				{5, 0, 10, 0,0,0,0},
+				{{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }
 			};
 			std::ofstream data_file("data/" + SRL_TYPE + "/1/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
@@ -44,7 +46,10 @@ namespace Checks
 				//	{SRL::EquipItemDataType::DexInc, 15},
 				//},
 				{"Chief Hat", SRL::Equip, "Gives Swag"},
-				SRL::EquipItemType::Hat};
+				SRL::EquipItemType::Hat,
+				{},
+				{{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }
+			};
 			std::ofstream data_file("data/" + SRL_TYPE + "/2/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
@@ -55,7 +60,10 @@ namespace Checks
 				//	{SRL::EquipItemDataType::LukInc, 15},
 				//},
 				{"Robe", SRL::Equip, "Gives Extra SWAGGG"}, 
-				SRL::EquipItemType::Top};
+				SRL::EquipItemType::Top,
+				{},
+				{{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }
+			};
 			std::ofstream data_file("data/" + SRL_TYPE + "/3/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
@@ -66,7 +74,10 @@ namespace Checks
 				//	{SRL::EquipItemDataType::DexInc, 15},
 				//},
 				{"Zakum Hat", SRL::Equip, "Gives Swag"},
-				SRL::EquipItemType::Hat};
+				SRL::EquipItemType::Hat,
+				{},
+				{{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }
+			};
 			std::ofstream data_file("data/" + SRL_TYPE + "/4/data.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));

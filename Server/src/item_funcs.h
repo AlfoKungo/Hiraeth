@@ -29,6 +29,7 @@ namespace hiraeth {
 			MoneyRangeStruct money_range;
 			float percent;
 		};
+		// move to data inside monster
 		static std::map<unsigned int, DropStruct> DropsPerMob{
 		{0, {DropType_multiple, {{0,1,2}, 0.1f}, {{0,1,2}, 0.5f},{{0,1,2}, 0.5f}, {10, 10}, 0.5f} },
 		{1, {DropType_multiple, {{0,1,2}, 0.1f}, {{0,1,2}, 0.5f},{{0,1,2}, 0.5f}, {10, 10}, 0.5f}},
@@ -71,25 +72,32 @@ namespace hiraeth {
 				}
 			return make_tuple(std::vector<unsigned int> {}, std::vector<unsigned int> {}, std::vector<unsigned int> {}, 0);
 		}
-		struct RandomStruct
-		{
-			SRL::EquipItemDataType stat_type;
-			unsigned int min, max;
-		};
-		static std::map<unsigned int, std::vector<RandomStruct>> RandomStatsForEquips{
-		{0, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
-		{1, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
-		{2, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
-		{3, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }},
-		{4, {{SRL::AttackPower, 10, 20}, {SRL::StrInc, 7,10} }}
-		};
+		//static std::map<unsigned int, std::vector<SRL::RandomStruct>> RandomStatsForEquips{
+		//{0, {{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }},
+		//{1, {{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }},
+		//{2, {{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }},
+		//{3, {{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }},
+		//{4, {{SRL::AttackPower, 10, 3}, {SRL::StrInc, 7,2} }}
+		//};
 		static SRL::EquipPropertiesMap RandomizeEquipStats(unsigned int equip_type_id)
 		{
+			auto StatsForEquip = SRL::deserial<SRL::EquipItemData>(DF_EQUIP, equip_type_id).info.equip_props;
 			SRL::EquipPropertiesMap props{};
-			for (auto [stat_type, min, max] : RandomStatsForEquips[equip_type_id])
+			for (auto [stat_type, default, plus_minus] : StatsForEquip)
 			{
-				auto range = max - min;
-				auto val = min + rand() % range;
+				auto range = plus_minus*2;
+				auto val = default + rand() % range - plus_minus;
+				props.emplace(stat_type, val);
+			}
+			return props;
+		}
+		static SRL::EquipPropertiesMap CreateBasicEquip(unsigned int equip_type_id)
+		{
+			auto StatsForEquip = SRL::deserial<SRL::EquipItemData>(DF_EQUIP, equip_type_id).info.equip_props;
+			SRL::EquipPropertiesMap props{};
+			for (auto [stat_type, default, plus_minus] : StatsForEquip)
+			{
+				auto val = default;
 				props.emplace(stat_type, val);
 			}
 			return props;

@@ -142,6 +142,7 @@ int main()
 	itemManager.setEquipsChar(clientHandler.getPlayerData().equips_char);
 	std::vector<unsigned int> aval{ 0,1,2 };
 	uiManager.getUiQuests()->setQuestsTab(aval, SRL::QuestTab::Available);
+	uiManager.getUiInventory()->setMoney(clientHandler.getPlayerData().money);
 	for (auto [active_quest_id, quest_stage] : clientHandler.getPlayerData().quests_in_progress)
 		uiManager.getUiQuests()->setQuestAsActive(active_quest_id);
 	//uiManager.getUiQuests()->setQuestsInProgress(clientHandler.getPlayerData().quests_in_progress, SRL::QuestTab::InProgress);
@@ -149,55 +150,55 @@ int main()
 	skillManager.setJobAndLoadSkills(clientHandler.getPlayerData().player_stats.job, clientHandler.getPlayerData().skills_alloc);
 	Char.loadSkillsToKeys();
 
-	std::thread nigga{ [&]() {
-	while (true)
-	{
-		//window.clear();
-		//double x, y;
-		//window.getKeyboard()->getMousePosition(x, y);
-		//auto mouse_pos = window.getKeyboard()->getMousePosition();
-		//std::string s = "my name is : " + std::to_string(Char.getBounds().x) + ", " +
-		//	std::to_string(Char.getBounds().y) + ", " + std::to_string(Char.getBounds().width) + ", " +
-		//	std::to_string(Char.getBounds().height) + "; " + std::to_string(mouse_pos.x) + "," + std::to_string(mouse_pos.y);
-		//window.setTitle(s.c_str());
-		//Camera::update();
-		//map.update();
-		//monsterManager.update();
-		//skillManager.update();
-		//npcManager.update();
-		//m_CrLayer.update();
-		//itemManager.update();
-		//uiManager.update();
-		//clientHandler.Update(network::PlayerStateUpdateMsg{ Char.getPosition(), Char.getForce() , Char.getDirection()});
-		//netCharManager.update();
-
-		////draw
-		//map.draw();
-		//npcManager.draw();
-		//monsterManager.draw();
-		//skillManager.draw();
-		//netCharManager.draw();
-		//m_CrLayer.render();
-		//itemManager.draw();
-		//uiManager.draw();
-		//window.update();
-
-		++frames;
-		if (StaticTimer::timer.elapsed() - timer > 1.0f)
-		{
-			timer += 1.0f;
-			//printf("%d fps, %f frame time\n", frames, 1.0 / frames);
-			frames = 0;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(16 ));
-		//using namespace std::literals;
-		//auto now = std::chrono::system_clock::now();
-		//std::this_thread::sleep_until(now + 1ms);
-   }
-   } };
+//	std::thread nigga{ [&]() {
+//	while (true)
+//	{
+//		//window.clear();
+//		//double x, y;
+//		//window.getKeyboard()->getMousePosition(x, y);
+//		//auto mouse_pos = window.getKeyboard()->getMousePosition();
+//		//std::string s = "my name is : " + std::to_string(Char.getBounds().x) + ", " +
+//		//	std::to_string(Char.getBounds().y) + ", " + std::to_string(Char.getBounds().width) + ", " +
+//		//	std::to_string(Char.getBounds().height) + "; " + std::to_string(mouse_pos.x) + "," + std::to_string(mouse_pos.y);
+//		//window.setTitle(s.c_str());
+//		//Camera::update();
+//		//map.update();
+//		//monsterManager.update();
+//		//skillManager.update();
+//		//npcManager.update();
+//		//m_CrLayer.update();
+//		//itemManager.update();
+//		//uiManager.update();
+//		//clientHandler.Update(network::PlayerStateUpdateMsg{ Char.getPosition(), Char.getForce() , Char.getDirection()});
+//		//netCharManager.update();
+//
+//		////draw
+//		//map.draw();
+//		//npcManager.draw();
+//		//monsterManager.draw();
+//		//skillManager.draw();
+//		//netCharManager.draw();
+//		//m_CrLayer.render();
+//		//itemManager.draw();
+//		//uiManager.draw();
+//		//window.update();
+//
+//		++frames;
+//		if (StaticTimer::timer.elapsed() - timer > 1.0f)
+//		{
+//			timer += 1.0f;
+//			//printf("%d fps, %f frame time\n", frames, 1.0 / frames);
+//			frames = 0;
+//		}
+//		std::this_thread::sleep_for(std::chrono::milliseconds(16 ));
+//		//using namespace std::literals;
+//		//auto now = std::chrono::system_clock::now();
+//		//std::this_thread::sleep_until(now + 1ms);
+//   }
+//   } };
 
 	while (!window.closed())
-	{
+    {
 		//update
 		window.clear();
 		double x, y;

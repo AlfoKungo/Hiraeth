@@ -2,13 +2,13 @@
 
 namespace hiraeth {
 	namespace network {
-		ItemDropData MapHolder::addDrop(unsigned int item_type_id, unsigned int item_kind,
+		ItemDropData MapHolder::addDrop(unsigned int item_type_id, unsigned int item_tab,
 			maths::vec2 pos)
 		{
-			if (item_kind == network::EQUIP_ITEM)
+			if (item_tab == network::EQUIP_ITEM)
 				return addDrop({ item_type_id, RandomizeEquipStats(item_type_id) }, pos);
 
-			auto new_item = ItemDropData{ m_ItemsIdCounter ,item_type_id, item_kind, pos };
+			auto new_item = ItemDropData{ m_ItemsIdCounter ,item_type_id, item_tab, pos };
 			items_dropped[m_ItemsIdCounter] = new_item;
 			m_ExpiringQueue.push(ItemExpirer{ m_ItemsIdCounter, ATimer{ EXPIRE_TIME } });
 			m_ItemsIdCounter++;

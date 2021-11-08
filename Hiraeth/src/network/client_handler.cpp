@@ -100,6 +100,7 @@ namespace hiraeth::network {
 		bindFunctionToChar(MSG_STC_TRADE_CANCEL, &ClientHandler::recvTradeCancel);
 		bindFunctionToChar(MSG_STC_PLAYER_LEFT, &ClientHandler::recvPlayerLeft);
 		bindFunctionToChar(MSG_STC_SHOP_OPEN, &ClientHandler::recvShopOpen);
+		bindFunctionToChar(MSG_STC_UPDATE_MONEY, &ClientHandler::recvUpdateMoney);
 
 		//EventManager *m_EventManager = EventManager::Instance();
 		//m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
@@ -282,7 +283,7 @@ namespace hiraeth::network {
 		for (const auto& item : monster_died_msg.dropped_items)
 		{
 			m_ItemManager->dropItem(item.item_id, item.item_type_id,
-				item.item_kind, item.location, x);
+				item.item_tab, item.location, x);
 			x += 1.5f;
 		}
 	}
@@ -332,7 +333,7 @@ namespace hiraeth::network {
 	{
 		const auto item_drop_msg = dsrl_type<MsgStcDropItem>(m_RcvBuffer + 1);
 		m_ItemManager->dropItem(item_drop_msg.item_id, item_drop_msg.item_type_id,
-			item_drop_msg.item_kind, item_drop_msg.pos, 0.0f);
+			item_drop_msg.item_tab, item_drop_msg.pos, 0.0f);
 	}
 
 	void ClientHandler::recvDroppedItem()
@@ -341,7 +342,7 @@ namespace hiraeth::network {
 		const auto dropped_items = dsrl_dynamic_type<std::vector<ItemDropData>>(m_RcvBuffer + 1);
 		for (const auto& item : dropped_items)
 			m_ItemManager->dropItem(item.item_id, item.item_type_id,
-				item.item_kind, item.location, 0.0f);
+				item.item_tab, item.location, 0.0f);
 	}
 
 	void ClientHandler::recvExpireItem()
@@ -349,13 +350,13 @@ namespace hiraeth::network {
 		const auto expired_item_id = dsrl_type<unsigned int>(m_RcvBuffer + 1);
 		m_ItemManager->startExpiring(expired_item_id);
 		//for (const auto& item : dropped_items)
-		//	m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_kind, item.location);
+		//	m_ItemManager->dropItem(item.item_id, item.item_type_id, item.item_tab, item.location);
 	}
 
 	void ClientHandler::recvAddItem()
 	{
-		const auto [item_kind, item_loc, item_id] = dsrl_type<AddItemMsg>(m_RcvBuffer + 1);
-		m_ItemManager->addItemToInv(item_kind, item_loc, item_id);
+		const auto [item_tab, item_loc, item_id] = dsrl_type<AddItemMsg>(m_RcvBuffer + 1);
+		m_ItemManager->addItemToInv(item_tab, item_loc, item_id);
 	}
 
 	void ClientHandler::recvAddEquipItem()
@@ -474,7 +475,12 @@ namespace hiraeth::network {
 	void ClientHandler::recvShopOpen()
 	{
 		const auto msg = dsrl_dynamic_type<MsgStcShopOpen>(m_RcvBuffer + 1);
-		m_UiManager->getUiShop()->openShop(msg.sell_items);
+		m_UiManager->getUiShop()->openShop(msg.npc_id, msg.sell_items);
+	}
+	void ClientHandler::recvUpdateMoney()
+	{
+		const auto msg = dsrl_type<MsgStcUpateMoney>(m_RcvBuffer + 1);
+		m_UiManager->getUiInventory()->setMoney(msg.new_money);
 	}
 
 	void ClientHandler::sendAck(unsigned int ack_id)
@@ -628,8 +634,9 @@ namespace hiraeth::network {
 	{
 		Send(MSG_CTS_TRADE_CANCEL);
 	}
-	void ClientHandler::sendShopBuyItem(unsigned int item_number)
+	void ClientHandler::sendShopBuyItem(unsigned int npc_id,
+		unsigned int item_number, unsigned int item_id)
 	{
-		Send(MSG_STC_SHOP_BUY_ITEM, MsgCtsShopBuyItem{ item_number });
+		Send(MSG_CTS_SHOP_BUY_ITEM, MsgCtsShopBuyItem{ npc_id, item_number, item_id });
 	}
 }

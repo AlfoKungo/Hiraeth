@@ -24,6 +24,9 @@ namespace hiraeth {
 			}
 			m_BackgroundGroup->add(m_Tabs);
 
+			m_MoneyLabel = new graphics::Label("arial", 14, 0, maths::vec2{ 95.0f,35.0f }, 0xff000000);
+			m_ForegroundGroup->add(m_MoneyLabel);
+
 			//EventManager *m_EventManager = EventManager::Instance();
 			//m_EventManager->createEvent<unsigned int, unsigned int, unsigned int>(SwitchInventoryItems);
 		}

@@ -18,7 +18,8 @@ namespace SRL
 					0,
 					-200.0,
 					{"Hey, care for some CDs nigga?", "May I interest you in\nsome Kanye?"},
-				{
+					//NpcQuestDataStruct{0, 10, 0}
+					NpcUsageDialog{{
 						{0,
 						DialogNode{{{"They tryna find TuPaC",{{DialogButton::Next}}},
 							{"Don't let them find tupac",{{DialogButton::Next}}},
@@ -34,9 +35,7 @@ namespace SRL
 					{4,
 						DialogNode{{{"Get outa my sight you fucking nigger",{{DialogButton::Ok}}}},{DR_DontCont{}} }
 					}
-				},
-					//NpcQuestDataStruct{0, 10, 0}
-					NpcUsageDialog{}
+				}}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/0/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);
@@ -50,7 +49,7 @@ namespace SRL
 					0,
 					-100.0,
 					{"I got an interesting offer for you", "This mission is not an easy one"},
-				{
+					NpcUsagePq{{
 					{0,
 					{{{"They tryna find TuPaC",{{DialogButton::Next}}},
 						{"Don't let them find tupac",{{DialogButton::Next}}},
@@ -63,8 +62,7 @@ namespace SRL
 					{{{"Aight you cool\nthere's you money",{{DialogButton::ReceiveReward}}}}}},
 				{3,
 					{{{"Aight you cool\nthere's you money",{{DialogButton::Next}}}}}}
-				},
-					NpcUsagePq{2,2, 10,2 }
+				},2,2, 10,2 }
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/1/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);
@@ -76,19 +74,6 @@ namespace SRL
 					0,
 					0.0,
 					{"It's sunny today isn't it", "Summer madness"},
-				{
-				//	{0,
-				//	{{{"They tryna find TuPaC",{{DialogButton::Next}}},
-				//		{"Don't let them find tupac",{{DialogButton::Next}}},
-				//		//{"La da da da",{2,1}}}}
-				//		{"La da da da",{{DialogButton::Cancel},{DialogButton::Accept}}}}}},
-				//{1,
-				//	{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}}},
-				//{2,
-				//	{{{"Aight you cool\n there's you money",{{DialogButton::ReceiveReward}}}}}},
-				//{3,
-				//	{{{"Aight you cool\n there's you money",{{DialogButton::Next}}}}}}
-				},
 					NpcUsageMerchant{{{0,0, 100}, {0,1, 250}, {1,1, 150}, {1,2, 400}}}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/2/data.json", std::ios::out);
@@ -101,7 +86,8 @@ namespace SRL
 					0,
 					100.0,
 					{"Too easy isn't it?", "Oh yeah"},
-				{
+					//NpcJobAdvancementDataStruct{0, 2}
+					NpcUsageDialog{{
 					{0,
 					{{{"They tryna find TuPaC",{{DialogButton::Next}}},
 						{"Don't let them find tupac",{{DialogButton::Next}}},
@@ -114,9 +100,7 @@ namespace SRL
 						{DialogButton::ReceiveReward}}}}}},
 				{3,
 					{{{"Aight you cool\nthere's you money",{{DialogButton::Next}}}}}}
-				},
-					//NpcJobAdvancementDataStruct{0, 2}
-					NpcUsageDialog{}
+				}}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/3/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);
@@ -128,7 +112,7 @@ namespace SRL
 					0,
 					200.0,
 					{"Can take you anywhere", "just say it"},
-				{
+				NpcUsageDialog{{
 					{0,
 					{{{"Got Anywhere you wanna go?",{{DialogButton::Next}}},
 					//	{"Choose a destination\nhelenia for 50 bucks\ntamopolis for 55 bucks",
@@ -145,8 +129,7 @@ namespace SRL
 				{{{"Tell Malcolm I'll come over next time",{{DialogButton::Ok, DAChangeMap{2}}}}}}},
 			{3,
 				{{{"See ya around than,\nhave fun",{{DialogButton::Ok}}}}, {}}}
-			},
-				NpcUsageDialog{}
+			}}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/4/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);

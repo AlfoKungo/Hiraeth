@@ -25,7 +25,10 @@ namespace hiraeth {
 			game::CharacterStats* m_CharacterStats;
 			maths::Rectangle* m_UiTradeRec;
 			maths::Rectangle* m_UiEquipRec;
+			graphics::Label* m_MoneyLabel;
 
+			unsigned int m_Money{0};
+			
 			maths::vec2 * m_UiTradePos;
 			bool * m_IsTradeAble;
 			//maths::vec2 m_OldItemPos;
@@ -57,6 +60,11 @@ namespace hiraeth {
 			{
 				m_UiTradePos = pos;
 				m_IsTradeAble = is_trading;
+			}
+			void setMoney(unsigned int money)
+			{
+				m_Money = money;
+				m_MoneyLabel->setText(money);
 			}
 		private:
 			//std::pair<unsigned int, std::unique_ptr<item::Item>> getItemPair(maths::vec2 mouse_pos);

@@ -7,205 +7,206 @@
             "Hey, care for some CDs nigga?",
             "May I interest you in\nsome Kanye?"
         ],
-        "dialog_tree": [
-            {
-                "key": 0,
-                "value": {
-                    "msgs": [
-                        {
-                            "text": "They tryna find TuPaC",
-                            "buttons": [
-                                {
-                                    "button": 0,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        },
-                        {
-                            "text": "Don't let them find tupac",
-                            "buttons": [
-                                {
-                                    "button": 0,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        },
-                        {
-                            "text": "La da da da",
-                            "buttons": [
-                                {
-                                    "button": 0,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        }
-                    ],
-                    "reqs": []
-                }
-            },
-            {
-                "key": 1,
-                "value": {
-                    "msgs": [
-                        {
-                            "text": "I have a small request",
-                            "buttons": [
-                                {
-                                    "button": 0,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        },
-                        {
-                            "text": "I need you to kill me some monsters",
-                            "buttons": [
-                                {
-                                    "button": 0,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        },
-                        {
-                            "text": "1 slime, 1 shroom, easy isn't it?",
-                            "buttons": [
-                                {
-                                    "button": 2,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                },
-                                {
-                                    "button": 1,
-                                    "action": {
-                                        "index": 1,
-                                        "data": {
-                                            "quest_id": 0
-                                        }
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        }
-                    ],
-                    "reqs": [
-                        {
-                            "index": 0,
-                            "data": {
-                                "min_lvl": 5
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "key": 2,
-                "value": {
-                    "msgs": [
-                        {
-                            "text": "I'm waiting for it you bitch ass nigga",
-                            "buttons": [
-                                {
-                                    "button": 0,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        }
-                    ],
-                    "reqs": [
-                        {
-                            "index": 1,
-                            "data": {
-                                "active_quest_id": 0
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "key": 3,
-                "value": {
-                    "msgs": [
-                        {
-                            "text": "Aight you cool\n there's you money",
-                            "buttons": [
-                                {
-                                    "button": 4,
-                                    "action": {
-                                        "index": 2,
-                                        "data": {
-                                            "quest_id": 0
-                                        }
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        }
-                    ],
-                    "reqs": [
-                        {
-                            "index": 2,
-                            "data": {
-                                "quest_id": 0
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "key": 4,
-                "value": {
-                    "msgs": [
-                        {
-                            "text": "Get outa my sight you fucking nigger",
-                            "buttons": [
-                                {
-                                    "button": 3,
-                                    "action": {
-                                        "index": 0,
-                                        "data": {}
-                                    }
-                                }
-                            ],
-                            "text_buttons": []
-                        }
-                    ],
-                    "reqs": [
-                        {
-                            "index": 4,
-                            "data": {}
-                        }
-                    ]
-                }
-            }
-        ],
         "usage_data": {
             "index": 0,
-            "data": {}
+            "data": {
+                "dialog_tree": [
+                    {
+                        "key": 0,
+                        "value": {
+                            "msgs": [
+                                {
+                                    "text": "They tryna find TuPaC",
+                                    "buttons": [
+                                        {
+                                            "button": 0,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                },
+                                {
+                                    "text": "Don't let them find tupac",
+                                    "buttons": [
+                                        {
+                                            "button": 0,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                },
+                                {
+                                    "text": "La da da da",
+                                    "buttons": [
+                                        {
+                                            "button": 0,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                }
+                            ],
+                            "reqs": []
+                        }
+                    },
+                    {
+                        "key": 1,
+                        "value": {
+                            "msgs": [
+                                {
+                                    "text": "I have a small request",
+                                    "buttons": [
+                                        {
+                                            "button": 0,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                },
+                                {
+                                    "text": "I need you to kill me some monsters",
+                                    "buttons": [
+                                        {
+                                            "button": 0,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                },
+                                {
+                                    "text": "1 slime, 1 shroom, easy isn't it?",
+                                    "buttons": [
+                                        {
+                                            "button": 2,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        },
+                                        {
+                                            "button": 1,
+                                            "action": {
+                                                "index": 1,
+                                                "data": {
+                                                    "quest_id": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                }
+                            ],
+                            "reqs": [
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "min_lvl": 5
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "key": 2,
+                        "value": {
+                            "msgs": [
+                                {
+                                    "text": "I'm waiting for it you bitch ass nigga",
+                                    "buttons": [
+                                        {
+                                            "button": 0,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                }
+                            ],
+                            "reqs": [
+                                {
+                                    "index": 1,
+                                    "data": {
+                                        "active_quest_id": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "key": 3,
+                        "value": {
+                            "msgs": [
+                                {
+                                    "text": "Aight you cool\n there's you money",
+                                    "buttons": [
+                                        {
+                                            "button": 4,
+                                            "action": {
+                                                "index": 2,
+                                                "data": {
+                                                    "quest_id": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                }
+                            ],
+                            "reqs": [
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "quest_id": 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "key": 4,
+                        "value": {
+                            "msgs": [
+                                {
+                                    "text": "Get outa my sight you fucking nigger",
+                                    "buttons": [
+                                        {
+                                            "button": 3,
+                                            "action": {
+                                                "index": 0,
+                                                "data": {}
+                                            }
+                                        }
+                                    ],
+                                    "text_buttons": []
+                                }
+                            ],
+                            "reqs": [
+                                {
+                                    "index": 4,
+                                    "data": {}
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
         }
     }
 }
