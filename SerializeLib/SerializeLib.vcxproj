@@ -146,6 +146,7 @@
     <ClInclude Include="srl\deserial.h" />
     <ClInclude Include="srl\equip_item_data.h" />
     <ClInclude Include="srl\item_data.h" />
+    <ClInclude Include="srl\job_data.h" />
     <ClInclude Include="srl\map_data.h" />
     <ClInclude Include="srl\monster_data.h" />
     <ClInclude Include="srl\npc_data.h" />

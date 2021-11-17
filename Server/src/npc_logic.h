@@ -12,6 +12,7 @@ namespace hiraeth::network {
 		const decltype(PlayerHoldState::active_kill_quests)& active_quests, 
 		const decltype(PlayerHoldState::fulfilled_quests)& fulfilled_quests)
 	{
+		//bool return_val = true;
 		for (const auto& req : reqs)
 		{
 			if (!std::visit(overloaded{
@@ -34,6 +35,10 @@ namespace hiraeth::network {
 			{
 				return false;
 			},
+				[&](SRL::DR_JobRequirements data)
+			{
+				return data.req_job_id == player_stats.job;
+			},
 				[&](SRL::DR_DontCont data)
 			{
 				return false;
@@ -48,6 +53,11 @@ namespace hiraeth::network {
 		}
 		return true;
 	}
+
+
+
+	
+
 	//template <typename T, typename... Args>
 	//struct is_one_of :
 	//	std::disjunction<std::is_same<std::decay_t<T>, Args>...> {};

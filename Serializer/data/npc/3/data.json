@@ -7,129 +7,135 @@
             "Too easy isn't it?",
             "Oh yeah"
         ],
+        "dialog_tree": [
+            {
+                "key": 0,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "I'm just hanging",
+                            "buttons": [
+                                {
+                                    "button": 3,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": []
+                }
+            },
+            {
+                "key": 1,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "They tryna find TuPaC",
+                            "buttons": [
+                                {
+                                    "button": 2,
+                                    "action": {
+                                        "index": 0,
+                                        "data": {}
+                                    }
+                                }
+                            ],
+                            "text_buttons": [
+                                {
+                                    "text": "Breserker",
+                                    "action": {
+                                        "index": 3,
+                                        "data": {
+                                            "next_map": 2
+                                        }
+                                    }
+                                },
+                                {
+                                    "text": "Rogue",
+                                    "action": {
+                                        "index": 3,
+                                        "data": {
+                                            "next_map": 3
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "reqs": [
+                        {
+                            "index": 4,
+                            "data": {
+                                "req_job_id": 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "key": 2,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "You a Berserker now",
+                            "buttons": [
+                                {
+                                    "button": 3,
+                                    "action": {
+                                        "index": 5,
+                                        "data": {
+                                            "job_id": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": [
+                        {
+                            "index": 5,
+                            "data": {}
+                        }
+                    ]
+                }
+            },
+            {
+                "key": 3,
+                "value": {
+                    "msgs": [
+                        {
+                            "text": "You a Rogue now",
+                            "buttons": [
+                                {
+                                    "button": 3,
+                                    "action": {
+                                        "index": 5,
+                                        "data": {
+                                            "job_id": 4
+                                        }
+                                    }
+                                }
+                            ],
+                            "text_buttons": []
+                        }
+                    ],
+                    "reqs": [
+                        {
+                            "index": 5,
+                            "data": {}
+                        }
+                    ]
+                }
+            }
+        ],
         "usage_data": {
             "index": 0,
-            "data": {
-                "dialog_tree": [
-                    {
-                        "key": 0,
-                        "value": {
-                            "msgs": [
-                                {
-                                    "text": "They tryna find TuPaC",
-                                    "buttons": [
-                                        {
-                                            "button": 0,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        }
-                                    ],
-                                    "text_buttons": []
-                                },
-                                {
-                                    "text": "Don't let them find tupac",
-                                    "buttons": [
-                                        {
-                                            "button": 0,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        }
-                                    ],
-                                    "text_buttons": []
-                                },
-                                {
-                                    "text": "La da da da",
-                                    "buttons": [
-                                        {
-                                            "button": 2,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        },
-                                        {
-                                            "button": 1,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        }
-                                    ],
-                                    "text_buttons": []
-                                }
-                            ],
-                            "reqs": []
-                        }
-                    },
-                    {
-                        "key": 1,
-                        "value": {
-                            "msgs": [
-                                {
-                                    "text": "I'm waiting for it you bitch ass nigga",
-                                    "buttons": [
-                                        {
-                                            "button": 0,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        }
-                                    ],
-                                    "text_buttons": []
-                                }
-                            ],
-                            "reqs": []
-                        }
-                    },
-                    {
-                        "key": 2,
-                        "value": {
-                            "msgs": [
-                                {
-                                    "text": "Aight you cool\nthere's you money",
-                                    "buttons": [
-                                        {
-                                            "button": 4,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        }
-                                    ],
-                                    "text_buttons": []
-                                }
-                            ],
-                            "reqs": []
-                        }
-                    },
-                    {
-                        "key": 3,
-                        "value": {
-                            "msgs": [
-                                {
-                                    "text": "Aight you cool\nthere's you money",
-                                    "buttons": [
-                                        {
-                                            "button": 0,
-                                            "action": {
-                                                "index": 0,
-                                                "data": {}
-                                            }
-                                        }
-                                    ],
-                                    "text_buttons": []
-                                }
-                            ],
-                            "reqs": []
-                        }
-                    }
-                ]
-            }
+            "data": {}
         }
     }
 }

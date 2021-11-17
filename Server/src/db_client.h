@@ -6,9 +6,17 @@
 
 namespace hiraeth {
 	namespace network {
+			inline const char* ID = "id";
+			inline const char* NAME = "name";
+			inline const char* LEVEL = "level";
+			inline const char* JOB = "job";
+			inline const char* MAX_HP = "max_hp";
+			inline const char* HP = "hp";
+			inline const char* MAX_MP = "max_mp";
+			inline const char* MP = "max_mp";
+			inline const char* MONEY = "money";
 			inline const char* STATS_ALLOC = "stats_alloc";
 			inline const char* SKILLS_ALLOC = "skills_alloc";
-			inline const char* MONEY = "money";
 			inline const char* INV_EQUIP = "inv_equip";
 			inline const char* INV_USE = "inv_use";
 			inline const char* INV_SETUP = "inv_setup";
@@ -52,114 +60,13 @@ namespace hiraeth {
 				//PQclear(m_Res);
 			}
 
-			std::string getNameById(unsigned int id)
+			template <class T>
+			T getTypeById(const std::string& field, unsigned int id)
 			{
 				const char *paramValues[1];
-				paramValues[0] = "2";
-				PGresult   *res;
-
-				res = PQexecParams(m_Conn,
-					"SELECT * FROM players WHERE id = $1",
-					1,       /* one param */
-					NULL,    /* let the backend deduce param type */
-					paramValues,
-					NULL,    /* don't need param lengths since text */
-					NULL,    /* default to all text params */
-					1);      /* ask for binary results */
-
-				if (PQresultStatus(res) != PGRES_TUPLES_OK)
-				{
-					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
-					PQclear(res);
-				}
-
-				std::string name{ getString("name") };
-				PQclear(res);
-				return name;
-			}
-
-			unsigned int getIdByAccountName(const std::string& account_name)
-			{
-				const char *paramValues[1];
-				paramValues[0] = account_name.c_str();
-
-				m_Res = PQexecParams(m_Conn,
-					"SELECT id FROM accounts WHERE account = $1",
-					1,       /* one param */
-					NULL,    /* let the backend deduce param type */
-					paramValues,
-					NULL,    /* don't need param lengths since text */
-					NULL,    /* default to all text params */
-					1);      /* ask for binary results */
-
-				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
-				{
-					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
-					PQclear(m_Res);
-				}
-
-				int id = getInt("id");
-				//auto name = getString(PQfnumber(m_Res, "account")),
-				//	pass = getString(PQfnumber(m_Res, "password"));
-				PQclear(m_Res);
-				return id;
-			}
-
-			PlayerData getPlayerDataById(unsigned int player_id)
-			{
-				const char *paramValues[1];
-				std::string id_string{ std::to_string(player_id) };
-				paramValues[0] = id_string.data();
-
-				m_Res = PQexecParams(m_Conn,
-					"SELECT * FROM players WHERE id = $1",
-					1,       /* one param */
-					NULL,    /* let the backend deduce param type */
-					paramValues,
-					NULL,    /* don't need param lengths since text */
-					NULL,    /* default to all text params */
-					1);      /* ask for binary results */
-
-				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
-				{
-					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
-					PQclear(m_Res);
-				}
-
-				const unsigned int level = getInt("level"),
-					exp = getInt("exp"),
-					job = getInt("job"),
-					max_hp = getInt("max_hp"),
-					hp = getInt("hp"),
-					max_mp = getInt("max_mp"),
-					mp = getInt("mp"),
-					money = getInt(MONEY);
-				std::string player_name{ getString("name") };
-				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>(STATS_ALLOC);
-				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>(SKILLS_ALLOC);
-				const auto inv_equip = getDynamicTypeFromBuffer<decltype(PlayerData::inv_equip)>(INV_EQUIP);
-				const auto inv_use = getDynamicTypeFromBuffer<decltype(PlayerData::inv_use)>(INV_USE);
-				const auto inv_setup = getDynamicTypeFromBuffer<decltype(PlayerData::inv_setup)>(INV_SETUP);
-				const auto inv_etc = getDynamicTypeFromBuffer<decltype(PlayerData::inv_etc)>(INV_ETC);
-				const auto inv_cash = getDynamicTypeFromBuffer<decltype(PlayerData::inv_cash)>(INV_CASH);
-				const auto equips_char = getDynamicTypeFromBuffer<decltype(PlayerData::equips_char)>(EQUIP_CHAR);
-				const auto player_state = getDynamicTypeFromBuffer<decltype(PlayerData::player_hold_state)>(PLAYER_STATE);
-				const auto quests_in_progress = getDynamicTypeFromBuffer<decltype(PlayerData::quests_in_progress)>(QUESTS_IN_PROGRESS);
-				const auto quests_done = getDynamicTypeFromBuffer<decltype(PlayerData::quests_done)>(QUESTS_DONE);
-
-				PQclear(m_Res);
-				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp,
-					hp, max_mp, mp}, money,stats_alloc, skills_alloc , inv_equip, inv_use,
-					inv_setup, inv_etc, inv_cash, equips_char, player_state, quests_in_progress, quests_done};
-				return player_data;
-			}
-
-			
-			unsigned int getInt(unsigned int player_id, const std::string& field)
-			{
-				const char *paramValues[1];
-				std::string id_string{ std::to_string(player_id) };
-				paramValues[0] = id_string.data();
+				std::string id_s{ std::to_string(id) };
+				//paramValues[0] = field
+				paramValues[0] = id_s.data();
 				std::string sCommand = "SELECT " + field + " FROM players WHERE id = $1";
 
 				m_Res = PQexecParams(m_Conn,
@@ -176,9 +83,11 @@ namespace hiraeth {
 					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
 					PQclear(m_Res);
 				}
-				auto dt = getInt(field.c_str());
+
+				T data;
+				getT(field.c_str(), data);
 				PQclear(m_Res);
-				return dt;
+				return data;
 			}
 			template <class T>
 			T getDynamicType(unsigned int player_id, const std::string& field)
@@ -207,6 +116,144 @@ namespace hiraeth {
 				return std::move(dt);
 				//return dt;
 			}
+			//std::string getStringById(const std::string& field, unsigned int id)
+			//{
+			//	//const char *paramValues[1];
+			//	const char *paramValues[1];
+			//	std::string id_s{ std::to_string(id) };
+			//	//paramValues[0] = field;
+			//	paramValues[0] = id_s.data();
+			//	std::string sCommand = "SELECT " + field + " FROM players WHERE id = $1";
+
+			//	m_Res = PQexecParams(m_Conn,
+			//		sCommand.c_str(),
+			//		1,       /* one param */
+			//		NULL,    /* let the backend deduce param type */
+			//		paramValues,
+			//		NULL,    /* don't need param lengths since text */
+			//		NULL,    /* default to all text params */
+			//		1);      /* ask for binary results */
+
+			//	if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+			//	{
+			//		fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+			//		PQclear(m_Res);
+			//	}
+
+			//	std::string name{ getString(field.c_str()) };
+			//	PQclear(m_Res);
+			//	return name;
+			//}
+
+			std::string getNameById(unsigned int id)
+			{
+				getTypeById<std::string>("name", id);
+			}
+
+			unsigned int getIdByAccountName(const std::string& account_name)
+			{
+				const char *paramValues[1];
+				paramValues[0] = account_name.c_str();
+
+				m_Res = PQexecParams(m_Conn,
+					"SELECT id FROM accounts WHERE account = $1",
+					1,       /* one param */
+					NULL,    /* let the backend deduce param type */
+					paramValues,
+					NULL,    /* don't need param lengths since text */
+					NULL,    /* default to all text params */
+					1);      /* ask for binary results */
+
+				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+				{
+					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+
+				unsigned int id;
+				getT("id", id);
+
+				//auto name = getString(PQfnumber(m_Res, "account")),
+				//	pass = getString(PQfnumber(m_Res, "password"));
+				PQclear(m_Res);
+				return id;
+			}
+
+			PlayerData getPlayerDataById(unsigned int player_id)
+			{
+				const char *paramValues[1];
+				std::string id_string{ std::to_string(player_id) };
+				paramValues[0] = id_string.data();
+
+				m_Res = PQexecParams(m_Conn,
+					"SELECT * FROM players WHERE id = $1",
+					1,       /* one param */
+					NULL,    /* let the backend deduce param type */
+					paramValues,
+					NULL,    /* don't need param lengths since text */
+					NULL,    /* default to all text params */
+					1);      /* ask for binary results */
+
+				if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+				{
+					fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+					PQclear(m_Res);
+				}
+
+				std::string player_name{ getString("name") };
+				const unsigned int level = getInt("level"),
+					exp = getInt("exp"),
+					job = getInt("job"),
+					max_hp = getInt("max_hp"),
+					hp = getInt("hp"),
+					max_mp = getInt("max_mp"),
+					mp = getInt("mp"),
+					money = getInt(MONEY);
+				const auto stats_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::stats_alloc)>(STATS_ALLOC);
+				const auto skills_alloc = getDynamicTypeFromBuffer<decltype(PlayerData::skills_alloc)>(SKILLS_ALLOC);
+				const auto inv_equip = getDynamicTypeFromBuffer<decltype(PlayerData::inv_equip)>(INV_EQUIP);
+				const auto inv_use = getDynamicTypeFromBuffer<decltype(PlayerData::inv_use)>(INV_USE);
+				const auto inv_setup = getDynamicTypeFromBuffer<decltype(PlayerData::inv_setup)>(INV_SETUP);
+				const auto inv_etc = getDynamicTypeFromBuffer<decltype(PlayerData::inv_etc)>(INV_ETC);
+				const auto inv_cash = getDynamicTypeFromBuffer<decltype(PlayerData::inv_cash)>(INV_CASH);
+				const auto equips_char = getDynamicTypeFromBuffer<decltype(PlayerData::equips_char)>(EQUIP_CHAR);
+				const auto player_state = getDynamicTypeFromBuffer<decltype(PlayerData::player_hold_state)>(PLAYER_STATE);
+				const auto quests_in_progress = getDynamicTypeFromBuffer<decltype(PlayerData::quests_in_progress)>(QUESTS_IN_PROGRESS);
+				const auto quests_done = getDynamicTypeFromBuffer<decltype(PlayerData::quests_done)>(QUESTS_DONE);
+
+				PQclear(m_Res);
+				PlayerData player_data{ PlayerStats{player_name, level, job, exp, max_hp,
+					hp, max_mp, mp}, money,stats_alloc, skills_alloc , inv_equip, inv_use,
+					inv_setup, inv_etc, inv_cash, equips_char, player_state, quests_in_progress, quests_done};
+				return player_data;
+			}
+
+			
+			//unsigned int getInt(unsigned int player_id, const std::string& field)
+			//{
+			//	const char *paramValues[1];
+			//	std::string id_string{ std::to_string(player_id) };
+			//	paramValues[0] = id_string.data();
+			//	std::string sCommand = "SELECT " + field + " FROM players WHERE id = $1";
+
+			//	m_Res = PQexecParams(m_Conn,
+			//		sCommand.c_str(),
+			//		1,       /* one param */
+			//		NULL,    /* let the backend deduce param type */
+			//		paramValues,
+			//		NULL,    /* don't need param lengths since text */
+			//		NULL,    /* default to all text params */
+			//		1);      /* ask for binary results */
+
+			//	if (PQresultStatus(m_Res) != PGRES_TUPLES_OK)
+			//	{
+			//		fprintf(stderr, "SELECT failed: %s", PQerrorMessage(m_Conn));
+			//		PQclear(m_Res);
+			//	}
+			//	auto dt = getInt(field.c_str());
+			//	PQclear(m_Res);
+			//	return dt;
+			//}
 
 			void setValue(unsigned int client_id, std::string field, unsigned int new_value)
 			{
@@ -242,11 +289,6 @@ namespace hiraeth {
 			{
 				auto[buffer, size] = srl_dynamic_type(stats_alloc);
 				std::string ref_data{ *buffer, unsigned int(size) };
-				//for (int i = 0; i < size; ++i)
-				//	//ss << std::hex << (int)(*buffer)[i];
-				//	//data += std::to_string((int)(*buffer)[i]);
-				//	std::cout << std::hex << (int)(*buffer)[i];
-				////std::string data{ss.str()};
 				std::string data{ hexStr(*buffer, size) };
 				std::string field = "stats_alloc";
 				std::string command = "UPDATE players SET " + field + " = E'\\\\x"
@@ -459,30 +501,44 @@ namespace hiraeth {
 			
 			unsigned int reduceMoney(unsigned int player_id, unsigned int amount_to_reduce)
 			{
-				auto money = getInt(player_id, MONEY);
+				auto money = getTypeById<unsigned int>(MONEY, player_id);
 				unsigned int new_money = money - amount_to_reduce;
 				setValue(player_id, MONEY, new_money);
 				return new_money;
 
 			}
+			
+			void setJob(unsigned int player_id, unsigned int new_job)
+			{
+				setValue(player_id, JOB, new_job);
+			}
 
 		private:
-
-			int getInt(const char* column_name)
-			{
-				const int column = PQfnumber(m_Res, column_name);
-				char *val_p = PQgetvalue(m_Res, 0, column);
-				return ntohl(*reinterpret_cast<uint32_t *>(val_p));
-			}
-			std::string	getString(const char* column_name)
+			void getT(const char* column_name, unsigned int& return_val)
 			{
 				const int column = PQfnumber(m_Res, column_name);
 				char *name = PQgetvalue(m_Res, 0, column);
-				//int blen = PQgetlength(m_Res, 0, column);
-				//printf(" b = (%d bytes) ", blen);
-				//std::cout << name;
+				return_val = ntohl(*reinterpret_cast<uint32_t *>(name));
+			}
+			void getT(const char* column_name, std::string& return_val)
+			{
+				const int column = PQfnumber(m_Res, column_name);
+				char *name = PQgetvalue(m_Res, 0, column);
 
-				return std::string{ name };
+				return_val = std::string{ name };
+			}
+
+			unsigned int getInt(const char* column_name)
+			{
+				unsigned int s;
+				getT(column_name, s);
+				return s;
+			}
+			std::string	getString(const char* column_name)
+			{
+				std::string s;
+				getT(column_name, s);
+				return s;
 			}
 			template<class T>
 			T getDynamicTypeFromBuffer(const char* column_name)

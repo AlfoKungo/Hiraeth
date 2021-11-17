@@ -101,6 +101,7 @@ namespace hiraeth::network {
 		bindFunctionToChar(MSG_STC_PLAYER_LEFT, &ClientHandler::recvPlayerLeft);
 		bindFunctionToChar(MSG_STC_SHOP_OPEN, &ClientHandler::recvShopOpen);
 		bindFunctionToChar(MSG_STC_UPDATE_MONEY, &ClientHandler::recvUpdateMoney);
+		bindFunctionToChar(MSG_STC_UPDATE_JOB, &ClientHandler::recvUpdateJob);
 
 		//EventManager *m_EventManager = EventManager::Instance();
 		//m_EventManager->createEvent<unsigned int>(SendIncreaseSkill);
@@ -481,6 +482,12 @@ namespace hiraeth::network {
 	{
 		const auto msg = dsrl_type<MsgStcUpateMoney>(m_RcvBuffer + 1);
 		m_UiManager->getUiInventory()->setMoney(msg.new_money);
+	}
+
+	void ClientHandler::recvUpdateJob()
+	{
+		const auto msg = dsrl_type<MsgStcUpdateJob>(m_RcvBuffer + 1);
+		m_SkillManager->updateJob(msg.new_job_id);
 	}
 
 	void ClientHandler::sendAck(unsigned int ack_id)

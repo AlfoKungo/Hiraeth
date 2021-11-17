@@ -3,3 +3,6 @@ password: 12341234
 
 psql -U postgres
 \c test
+
+
+\i db_create_tables.txt

@@ -252,6 +252,7 @@ namespace hiraeth {
 			//	std::map<SRL::EquipReqEnum, int> { {SRL::eReqLvl, 5}, {SRL::eReqStr, 3}}, "equips");
 			//m_DbClient->setByteArray(1, "properties", 
 			//	std::map<SRL::EquipItemDataType, int> { {SRL::StrInc, 5}, {SRL::IntInc, 3}}, "equips");
+			auto namer = m_DbClient->getTypeById<std::string>("name", 1);
 			const auto player_data = m_DbClient->getPlayerDataById(char_id);
 			m_PlayersState[char_id] = player_data.player_hold_state;
 			m_PlayersStats[char_id] = player_data.player_stats;

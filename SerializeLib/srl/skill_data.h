@@ -135,31 +135,5 @@ namespace SRL
 		}
 	};
 
-	struct JobData
-	{
-		std::vector<unsigned int> first_job_skills;
-		std::vector<unsigned int> second_job_skills;
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(first_job_skills), CEREAL_NVP(first_job_skills));
-		}
-	};
 
-	enum JobsTypes
-	{
-		Novice,
-		Berserker,
-		CrusaderKnight,
-		Wizard,
-		Rogue,
-		Archer,
-		ForestFighter,
-	};
-
-	struct AllJobsData
-	{
-		std::map<JobsTypes, JobData> jobs_type_to_data_map;
-		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(jobs_type_to_data_map));
-		}
-	};
 }

@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include "srl/npc_data.h"
+#include "srl/job_data.h"
 
 namespace SRL
 {
@@ -12,6 +13,7 @@ namespace SRL
 		{
 			const std::string SRL_TYPE{ "npc" };
 			{
+				// basic quest
 				unsigned int quest_id = 0;
 				SRL::NpcInfo info{
 					"Chief Guatamala",
@@ -19,23 +21,24 @@ namespace SRL
 					-200.0,
 					{"Hey, care for some CDs nigga?", "May I interest you in\nsome Kanye?"},
 					//NpcQuestDataStruct{0, 10, 0}
-					NpcUsageDialog{{
-						{0,
+					{{0,
 						DialogNode{{{"They tryna find TuPaC",{{DialogButton::Next}}},
 							{"Don't let them find tupac",{{DialogButton::Next}}},
 							{"La da da da",{{DialogButton::Next}}}}, {}}},
 						{1,
 						DialogNode{{{"I have a small request",{{DialogButton::Next}}},
 							{"I need you to kill me some monsters",{{DialogButton::Next}}},
-							{"1 slime, 1 shroom, easy isn't it?",{{DialogButton::Cancel},{DialogButton::Accept, DAAddQuest{quest_id}}}}}, {DR_Lvl{5}}}},
+							{"1 slime, 1 shroom, easy isn't it?",{{DialogButton::Cancel},{DialogButton::Accept, DAAddQuest{quest_id}}}}}, 
+					{DR_Lvl{5}}}},
 					{2,
 						DialogNode{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}, {DR_ActiveQuest{quest_id}}}},
 					{3,
-						DialogNode{{{"Aight you cool\n there's you money",{{DialogButton::ReceiveReward, {DAReceiveReward{quest_id}}}}}},{DR_QuestFulfilled{0}}}},
+						DialogNode{{{"Aight you cool\n there's you money",{{DialogButton::ReceiveReward, {DAReceiveReward{quest_id}}}}}},
+					{DR_QuestFulfilled{0}}}},
 					{4,
 						DialogNode{{{"Get outa my sight you fucking nigger",{{DialogButton::Ok}}}},{DR_DontCont{}} }
-					}
-				}}
+					}},
+					NpcUsageDialog{}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/0/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);
@@ -43,37 +46,49 @@ namespace SRL
 			}
 
 			{
+				// pq
 				//using enum DialogButton;
 				SRL::NpcInfo info{
 					"Ruby PQ",
 					0,
 					-100.0,
 					{"I got an interesting offer for you", "This mission is not an easy one"},
-					NpcUsagePq{{
-					{0,
+					{{0,
 					{{{"They tryna find TuPaC",{{DialogButton::Next}}},
 						{"Don't let them find tupac",{{DialogButton::Next}}},
 						//{"La da da da",{2,1}}}}
 						{"La da da da",{{DialogButton::Cancel},{DialogButton::Accept}}}}}},
 				{1,
-					//{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}, {DR_Pq{0,0,0,0}}}},
-					{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}, {}}},
-				{2,
-					{{{"Aight you cool\nthere's you money",{{DialogButton::ReceiveReward}}}}}},
-				{3,
-					{{{"Aight you cool\nthere's you money",{{DialogButton::Next}}}}}}
-				},2,2, 10,2 }
+					{{{"You don't fulfill the requirements",{{DialogButton::Next}}}}}}
+				},
+					NpcUsagePq{1,2,10,2}
+					//	NpcUsagePq{{
+					//	{0,
+					//	{{{"They tryna find TuPaC",{{DialogButton::Next}}},
+					//		{"Don't let them find tupac",{{DialogButton::Next}}},
+					//		//{"La da da da",{2,1}}}}
+					//		{"La da da da",{{DialogButton::Cancel},{DialogButton::Accept}}}}}},
+					////{1,
+					////	//{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}, {DR_Pq{0,0,0,0}}}},
+					////	{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}, {}}},
+					////{2,
+					////	{{{"Aight you cool\nthere's you money",{{DialogButton::ReceiveReward}}}}}},
+					//{1,
+					//	{{{"You don't fulfill the requirements",{{DialogButton::Next}}}}}}
+					//},2,2, 10,2 }
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/1/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);
 				arout(CEREAL_NVP(info));
 			}
 			{
+				// Merchant
 				SRL::NpcInfo info{
 					"Lavie",
 					0,
 					0.0,
 					{"It's sunny today isn't it", "Summer madness"},
+					{},
 					NpcUsageMerchant{{{0,0, 100}, {0,1, 250}, {1,1, 150}, {1,2, 400}}}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/2/data.json", std::ios::out);
@@ -87,33 +102,37 @@ namespace SRL
 					100.0,
 					{"Too easy isn't it?", "Oh yeah"},
 					//NpcJobAdvancementDataStruct{0, 2}
-					NpcUsageDialog{{
-					{0,
-					{{{"They tryna find TuPaC",{{DialogButton::Next}}},
-						{"Don't let them find tupac",{{DialogButton::Next}}},
-						//{"La da da da",{2,1}}}}
-						{"La da da da",{{DialogButton::Cancel},{DialogButton::Accept}}}}}},
-				{1,
-					{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}}},
+					{
+						{0,
+					DialogNode{{{{"I'm just hanging"},{{DialogButton::Ok}}}}}},
+						{1,
+					DialogNode{{{{"They tryna find TuPaC"},{{DialogButton::Cancel}},
+					{{"Breserker", DAGoToDialog{2}}, {"Rogue", DAGoToDialog{3}}}}},
+					{DR_JobRequirements{SRL::JobBeginner}}}},
+				//{1,
+				//	{{{"I'm waiting for it you bitch ass nigga",{{DialogButton::Next}}}}}},
+				//{2,
+				//	{{{"Aight you cool\nthere's you money",{
+				//		{DialogButton::ReceiveReward}}}}}},
 				{2,
-					{{{"Aight you cool\nthere's you money",{
-						{DialogButton::ReceiveReward}}}}}},
+					{{{"You a Berserker now",{{DialogButton::Ok,DASetJob{SRL::JobBerserker}}}}},{DR_DontCont{}}}},
 				{3,
-					{{{"Aight you cool\nthere's you money",{{DialogButton::Next}}}}}}
-				}}
+					{{{"You a Rogue now",{{DialogButton::Ok, DASetJob{SRL::JobRogue}}}}},{DR_DontCont{}}}}
+				},
+					NpcUsageDialog{}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/3/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);
 				arout(CEREAL_NVP(info));
 			}
 			{
+				// taxi
 				SRL::NpcInfo info{
 					"Taxi Driver",
 					0,
 					200.0,
 					{"Can take you anywhere", "just say it"},
-				NpcUsageDialog{{
-					{0,
+					{{0,
 					{{{"Got Anywhere you wanna go?",{{DialogButton::Next}}},
 					//	{"Choose a destination\nhelenia for 50 bucks\ntamopolis for 55 bucks",
 					//{{DialogButton::Cancel, DAGoToDialog{1}}, {DialogButton::Accept, DAGoToDialog{2}}}}}}},
@@ -129,7 +148,8 @@ namespace SRL
 				{{{"Tell Malcolm I'll come over next time",{{DialogButton::Ok, DAChangeMap{2}}}}}}},
 			{3,
 				{{{"See ya around than,\nhave fun",{{DialogButton::Ok}}}}, {}}}
-			}}
+			},
+				NpcUsageDialog{}
 				};
 				std::ofstream data_file("data/" + SRL_TYPE + "/4/data.json", std::ios::out);
 				cereal::JSONOutputArchive arout(data_file);

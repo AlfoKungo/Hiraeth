@@ -222,7 +222,6 @@ namespace hiraeth::network {
 
 		void NpcClickOpenDialog(Address sender)
 		{
-
 		}
 
 		void NpcClick(Address sender)
@@ -240,8 +239,8 @@ namespace hiraeth::network {
 					dialog_id = m_PlayersState[player_id].npc_dialog_id[npc_id];
 				while (true)
 				{
-					if ((data.dialog_tree.find(dialog_id + 1) == data.dialog_tree.end()) ||
-						(!are_reqs_fulfilled(data.dialog_tree[dialog_id + 1].reqs, m_PlayersStats[player_id],
+					if ((npc_data.dialog_tree.find(dialog_id + 1) == npc_data.dialog_tree.end()) ||
+						(!are_reqs_fulfilled(npc_data.dialog_tree[dialog_id + 1].reqs, m_PlayersStats[player_id],
 					m_PlayersState[player_id].active_kill_quests, m_PlayersState[player_id].fulfilled_quests)))
 						break;
 					dialog_id++;
@@ -253,14 +252,33 @@ namespace hiraeth::network {
 			{
 				if (m_PartyLeaderToMembersMap.find(player_id) != m_PartyLeaderToMembersMap.end())
 				{
-					m_PqGoals[m_PlayerToPartyLeaderMap[player_id]] = { {0, SRL::QuestDouble{0, 5}},  {1, SRL::QuestDouble{1, 5}} };
-					for (const auto& player_in_party : m_PartyLeaderToMembersMap[player_id])
+					// check if party members fulfil requirements
+					if (m_PartyLeaderToMembersMap.size() == data.party_members_amount)
 					{
-						Send(m_ClientAddress[player_in_party], MSG_STC_CHANGE_MAP, ChangeMapMsg{ data.pq_map_id });
-						player_change_map(player_in_party, data.pq_map_id);
+						for (const auto& player_in_party : m_PartyLeaderToMembersMap[player_id])
+						{
+							if (!(m_PlayersStats[player_in_party].char_lvl >= data.lvl_req_min &&
+								m_PlayersStats[player_in_party].char_lvl <= data.lvl_req_max))
+							{
+								Send(sender, MSG_STC_NPC_START_DIALOG, MsgStcNpcStartDialog{ npc_id, 1});
+								break;
+							}
+						}
+
+						// set party members in new map
+						m_PqGoals[m_PlayerToPartyLeaderMap[player_id]] = { {0, SRL::QuestDouble{0, 5}},  {1, SRL::QuestDouble{1, 5}} };
+						for (const auto& player_in_party : m_PartyLeaderToMembersMap[player_id])
+						{
+							Send(m_ClientAddress[player_in_party], MSG_STC_CHANGE_MAP, ChangeMapMsg{ data.pq_map_id });
+							player_change_map(player_in_party, data.pq_map_id);
+						}
+						m_PartiesInPqs.push_back(player_id);
 					}
-					m_PartiesInPqs.push_back(player_id);
+					else
+						Send(sender, MSG_STC_NPC_START_DIALOG, MsgStcNpcStartDialog{ npc_id, 1});
 				}
+					else
+						Send(sender, MSG_STC_NPC_START_DIALOG, MsgStcNpcStartDialog{ npc_id, 1});
 			},
 			[&](SRL::NpcUsageMerchant data)
 			{
@@ -275,14 +293,14 @@ namespace hiraeth::network {
 			auto msg = dsrl_type<MsgCtsDialogButtonClick>(m_Buffer + 1 + sizeof(IdType));
 			auto npc_data = SRL::deserial<SRL::NpcInfo>(DF_NPC, msg.npc_id);
 			auto usage_data = std::get<SRL::NpcUsageDialog>(npc_data.usage_data);
-				
-			const auto& dialog_struct = usage_data.dialog_tree[msg.dialog_id].msgs[msg.sub_dialog_id];
+
+			const auto& dialog_struct = npc_data.dialog_tree[msg.dialog_id].msgs[msg.sub_dialog_id];
 			SRL::ActionVariant action;
 			//auto action = dialog_struct.buttons[msg.button_id].action;
 			if (dialog_struct.buttons.size() <= msg.button_id)
 				action = dialog_struct.text_buttons[msg.button_id - dialog_struct.buttons.size()].action;
 			else
-			 action = dialog_struct.buttons[msg.button_id].action;
+				action = dialog_struct.buttons[msg.button_id].action;
 			std::visit(overloaded{
 				[&](SRL::DANextDialog data)
 			{
@@ -309,12 +327,18 @@ namespace hiraeth::network {
 				Send(sender, MSG_STC_CHANGE_MAP, ChangeMapMsg{ data.next_map });
 				player_change_map(player_id, data.next_map);
 			},
+				[&](SRL::DASetJob data)
+			{
+				auto new_job_id = 1000 * data.job_id;
+				Send(sender, MSG_STC_UPDATE_JOB,MsgStcUpdateJob{new_job_id});
+				Send(sender, MSG_STC_DIALOG_NEXT_SUB_DIALOG, MsgStcDialogNextSubDialog{});
+				m_DbClient->setJob(player_id, new_job_id);
+			},
 				}, action);
 		}
-		
+
 		void NpcClickedOpenDialog(Address sender, SRL::NpcUsageDialog dialog_tree)
 		{
-
 		}
 
 		void DialogNext(Address sender)
@@ -505,14 +529,10 @@ namespace hiraeth::network {
 				{
 					if (party_member == player_id)
 					{
-						//m_Size = construct_server_packet(m_Buffer, MSG_STC_RECEIVED_EXP, killer_split);
-						//m_Socket.Send(m_ClientAddress[party_member], m_Buffer, m_Size);
 						Send(m_ClientAddress[party_member], MSG_STC_RECEIVED_EXP, killer_split);
 					}
 					else
 					{
-						//m_Size = construct_server_packet(m_Buffer, MSG_STC_RECEIVED_EXP, party_split);
-						//m_Socket.Send(m_ClientAddress[party_member], m_Buffer, m_Size);
 						Send(m_ClientAddress[party_member], MSG_STC_RECEIVED_EXP, party_split);
 					}
 				}
@@ -553,11 +573,6 @@ namespace hiraeth::network {
 				auto equip_info = map_holder.m_EquipsStats[item_id];
 				auto equip_db = SRL::EquipDbStruct{ item_picked.item_type_id, equip_info };
 				item_loc = m_DbClient->addEquipInv(player_id, equip_db);
-				//auto msg = AddEquipItemMsg{ item_loc, item_picked.item_type_id, equip_db };
-				//auto [data, size] = srl_dynamic_type(msg);
-				//m_Size = construct_server_packet_with_buffer(m_Buffer, MSG_STC_ADD_EQUIP_ITEM,
-				//	*data, size);
-				//m_Socket.Send(sender, m_Buffer, m_Size);
 				Send_dynamic(sender, MSG_STC_ADD_EQUIP_ITEM, AddEquipItemMsg{ item_loc, item_picked.item_type_id, equip_db });
 				map_holder.m_EquipsStats.erase(item_id);
 			}
@@ -572,8 +587,6 @@ namespace hiraeth::network {
 		{
 			auto [client_id, skill_id] = dsrl_types<IdType, unsigned int>(m_Buffer + 1);
 			m_DbClient->increaseSkillPoints(client_id, skill_id);
-			//m_Size = construct_server_packet(m_Buffer, MSG_STC_INCREASE_SKILL, skill_id);
-			//m_Socket.Send(sender, m_Buffer, m_Size);
 			Send(sender, MSG_STC_INCREASE_SKILL, skill_id);
 		}
 		void WearEquip(Address sender)
@@ -637,19 +650,13 @@ namespace hiraeth::network {
 		void TradeRequest(Address sender)
 		{
 			auto [player_id, msg] = dsrl_types<IdType, MsgCtsTradeRequest>(m_Buffer + 1);
-			//m_Size = construct_server_packet(m_Buffer, MSG_STC_TRADE_REQUEST, player_id);
-			//m_Socket.Send(m_ClientAddress[msg.player_to_trade], m_Buffer, m_Size);
 			Send(m_ClientAddress[msg.player_to_trade], MSG_STC_TRADE_REQUEST, player_id);
 		}
 		void TradeRequestAccept(Address sender)
 		{
 			auto [player_id, msg] = dsrl_types<IdType, MsgCtsTradeRequestAccept>(m_Buffer + 1);
-			//m_Size = construct_server_packet(m_Buffer, MSG_STC_TRADE_FACILITATE, MsgStcTradeFacilitate{ player_id });
-			//m_Socket.Send(m_ClientAddress[msg.player_who_wants_to_trade], m_Buffer, m_Size);
-			Send(m_ClientAddress[msg.player_who_wants_to_trade], MSG_STC_TRADE_FACILITATE, MsgStcTradeFacilitate{ player_id });
-			//m_Size = construct_server_packet(m_Buffer, MSG_STC_TRADE_FACILITATE,
-			//	MsgStcTradeFacilitate{ msg.player_who_wants_to_trade });
-			//m_Socket.Send(m_ClientAddress[player_id], m_Buffer, m_Size);
+			Send(m_ClientAddress[msg.player_who_wants_to_trade], MSG_STC_TRADE_FACILITATE,
+				MsgStcTradeFacilitate{ player_id });
 			Send(m_ClientAddress[player_id], MSG_STC_TRADE_FACILITATE,
 				MsgStcTradeFacilitate{ msg.player_who_wants_to_trade });
 			m_TradeMap[player_id] = msg.player_who_wants_to_trade;
@@ -689,20 +696,6 @@ namespace hiraeth::network {
 					Send(m_ClientAddress[other_player], MSG_STC_TRADE_FINALIZE, 0);
 					give_items_to_player(other_player, m_TradeDataMap[player_id].trade_items);
 					give_items_to_player(player_id, m_TradeDataMap[other_player].trade_items);
-					//for (auto& [key, item] : m_TradeDataMap[player_id].trade_items)
-					//{
-					//	auto equip_db = item;
-					//	auto item_loc = m_DbClient->addEquipInv(other_player, equip_db);
-					//	auto msg = AddEquipItemMsg{ item_loc, EQUIP_ITEM, equip_db };
-					//	Send_dynamic(m_ClientAddress[other_player], MSG_STC_ADD_EQUIP_ITEM, msg);
-					//}
-					//for (auto& [key, item] : m_TradeDataMap[other_player].trade_items)
-					//{
-					//	auto equip_db = item;
-					//	auto item_loc = m_DbClient->addEquipInv(player_id, equip_db);
-					//	auto msg = AddEquipItemMsg{ item_loc, EQUIP_ITEM, equip_db };
-					//	Send_dynamic(sender, MSG_STC_ADD_EQUIP_ITEM, msg);
-					//}
 					m_TradeMap.erase(player_id);
 					m_TradeMap.erase(other_player);
 					m_TradeDataMap.erase(player_id);
@@ -732,20 +725,6 @@ namespace hiraeth::network {
 			auto other_player = m_TradeMap[player_id];
 			Send(sender, MSG_STC_TRADE_CANCEL, 0);
 			Send(m_ClientAddress[other_player], MSG_STC_TRADE_CANCEL, 0);
-			//for (auto& [key, item] : m_TradeDataMap[player_id].trade_items)
-			//{
-			//	auto equip_db = item;
-			//	auto item_loc = m_DbClient->addEquipInv(player_id, equip_db);
-			//	auto msg = AddEquipItemMsg{ item_loc, EQUIP_ITEM, equip_db };
-			//	Send_dynamic(sender, MSG_STC_ADD_EQUIP_ITEM, msg);
-			//}
-			//for (auto& [key, item] : m_TradeDataMap[other_player].trade_items)
-			//{
-			//	auto equip_db = item;
-			//	auto item_loc = m_DbClient->addEquipInv(other_player, equip_db);
-			//	auto msg = AddEquipItemMsg{ item_loc, EQUIP_ITEM, equip_db };
-			//	Send_dynamic(m_ClientAddress[other_player], MSG_STC_ADD_EQUIP_ITEM, msg);
-			//}
 			give_items_to_player(player_id, m_TradeDataMap[player_id].trade_items);
 			give_items_to_player(other_player, m_TradeDataMap[other_player].trade_items);
 			m_TradeMap.erase(player_id);
@@ -758,8 +737,6 @@ namespace hiraeth::network {
 			auto [player_id, msg] = dsrl_types<IdType, EnterPortalMsg>(m_Buffer + 1);
 			if (m_PlayerToMapId[player_id] == 1)
 				msg.next_map = 0;
-			//m_Size = construct_server_packet(m_Buffer, MSG_STC_ENTER_PORTAL, msg);
-			//m_Socket.Send(sender, m_Buffer, m_Size);
 			Send(sender, MSG_STC_ENTER_PORTAL, msg);
 
 			// change map
@@ -788,7 +765,6 @@ namespace hiraeth::network {
 					MsgStcDropItem{ tab_index, item.item_type_id, item_id.item_id, pos });
 			}
 
-			//m_Socket.Send(sender, m_Buffer, m_Size);
 			sendDataToAllClientsInMap(map_id, m_Size);
 		}
 		void player_change_map(unsigned int player_id, unsigned int next_map_id)

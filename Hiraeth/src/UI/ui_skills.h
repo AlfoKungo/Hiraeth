@@ -93,6 +93,10 @@ namespace hiraeth {
 					}
 					return nullptr;
 			}
+			void ugdateJob(unsigned int new_job_id)
+			{
+
+			}
 			//SRL::SkillInfo * getSkillInfo(unsigned int skill_id)
 			//{
 			//	for (int i = 0; i < 5; ++i)

@@ -17,7 +17,7 @@ namespace Checks
 			{ SRL::Archer, {{1,2,3}, {1,2,3}}},
 			{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
 				}};
-			std::ofstream data_file("data/" + SRL_TYPE + "/jobsjson", std::ios::out);
+			std::ofstream data_file("data/" + SRL_TYPE + "/jobs.json", std::ios::out);
 			cereal::JSONOutputArchive arout(data_file);
 			arout(CEREAL_NVP(info));
 		}

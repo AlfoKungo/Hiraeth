@@ -145,6 +145,7 @@ namespace hiraeth {
 			void recvPlayerLeft();
 			void recvShopOpen();
 			void recvUpdateMoney();
+			void recvUpdateJob();
 		public:
 			void sendAck(unsigned int ack_id);
 			void sendAttackPacket(MonsterHit monster_damage) override;

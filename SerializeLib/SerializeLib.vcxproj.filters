@@ -60,6 +60,9 @@
     <ClInclude Include="srl\all_srl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="srl\job_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srl\includer.cpp">

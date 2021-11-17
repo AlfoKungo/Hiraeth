@@ -4,6 +4,7 @@
 #include "top_right_icon.h"
 #include "graphics/percented_sprite.h"
 #include "UI/ui_skills.h"
+#include "srl/job_data.h"
 
 namespace hiraeth {
 	namespace skills {
@@ -21,19 +22,6 @@ namespace hiraeth {
 				m_UiSkills(ui_skills),
 				m_Layer(new graphics::Shader("Assets/shaders/basic.vert", "Assets/shaders/basic.frag"), false)
 			{
-				//SRL::AllJobsData JobInfo{ {
-				//{ SRL::Berserker, {{1,2,3}, {1,2,3}}},
-				//{ SRL::CrusaderKnight, {{1,2,3}, {1,2,3}}},
-				//{ SRL::Wizard, {{1,2,3}, {1,2,3}}},
-				//{ SRL::Rogue, {{1,2,3}, {1,2,3}}},
-				//{ SRL::Archer, {{1,2,3}, {1,2,3}}},
-				//{ SRL::ForestFighter, {{1,2,3}, {1,2,3}}},
-				//	} };
-
-				////std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
-				//std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(SRL::Berserker).first_job_skills;
-				//for (const auto& index : FirstJobSkillsIndices)
-				//	add_skill(index - 1);
 
 			}
 
@@ -114,34 +102,51 @@ namespace hiraeth {
 							m_CharacterStats->updatePassiveSkill(skill_id, m_SkillsAlloc[skill_id], skill_info->skill_properties);
 			}
 
-			void setJobAndLoadSkills(unsigned int job_id, std::vector<network::SkillAlloc> skills_alloc)
-			//void setJob(unsigned int job_id, std::map<unsigned int, unsigned int> stats_alloc)
+			void setJobAndLoadSkills(unsigned int job_id, const std::vector<network::SkillAlloc>& skills_alloc)
+				//void setJob(unsigned int job_id, std::map<unsigned int, unsigned int> stats_alloc)
 			{
-				SRL::AllJobsData JobInfo{ {
-				{ SRL::Novice, {{0,1,2}, {}}},
-				{ SRL::Berserker, {{0,1,2}, {5,6,7,8,9}}},
-				{ SRL::CrusaderKnight, {{0,1,2}, {10,11}}},
-				{ SRL::Wizard, {{0,1,2}, {3,4}}},
-				{ SRL::Rogue, {{0,1,2}, {3,4}}},
-				{ SRL::Archer, {{0,1,2}, {3,4}}},
-				{ SRL::ForestFighter, {{0,1,2}, {1,2,3}}},
-					} };
+				std::vector<unsigned int> ZeroJobSkillsIndices = SRL::JobInfo.zero_jobs;
+				for (const auto& index : ZeroJobSkillsIndices)
+					add_skill(index, 0);
+				loadJobData(job_id);
+				loadSkillPoints(skills_alloc);
+			}
 
-				//std::vector<unsigned int> SkillIndices = SRL::deserial<std::vector<unsigned int>>("serialized/jobs.data", 0);
-				const SRL::JobsTypes job_type{ static_cast<SRL::JobsTypes>(job_id) };
-				std::vector<unsigned int> BasicJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).first_job_skills;
-				for (const auto& index : BasicJobSkillsIndices)
-					add_skill(index, 0 );
-				std::vector<unsigned int> FirstJobSkillsIndices = JobInfo.jobs_type_to_data_map.at(job_type).second_job_skills;
-				for (const auto& index : FirstJobSkillsIndices)
-					add_skill(index, 1);
+			void updateJob(unsigned int new_job_id)
+			{
+				eraseSkills();
+				loadJobData(new_job_id);
 
+			}
+			
+			void loadJobData(unsigned int job_id)
+			{
+				//const SRL::JobsTypes job_type{ static_cast<SRL::JobsTypes>(job_id) };
+				unsigned int first_job_id = div(job_id, 1000).quot;
+				const SRL::JobsTypes first_job_type{ static_cast<SRL::JobsTypes>(first_job_id) };
+				if (first_job_id != 0)
+				{
+					std::vector<unsigned int> FirstJobSkillsIndices = SRL::JobInfo.first_jobs.at(first_job_type).first_job_skills;
+					for (const auto& index : FirstJobSkillsIndices)
+						add_skill(index, 1);
+				}
+				unsigned int second_job_id = div(div(job_id, 1000).rem, 100).quot;
+				if (second_job_id != 0)
+				{
+					std::vector<unsigned int> SecondJobSkillsIndices = SRL::JobInfo.first_jobs.at(first_job_type).second_job_skills.at(second_job_id);
+					for (const auto& index : SecondJobSkillsIndices)
+						add_skill(index, 1);
+				}
+			}
+			void loadSkillPoints(const std::vector<network::SkillAlloc>& skills_alloc)
+			{
 				for (const auto& alloc : skills_alloc)
 				{
 					m_SkillsAlloc[alloc.skill_id] = alloc.pts_alloc;
 					m_UiSkills->setSkillPoints(alloc.skill_id, alloc.pts_alloc);
 					updateSkillEffectIfPassive(alloc.skill_id);
 				}
+
 			}
 
 			//void updatePassiveSkill(unsigned int skill_id, unsigned int skill_lvl, SRL::SkillPropertiesMap* skill_properties)
@@ -171,6 +176,11 @@ namespace hiraeth {
 			//	}
 			//	m_CharacterStats->recalculateEffectsFromSkills();
 			//}
+			
+			void eraseSkills()
+			{
+
+			}
 
 			void add_icon(const std::string& name, unsigned int skill_index, float duration)
 			{

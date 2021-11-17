@@ -41,7 +41,8 @@ namespace hiraeth::npc {
 		void set_dialog(unsigned int npc_id, unsigned int dialog_index)
 		{
 			auto npc_data = SRL::deserial<SRL::NpcData>("npc", npc_id);
-			m_Strings = std::get<SRL::NpcUsageDialog>(npc_data.info.usage_data).dialog_tree[dialog_index].msgs;
+			//m_Strings = std::get<SRL::NpcUsageDialog>(npc_data.info.usage_data).dialog_tree[dialog_index].msgs;
+			m_Strings = npc_data.info.dialog_tree[dialog_index].msgs;
 			m_StringIndex = 0;
 		}
 

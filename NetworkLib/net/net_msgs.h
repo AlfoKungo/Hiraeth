@@ -242,4 +242,11 @@ namespace hiraeth::network {
 			ar(CEREAL_NVP(npc_id), CEREAL_NVP(item_num), CEREAL_NVP(item_id));
 		}
 	};
+	struct MsgStcUpdateJob
+	{
+		unsigned int new_job_id;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(new_job_id));
+		}
+	};
 }

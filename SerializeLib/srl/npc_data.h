@@ -73,7 +73,14 @@ namespace SRL {
 			ar(CEREAL_NVP(next_map), CEREAL_NVP(is_to_include_party));
 		}
 	};
-	using ActionVariant = std::variant<DANextDialog, DAAddQuest, DAReceiveReward, DAGoToDialog, DAChangeMap>;
+	struct DASetJob
+	{
+		unsigned int job_id{};
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(job_id));
+		}
+	};
+	using ActionVariant = std::variant<DANextDialog, DAAddQuest, DAReceiveReward, DAGoToDialog, DAChangeMap, DASetJob>;
 
 	struct DialogButtonType
 	{
@@ -139,6 +146,13 @@ namespace SRL {
 			ar(CEREAL_NVP(prior_quest_id));
 		}
 	};
+	struct DR_JobRequirements
+	{
+		unsigned int req_job_id;
+		template<class A> void serialize(A& ar) {
+			ar(CEREAL_NVP(req_job_id));
+		}
+	};
 	struct DR_DontCont
 	{
 		template<class A> void serialize(A& ar) {
@@ -160,6 +174,7 @@ namespace SRL {
 		DR_ActiveQuest,
 		DR_QuestFulfilled,
 		DR_PriorQuest,
+		DR_JobRequirements,
 		DR_DontCont,
 		DR_Pq
 	>;
@@ -175,18 +190,19 @@ namespace SRL {
 
 	struct NpcUsageDialog
 	{
-		std::map<unsigned int, DialogNode> dialog_tree;
+		//std::map<unsigned int, DialogNode> dialog_tree;
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(dialog_tree));
+			//ar(CEREAL_NVP(dialog_tree));
 		}
 	};
 	struct NpcUsagePq
 	{	
 
-		std::map<unsigned int, DialogNode> dialog_tree;
+		//std::map<unsigned int, DialogNode> dialog_tree;
 		unsigned int party_members_amount{}, lvl_req_min{}, lvl_req_max{}, pq_map_id{};
 		template<class A> void serialize(A& ar) {
-			ar(CEREAL_NVP(dialog_tree), 
+			ar(
+				//CEREAL_NVP(dialog_tree), 
 				CEREAL_NVP(party_members_amount), CEREAL_NVP(lvl_req_min),
 				CEREAL_NVP(lvl_req_max), CEREAL_NVP(pq_map_id));
 		}
@@ -225,11 +241,11 @@ namespace SRL {
 		unsigned int npc_foothold;
 		float npc_x_value;
 		std::vector<std::string> say_lines;
-		//std::map<unsigned int, DialogNode> dialog_tree;
+		std::map<unsigned int, DialogNode> dialog_tree;
 		NpcTypeVariant usage_data;
 		template<class A> void serialize(A& ar) {
 			ar(CEREAL_NVP(npc_name), CEREAL_NVP(npc_foothold), CEREAL_NVP(npc_x_value),
-				CEREAL_NVP(say_lines), CEREAL_NVP(usage_data));
+				CEREAL_NVP(say_lines), CEREAL_NVP(dialog_tree), CEREAL_NVP(usage_data));
 		}
 	};
 

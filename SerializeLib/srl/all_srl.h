@@ -12,5 +12,6 @@
 #include "sprite_data.h"
 #include "texture_data.h"
 #include "tile_texture_data.h"
+#include "job_data.h"
 
 
